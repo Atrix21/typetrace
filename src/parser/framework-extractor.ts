@@ -12,6 +12,7 @@ import { emitEffect } from './graph-context.js';
 import { externalMeta, externalPackageOf, stripParens, type CallResolution } from './call-extractor.js';
 import { aliasTarget, declInfo, decoratorTexts, symbolKey, type SymbolPass } from './symbol-extractor.js';
 import { shortText, spanOf, startOf } from './typescript-parser.js';
+import { DispatchExtractor } from './dispatch-extractor.js';
 
 /** Explicit list of packages whose calls are reported as CALLS_EXTERNAL_API. */
 export const EXTERNAL_API_PACKAGES = [
@@ -37,7 +38,10 @@ export class FrameworkExtractor {
   readonly index: FrameworkIndex = { roles: new Map(), bindings: new Map(), entities: new Map(), implementers: new Map() };
   private dbWithoutEntity = 0;
 
-  constructor(private env: Env) { env.fw = this.index; }
+  /** Experiment 3 (M2.2): keyed dispatch, GraphQL entry points, query-builder tables. */
+  readonly dispatch: DispatchExtractor;
+
+  constructor(private env: Env) { env.fw = this.index; this.dispatch = new DispatchExtractor(env, (n) => this.decos(n)); }
 
   // ------------------------------------------------------------ helpers
   private decos(node: ts.Node): Deco[] {
@@ -94,6 +98,7 @@ export class FrameworkExtractor {
     this.routes();
     this.injections();
     this.eventConsumers();
+    this.dispatch.prepare();
   }
 
   private computeRoles() {
@@ -345,6 +350,7 @@ export class FrameworkExtractor {
   }
 
   onCall(res: CallResolution, st: WalkState): void {
+    this.dispatch.onCall(res, st);
     const { env } = this;
     const { ctx, project } = env;
     const owner = st.owner;
@@ -422,6 +428,7 @@ export class FrameworkExtractor {
   }
 
   finish(): void {
+    this.dispatch.finish();
     if (this.dbWithoutEntity) this.env.diag.notes.push(`${this.dbWithoutEntity} calls into typeorm/mongoose without a resolvable entity receiver (module setup, migrations queryRunner.query, query modifiers, find operators In/Not): no QUERIES_DATABASE edge`);
   }
 }

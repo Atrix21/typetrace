@@ -188,7 +188,18 @@ export function emitEffect(
   e: Omit<EdgeInput, 'src'> & { node?: ts.Node },
   opts: { branch?: boolean } = {},
 ): void {
-  const { ctx } = env;
+  for (const x of effectEdges(st, e, opts)) env.ctx.edge(x);
+}
+
+/**
+ * The edge inputs emitEffect would add (owner edge, plus the branch edge when inside a guard), computed from the walk
+ * state at this point. Used directly when an effect must be decided later (e.g. keyed dispatch, decided in finish()).
+ */
+export function effectEdges(
+  st: WalkState,
+  e: Omit<EdgeInput, 'src'> & { node?: ts.Node },
+  opts: { branch?: boolean } = {},
+): EdgeInput[] {
   const owner = st.owner;
   const guard = currentGuard(st);
   const meta: Record<string, unknown> = { ...(e.meta ?? {}) };
@@ -196,11 +207,12 @@ export function emitEffect(
   if (st.callbackDepth > 0) meta.in_callback = true;
   if (st.tryStack.length) meta.caught_by = st.tryStack[st.tryStack.length - 1];
   if (st.handlerStack.length) meta.in_handler = st.handlerStack[st.handlerStack.length - 1];
-  ctx.edge({ ...e, src: owner.id, file: e.file ?? owner.file, meta });
+  const out: EdgeInput[] = [{ ...e, src: owner.id, file: e.file ?? owner.file, meta }];
   if (guard && opts.branch !== false) {
     const bmeta = { ...(e.meta ?? {}), owner: owner.id, guard: { condition_id: guard.conditionId, polarity: guard.polarity } };
-    ctx.edge({ ...e, src: guard.branchId, file: e.file ?? owner.file, meta: bmeta });
+    out.push({ ...e, src: guard.branchId, file: e.file ?? owner.file, meta: bmeta });
   }
+  return out;
 }
 
 export function locOf(sf: ts.SourceFile, node: ts.Node, file: string) {

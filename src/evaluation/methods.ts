@@ -34,4 +34,28 @@ export const REGISTRY: Record<string, Factory> = {
     const { hybridConfig } = await import('./configs.js');
     return new HybridRetriever(hybridConfig());
   },
+  // ---- Experiment 3 (M2.8). hybrid_nograph = the experiment-1 ablation `no_graph_at_all` (wGraph = wFact = 0).
+  hybrid_nograph: async () => {
+    const { HybridRetriever } = await import('../retrieval/hybrid-retrieval.js');
+    const { hybridConfig } = await import('./configs.js');
+    return new HybridRetriever(hybridConfig(HYBRID_NOGRAPH_OVERRIDE), 'hybrid_nograph');
+  },
+  compact_graph: async () => {
+    const { HybridRetriever } = await import('../retrieval/hybrid-retrieval.js');
+    const { CompactRetriever } = await import('../retrieval/compact-retrieval.js');
+    const { hybridConfig } = await import('./configs.js');
+    return new CompactRetriever('compact_graph', new HybridRetriever(hybridConfig(), 'hybrid'), true);
+  },
+  compact_nograph: async () => {
+    const { HybridRetriever } = await import('../retrieval/hybrid-retrieval.js');
+    const { CompactRetriever } = await import('../retrieval/compact-retrieval.js');
+    const { hybridConfig } = await import('./configs.js');
+    return new CompactRetriever('compact_nograph', new HybridRetriever(hybridConfig(HYBRID_NOGRAPH_OVERRIDE), 'hybrid_nograph'), false);
+  },
 };
+
+/** The single difference between hybrid and hybrid_nograph (identical to experiment 1's `no_graph_at_all` ablation). */
+export const HYBRID_NOGRAPH_OVERRIDE = { wGraph: 0, wFact: 0 } as const;
+
+/** Experiment 3 stage-1 methods (approved list + compact variants + ripgrep as the cheapest lexical floor). */
+export const STAGE1_METHODS = ['ripgrep', 'bm25', 'embeddings', 'hybrid_nograph', 'hybrid', 'custom_graph', 'compact_nograph', 'compact_graph'];

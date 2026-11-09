@@ -1,0 +1,163 @@
+#!/usr/bin/env tsx
+/**
+ * Experiment 3 stage 1: deterministic retrieval-only evaluation (no model calls).
+ *
+ *   npx tsx scripts/exp3/stage1.ts --repo S|M|L --split dev|test|all --out experiments/03-graph-scale/results/stage1-<repo>
+ *       [--methods a,b] [--nested experiments/03-graph-scale/manifests/corpora-twenty.json] [--tasks <dir>] [--only id,id]
+ *
+ * Per task: materialise the snapshot (S: experiment-1 single-bug branch; M/L category A: pinned snapshot with the fix
+ * reverted; M/L other categories: pinned snapshot), build the custom graph once in a child process (memory isolation),
+ * then for each corpus (full, plus nested corpora on L) prepare and query every method with the SAME budget and
+ * score with experiment 1's metrics plus the v2 metrics. Subset corpora use the INDUCED subgraph of the full graph
+ * (nodes in corpus files; edges with both ends kept) and their own BM25/embedding indexes.
+ * Output: <out>/raw/<method>.jsonl (outputs), <out>/metrics.jsonl, <out>/infra.jsonl, <out>/meta.json. Resumable:
+ * (task, corpus, method) rows already in metrics.jsonl are skipped.
+ */
+import { spawnSync } from 'node:child_process';
+import crypto from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
+import { abs, listCorpusFiles, loadConfig } from '../../src/config.js';
+import { selectTasks } from '../../src/cli/commands.js';
+import { checkoutSnapshot } from '../../src/evaluation/corpus.js';
+import { loadTasks, validateTasks } from '../../src/evaluation/ground-truth.js';
+import { REGISTRY, STAGE1_METHODS } from '../../src/evaluation/methods.js';
+import { computeTaskMetrics } from '../../src/evaluation/metrics.js';
+import { computeV2Metrics } from '../../src/evaluation/metrics-v2.js';
+import { normaliseOutput } from '../../src/evaluation/normalise.js';
+import { SymbolIndex } from '../../src/evaluation/symbol-index.js';
+import { countTokens } from '../../src/evaluation/token-accounting.js';
+import type { GraphEdge, GraphNode } from '../../src/graph/graph-schema.js';
+import { loadGraph } from '../../src/graph/graph-store.js';
+import { EmbeddingRetriever } from '../../src/retrieval/embeddings.js';
+import { primeGraphCache, clearGraphCache } from '../../src/retrieval/graph-retrieval.js';
+import type { Corpus, GroundTruthTask, RetrievalBudget } from '../../src/types.js';
+import { materialise, REPOS, type RepoName } from './tasks.js';
+
+const arg = (n: string, d?: string) => { const i = process.argv.indexOf(`--${n}`); return i >= 0 ? process.argv[i + 1] : d; };
+const REPO = arg('repo') as 'S' | 'M' | 'L';
+const SPLIT = arg('split', 'test')!;
+const OUT = abs(arg('out')!);
+const METHODS = (arg('methods') ?? STAGE1_METHODS.join(',')).split(',');
+const NESTED = arg('nested');
+const ONLY = arg('only')?.split(',');
+const BUDGET: RetrievalBudget = { maxResults: 50, maxContextTokens: 8000 }; // experiment-1 frozen budget
+const MAX_DECL_BYTES = 50e6; // E3-D13: declaration-heavy packages stubbed (M, L)
+const repoName: RepoName | null = REPO === 'M' ? 'immich' : REPO === 'L' ? 'twenty' : null;
+const sha = (s: string) => crypto.createHash('sha256').update(s).digest('hex');
+const rss = () => Math.round(process.memoryUsage().rss / 1e6);
+
+fs.mkdirSync(path.join(OUT, 'raw'), { recursive: true });
+const metricsFile = path.join(OUT, 'metrics.jsonl');
+const done = new Set<string>();
+if (fs.existsSync(metricsFile)) for (const l of fs.readFileSync(metricsFile, 'utf8').split('\n').filter(Boolean)) { const o = JSON.parse(l); done.add(`${o.task_id}|${o.corpus}|${o.method}`); }
+const append = (f: string, o: unknown) => fs.appendFileSync(path.join(OUT, f), JSON.stringify(o) + '\n');
+
+function loadV2Tasks(): GroundTruthTask[] {
+  const dir = abs(arg('tasks') ?? `experiments/03-graph-scale/dataset/v2/${repoName}`);
+  const all = loadTasks(dir) as (GroundTruthTask & { split: string | null })[];
+  return all.filter((t) => SPLIT === 'all' || t.split === SPLIT);
+}
+
+/** Build the custom graph of the snapshot in a child process; returns build stats (time, peak RSS, sizes). */
+function buildGraphChild(root: string, outDir: string): Record<string, unknown> {
+  fs.mkdirSync(outDir, { recursive: true });
+  const t0 = performance.now();
+  const r = spawnSync('/usr/bin/time', ['-v', 'npx', 'tsx', abs('src/graph/build-cli.ts'), '--repo', root, '--out', outDir, '--include', 'src', '--max-package-decl-mb', String(MAX_DECL_BYTES / 1e6), '--no-json'], {
+    cwd: abs('.'), encoding: 'utf8', env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=7000' }, maxBuffer: 64 * 1024 * 1024,
+  });
+  if (r.status !== 0) throw new Error(`graph build failed (${r.status}): ${(r.stderr ?? '').slice(-800)}`);
+  const peak = /Maximum resident set size \(kbytes\): (\d+)/.exec(r.stderr ?? '');
+  const hash = /hash=([0-9a-f]{64})/.exec(r.stdout ?? '');
+  return { wall_ms: Math.round(performance.now() - t0), peak_rss_mb: peak ? Math.round(Number(peak[1]) / 1000) : null, sqlite_bytes: fs.statSync(path.join(outDir, 'graph.sqlite')).size, hash: hash?.[1] ?? null };
+}
+
+/** Nodes in corpus files (plus file-less synthetic nodes touching them); edges with both endpoints kept. */
+function inducedSubgraph(nodes: GraphNode[], edges: GraphEdge[], files: Set<string>): { nodes: GraphNode[]; edges: GraphEdge[] } {
+  const keep = new Set(nodes.filter((n) => n.file !== null && files.has(n.file)).map((n) => n.id));
+  const synthetic = new Set(nodes.filter((n) => n.file === null).map((n) => n.id));
+  for (const e of edges) {
+    if (keep.has(e.src) && synthetic.has(e.dst)) keep.add(e.dst);
+    if (keep.has(e.dst) && synthetic.has(e.src)) keep.add(e.src);
+  }
+  return { nodes: nodes.filter((n) => keep.has(n.id)), edges: edges.filter((e) => keep.has(e.src) && keep.has(e.dst)) };
+}
+
+interface CorpusSpec { name: string; files: string[]; strategy: string; target_lines: number | null; lines: number | null }
+
+async function evalCorpus(task: GroundTruthTask, spec: CorpusSpec, root: string, commit: string, full: { nodes: GraphNode[]; edges: GraphEdge[] } | null) {
+  const pending = METHODS.filter((m) => !done.has(`${task.task_id}|${spec.name}|${m}`));
+  if (!pending.length) return;
+  const cacheDir = abs(`.cache/exp3/stage1/${REPO}/${task.task_id}/${spec.name}`);
+  const corpus: Corpus = { repoRoot: root, commit, files: spec.files, cacheDir };
+  clearGraphCache();
+  if (full) {
+    const g = spec.name === 'full' ? full : inducedSubgraph(full.nodes, full.edges, new Set(spec.files));
+    primeGraphCache(corpus, { nodes: g.nodes, edges: g.edges, build_ms: 0, cached: true });
+  }
+  const index = new SymbolIndex(root, spec.files);
+  const bad = validateTasks([task], index).filter((i) => i.level === 'error');
+  if (bad.length) throw new Error(`ground truth invalid on ${task.task_id}/${spec.name}: ${bad.map((b) => b.msg).join('; ')}`);
+  const q = { task_id: task.task_id, query: task.description };
+  for (const name of pending) {
+    const m = await REGISTRY[name]();
+    const t0 = performance.now();
+    const st = await m.prepare(corpus);
+    const prepMs = performance.now() - t0;
+    const out = await m.retrieve(q, BUDGET);
+    await m.close?.();
+    const norm = normaliseOutput(index, out);
+    const base = computeTaskMetrics(index, task, norm, { native_context_tokens: countTokens(out.context), latency_ms: out.latency_ms, llm_tokens: 0, n_results: out.results.length });
+    const v2 = computeV2Metrics(index, task as never, norm);
+    const row = { ...base, ...v2, repo: REPO, corpus: spec.name, strategy: spec.strategy, target_lines: spec.target_lines, corpus_lines: spec.lines, corpus_files: spec.files.length, method: name, split: (task as { split?: string }).split, task_type: (task as { task_type?: string }).task_type ?? 'bug_localisation', strata: (task as { strata?: unknown }).strata ?? null };
+    append('metrics.jsonl', row);
+    fs.appendFileSync(path.join(OUT, 'raw', `${name}.jsonl`), JSON.stringify({ task_id: task.task_id, corpus: spec.name, method: name, results: out.results, context: out.context, latency_ms: out.latency_ms, metadata: out.metadata }) + '\n');
+    append('infra.jsonl', { task_id: task.task_id, corpus: spec.name, method: name, prepare_ms: Math.round(prepMs), index_ms: Math.round(st.index_ms), query_ms: Math.round(out.latency_ms), rss_mb_after: rss(), details: { chunks: (st.details as Record<string, any>)?.chunks ?? (st.details as Record<string, any>)?.bm25?.chunks ?? null } });
+    done.add(`${task.task_id}|${spec.name}|${name}`);
+  }
+}
+
+async function main() {
+  const cfg = loadConfig();
+  EmbeddingRetriever.embeddingCacheDir = abs(`.cache/exp3/embeddings-${REPO}`);
+  if (REPO === 'S') EmbeddingRetriever.embeddingCacheDir = null; // experiment-1 cache layout, for reproducibility
+  const tasks = (REPO === 'S' ? selectTasks(cfg, SPLIT) : loadV2Tasks()).filter((t) => !ONLY || ONLY.includes(t.task_id));
+  const nested = NESTED ? JSON.parse(fs.readFileSync(abs(NESTED), 'utf8')) : null;
+  fs.writeFileSync(path.join(OUT, 'meta.json'), JSON.stringify({ repo: REPO, split: SPLIT, methods: METHODS, budget: BUDGET, tasks: tasks.map((t) => t.task_id), nested: NESTED ?? null, max_package_declaration_bytes: REPO === 'S' ? null : MAX_DECL_BYTES, started: new Date().toISOString() }, null, 2) + '\n');
+  for (const t of tasks) {
+    const pendingAny = () => METHODS.some((m) => !done.has(`${t.task_id}|full|${m}`)) || (nested?.tasks?.[t.task_id]?.corpora ?? []).some((c: any) => METHODS.some((m) => !done.has(`${t.task_id}|${c.strategy}-${c.target_lines}|${m}`)));
+    if (!pendingAny()) continue;
+    const t0 = performance.now();
+    if (REPO === 'S') {
+      const corpus = checkoutSnapshot(cfg, t.task_id);
+      await evalCorpus(t, { name: 'full', files: corpus.files, strategy: 'full', target_lines: null, lines: null }, corpus.repoRoot, corpus.commit, null);
+      console.error(`[S] ${t.task_id} ${Math.round((performance.now() - t0) / 1000)}s`);
+      continue;
+    }
+    const R = REPOS[repoName!];
+    const snap = (t as { snapshot?: { kind: string; patch?: string; apply?: string; patch_sha256?: string } }).snapshot;
+    const restore = snap?.kind === 'revert_fix' ? materialise(repoName!, snap.patch!, snap.apply ?? 'exact') : () => {};
+    try {
+      const root = abs(R.corpusRoot);
+      const files = listCorpusFiles(root, ['src']);
+      const commit = sha(`${R.pinned}|${snap?.patch_sha256 ?? 'pinned'}`).slice(0, 16);
+      const gdir = abs(`.cache/exp3/stage1/${REPO}/${t.task_id}/graph-build`);
+      const build = fs.existsSync(path.join(gdir, 'graph.sqlite')) ? JSON.parse(fs.readFileSync(path.join(gdir, 'build.json'), 'utf8')) : buildGraphChild(root, gdir);
+      fs.writeFileSync(path.join(gdir, 'build.json'), JSON.stringify(build));
+      const g = loadGraph(path.join(gdir, 'graph.sqlite'));
+      append('graph-builds.jsonl', { task_id: t.task_id, ...build, nodes: g.nodes.length, edges: g.edges.length });
+      await evalCorpus(t, { name: 'full', files, strategy: 'full', target_lines: null, lines: null }, root, commit, g);
+      for (const c of nested?.tasks?.[t.task_id]?.corpora ?? []) {
+        const want = new Set<number>(c.communities);
+        const comm = JSON.parse(fs.readFileSync(abs(nested.communities), 'utf8'));
+        const cf = comm.communities.filter((x: any) => want.has(x.id)).flatMap((x: any) => x.files).filter((f: string) => files.includes(f)).sort();
+        if (sha(cf.join('\n')) !== c.files_sha256) throw new Error(`corpus hash mismatch ${t.task_id} ${c.strategy}-${c.target_lines}`);
+        await evalCorpus(t, { name: `${c.strategy}-${c.target_lines}`, files: cf, strategy: c.strategy, target_lines: c.target_lines, lines: c.lines }, root, commit, g);
+      }
+      fs.rmSync(path.join(gdir, 'graph.sqlite'), { force: true }); // 0.1–1.2 GB each; stats kept in graph-builds.jsonl
+    } finally { restore(); }
+    console.error(`[${REPO}] ${t.task_id} ${Math.round((performance.now() - t0) / 1000)}s rss ${rss()} MB`);
+  }
+  console.log(`done: ${done.size} (task, corpus, method) rows in ${path.relative(process.cwd(), OUT)}`);
+}
+main().catch((e) => { console.error(e); process.exit(1); });

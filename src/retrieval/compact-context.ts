@@ -82,6 +82,17 @@ export class CompactIndex {
   }
 }
 
+/** One-line signature taken from source: the first line of the declaration that is not a decorator or comment. */
+export function sourceSignature(lines: string[], start: number, end: number): string | null {
+  for (let l = start; l <= Math.min(end, start + 12); l++) {
+    const t = (lines[l - 1] ?? '').trim();
+    if (!t || t.startsWith('@') || t.startsWith('//') || t.startsWith('/*') || t.startsWith('*')) continue;
+    const one = t.replace(/\s+/g, ' ').replace(/\s*\{$/, '');
+    return one.length > 110 ? one.slice(0, 107) + '…' : one;
+  }
+  return null;
+}
+
 export interface CompactOptions {
   /** Hard cap on rendered tokens (proxy tokenizer, src/evaluation/token-accounting.ts). */
   maxTokens: number;
@@ -91,6 +102,8 @@ export interface CompactOptions {
   neighbours: number;
   /** false = no-graph control: identical format without relationship lines. */
   relations: boolean;
+  /** Source-based signature lookup (same for both variants, so the no-graph control needs no graph). */
+  signature?: (file: string, start: number, end: number) => string | null;
 }
 export const DEFAULT_COMPACT: CompactOptions = { maxTokens: 800, maxSymbols: 10, neighbours: 3, relations: true };
 
@@ -106,7 +119,7 @@ function signatureOf(n: GraphNode | undefined): string | null {
 
 const VERIFIED = new Set(['static_verified']);
 
-export function renderCompact(idx: CompactIndex, query: string, ranked: CompactInput[], opt: CompactOptions = DEFAULT_COMPACT): CompactOutput {
+export function renderCompact(idx: CompactIndex | null, query: string, ranked: CompactInput[], opt: CompactOptions = DEFAULT_COMPACT): CompactOutput {
   const header = `Relevant code for: "${query.length > 80 ? query.slice(0, 77) + '…' : query}". Pointers only — read the line ranges you need.`;
   const lines: string[] = [header];
   const listed: string[] = [];
@@ -116,15 +129,15 @@ export function renderCompact(idx: CompactIndex, query: string, ranked: CompactI
   for (const r of ranked) {
     if (listed.length >= opt.maxSymbols) break;
     const key = r.symbol ? `${r.file}::${r.symbol}` : r.file;
-    const n = r.symbol ? idx.byKey.get(key) : undefined;
+    const n = r.symbol && idx ? idx.byKey.get(key) : undefined;
     const block: string[] = [];
     const i = listed.length + 1;
     const span = r.start_line ? `${r.file}:${r.start_line}-${r.end_line ?? r.start_line}` : r.file;
-    block.push(`${i}. ${r.symbol ?? '(file)'} — ${span}${n ? ` [${n.type}${n.meta?.is_async ? ', async' : ''}]` : ''}`);
-    const sig = signatureOf(n);
+    block.push(`${i}. ${r.symbol ?? '(file)'} — ${span}`);
+    const sig = opt.signature && r.start_line ? opt.signature(r.file, r.start_line, r.end_line ?? r.start_line) : signatureOf(n);
     if (sig) block.push(`   ${sig}`);
     const ment: string[] = [];
-    if (opt.relations && n) {
+    if (opt.relations && n && idx) {
       const rel = idx.rels.get(n.id) ?? [];
       const inSet = (id: string) => listedIds.includes(id) || ranked.some((x) => x.symbol && idx.byKey.get(`${x.file}::${x.symbol}`)?.id === id);
       for (const dir of ['out', 'in'] as const) {
@@ -153,7 +166,7 @@ export function renderCompact(idx: CompactIndex, query: string, ranked: CompactI
     lines.push(text);
     listed.push(key);
     if (n) listedIds.push(n.id);
-    for (const m of ment) { const mn = idx.nodes.get(m); if (mn?.file && mn.qualified_name) mentioned.add(`${mn.file}::${mn.qualified_name}`); }
+    for (const m of ment) { const mn = idx!.nodes.get(m); if (mn?.file && mn.qualified_name) mentioned.add(`${mn.file}::${mn.qualified_name}`); }
   }
   const text = lines.join('\n');
   return { text, tokens: countTokens(text), listed, mentioned: [...mentioned] };

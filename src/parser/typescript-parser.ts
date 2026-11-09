@@ -12,6 +12,12 @@ export interface ProjectOptions {
   files: string[];
   /** Optional tsconfig (absolute, or relative to repoRoot). Defaults to <repoRoot>/tsconfig.json when present. */
   tsconfigPath?: string;
+  /**
+   * Experiment 3 (scale): external packages whose declaration files total more than this many bytes are loaded as an
+   * untyped stub (`any`), so one declaration-heavy dependency cannot exhaust memory. Off when undefined (the default,
+   * and the setting of experiments 1-2). Stubbed packages are listed in Project.stubbedPackages / coverage notes.
+   */
+  maxPackageDeclarationBytes?: number;
 }
 
 export interface Project {
@@ -28,6 +34,36 @@ export interface Project {
   /** Repo-relative path of a source file if it is part of the corpus, else null. */
   relOf(sf: ts.SourceFile | string): string | null;
   isLib(sf: ts.SourceFile): boolean;
+  /** Packages loaded as untyped stubs (maxPackageDeclarationBytes), with their declaration size in bytes. */
+  stubbedPackages: Record<string, number>;
+}
+
+const STUB_DECLARATION = 'declare const __stubbedPackage: any;\nexport = __stubbedPackage;\n';
+
+/** Package root directory and name for a file inside node_modules, else null. */
+function packageRootOf(file: string): { root: string; name: string } | null {
+  const f = file.replace(/\\/g, '/');
+  const i = f.lastIndexOf('/node_modules/');
+  if (i < 0) return null;
+  const rest = f.slice(i + '/node_modules/'.length).split('/');
+  const n = rest[0].startsWith('@') ? 2 : 1;
+  if (rest.length <= n) return null;
+  return { root: f.slice(0, i + '/node_modules/'.length) + rest.slice(0, n).join('/'), name: rest.slice(0, n).join('/') };
+}
+
+function declarationBytes(dir: string): number {
+  let total = 0;
+  const walk = (d: string) => {
+    let ents: fs.Dirent[];
+    try { ents = fs.readdirSync(d, { withFileTypes: true }); } catch { return; }
+    for (const e of ents) {
+      const p = path.join(d, e.name);
+      if (e.isDirectory()) { if (e.name !== 'node_modules') walk(p); }
+      else if (/\.d\.(c|m)?ts$/.test(e.name)) { try { total += fs.statSync(p).size; } catch { /* ignore */ } }
+    }
+  };
+  walk(dir);
+  return total;
 }
 
 export function toPosix(p: string): string {
@@ -73,6 +109,24 @@ export function createProject(opts: ProjectOptions): Project {
 
   const rootNames = [...new Set([...files.map((f) => absByRel.get(f)!).filter((a) => fs.existsSync(a)), ...extraRoots])];
   const host = ts.createCompilerHost(options, true);
+  const stubbedPackages: Record<string, number> = {};
+  if (opts.maxPackageDeclarationBytes !== undefined) {
+    const limit = opts.maxPackageDeclarationBytes;
+    const sizeOf = new Map<string, number>();
+    const getSourceFile = host.getSourceFile.bind(host);
+    host.getSourceFile = (fileName, lang, onError, shouldCreate) => {
+      const pk = packageRootOf(fileName);
+      if (pk && /\.d\.(c|m)?ts$/.test(fileName)) {
+        let size = sizeOf.get(pk.root);
+        if (size === undefined) sizeOf.set(pk.root, (size = declarationBytes(pk.root)));
+        if (size > limit) {
+          stubbedPackages[pk.name] = size;
+          return ts.createSourceFile(fileName, STUB_DECLARATION, lang, true);
+        }
+      }
+      return getSourceFile(fileName, lang, onError, shouldCreate);
+    };
+  }
   const program = ts.createProgram({ rootNames, options, host });
   const checker = program.getTypeChecker();
 
@@ -101,6 +155,7 @@ export function createProject(opts: ProjectOptions): Project {
     packageJson: { dependencies: pkg.dependencies ?? {}, devDependencies: pkg.devDependencies ?? {} },
     relOf,
     isLib: (sf) => program.isSourceFileDefaultLibrary(sf),
+    stubbedPackages,
   };
 }
 

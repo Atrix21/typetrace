@@ -15,6 +15,15 @@ export interface LoadedGraph { nodes: GraphNode[]; edges: GraphEdge[]; build_ms:
 
 const graphCache = new Map<string, LoadedGraph>();
 
+/**
+ * Experiment 3: hand a pre-built graph to the methods of this corpus (e.g. an induced subgraph for a nested corpus,
+ * or a graph built in a child process). Opt-in; experiment-1 runs never call it.
+ */
+export function primeGraphCache(corpus: Corpus, g: LoadedGraph): void {
+  graphCache.set(path.join(corpus.cacheDir, 'custom-graph', 'graph.json'), g);
+}
+export function clearGraphCache(): void { graphCache.clear(); }
+
 /** Build (or load the cached) custom graph for this corpus revision. */
 export async function loadOrBuildGraph(corpus: Corpus): Promise<LoadedGraph> {
   const dir = path.join(corpus.cacheDir, 'custom-graph');

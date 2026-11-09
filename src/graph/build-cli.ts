@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * npx tsx src/graph/build-cli.ts --repo <dir> --out <dir> [--include src,test] [--tsconfig path] [--check-repro]
+ * npx tsx src/graph/build-cli.ts --repo <dir> --out <dir> [--include src,test] [--tsconfig path] [--max-package-decl-mb N] [--no-json] [--check-repro]
  * Writes graph.sqlite, graph.json, coverage.json, stats.json and prints a summary.
  */
 import fs from 'node:fs';
@@ -26,14 +26,15 @@ function main() {
   const outDir = path.isAbsolute(outArg) ? outArg : path.resolve(outArg);
   const include = arg('include')?.split(',') ?? loadConfig().target.include_dirs;
   const files = listCorpusFiles(repoRoot, include);
-  const opts = { repoRoot, files, tsconfigPath: arg('tsconfig') };
+  const maxMb = arg('max-package-decl-mb');
+  const opts = { repoRoot, files, tsconfigPath: arg('tsconfig'), maxPackageDeclarationBytes: maxMb ? Number(maxMb) * 1e6 : undefined };
 
   const g = buildGraph(opts);
   const hash = graphHash(g.nodes, g.edges);
   fs.mkdirSync(outDir, { recursive: true });
   const meta = { repo: path.basename(repoRoot), files: files.length, hash, build_ms: g.build_ms, node_count: g.nodes.length, edge_count: g.edges.length };
   saveGraph(path.join(outDir, 'graph.sqlite'), { nodes: g.nodes, edges: g.edges, coverage: g.coverage, stats: g.stats, meta });
-  exportGraphJson(path.join(outDir, 'graph.json'), { nodes: g.nodes, edges: g.edges, meta });
+  if (!flag('no-json')) exportGraphJson(path.join(outDir, 'graph.json'), { nodes: g.nodes, edges: g.edges, meta });
   fs.writeFileSync(path.join(outDir, 'coverage.json'), JSON.stringify(g.coverage, null, 2) + '\n');
   fs.writeFileSync(path.join(outDir, 'stats.json'), JSON.stringify({ ...g.stats, hash, build_ms: g.build_ms, node_count: g.nodes.length, edge_count: g.edges.length }, null, 2) + '\n');
 

@@ -13,7 +13,7 @@ import { FrameworkExtractor } from '../parser/framework-extractor.js';
 import { walkOwners } from '../parser/body-walker.js';
 import { computeCoverage } from './graph-validator.js';
 
-export interface BuildOptions { repoRoot: string; files: string[]; tsconfigPath?: string }
+export interface BuildOptions { repoRoot: string; files: string[]; tsconfigPath?: string; maxPackageDeclarationBytes?: number }
 export interface BuiltGraph {
   nodes: GraphNode[];
   edges: GraphEdge[];
@@ -42,14 +42,26 @@ export function buildGraph(opts: BuildOptions): BuiltGraph {
   const fwIndex: FrameworkIndex = { roles: new Map(), bindings: new Map(), entities: new Map(), implementers: new Map() };
   const env: Env = { project, ctx, diag, owners: [], heritage: new Map(), fw: fwIndex };
 
+  // EXP3_PHASE_TIMING=1 prints phase durations to stderr (diagnostics only; no effect on the graph).
+  const timing = process.env.EXP3_PHASE_TIMING === '1';
+  let tp = performance.now();
+  const phase = (name: string) => { if (timing) { const n = performance.now(); console.error(`[phase] ${name} ${Math.round(n - tp)} ms rss ${Math.round(process.memoryUsage().rss / 1e6)} MB`); tp = n; } };
+  phase('program');
   const symbolPass = extractSymbols(env);
+  phase('symbols');
   extractImportsExports(env);
   extractHeritage(env);
+  phase('imports+heritage');
   extractHasType(env, symbolPass);
+  phase('has-type');
   const fw = new FrameworkExtractor(env);
   fw.prepare(symbolPass);
+  phase('framework-prepare');
   walkOwners(env, symbolPass, fw);
+  phase('walk');
   fw.finish();
+  phase('finish');
+  for (const [pkg, bytes] of Object.entries(project.stubbedPackages).sort()) diag.notes.push(`package ${pkg} loaded as an untyped stub: ${(bytes / 1e6).toFixed(1)} MB of declarations exceeds maxPackageDeclarationBytes`);
 
   const nodes = [...ctx.nodes.values()].sort((a, b) => cmp(a.id, b.id));
   const edges = [...ctx.edges.values()].sort((a, b) => cmp(a.id, b.id));
