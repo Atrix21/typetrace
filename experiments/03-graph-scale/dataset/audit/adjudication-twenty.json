@@ -1,0 +1,24 @@
+{
+  "adjudicated_by": "lead (Claude Opus 5.5), before any retrieval run on Twenty; no retrieval output was consulted",
+  "policies": [
+    "Same policies as Immich (description = mined text as stored; stack traces are symptom evidence; boundary labels as defined; auditor verdicts and fixes applied).",
+    "Reports are never rewritten: tasks rejected for stating the mechanism stay rejected even where cutting the technical lines would 'salvage' them (auditor suggestion for twenty_pr28825 and twenty_pr22640 declined); borderline mechanism cases (twenty_pr27245, twenty_pr29754) stay rejected (strict reading).",
+    "Category C direct impact = the type-checker oracle's set (dataset/evidence/twenty-impact-oracle.json); the auditor's grep-based sets are kept as indirect impact."
+  ],
+  "decisions": {
+    "twenty_pr28494": {
+      "verdict": "reject",
+      "reasons": [
+        "Materialisation defect found when validating the auditor fix: the fix renames utils/expand-flat-field-metadata-maps.util.ts to ...-or-throw.util.ts; the mined patch lists only the new path, so reverting it deletes the new file without restoring the old one and the bug snapshot does not compile. Excluded (not repaired)."
+      ]
+    },
+    "twenty_tw_t9": {
+      "reasons": [
+        "Auditor relevant_missing entries are integration test FILES under test/integration (outside the src corpus; not symbol keys): not added to relevant_symbols; recorded as additional tests to update in the audit notes."
+      ],
+      "fixes": {
+        "relevant_missing": []
+      }
+    }
+  }
+}

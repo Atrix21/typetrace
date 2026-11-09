@@ -1,0 +1,127 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_tw_t1",
+  "split": "dev",
+  "repo": "twenty",
+  "task_type": "data_flow",
+  "category": "D",
+  "description": "A workspace member creates a new person record by sending a GraphQL mutation to the main /graphql endpoint, and the workspace has a webhook subscribed to person-creation events. Trace the complete server-side path from the incoming HTTP request to the outbound HTTP POST that reaches the webhook URL. For each hop give the file and function, and say which hops cross an asynchronous boundary (in-process event emitter or message queue) and what the payload looks like on each side of the boundary.",
+  "root_cause_symbols": [
+    "src/engine/api/graphql/direct-execution/hooks/use-direct-execution.hook.ts::useDirectExecution"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/engine/api/graphql/direct-execution/hooks/use-direct-execution.hook.ts::useDirectExecution",
+    "src/engine/api/graphql/direct-execution/direct-execution.service.ts::DirectExecutionService.execute",
+    "src/engine/api/graphql/direct-execution/direct-execution.service.ts::DirectExecutionService.executeWorkspaceQuery",
+    "src/engine/api/graphql/direct-execution/direct-execution.service.ts::DirectExecutionService.executeField",
+    "src/engine/api/graphql/workspace-resolver-builder/factories/create-one-resolver.factory.ts::CreateOneResolverFactory.create",
+    "src/engine/api/common/common-query-runners/common-base-query-runner.service.ts::CommonBaseQueryRunnerService.execute",
+    "src/engine/api/common/common-query-runners/common-create-one-query-runner.service.ts::CommonCreateOneQueryRunnerService.run",
+    "src/engine/api/common/common-query-runners/common-create-many-query-runner/common-create-many-query-runner.service.ts::CommonCreateManyQueryRunnerService.run",
+    "src/engine/api/common/common-query-runners/common-create-many-query-runner/common-create-many-query-runner.service.ts::CommonCreateManyQueryRunnerService.insertOrUpsertRecords",
+    "src/engine/twenty-orm/repository/workspace-repository.ts::WorkspaceRepository.runInsert",
+    "src/engine/twenty-orm/repository/workspace-repository.ts::WorkspaceRepository.performInsert",
+    "src/engine/twenty-orm/repository/workspace-repository.ts::WorkspaceRepository.emitCreateEvents",
+    "src/engine/workspace-event-emitter/workspace-event-emitter.ts::WorkspaceEventEmitter.emitDatabaseBatchEvent",
+    "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts::EntityEventsToDbListener.handleCreate",
+    "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts::EntityEventsToDbListener.handleEvent",
+    "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts::EntityEventsToDbListener.enqueueWebhookJobsIfAnyWebhookMatches",
+    "src/engine/metadata-modules/webhook/jobs/call-webhook-jobs.job.ts::CallWebhookJobsJob.handle",
+    "src/engine/metadata-modules/webhook/jobs/call-webhook.job.ts::CallWebhookJob.handle",
+    "src/engine/metadata-modules/webhook/jobs/call-webhook.job.ts::CallWebhookJob.callWebhook",
+    "src/engine/middlewares/graphql-hydrate-request-from-token.middleware.ts::GraphQLHydrateRequestFromTokenMiddleware.use",
+    "src/engine/metadata-modules/webhook/jobs/webhook-rate-limit.service.ts::WebhookRateLimitService.admitWebhookEventsWithinRateLimit"
+  ],
+  "relevant_files": [
+    "src/engine/api/common/common-query-runners/common-base-query-runner.service.ts",
+    "src/engine/api/common/common-query-runners/common-create-many-query-runner/common-create-many-query-runner.service.ts",
+    "src/engine/api/common/common-query-runners/common-create-one-query-runner.service.ts",
+    "src/engine/api/graphql/direct-execution/direct-execution.service.ts",
+    "src/engine/api/graphql/direct-execution/hooks/use-direct-execution.hook.ts",
+    "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts",
+    "src/engine/api/graphql/workspace-resolver-builder/factories/create-one-resolver.factory.ts",
+    "src/engine/metadata-modules/webhook/jobs/call-webhook-jobs.job.ts",
+    "src/engine/metadata-modules/webhook/jobs/call-webhook.job.ts",
+    "src/engine/metadata-modules/webhook/jobs/webhook-rate-limit.service.ts",
+    "src/engine/middlewares/graphql-hydrate-request-from-token.middleware.ts",
+    "src/engine/twenty-orm/repository/workspace-repository.ts",
+    "src/engine/workspace-event-emitter/workspace-event-emitter.ts"
+  ],
+  "gt_path": [
+    "src/engine/middlewares/graphql-hydrate-request-from-token.middleware.ts::GraphQLHydrateRequestFromTokenMiddleware.use",
+    "src/engine/api/graphql/direct-execution/hooks/use-direct-execution.hook.ts::useDirectExecution",
+    "src/engine/api/graphql/direct-execution/direct-execution.service.ts::DirectExecutionService.execute",
+    "src/engine/api/graphql/direct-execution/direct-execution.service.ts::DirectExecutionService.executeWorkspaceQuery",
+    "src/engine/api/graphql/direct-execution/direct-execution.service.ts::DirectExecutionService.executeField",
+    "src/engine/api/graphql/workspace-resolver-builder/factories/create-one-resolver.factory.ts::CreateOneResolverFactory.create",
+    "src/engine/api/common/common-query-runners/common-base-query-runner.service.ts::CommonBaseQueryRunnerService.execute",
+    "src/engine/api/common/common-query-runners/common-create-one-query-runner.service.ts::CommonCreateOneQueryRunnerService.run",
+    "src/engine/api/common/common-query-runners/common-create-many-query-runner/common-create-many-query-runner.service.ts::CommonCreateManyQueryRunnerService.run",
+    "src/engine/api/common/common-query-runners/common-create-many-query-runner/common-create-many-query-runner.service.ts::CommonCreateManyQueryRunnerService.insertOrUpsertRecords",
+    "src/engine/twenty-orm/repository/workspace-repository.ts::WorkspaceRepository.runInsert",
+    "src/engine/twenty-orm/repository/workspace-repository.ts::WorkspaceRepository.performInsert",
+    "src/engine/twenty-orm/repository/workspace-repository.ts::WorkspaceRepository.emitCreateEvents",
+    "src/engine/workspace-event-emitter/workspace-event-emitter.ts::WorkspaceEventEmitter.emitDatabaseBatchEvent",
+    "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts::EntityEventsToDbListener.handleCreate",
+    "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts::EntityEventsToDbListener.handleEvent",
+    "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts::EntityEventsToDbListener.enqueueWebhookJobsIfAnyWebhookMatches",
+    "src/engine/metadata-modules/webhook/jobs/call-webhook-jobs.job.ts::CallWebhookJobsJob.handle",
+    "src/engine/metadata-modules/webhook/jobs/call-webhook.job.ts::CallWebhookJob.handle",
+    "src/engine/metadata-modules/webhook/jobs/call-webhook.job.ts::CallWebhookJob.callWebhook"
+  ],
+  "alternatives": [
+    "The same mutation over REST or from a workflow/agent tool skips steps 1-6 but joins at WorkspaceRepository (steps 11+).",
+    "A request that opens an explicit transaction (nested relation create, record sharing) goes through WorkspaceDataSource.transaction so emission is deferred to after commit.",
+    "The path via the generated GraphQL schema (WorkspaceSchemaFactory) exists but is used for SDK client generation, not for serving /graphql."
+  ],
+  "distractor_symbols": [
+    "src/engine/metadata-modules/webhook/jobs/call-webhook-jobs-for-metadata.job.ts::CallWebhookJobsForMetadataJob.handle",
+    "src/engine/subscriptions/object-record-event/object-record-event-publisher.ts::ObjectRecordEventPublisher.publish",
+    "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts::WorkflowDatabaseEventTriggerListener.handleObjectRecordCreateEvent",
+    "src/engine/api/graphql/workspace-resolver-builder/workspace-resolver-builder.service.ts::WorkspaceResolverBuilderService"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d"
+  },
+  "source": {
+    "drafted_by": "mining agent (twenty)",
+    "draft_id": "TW-T1",
+    "verification": "Third party reads each cited line and checks the call/enqueue/emit named in the edge column; steps 19/23 are verifiable by matching the job class name string passed to add() with the @Process argument in the next step. Run webhook-rate-limit.integration-spec.ts (needs DB+Redis) to observe delivery end to end.",
+    "notes": "Confounders: (a) the question says 'GraphQL resolver' but /graphql workspace queries bypass the generated resolvers via DirectExecutionService (step 1-5); an agent that stops at WorkspaceResolverBuilderService will be wrong. (b) job names equal class names (Process(Class.name)), so grep for the string finds both enqueue and handler. (c) Line numbers are for snapshot bde4ff13. Not tool-verified by running."
+  },
+  "evidence": [
+    "packages/twenty-server/src/engine/api/graphql/graphql-config/graphql-config.service.ts:56 registers useDirectExecution as the first GraphQL plugin",
+    "packages/twenty-server/test/integration/usage-limit/webhook-rate-limit.integration-spec.ts:153 'delivers what the bucket admits and drops the rest of the burst' exercises steps 16-25",
+    "commit 12e8fae471 (2026-11-06, #29150) 'Drop unreadable fields from webhook payloads' touched CallWebhookJobsJob",
+    "use-direct-execution.hook.ts:36-140",
+    "workspace-repository.ts:1350-1380",
+    "workspace-data-source.ts:90-100",
+    "entity-events-to-db.listener.ts:95-190",
+    "call-webhook-jobs.job.ts:119-142",
+    "call-webhook.job.ts:112"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 13,
+    "communities_spanned": 4,
+    "gt_path_length": 20,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "mapping note gt_path[18] (line 183): the enqueue of CallWebhookJobsJob is inside enqueueWebhookJobsIfAnyWebhookMatches (already a gt key); no separate hop: drop the element",
+      "mapping note gt_path[24] (line 112): axiosClient.post is inside CallWebhookJob.callWebhook (already a gt key); drop the element",
+      "WorkspaceDataSource.transaction is NOT on the plain person-create path: CommonCreateManyQueryRunnerService.run only opens runInWorkspaceTransaction when sharing or nested relation create is present (common-create-many-query-runner.service.ts:87-111); emitCreateEvents calls internalContext.eventEmitterService.emitDatabaseBatchEvent directly (workspace-repository.ts:1376). It is the draft's own alternative; move out of gt_path/relevant",
+      "missing hop before the hook: req.workspace must be hydrated by GraphQLHydrateRequestFromTokenMiddleware (registered app.module.ts:111-126), otherwise use-direct-execution.hook.ts:41-60 returns an auth error",
+      "distractors lacked line numbers: keys given; WorkspaceResolverBuilderService only exposes shouldBuildResolver (used by workspace-schema-builder generators), correct as \"looks like entry point\" distractor",
+      "steps verified: each consecutive call edge confirmed in source (hook:133 -> DirectExecutionService.execute; executeField -> factory.create; CreateOne resolver -> commonCreateOneQueryRunnerService.execute; emitCreateEvents -> emitDatabaseBatchEvent; handleCreate -> handleEvent -> enqueueWebhookJobsIfAnyWebhookMatches -> webhookQueue.add(CallWebhookJobsJob.name); CallWebhookJobsJob.handle:121-140 -> CallWebhookJob.name add)"
+    ]
+  }
+}

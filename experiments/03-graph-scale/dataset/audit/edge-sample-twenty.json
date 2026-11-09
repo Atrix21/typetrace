@@ -1,0 +1,517 @@
+{
+ "repo": "twenty",
+ "graph": ".cache/exp3/graph-twenty-stub",
+ "population": {
+  "dispatch_pairs": 525,
+  "graphql_routes": 716,
+  "query_builder_edges": 0
+ },
+ "seed": 20261110,
+ "sample": [
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.UPDATED",
+   "producer": "src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts:1 src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts",
+   "producer_site": "src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts:94",
+   "producer_evidence": "it.each([ { eventAction: DatabaseEventAction.CREATED, declaredAction: 'linked' as const, }, { eventAction: DatabaseEventAction.RESTORED, de\u2026",
+   "handler": "src/engine/core-modules/user/services/global-workspace-member.listener.ts:49 GlobalWorkspaceMemberListener.syncUserWorkspaceLocale",
+   "handler_registration": "src/engine/core-modules/user/services/global-workspace-member.listener.ts:49",
+   "handler_evidence": "@OnDatabaseBatchEvent('workspaceMember', DatabaseEventAction.UPDATED)",
+   "id": "twenty-01"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.UPDATED",
+   "producer": "src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts:1 src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts",
+   "producer_site": "src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts:94",
+   "producer_evidence": "it.each([ { eventAction: DatabaseEventAction.CREATED, declaredAction: 'linked' as const, }, { eventAction: DatabaseEventAction.RESTORED, de\u2026",
+   "handler": "src/modules/messaging/message-participant-manager/listeners/message-participant-person.listener.ts:73 MessageParticipantPersonListener.handleUpdatedEvent",
+   "handler_registration": "src/modules/messaging/message-participant-manager/listeners/message-participant-person.listener.ts:73",
+   "handler_evidence": "@OnDatabaseBatchEvent('person', DatabaseEventAction.UPDATED)",
+   "id": "twenty-02"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "CleanSuspendedWorkspacesJob.name",
+   "producer": "src/engine/workspace-manager/workspace-cleaner/commands/clean-suspended-workspaces.cron.command.ts:21 CleanSuspendedWorkspacesCronCommand.run",
+   "producer_site": "src/engine/workspace-manager/workspace-cleaner/commands/clean-suspended-workspaces.cron.command.ts:23",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: CleanSuspendedWorkspacesJob.name, data: undefined, options: { repeat: { pattern: cle\u2026",
+   "handler": "src/engine/workspace-manager/workspace-cleaner/crons/clean-suspended-workspaces.job.ts:34 CleanSuspendedWorkspacesJob.handle",
+   "handler_registration": "src/engine/workspace-manager/workspace-cleaner/crons/clean-suspended-workspaces.job.ts:35",
+   "handler_evidence": "@SentryCronMonitor( CleanSuspendedWorkspacesJob.name, cleanSuspendedWorkspaceCronPattern, )",
+   "id": "twenty-03"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.UPDATED",
+   "producer": "src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts:1 src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts",
+   "producer_site": "src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts:116",
+   "producer_evidence": "expect( resolveTimelineActivityRuleAction({ actions: ['updated'], targetShape: JUNCTION_TARGET_SHAPE, eventAction: DatabaseEventAction.UPDA\u2026",
+   "handler": "src/modules/calendar/calendar-event-participant-manager/listeners/calendar-event-participant-workspace-member.listener.ts:56 CalendarEventParticipantWorkspaceMemberListener.handleUpdatedEvent",
+   "handler_registration": "src/modules/calendar/calendar-event-participant-manager/listeners/calendar-event-participant-workspace-member.listener.ts:56",
+   "handler_evidence": "@OnDatabaseBatchEvent('workspaceMember', DatabaseEventAction.UPDATED)",
+   "id": "twenty-04"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.DESTROYED",
+   "producer": "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts:131 WorkflowDatabaseEventTriggerListener.handleObjectRecordDestroyEvent",
+   "producer_site": "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts:141",
+   "producer_evidence": "this.handleEvent({ payload, action: DatabaseEventAction.DESTROYED, enrichPayload: (payloadToEnrich) => this.enrichDestroyedEvent(payloadToE\u2026",
+   "handler": "src/modules/calendar/calendar-event-cleaner/listeners/calendar-event-cleaner-calendar-event.listener.ts:21 CalendarEventCleanerCalendarEventListener.handleDestroyedEvent",
+   "handler_registration": "src/modules/calendar/calendar-event-cleaner/listeners/calendar-event-cleaner-calendar-event.listener.ts:21",
+   "handler_evidence": "@OnDatabaseBatchEvent('calendarEvent', DatabaseEventAction.DESTROYED)",
+   "id": "twenty-05"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "MarketplaceCatalogSyncCronJob.name",
+   "producer": "src/engine/core-modules/application/application-marketplace/marketplace.resolver.ts:72 MarketplaceResolver.syncMarketplaceCatalog",
+   "producer_site": "src/engine/core-modules/application/application-marketplace/marketplace.resolver.ts:91",
+   "producer_evidence": "this.messageQueueService.add( MarketplaceCatalogSyncCronJob.name, {}, { id: 'marketplace-catalog-sync', isSystemJob: true }, // Avoids trig\u2026",
+   "handler": "src/engine/core-modules/application/application-marketplace/crons/marketplace-catalog-sync.cron.job.ts:19 MarketplaceCatalogSyncCronJob.handle",
+   "handler_registration": "src/engine/core-modules/application/application-marketplace/crons/marketplace-catalog-sync.cron.job.ts:19",
+   "handler_evidence": "@Process(MarketplaceCatalogSyncCronJob.name)",
+   "id": "twenty-06"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "MessagingMessageListFetchJob.name",
+   "producer": "src/modules/connected-account/services/imap-smtp-caldav-apis.service.ts:64 ImapSmtpCalDavApiService.upsertConnectedAccount",
+   "producer_site": "src/modules/connected-account/services/imap-smtp-caldav-apis.service.ts:228",
+   "producer_evidence": "this.messageQueueService.add<MessagingMessageListFetchJobData>( MessagingMessageListFetchJob.name, { workspaceId, messageChannelId: existin\u2026",
+   "handler": "src/modules/messaging/message-import-manager/jobs/messaging-message-list-fetch.job.ts:39 MessagingMessageListFetchJob.handle",
+   "handler_registration": "src/modules/messaging/message-import-manager/jobs/messaging-message-list-fetch.job.ts:39",
+   "handler_evidence": "@Process(MessagingMessageListFetchJob.name)",
+   "id": "twenty-07"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "EventLogCleanupCronJob.name",
+   "producer": "src/engine/core-modules/event-logs/cleanup/commands/event-log-cleanup.cron.command.ts:24 EventLogCleanupCronCommand.run",
+   "producer_site": "src/engine/core-modules/event-logs/cleanup/commands/event-log-cleanup.cron.command.ts:26",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: EventLogCleanupCronJob.name, data: undefined, options: { repeat: { pattern: EVENT_LO\u2026",
+   "handler": "src/engine/core-modules/event-logs/cleanup/crons/event-log-cleanup.cron.job.ts:31 EventLogCleanupCronJob.handle",
+   "handler_registration": "src/engine/core-modules/event-logs/cleanup/crons/event-log-cleanup.cron.job.ts:31",
+   "handler_evidence": "@Process(EventLogCleanupCronJob.name)",
+   "id": "twenty-08"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "BlocklistReimportMessagesJob.name",
+   "producer": "src/modules/messaging/blocklist-manager/listeners/messaging-blocklist.listener.ts:64 MessagingBlocklistListener.handleUpdatedEvent",
+   "producer_site": "src/modules/messaging/blocklist-manager/listeners/messaging-blocklist.listener.ts:80",
+   "producer_evidence": "this.messageQueueService.add<BlocklistReimportMessagesJobData>( BlocklistReimportMessagesJob.name, payload, { workspaceId: payload.workspac\u2026",
+   "handler": "src/modules/messaging/blocklist-manager/jobs/messaging-blocklist-reimport-messages.job.ts:43 BlocklistReimportMessagesJob.handle",
+   "handler_registration": "src/modules/messaging/blocklist-manager/jobs/messaging-blocklist-reimport-messages.job.ts:43",
+   "handler_evidence": "@Process(BlocklistReimportMessagesJob.name)",
+   "id": "twenty-09"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.UPDATED",
+   "producer": "src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts:1 src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts",
+   "producer_site": "src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts:94",
+   "producer_evidence": "it.each([ { eventAction: DatabaseEventAction.CREATED, declaredAction: 'linked' as const, }, { eventAction: DatabaseEventAction.RESTORED, de\u2026",
+   "handler": "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts:99 WorkflowDatabaseEventTriggerListener.handleObjectRecordUpdateEvent",
+   "handler_registration": "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts:99",
+   "handler_evidence": "@OnDatabaseBatchEvent('*', DatabaseEventAction.UPDATED)",
+   "id": "twenty-10"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.UPDATED",
+   "producer": "src/engine/core-modules/open-api/open-api.service.ts:97 OpenApiService.generateCoreSchema",
+   "producer_site": "src/engine/core-modules/open-api/open-api.service.ts:173",
+   "producer_evidence": "computeWebhooks(DatabaseEventAction.UPDATED, item)",
+   "handler": "src/modules/calendar/calendar-event-participant-manager/listeners/calendar-event-participant-workspace-member.listener.ts:56 CalendarEventParticipantWorkspaceMemberListener.handleUpdatedEvent",
+   "handler_registration": "src/modules/calendar/calendar-event-participant-manager/listeners/calendar-event-participant-workspace-member.listener.ts:56",
+   "handler_evidence": "@OnDatabaseBatchEvent('workspaceMember', DatabaseEventAction.UPDATED)",
+   "id": "twenty-11"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.UPDATED",
+   "producer": "src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts:1 src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts",
+   "producer_site": "src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts:116",
+   "producer_evidence": "expect( resolveTimelineActivityRuleAction({ actions: ['updated'], targetShape: JUNCTION_TARGET_SHAPE, eventAction: DatabaseEventAction.UPDA\u2026",
+   "handler": "src/engine/core-modules/pending-wake-up/listeners/pending-wake-up-database-event.listener.ts:25 PendingWakeUpDatabaseEventListener.handleObjectRecordUpdateEvent",
+   "handler_registration": "src/engine/core-modules/pending-wake-up/listeners/pending-wake-up-database-event.listener.ts:25",
+   "handler_evidence": "@OnDatabaseBatchEvent('*', DatabaseEventAction.UPDATED)",
+   "id": "twenty-12"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.UPDATED",
+   "producer": "src/engine/core-modules/open-api/open-api.service.ts:97 OpenApiService.generateCoreSchema",
+   "producer_site": "src/engine/core-modules/open-api/open-api.service.ts:170",
+   "producer_evidence": "this.createWebhookEventName( DatabaseEventAction.UPDATED, item.nameSingular, )",
+   "handler": "src/modules/calendar/blocklist-manager/listeners/calendar-blocklist.listener.ts:64 CalendarBlocklistListener.handleUpdatedEvent",
+   "handler_registration": "src/modules/calendar/blocklist-manager/listeners/calendar-blocklist.listener.ts:64",
+   "handler_evidence": "@OnDatabaseBatchEvent('blocklist', DatabaseEventAction.UPDATED)",
+   "id": "twenty-13"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.CREATED",
+   "producer": "src/modules/workflow/workflow-builder/workflow-schema/utils/__tests__/generate-fake-object-record-event.spec.ts:1 src/modules/workflow/workflow-builder/workflow-schema/utils/__tests__/generate-fake-object-record-event.spec.ts",
+   "producer_site": "src/modules/workflow/workflow-builder/workflow-schema/utils/__tests__/generate-fake-object-record-event.spec.ts:35",
+   "producer_evidence": "generateFakeObjectRecordEvent( mockCompanyObjectMetadataInfo, DatabaseEventAction.CREATED, )",
+   "handler": "src/modules/messaging/message-participant-manager/listeners/message-participant-person.listener.ts:41 MessageParticipantPersonListener.handleCreatedEvent",
+   "handler_registration": "src/modules/messaging/message-participant-manager/listeners/message-participant-person.listener.ts:41",
+   "handler_evidence": "@OnDatabaseBatchEvent('person', DatabaseEventAction.CREATED)",
+   "id": "twenty-14"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.UPDATED",
+   "producer": "src/modules/workflow/workflow-builder/workflow-schema/utils/__tests__/generate-fake-object-record-event.spec.ts:1 src/modules/workflow/workflow-builder/workflow-schema/utils/__tests__/generate-fake-object-record-event.spec.ts",
+   "producer_site": "src/modules/workflow/workflow-builder/workflow-schema/utils/__tests__/generate-fake-object-record-event.spec.ts:66",
+   "producer_evidence": "generateFakeObjectRecordEvent( mockCompanyObjectMetadataInfo, DatabaseEventAction.UPDATED, )",
+   "handler": "src/modules/messaging/message-participant-manager/listeners/message-participant-workspace-member.listener.ts:73 MessageParticipantWorkspaceMemberListener.handleUpdatedEvent",
+   "handler_registration": "src/modules/messaging/message-participant-manager/listeners/message-participant-workspace-member.listener.ts:73",
+   "handler_evidence": "@OnDatabaseBatchEvent('workspaceMember', DatabaseEventAction.UPDATED)",
+   "id": "twenty-15"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.DESTROYED",
+   "producer": "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts:131 WorkflowDatabaseEventTriggerListener.handleObjectRecordDestroyEvent",
+   "producer_site": "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts:141",
+   "producer_evidence": "this.handleEvent({ payload, action: DatabaseEventAction.DESTROYED, enrichPayload: (payloadToEnrich) => this.enrichDestroyedEvent(payloadToE\u2026",
+   "handler": "src/modules/messaging/message-cleaner/listeners/messaging-message-cleaner-message.listener.ts:21 MessagingMessageCleanerMessageListener.handleDestroyedEvent",
+   "handler_registration": "src/modules/messaging/message-cleaner/listeners/messaging-message-cleaner-message.listener.ts:21",
+   "handler_evidence": "@OnDatabaseBatchEvent('message', DatabaseEventAction.DESTROYED)",
+   "id": "twenty-16"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.CREATED",
+   "producer": "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts:52 EntityEventsToDbListener.handleCreate",
+   "producer_site": "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts:54",
+   "producer_evidence": "this.handleEvent(batchEvent, DatabaseEventAction.CREATED)",
+   "handler": "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts:83 WorkflowDatabaseEventTriggerListener.handleObjectRecordCreateEvent",
+   "handler_registration": "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts:83",
+   "handler_evidence": "@OnDatabaseBatchEvent('*', DatabaseEventAction.CREATED)",
+   "id": "twenty-17"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.CREATED",
+   "producer": "src/engine/core-modules/open-api/open-api.service.ts:97 OpenApiService.generateCoreSchema",
+   "producer_site": "src/engine/core-modules/open-api/open-api.service.ts:164",
+   "producer_evidence": "this.createWebhookEventName( DatabaseEventAction.CREATED, item.nameSingular, )",
+   "handler": "src/engine/core-modules/pending-wake-up/listeners/pending-wake-up-database-event.listener.ts:18 PendingWakeUpDatabaseEventListener.handleObjectRecordCreateEvent",
+   "handler_registration": "src/engine/core-modules/pending-wake-up/listeners/pending-wake-up-database-event.listener.ts:18",
+   "handler_evidence": "@OnDatabaseBatchEvent('*', DatabaseEventAction.CREATED)",
+   "id": "twenty-18"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.UPDATED",
+   "producer": "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts:57 EntityEventsToDbListener.handleUpdate",
+   "producer_site": "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts:59",
+   "producer_evidence": "this.handleEvent(batchEvent, DatabaseEventAction.UPDATED)",
+   "handler": "src/modules/calendar/blocklist-manager/listeners/calendar-blocklist.listener.ts:64 CalendarBlocklistListener.handleUpdatedEvent",
+   "handler_registration": "src/modules/calendar/blocklist-manager/listeners/calendar-blocklist.listener.ts:64",
+   "handler_evidence": "@OnDatabaseBatchEvent('blocklist', DatabaseEventAction.UPDATED)",
+   "id": "twenty-19"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.DESTROYED",
+   "producer": "src/modules/workflow/workflow-builder/workflow-schema/utils/__tests__/generate-fake-object-record-event.spec.ts:1 src/modules/workflow/workflow-builder/workflow-schema/utils/__tests__/generate-fake-object-record-event.spec.ts",
+   "producer_site": "src/modules/workflow/workflow-builder/workflow-schema/utils/__tests__/generate-fake-object-record-event.spec.ts:128",
+   "producer_evidence": "generateFakeObjectRecordEvent( mockCompanyObjectMetadataInfo, DatabaseEventAction.DESTROYED, )",
+   "handler": "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts:131 WorkflowDatabaseEventTriggerListener.handleObjectRecordDestroyEvent",
+   "handler_registration": "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts:131",
+   "handler_evidence": "@OnDatabaseBatchEvent('*', DatabaseEventAction.DESTROYED)",
+   "id": "twenty-20"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "MessagingMessagesImportCronJob.name",
+   "producer": "src/modules/messaging/message-import-manager/crons/commands/messaging-messages-import.cron.command.ts:23 MessagingMessagesImportCronCommand.run",
+   "producer_site": "src/modules/messaging/message-import-manager/crons/commands/messaging-messages-import.cron.command.ts:25",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: MessagingMessagesImportCronJob.name, data: undefined, options: { repeat: { pattern: \u2026",
+   "handler": "src/modules/messaging/message-import-manager/crons/jobs/messaging-messages-import.cron.job.ts:43 MessagingMessagesImportCronJob.handle",
+   "handler_registration": "src/modules/messaging/message-import-manager/crons/jobs/messaging-messages-import.cron.job.ts:43",
+   "handler_evidence": "@Process(MessagingMessagesImportCronJob.name)",
+   "id": "twenty-21"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.UPDATED",
+   "producer": "src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts:1 src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts",
+   "producer_site": "src/modules/timeline/utils/__tests__/resolve-timeline-activity-rule-action.util.spec.ts:90",
+   "producer_evidence": "it.each([ { eventAction: DatabaseEventAction.CREATED, declaredAction: 'linked' as const, }, { eventAction: DatabaseEventAction.RESTORED, de\u2026",
+   "handler": "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts:99 WorkflowDatabaseEventTriggerListener.handleObjectRecordUpdateEvent",
+   "handler_registration": "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts:99",
+   "handler_evidence": "@OnDatabaseBatchEvent('*', DatabaseEventAction.UPDATED)",
+   "id": "twenty-22"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.UPDATED",
+   "producer": "src/modules/workflow/workflow-builder/workflow-schema/utils/__tests__/generate-fake-object-record-event.spec.ts:1 src/modules/workflow/workflow-builder/workflow-schema/utils/__tests__/generate-fake-object-record-event.spec.ts",
+   "producer_site": "src/modules/workflow/workflow-builder/workflow-schema/utils/__tests__/generate-fake-object-record-event.spec.ts:66",
+   "producer_evidence": "generateFakeObjectRecordEvent( mockCompanyObjectMetadataInfo, DatabaseEventAction.UPDATED, )",
+   "handler": "src/modules/messaging/message-participant-manager/listeners/message-participant-person.listener.ts:73 MessageParticipantPersonListener.handleUpdatedEvent",
+   "handler_registration": "src/modules/messaging/message-participant-manager/listeners/message-participant-person.listener.ts:73",
+   "handler_evidence": "@OnDatabaseBatchEvent('person', DatabaseEventAction.UPDATED)",
+   "id": "twenty-23"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "CreateEventLogFromInternalEvent.name",
+   "producer": "src/engine/core-modules/event-logs/ingest/forward-event-log-from-entity-events-to-db-queue.ts:18 ForwardEventLogFromEntityEventsToDbQueue.handle",
+   "producer_site": "src/engine/core-modules/event-logs/ingest/forward-event-log-from-entity-events-to-db-queue.ts:21",
+   "producer_evidence": "this.eventLogQueueService.add<CreateEventLogFromInternalEventData>( CreateEventLogFromInternalEvent.name, batch, { retryLimit: 1, workspace\u2026",
+   "handler": "src/engine/core-modules/event-logs/ingest/forward-event-log-from-entity-events-to-db-queue.ts:18 ForwardEventLogFromEntityEventsToDbQueue.handle",
+   "handler_registration": "src/engine/core-modules/event-logs/ingest/forward-event-log-from-entity-events-to-db-queue.ts:18",
+   "handler_evidence": "@Process(CreateEventLogFromInternalEvent.name)",
+   "id": "twenty-24"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "LinkedTimelineActivityDeletionJob.name",
+   "producer": "src/modules/calendar/calendar-event-cleaner/listeners/calendar-event-cleaner-calendar-event.listener.ts:21 CalendarEventCleanerCalendarEventListener.handleDestroyedEvent",
+   "producer_site": "src/modules/calendar/calendar-event-cleaner/listeners/calendar-event-cleaner-calendar-event.listener.ts:32",
+   "producer_evidence": "this.messageQueueService.add<LinkedTimelineActivityDeletion>( LinkedTimelineActivityDeletionJob.name, { workspaceId: payload.workspaceId, l\u2026",
+   "handler": "src/modules/timeline/jobs/linked-timeline-activity-deletion.job.ts:18 LinkedTimelineActivityDeletionJob.handle",
+   "handler_registration": "src/modules/timeline/jobs/linked-timeline-activity-deletion.job.ts:18",
+   "handler_evidence": "@Process(LinkedTimelineActivityDeletionJob.name)",
+   "id": "twenty-25"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.CREATED",
+   "producer": "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts:52 EntityEventsToDbListener.handleCreate",
+   "producer_site": "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts:54",
+   "producer_evidence": "this.handleEvent(batchEvent, DatabaseEventAction.CREATED)",
+   "handler": "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts:52 EntityEventsToDbListener.handleCreate",
+   "handler_registration": "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts:52",
+   "handler_evidence": "@OnDatabaseBatchEvent('*', DatabaseEventAction.CREATED)",
+   "id": "twenty-26"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.DELETED",
+   "producer": "src/engine/core-modules/open-api/open-api.service.ts:97 OpenApiService.generateCoreSchema",
+   "producer_site": "src/engine/core-modules/open-api/open-api.service.ts:179",
+   "producer_evidence": "computeWebhooks(DatabaseEventAction.DELETED, item)",
+   "handler": "src/modules/messaging/blocklist-manager/listeners/messaging-blocklist.listener.ts:48 MessagingBlocklistListener.handleDeletedEvent",
+   "handler_registration": "src/modules/messaging/blocklist-manager/listeners/messaging-blocklist.listener.ts:48",
+   "handler_evidence": "@OnDatabaseBatchEvent('blocklist', DatabaseEventAction.DELETED)",
+   "id": "twenty-27"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.CREATED",
+   "producer": "src/engine/core-modules/open-api/open-api.service.ts:97 OpenApiService.generateCoreSchema",
+   "producer_site": "src/engine/core-modules/open-api/open-api.service.ts:167",
+   "producer_evidence": "computeWebhooks(DatabaseEventAction.CREATED, item)",
+   "handler": "src/modules/calendar/calendar-event-participant-manager/listeners/calendar-event-participant-workspace-member.listener.ts:28 CalendarEventParticipantWorkspaceMemberListener.handleCreatedEvent",
+   "handler_registration": "src/modules/calendar/calendar-event-participant-manager/listeners/calendar-event-participant-workspace-member.listener.ts:28",
+   "handler_evidence": "@OnDatabaseBatchEvent('workspaceMember', DatabaseEventAction.CREATED)",
+   "id": "twenty-28"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "TriggerInstallApplicationJob.name",
+   "producer": "src/engine/core-modules/application/application-install/services/application-lifecycle-job.service.ts:88 ApplicationLifecycleJobService.triggerInstallApplication",
+   "producer_site": "src/engine/core-modules/application/application-install/services/application-lifecycle-job.service.ts:99",
+   "producer_evidence": "this.triggerLifecycleJob<TriggerInstallApplicationJobData>({ operation: 'install', jobName: TriggerInstallApplicationJob.name, data: { appl\u2026",
+   "handler": "src/engine/core-modules/application/application-install/jobs/trigger-install-application.job.ts:19 TriggerInstallApplicationJob.handle",
+   "handler_registration": "src/engine/core-modules/application/application-install/jobs/trigger-install-application.job.ts:19",
+   "handler_evidence": "@Process(TriggerInstallApplicationJob.name)",
+   "id": "twenty-29"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "CallDatabaseEventTriggerJobsJob.name",
+   "producer": "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts:193 EntityEventsToDbListener.enqueueDatabaseEventTriggerJobsIfAnyLogicFunctionMatches",
+   "producer_site": "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts:212",
+   "producer_evidence": "this.triggerQueueService.add<WorkspaceEventBatch<T>>( CallDatabaseEventTriggerJobsJob.name, batchEvent, { retryLimit: 3, workspaceId: batch\u2026",
+   "handler": "src/engine/core-modules/logic-function/logic-function-trigger/triggers/database-event/call-database-event-trigger-jobs.job.ts:45 CallDatabaseEventTriggerJobsJob.handle",
+   "handler_registration": "src/engine/core-modules/logic-function/logic-function-trigger/triggers/database-event/call-database-event-trigger-jobs.job.ts:45",
+   "handler_evidence": "@Process(CallDatabaseEventTriggerJobsJob.name)",
+   "id": "twenty-30"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.DELETED",
+   "producer": "src/engine/core-modules/open-api/open-api.service.ts:97 OpenApiService.generateCoreSchema",
+   "producer_site": "src/engine/core-modules/open-api/open-api.service.ts:176",
+   "producer_evidence": "this.createWebhookEventName( DatabaseEventAction.DELETED, item.nameSingular, )",
+   "handler": "src/modules/messaging/blocklist-manager/listeners/messaging-blocklist.listener.ts:48 MessagingBlocklistListener.handleDeletedEvent",
+   "handler_registration": "src/modules/messaging/blocklist-manager/listeners/messaging-blocklist.listener.ts:48",
+   "handler_evidence": "@OnDatabaseBatchEvent('blocklist', DatabaseEventAction.DELETED)",
+   "id": "twenty-31"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.UPDATED",
+   "producer": "src/engine/twenty-orm/utils/__tests__/format-twenty-orm-event-to-database-batch-event.util.spec.ts:1 src/engine/twenty-orm/utils/__tests__/format-twenty-orm-event-to-database-batch-event.util.spec.ts",
+   "producer_site": "src/engine/twenty-orm/utils/__tests__/format-twenty-orm-event-to-database-batch-event.util.spec.ts:217",
+   "producer_evidence": "formatTwentyOrmEventToDatabaseBatchEvent({ action: DatabaseEventAction.UPDATED, objectMetadataItem: flatObjectMetadataWithRelation, flatFie\u2026",
+   "handler": "src/engine/core-modules/pending-wake-up/listeners/pending-wake-up-database-event.listener.ts:25 PendingWakeUpDatabaseEventListener.handleObjectRecordUpdateEvent",
+   "handler_registration": "src/engine/core-modules/pending-wake-up/listeners/pending-wake-up-database-event.listener.ts:25",
+   "handler_evidence": "@OnDatabaseBatchEvent('*', DatabaseEventAction.UPDATED)",
+   "id": "twenty-32"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "CalendarOngoingStaleCronJob.name",
+   "producer": "src/modules/calendar/calendar-event-import-manager/crons/commands/calendar-ongoing-stale.cron.command.ts:24 CalendarOngoingStaleCronCommand.run",
+   "producer_site": "src/modules/calendar/calendar-event-import-manager/crons/commands/calendar-ongoing-stale.cron.command.ts:26",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: CalendarOngoingStaleCronJob.name, data: undefined, options: { repeat: { pattern: CAL\u2026",
+   "handler": "src/modules/calendar/calendar-event-import-manager/crons/jobs/calendar-ongoing-stale.cron.job.ts:33 CalendarOngoingStaleCronJob.handle",
+   "handler_registration": "src/modules/calendar/calendar-event-import-manager/crons/jobs/calendar-ongoing-stale.cron.job.ts:34",
+   "handler_evidence": "@SentryCronMonitor( CalendarOngoingStaleCronJob.name, CALENDAR_ONGOING_STALE_CRON_PATTERN, )",
+   "id": "twenty-33"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "MessageParticipantMatchParticipantJob.name",
+   "producer": "src/modules/messaging/message-participant-manager/listeners/message-participant-person.listener.ts:111 MessageParticipantPersonListener.enqueueMatching",
+   "producer_site": "src/modules/messaging/message-participant-manager/listeners/message-participant-person.listener.ts:122",
+   "producer_evidence": "this.messageQueueService.add<MessageParticipantMatchParticipantJobData>( MessageParticipantMatchParticipantJob.name, data, { workspaceId: d\u2026",
+   "handler": "src/modules/messaging/message-participant-manager/jobs/message-participant-match-participant.job.ts:38 MessageParticipantMatchParticipantJob.handle",
+   "handler_registration": "src/modules/messaging/message-participant-manager/jobs/message-participant-match-participant.job.ts:38",
+   "handler_evidence": "@Process(MessageParticipantMatchParticipantJob.name)",
+   "id": "twenty-34"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DatabaseEventAction.UPDATED",
+   "producer": "src/engine/twenty-orm/utils/__tests__/format-twenty-orm-event-to-database-batch-event.util.spec.ts:1 src/engine/twenty-orm/utils/__tests__/format-twenty-orm-event-to-database-batch-event.util.spec.ts",
+   "producer_site": "src/engine/twenty-orm/utils/__tests__/format-twenty-orm-event-to-database-batch-event.util.spec.ts:165",
+   "producer_evidence": "expect(result?.action).toBe(DatabaseEventAction.UPDATED)",
+   "handler": "src/modules/messaging/message-participant-manager/listeners/message-participant-person.listener.ts:73 MessageParticipantPersonListener.handleUpdatedEvent",
+   "handler_registration": "src/modules/messaging/message-participant-manager/listeners/message-participant-person.listener.ts:73",
+   "handler_evidence": "@OnDatabaseBatchEvent('person', DatabaseEventAction.UPDATED)",
+   "id": "twenty-35"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL field logoUrl",
+   "target": "src/engine/core-modules/application/application.resolver.ts:113 ApplicationResolver.logoUrl",
+   "site": "src/engine/core-modules/application/application.resolver.ts:113",
+   "evidence": "@ResolveField(() => String, { nullable: true })",
+   "id": "twenty-36"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL query adminPanelRecentUsers",
+   "target": "src/engine/core-modules/admin-panel/admin-panel.resolver.ts:189 AdminPanelResolver.adminPanelRecentUsers",
+   "site": "src/engine/core-modules/admin-panel/admin-panel.resolver.ts:193",
+   "evidence": "@Query(() => [AdminPanelRecentUserDTO])",
+   "id": "twenty-37"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL mutation syncMarketplaceCatalog",
+   "target": "src/engine/core-modules/application/application-marketplace/marketplace.resolver.ts:72 MarketplaceResolver.syncMarketplaceCatalog",
+   "site": "src/engine/core-modules/application/application-marketplace/marketplace.resolver.ts:72",
+   "evidence": "@Mutation(() => Boolean)",
+   "id": "twenty-38"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL query webhook",
+   "target": "src/engine/metadata-modules/webhook/webhook.resolver.ts:39 WebhookResolver.webhook",
+   "site": "src/engine/metadata-modules/webhook/webhook.resolver.ts:39",
+   "evidence": "@Query(() => WebhookDTO, { nullable: true })",
+   "id": "twenty-39"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL query findOneAgent",
+   "target": "src/engine/metadata-modules/ai/ai-agent/agent.resolver.ts:79 AgentResolver.findOneAgent",
+   "site": "src/engine/metadata-modules/ai/ai-agent/agent.resolver.ts:79",
+   "evidence": "@Query(() => AgentDTO)",
+   "id": "twenty-40"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL mutation createBillingPaymentMethodSetupIntent",
+   "target": "src/engine/core-modules/billing/billing.resolver.ts:270 BillingResolver.createBillingPaymentMethodSetupIntent",
+   "site": "src/engine/core-modules/billing/billing.resolver.ts:270",
+   "evidence": "@Mutation(() => BillingPaymentIntentDTO)",
+   "id": "twenty-41"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL mutation deleteDatabaseConfigVariable",
+   "target": "src/engine/core-modules/admin-panel/admin-panel.resolver.ts:489 AdminPanelResolver.deleteDatabaseConfigVariable",
+   "site": "src/engine/core-modules/admin-panel/admin-panel.resolver.ts:490",
+   "evidence": "@Mutation(() => Boolean)",
+   "id": "twenty-42"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL mutation refreshEnterpriseValidityToken",
+   "target": "src/engine/core-modules/enterprise/enterprise.resolver.ts:93 EnterpriseResolver.refreshEnterpriseValidityToken",
+   "site": "src/engine/core-modules/enterprise/enterprise.resolver.ts:93",
+   "evidence": "@Mutation(() => Boolean)",
+   "id": "twenty-43"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL mutation createNewWorkspaceLogoUpload",
+   "target": "src/engine/core-modules/auth/auth.resolver.ts:772 AuthResolver.createNewWorkspaceLogoUpload",
+   "site": "src/engine/core-modules/auth/auth.resolver.ts:772",
+   "evidence": "@Mutation(() => FileUploadTargetDTO)",
+   "id": "twenty-44"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL field createdAt",
+   "target": "src/engine/metadata-modules/ai/ai-chat/resolvers/agent-chat.resolver.ts:306 AgentChatResolver.createdAt",
+   "site": "src/engine/metadata-modules/ai/ai-chat/resolvers/agent-chat.resolver.ts:306",
+   "evidence": "@ResolveField(() => Date)",
+   "id": "twenty-45"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL query getTimelineCalendarEventsFromCompanyId",
+   "target": "src/engine/core-modules/calendar/timeline-calendar-event.resolver.ts:178 TimelineCalendarEventResolver.getTimelineCalendarEventsFromCompanyId",
+   "site": "src/engine/core-modules/calendar/timeline-calendar-event.resolver.ts:178",
+   "evidence": "@Query(() => TimelineCalendarEventsWithTotalDTO, { deprecationReason: 'Use getTimelineCalendarEvent\u2026",
+   "id": "twenty-46"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL mutation createOneLogicFunction",
+   "target": "src/engine/metadata-modules/logic-function/logic-function.resolver.ts:270 LogicFunctionResolver.createOneLogicFunction",
+   "site": "src/engine/metadata-modules/logic-function/logic-function.resolver.ts:270",
+   "evidence": "@Mutation(() => LogicFunctionDTO)",
+   "id": "twenty-47"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL mutation cancelSwitchBillingPlan",
+   "target": "src/engine/core-modules/billing/billing.resolver.ts:319 BillingResolver.cancelSwitchBillingPlan",
+   "site": "src/engine/core-modules/billing/billing.resolver.ts:319",
+   "evidence": "@Mutation(() => BillingUpdateDTO)",
+   "id": "twenty-48"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL query callRecordingIdForCalendarEvent",
+   "target": "src/modules/call-recording/resolvers/call-recording.resolver.ts:31 CallRecordingResolver.callRecordingIdForCalendarEvent",
+   "site": "src/modules/call-recording/resolvers/call-recording.resolver.ts:31",
+   "evidence": "@Query(() => UUIDScalarType, { nullable: true })",
+   "id": "twenty-49"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL mutation triggerUpgradeApplication",
+   "target": "src/engine/core-modules/application/application-upgrade/application-upgrade.resolver.ts:68 ApplicationUpgradeResolver.triggerUpgradeApplication",
+   "site": "src/engine/core-modules/application/application-upgrade/application-upgrade.resolver.ts:68",
+   "evidence": "@Mutation(() => TriggerUpgradeApplicationResultDTO)",
+   "id": "twenty-50"
+  }
+ ]
+}

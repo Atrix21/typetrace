@@ -1,0 +1,96 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_tw_t6",
+  "split": "test",
+  "repo": "twenty",
+  "task_type": "feature_understanding",
+  "category": "B",
+  "description": "When a workspace's records change very rapidly and many webhook deliveries become due, what limits the number of outbound webhook calls per workspace? Explain where the limit comes from and how it can be configured, at what point in the pipeline it is enforced, and what happens to deliveries that exceed it (are they delayed, retried, or discarded, and is that observable?).",
+  "root_cause_symbols": [
+    "src/engine/metadata-modules/webhook/jobs/call-webhook-jobs.job.ts::CallWebhookJobsJob.handle"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/engine/metadata-modules/webhook/jobs/call-webhook-jobs.job.ts::CallWebhookJobsJob.handle",
+    "src/engine/metadata-modules/webhook/jobs/webhook-rate-limit.service.ts::WebhookRateLimitService.admitWebhookEventsWithinRateLimit",
+    "src/engine/core-modules/usage-limit/services/usage-limit-speed.service.ts::UsageLimitSpeedService.tryConsumeUpTo",
+    "src/engine/core-modules/usage-limit/constants/usage-limit-definitions.constant.ts::USAGE_LIMIT_DEFINITIONS",
+    "src/engine/core-modules/twenty-config/config-variables.ts::ConfigVariables.WEBHOOK_CALL_RATE_LIMITING_LIMIT",
+    "src/engine/metadata-modules/webhook/jobs/webhook-rate-limit.service.ts::WebhookRateLimitService.dropThrottledWebhookCalls",
+    "src/engine/core-modules/usage-limit/services/usage-limit-speed.service.ts::UsageLimitSpeedService.buildBuckets",
+    "src/engine/core-modules/usage-limit/services/usage-limit-speed.service.ts::UsageLimitSpeedService.consumeTokens",
+    "src/engine/core-modules/throttler/throttler.service.ts::ThrottlerService.tryConsumeTokenBuckets",
+    "src/engine/core-modules/twenty-config/config-variables.ts::ConfigVariables.WEBHOOK_CALL_RATE_LIMITING_TTL_IN_MS",
+    "src/engine/core-modules/usage-limit/services/usage-limit-speed.service.ts::UsageLimitSpeedService.consumeAdmittingOnFailure"
+  ],
+  "relevant_files": [
+    "src/engine/core-modules/throttler/throttler.service.ts",
+    "src/engine/core-modules/twenty-config/config-variables.ts",
+    "src/engine/core-modules/usage-limit/constants/usage-limit-definitions.constant.ts",
+    "src/engine/core-modules/usage-limit/services/usage-limit-speed.service.ts",
+    "src/engine/metadata-modules/webhook/jobs/call-webhook-jobs.job.ts",
+    "src/engine/metadata-modules/webhook/jobs/webhook-rate-limit.service.ts"
+  ],
+  "gt_path": [
+    "src/engine/metadata-modules/webhook/jobs/call-webhook-jobs.job.ts::CallWebhookJobsJob.handle",
+    "src/engine/metadata-modules/webhook/jobs/webhook-rate-limit.service.ts::WebhookRateLimitService.admitWebhookEventsWithinRateLimit",
+    "src/engine/core-modules/usage-limit/services/usage-limit-speed.service.ts::UsageLimitSpeedService.tryConsumeUpTo",
+    "src/engine/core-modules/usage-limit/services/usage-limit-speed.service.ts::UsageLimitSpeedService.consumeAdmittingOnFailure",
+    "src/engine/core-modules/usage-limit/services/usage-limit-speed.service.ts::UsageLimitSpeedService.buildBuckets",
+    "src/engine/core-modules/usage-limit/constants/usage-limit-definitions.constant.ts::USAGE_LIMIT_DEFINITIONS",
+    "src/engine/core-modules/twenty-config/config-variables.ts::ConfigVariables.WEBHOOK_CALL_RATE_LIMITING_LIMIT",
+    "src/engine/core-modules/twenty-config/config-variables.ts::ConfigVariables.WEBHOOK_CALL_RATE_LIMITING_TTL_IN_MS",
+    "src/engine/core-modules/usage-limit/services/usage-limit-speed.service.ts::UsageLimitSpeedService.consumeTokens",
+    "src/engine/core-modules/throttler/throttler.service.ts::ThrottlerService.tryConsumeTokenBuckets",
+    "src/engine/metadata-modules/webhook/jobs/webhook-rate-limit.service.ts::WebhookRateLimitService.dropThrottledWebhookCalls"
+  ],
+  "alternatives": [
+    "Per-workspace overrides are possible because the definition is flagged isOverridable (usage-limit-definitions.constant.ts) - mechanism of override storage not traced (UNVERIFIED).",
+    "Window length is a second config variable WEBHOOK_CALL_RATE_LIMITING_TTL_IN_MS referenced from the same definition."
+  ],
+  "distractor_symbols": [
+    "src/engine/core-modules/throttler/throttler.service.ts::ThrottlerService.tokenBucketThrottleOrThrow",
+    "src/engine/metadata-modules/webhook/jobs/call-webhook.job.ts::CallWebhookJob",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d"
+  },
+  "source": {
+    "drafted_by": "mining agent (twenty)",
+    "draft_id": "TW-T6",
+    "verification": "Integration spec above asserts the drop behaviour; confirm default via config-variables.ts line cited.",
+    "notes": "Expected answer: limit is 60 calls per window by default (UNVERIFIED window default - TTL variable default not read); excess is dropped with a warning and the JobWebhookCallThrottled counter, never retried. Confounder: a plausible-sounding but wrong answer is that BullMQ retries throttled calls (retryLimit: 3 applies to delivery failures, not throttling)."
+  },
+  "evidence": [
+    "packages/twenty-server/test/integration/usage-limit/webhook-rate-limit.integration-spec.ts:153 'delivers what the bucket admits and drops the rest of the burst'",
+    "webhook-rate-limit.service.ts:21-70",
+    "usage-limit-speed.service.ts:101-290",
+    "usage-limit-definitions.constant.ts:267-290",
+    "config-variables.ts:1951-1966",
+    "call-webhook-jobs.job.ts:119-142"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 6,
+    "communities_spanned": 3,
+    "gt_path_length": 11,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "mapping notes gt_path[3],[4] and relevant[2] (usage-limit-definitions.constant.ts:267/286): both lines are inside USAGE_LIMIT_DEFINITIONS (one const): merge into the single key; mapping gt_path[5]/relevant[3] (config-variables.ts:1966) = ConfigVariables.WEBHOOK_CALL_RATE_LIMITING_LIMIT (correct key)",
+      "factual error in the draft step text: the window is NOT \"per second\". periodUnit:\"second\" is a label; windowMs comes from WEBHOOK_CALL_RATE_LIMITING_TTL_IN_MS, default 60_000 ms (config-variables.ts:1957), so the default is 60 calls per 60 s. Add the TTL variable as a key",
+      "the actual enforcement path is longer than drafted: tryConsumeUpTo -> consumeAdmittingOnFailure -> buildBuckets (reads definition + TwentyConfigService + workspace usageLimits cache overrides, isOverridable:true) -> consumeTokens -> ThrottlerService.tryConsumeTokenBuckets; fail-open on CacheStorageException (usage-limit-speed.service.ts:168-176)",
+      "config-variables.ts:1962 description says excess calls are \"recorded as a failed webhook response\", but the code only warns and increments JobWebhookCallThrottled (webhook-rate-limit.service.ts:52-70): drop/ignore that sentence when judging answers",
+      "distractor ThrottlerService.tokenBucketThrottleOrThrow is a different method of a file that IS used (tryConsumeTokenBuckets): keep but file-level overlap exists; WorkflowThrottlingWorkspaceService and CallWebhookJob keys given",
+      "dropped-not-retried claim verified: admitted events sliced (admittedCount), remainder dropped, then chunked into CallWebhookJob add with retryLimit 3 (retry applies to delivery only)"
+    ]
+  }
+}

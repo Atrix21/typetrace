@@ -1,0 +1,98 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_tw_t9",
+  "split": "test",
+  "repo": "twenty",
+  "task_type": "change_impact",
+  "category": "C",
+  "description": "If the method that filters a batch of record events down to those a principal may read were changed to require one more mandatory argument describing why the filtering is requested, which production call sites and which tests would need to change? Distinguish direct callers from places affected only indirectly.",
+  "root_cause_symbols": [
+    "src/engine/subscriptions/object-record-event/object-record-event-publisher.ts::ObjectRecordEventPublisher.processObjectRecordStreamEvents"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/engine/permissions/record-event-permissions.service.ts::RecordEventPermissionsService.filterReadableEvents",
+    "src/engine/subscriptions/object-record-event/object-record-event-publisher.ts::ObjectRecordEventPublisher.processObjectRecordStreamEvents",
+    "src/engine/metadata-modules/ai/ai-agent-trigger/jobs/call-agent-database-event-triggers.job.ts::CallAgentDatabaseEventTriggersJob.handle",
+    "src/engine/metadata-modules/webhook/jobs/call-webhook-jobs.job.ts::CallWebhookJobsJob.handle",
+    "src/engine/core-modules/logic-function/logic-function-trigger/triggers/database-event/call-database-event-trigger-jobs.job.ts::CallDatabaseEventTriggerJobsJob.handle",
+    "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts::WorkflowDatabaseEventTriggerListener.resolveReadableEvents"
+  ],
+  "relevant_files": [
+    "src/engine/core-modules/logic-function/logic-function-trigger/triggers/database-event/call-database-event-trigger-jobs.job.ts",
+    "src/engine/metadata-modules/ai/ai-agent-trigger/jobs/call-agent-database-event-triggers.job.ts",
+    "src/engine/metadata-modules/webhook/jobs/call-webhook-jobs.job.ts",
+    "src/engine/permissions/record-event-permissions.service.ts",
+    "src/engine/subscriptions/object-record-event/object-record-event-publisher.ts",
+    "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts"
+  ],
+  "gt_path": [
+    "src/engine/permissions/record-event-permissions.service.ts::RecordEventPermissionsService.filterReadableEvents"
+  ],
+  "impact": {
+    "direct": [
+      "src/engine/core-modules/logic-function/logic-function-trigger/triggers/database-event/call-database-event-trigger-jobs.job.ts::CallDatabaseEventTriggerJobsJob.handle",
+      "src/engine/metadata-modules/ai/ai-agent-trigger/jobs/call-agent-database-event-triggers.job.ts::CallAgentDatabaseEventTriggersJob.handle",
+      "src/engine/subscriptions/object-record-event/object-record-event-publisher.ts::ObjectRecordEventPublisher.processObjectRecordStreamEvents",
+      "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts::WorkflowDatabaseEventTriggerListener.resolveReadableEvents"
+    ],
+    "indirect": [
+      "src/engine/metadata-modules/webhook/jobs/call-webhook-jobs.job.ts::CallWebhookJobsJob.handle"
+    ],
+    "tests": [
+      "No spec found that calls RecordEventPermissionsService.filterReadableEvents (grep over src and test). src/engine/permissions/internal/combine/utils/__tests__/filter-readable-events.util.spec.ts tests a different, same-named util and is NOT affected."
+    ],
+    "source": "type-checker oracle (direct, tests_with_errors) + annotated (indirect, tests)"
+  },
+  "oracle_edit": {
+    "file": "src/engine/permissions/record-event-permissions.service.ts",
+    "old": "    authContext: PermissionsAuthContext;\n    eventBatch: WorkspaceEventBatch<TEvent>;\n    events?: TEvent[];\n  }): Promise<TEvent[]> {",
+    "new": "    authContext: PermissionsAuthContext;\n    eventBatch: WorkspaceEventBatch<TEvent>;\n    events?: TEvent[];\n    reason: string;\n  }): Promise<TEvent[]> {",
+    "note": "Adds a required property to the argument type; tsc then reports a missing-property error at every direct call site. Run: npx tsc --noEmit -p packages/twenty-server/tsconfig.json (not run by the miner: build tooling forbidden)."
+  },
+  "alternatives": [
+    "Renaming the method (instead of adding a field) would give the same direct set; a recent commit 36c184849d (2026-11-06) did rename record event permission methods to filter* (#29862), showing this API is actively churned."
+  ],
+  "distractor_symbols": [
+    "src/engine/permissions/internal/combine/utils/filter-readable-events.util.ts::filterReadableEvents",
+    "src/engine/permissions/record-permissions.service.ts::RecordPermissionsService"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d"
+  },
+  "source": {
+    "drafted_by": "mining agent (twenty)",
+    "draft_id": "TW-T9",
+    "verification": "Apply oracle_edit to a copy of the snapshot, run tsc, collect files with TS2345/TS2741 errors; expected exactly the 5 files in impact.direct. UNVERIFIED (not executed).",
+    "notes": "Method is generic <TEvent>; call sites pass object literals so a missing required property is reported at each. Expected exactly 5 direct files; any extra would indicate a caller the grep missed."
+  },
+  "evidence": [
+    "grep: 5 call sites listed under impact.direct (lines cited)",
+    "commit 36c184849d 2026-11-06 'Rename record event permission methods to filter*'",
+    "grep -rn filterReadableEvents src test (8 hits outside the util + spec)"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 6,
+    "communities_spanned": 2,
+    "gt_path_length": 1,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "high",
+    "adjudicated": true,
+    "notes": [
+      "oracle_edit.old occurs exactly once in record-event-permissions.service.ts (checked); adding a required property makes object-literal call sites fail to compile",
+      "impact.direct (5 production sites) verified by grep of \"filterReadableEvents\" over src and test: exact set (publisher:188, call-agent-database-event-triggers.job:75, call-webhook-jobs.job:98, call-database-event-trigger-jobs.job:96, workflow-database-event-trigger.listener:516)",
+      "WRONG: impact.tests claims no spec calls the method. Three integration specs call it via getAppProviderByClassName<RecordEventPermissionsService>(...).filterReadableEvents({...}): test/integration/graphql/suites/object-records-permissions/record-sharing-beyond-role.integration-spec.ts:529, chat-thread-sharing.integration-spec.ts:1094, record-level-sharing-restricted-record-surfaces.integration-spec.ts:300. They would need the new argument. The util spec is correctly unaffected",
+      "mapping notes impact.direct[0],[3]: keys ObjectRecordEventPublisher.processObjectRecordStreamEvents (enclosing :188) and CallDatabaseEventTriggerJobsJob.handle (:96)",
+      "distractor keys: filterReadableEvents util (filter-readable-events.util.ts::filterReadableEvents, called by the service) and RecordPermissionsService (class, record-permissions.service.ts)",
+      "query leaks no identifiers (describes the method abstractly)",
+      "Auditor relevant_missing entries are integration test FILES under test/integration (outside the src corpus; not symbol keys): not added to relevant_symbols; recorded as additional tests to update in the audit notes."
+    ]
+  }
+}

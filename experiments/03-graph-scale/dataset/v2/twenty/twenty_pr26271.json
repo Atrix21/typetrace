@@ -1,0 +1,88 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_pr26271",
+  "split": "dev",
+  "repo": "twenty",
+  "task_type": "bug_localisation",
+  "description": "Workflow reports COMPLETED while IF children or skipped-branch continuation remain NOT_STARTED\n\n## Environment\n\n- Self-hosted Twenty 2.41.0, separate server and worker, PostgreSQL 16 and Redis 7.\n- Image: `twentycrm/twenty@sha256:47bcefe4e497ceef232f149153a4a61379830f5c898b7da71a5b0e21fd5ea916`.\n- Release source: `d1bb92d111f91529478da56aa677efbdba230c00`.\n- Reproduced 19 September 2026 in an isolated clone using native manual workflows only.\n- No provider credentials, external requests, custom actions or core modifications are required.\n\n## Reproduction\n\nCreate three separate DRAFT workflows with a GLOBAL MANUAL trigger. Use native EMPTY steps, IF_ELSE with the constant Boolean condition `true IS true`, and CREATE_RECORD to create one local Task (`status: TODO`). Supply a fresh deterministic UUID and title for each receipt. Execute each draft once with the supported workflow-run act",
+  "root_cause_symbols": [
+    "src/modules/workflow/workflow-executor/utils/workflow-should-keep-running.util.ts::workflowShouldKeepRunning"
+  ],
+  "relevant_symbols": [
+    "src/modules/workflow/workflow-executor/utils/workflow-should-keep-running.util.ts::workflowShouldKeepRunning"
+  ],
+  "relevant_files": [
+    "src/modules/workflow/workflow-executor/utils/workflow-should-keep-running.util.ts"
+  ],
+  "module_level_changes": [
+    "src/modules/workflow/workflow-executor/utils/workflow-should-keep-running.util.ts::<module>"
+  ],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d",
+    "patch": "targets/exp3/dataset-patches/twenty/twenty_pr26271.patch",
+    "patch_sha256": "83c5eefc6c3f5f4ec6e0d9c6a5ff2976bfcfce38e48cbdccac2b5238999322ee",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/twentyhq/twenty/pull/26271",
+    "issue": "#26223",
+    "merge_commit": "4a76dd26709d8def076e66b72266c52072327a1a",
+    "parent_commit": "743313f41572d5ac03649582be47565f67874270",
+    "merged_at": "2026-09-21T12:57:58Z",
+    "report_source": "issue",
+    "tests_added": [
+      "src/modules/workflow/workflow-executor/utils/__tests__/find-child-step-ids.util.spec.ts: returns the next step ids of a regular step",
+      "src/modules/workflow/workflow-executor/utils/__tests__/find-child-step-ids.util.spec.ts: returns an empty array when a step has no next step ids",
+      "src/modules/workflow/workflow-executor/utils/__tests__/find-child-step-ids.util.spec.ts: returns the branch children of an if/else step",
+      "src/modules/workflow/workflow-executor/utils/__tests__/find-child-step-ids.util.spec.ts: deduplicates a step reachable through several branches",
+      "src/modules/workflow/workflow-executor/utils/__tests__/find-child-step-ids.util.spec.ts: ignores next step ids an if/else step carries outside its branches",
+      "src/modules/workflow/workflow-executor/utils/__tests__/workflow-should-keep-running.util.spec.ts: if/else step with a not started selected branch child exists",
+      "src/modules/workflow/workflow-executor/utils/__tests__/workflow-should-keep-running.util.spec.ts: skipped step with a not started child left to skip exists",
+      "src/modules/workflow/workflow-executor/utils/__tests__/workflow-should-keep-running.util.spec.ts: skipped branch still has to reach a merge step",
+      "src/modules/workflow/workflow-executor/utils/__tests__/workflow-should-keep-running.util.spec.ts: if/else step whose branch children are all resolved",
+      "src/modules/workflow/workflow-executor/utils/__tests__/workflow-should-keep-running.util.spec.ts: skipped step whose children are already skipped"
+    ],
+    "test_files_changed": [
+      "packages/twenty-server/src/modules/workflow/workflow-executor/utils/__tests__/find-child-step-ids.util.spec.ts",
+      "packages/twenty-server/src/modules/workflow/workflow-executor/utils/__tests__/workflow-should-keep-running.util.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "job",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix 4a76dd26709d8def076e66b72266c52072327a1a (https://github.com/twentyhq/twenty/pull/26271)",
+    "test: src/modules/workflow/workflow-executor/utils/__tests__/find-child-step-ids.util.spec.ts: returns the next step ids of a regular step",
+    "test: src/modules/workflow/workflow-executor/utils/__tests__/find-child-step-ids.util.spec.ts: returns an empty array when a step has no next step ids",
+    "test: src/modules/workflow/workflow-executor/utils/__tests__/find-child-step-ids.util.spec.ts: returns the branch children of an if/else step",
+    "test: src/modules/workflow/workflow-executor/utils/__tests__/find-child-step-ids.util.spec.ts: deduplicates a step reachable through several branches",
+    "test: src/modules/workflow/workflow-executor/utils/__tests__/find-child-step-ids.util.spec.ts: ignores next step ids an if/else step carries outside its branches",
+    "test: src/modules/workflow/workflow-executor/utils/__tests__/workflow-should-keep-running.util.spec.ts: if/else step with a not started selected branch child exists",
+    "test: src/modules/workflow/workflow-executor/utils/__tests__/workflow-should-keep-running.util.spec.ts: skipped step with a not started child left to skip exists",
+    "test: src/modules/workflow/workflow-executor/utils/__tests__/workflow-should-keep-running.util.spec.ts: skipped branch still has to reach a merge step",
+    "test: src/modules/workflow/workflow-executor/utils/__tests__/workflow-should-keep-running.util.spec.ts: if/else step whose branch children are all resolved",
+    "test: src/modules/workflow/workflow-executor/utils/__tests__/workflow-should-keep-running.util.spec.ts: skipped step whose children are already skipped",
+    "patch: terminal parents now expand if-else branch nextStepIds and also consider shouldSkipStepExecution/shouldFailSafely children"
+  ],
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "RC exact (workflowShouldKeepRunning); findChildStepIds is new",
+      "description truncated inside the reproduction (800 chars) and omits the observed/expected sections; use title + full issue",
+      "boundary: workflowShouldKeepRunning is called from RunWorkflowJob (run-workflow.job.ts:312), WorkflowExecutorWorkspaceService (:380) and the staled-runs service (:269): job"
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "not_run"
+  }
+}

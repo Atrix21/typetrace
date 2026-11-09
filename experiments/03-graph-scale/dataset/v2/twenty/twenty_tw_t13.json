@@ -1,0 +1,92 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_tw_t13",
+  "split": "test",
+  "repo": "twenty",
+  "task_type": "architecture",
+  "category": "E",
+  "description": "Describe the architecture of the per-workspace metadata cache that the server consults on almost every request (object/field/index metadata, role permissions, webhook lists, etc.): how a cache entry kind is declared and populated, how multiple server pods keep their local copies consistent, what 'derived' cache entries are, and exactly what triggers invalidation after a schema or permission metadata change.",
+  "root_cause_symbols": [
+    "src/engine/workspace-cache/decorators/workspace-cache.decorator.ts::WorkspaceCache"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/engine/workspace-cache/decorators/workspace-cache.decorator.ts::WorkspaceCache",
+    "src/engine/workspace-cache/interfaces/workspace-cache-provider.service.ts::WorkspaceCacheProvider",
+    "src/engine/workspace-cache/services/workspace-cache.service.ts::WorkspaceCacheService.getOrRecompute",
+    "src/engine/workspace-cache/services/workspace-cache.service.ts::WorkspaceCacheService.getOrRecomputeWithHashes",
+    "src/engine/workspace-cache/services/workspace-cache.service.ts::WorkspaceCacheService.validateLocalHashAgainstRedisHash",
+    "src/engine/workspace-cache/services/workspace-cache.service.ts::WorkspaceCacheService.fetchDataFromRedis",
+    "src/engine/workspace-cache/services/workspace-cache.service.ts::WorkspaceCacheService.recomputeDataFromProvider",
+    "src/engine/workspace-cache/services/workspace-cache.service.ts::WorkspaceCacheService.invalidateAndRecompute",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/services/workspace-migration-runner.service.ts::WorkspaceMigrationRunnerService.invalidateCache",
+    "src/engine/workspace-cache/interfaces/workspace-derived-cache-provider.service.ts::WorkspaceDerivedCacheProvider",
+    "src/engine/workspace-cache/services/workspace-cache.service.ts::WorkspaceCacheService.invalidate",
+    "src/engine/metadata-modules/workspace-metadata-version/services/workspace-metadata-version.service.ts::WorkspaceMetadataVersionService.incrementMetadataVersion",
+    "src/engine/workspace-cache/constants/publish-workspace-cache-script.constant.ts::PUBLISH_WORKSPACE_CACHE_SCRIPT"
+  ],
+  "relevant_files": [
+    "src/engine/metadata-modules/workspace-metadata-version/services/workspace-metadata-version.service.ts",
+    "src/engine/workspace-cache/constants/publish-workspace-cache-script.constant.ts",
+    "src/engine/workspace-cache/decorators/workspace-cache.decorator.ts",
+    "src/engine/workspace-cache/interfaces/workspace-cache-provider.service.ts",
+    "src/engine/workspace-cache/interfaces/workspace-derived-cache-provider.service.ts",
+    "src/engine/workspace-cache/services/workspace-cache.service.ts",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/services/workspace-migration-runner.service.ts"
+  ],
+  "gt_path": [
+    "src/engine/workspace-cache/decorators/workspace-cache.decorator.ts::WorkspaceCache",
+    "src/engine/workspace-cache/interfaces/workspace-cache-provider.service.ts::WorkspaceCacheProvider",
+    "src/engine/workspace-cache/services/workspace-cache.service.ts::WorkspaceCacheService.getOrRecompute",
+    "src/engine/workspace-cache/services/workspace-cache.service.ts::WorkspaceCacheService.getOrRecomputeWithHashes",
+    "src/engine/workspace-cache/services/workspace-cache.service.ts::WorkspaceCacheService.validateLocalHashAgainstRedisHash",
+    "src/engine/workspace-cache/services/workspace-cache.service.ts::WorkspaceCacheService.fetchDataFromRedis",
+    "src/engine/workspace-cache/services/workspace-cache.service.ts::WorkspaceCacheService.recomputeDataFromProvider",
+    "src/engine/workspace-cache/services/workspace-cache.service.ts::WorkspaceCacheService.invalidateAndRecompute",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/services/workspace-migration-runner.service.ts::WorkspaceMigrationRunnerService.invalidateCache",
+    "src/engine/workspace-cache/interfaces/workspace-derived-cache-provider.service.ts::WorkspaceDerivedCacheProvider"
+  ],
+  "alternatives": [
+    "Some keys are marked localDataOnly in @WorkspaceCache options (see commit d4ac6e752b).",
+    "Core-entity cache (engine/core-entity-cache) is a separate mechanism for core (non-workspace) entities."
+  ],
+  "distractor_symbols": [],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d"
+  },
+  "source": {
+    "drafted_by": "mining agent (twenty)",
+    "draft_id": "TW-T13",
+    "verification": "Read cited lines; confirm invalidation triggers by reading invalidateCache arguments in workspace-migration-runner.service.ts.",
+    "notes": "UNVERIFIED claims in query phrasing: 'multiple pods' consistency is inferred from validateLocalHashAgainstRedisHash naming; auditor should read lines 563-615. Confounder: engine/workspace-cache-storage vs engine/workspace-cache."
+  },
+  "evidence": [
+    "packages/twenty-server/src/engine/workspace-cache/services/__tests__/workspace-cache-rows-batch-loader.spec.ts",
+    "commit d4ac6e752b (PR #22980) 'stop cross-pod recompute cascade on localDataOnly workspace cache keys'",
+    "workspace-cache.service.ts:420-500,563-615,780",
+    "workspace-migration-runner.service.ts:56-112",
+    "workspace-metadata-version.service.ts:26-58"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 7,
+    "communities_spanned": 3,
+    "gt_path_length": 10,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "mapping note gt_path[9] (workspace-derived-cache-provider.service.ts:21) = WorkspaceDerivedCacheProvider (abstract class, key already correct)",
+      "cross-pod consistency verified: validateLocalHashAgainstRedisHash (:563) compares the local entry latestHash with Redis <key>:hash; mismatch -> fetch data from Redis or recompute (localDataOnlyKeys recompute). The signalling write is the private WorkspaceCacheService.invalidate (:~452) that stores a fresh random expectedHash (msetAndMdel) -- missing key; publish uses PUBLISH_WORKSPACE_CACHE_SCRIPT (constants file)",
+      "invalidation trigger chain is incomplete: after invalidateAndRecompute the runner calls WorkspaceMetadataVersionService.incrementMetadataVersion when schema metadata changed (runner.service.ts:108), which updates workspace.metadataVersion, WorkspaceCacheStorageService.setMetadataVersion and CoreEntityCacheService.invalidate(\"workspaceEntity\") -- add incrementMetadataVersion",
+      "distractors are NOT irrelevant: CoreEntityCacheService.invalidate and WorkspaceCacheStorageService.setMetadataVersion are called on this path (workspace-metadata-version.service.ts:44-56); WorkspaceCacheStorageService is not \"older\" (still used by middleware.service.ts); CacheStorageService is the Redis layer WorkspaceCacheService itself uses (cacheStorage.mget). The directories exist (core-entity-cache/, workspace-cache-storage/): the mapping \"not found\" is a directory-vs-file artefact. Remove all three; if distractors are required use unrelated caches (e.g. record-filter or dataloaders)",
+      "the localDataOnly option (alt) exists: localDataOnlyKeys branch in validateLocalHashAgainstRedisHash"
+    ]
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_tw_t12",
+  "split": "test",
+  "repo": "twenty",
+  "task_type": "architecture",
+  "category": "E",
+  "description": "Explain the architecture by which background jobs are defined, enqueued and executed in the Twenty server. In particular: how does a class become a job handler, how does a job name map to a handler method when several handler classes share a queue, how are workers started and filtered per deployment, how do per-queue concurrency/lock settings reach the underlying queue library, and how is a request-scoped handler instantiated with the workspace context?",
+  "root_cause_symbols": [
+    "src/engine/core-modules/message-queue/decorators/processor.decorator.ts::Processor"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/engine/core-modules/message-queue/decorators/processor.decorator.ts::Processor",
+    "src/engine/core-modules/message-queue/decorators/process.decorator.ts::Process",
+    "src/engine/core-modules/message-queue/services/message-queue.service.ts::MessageQueueService.add",
+    "src/engine/core-modules/message-queue/message-queue.explorer.ts::MessageQueueExplorer.onModuleInit",
+    "src/engine/core-modules/message-queue/message-queue.explorer.ts::MessageQueueExplorer.explore",
+    "src/engine/core-modules/message-queue/message-queue-worker-config.constant.ts::MESSAGE_QUEUE_WORKER_CONFIG",
+    "src/engine/core-modules/message-queue/message-queue.explorer.ts::MessageQueueExplorer.handleProcessorGroupCollection",
+    "src/engine/core-modules/message-queue/message-queue.explorer.ts::MessageQueueExplorer.handleProcessor",
+    "src/engine/core-modules/message-queue/drivers/bullmq.driver.ts::BullMQDriver.work",
+    "src/queue-worker/queue-worker.ts::bootstrap",
+    "src/engine/core-modules/message-queue/utils/should-create-worker-for-queue.util.ts::shouldCreateWorkerForQueue",
+    "src/engine/core-modules/message-queue/message-queue.explorer.ts::MessageQueueExplorer.groupProcessorsByQueueName",
+    "src/engine/core-modules/message-queue/message-queue.explorer.ts::MessageQueueExplorer.invokeProcessMethods",
+    "src/engine/core-modules/message-queue/services/message-queue.service.ts::MessageQueueService.work"
+  ],
+  "relevant_files": [
+    "src/engine/core-modules/message-queue/decorators/process.decorator.ts",
+    "src/engine/core-modules/message-queue/decorators/processor.decorator.ts",
+    "src/engine/core-modules/message-queue/drivers/bullmq.driver.ts",
+    "src/engine/core-modules/message-queue/message-queue-worker-config.constant.ts",
+    "src/engine/core-modules/message-queue/message-queue.explorer.ts",
+    "src/engine/core-modules/message-queue/services/message-queue.service.ts",
+    "src/engine/core-modules/message-queue/utils/should-create-worker-for-queue.util.ts",
+    "src/queue-worker/queue-worker.ts"
+  ],
+  "gt_path": [
+    "src/engine/core-modules/message-queue/decorators/processor.decorator.ts::Processor",
+    "src/engine/core-modules/message-queue/decorators/process.decorator.ts::Process",
+    "src/engine/core-modules/message-queue/services/message-queue.service.ts::MessageQueueService.add",
+    "src/engine/core-modules/message-queue/message-queue.explorer.ts::MessageQueueExplorer.onModuleInit",
+    "src/engine/core-modules/message-queue/message-queue.explorer.ts::MessageQueueExplorer.explore",
+    "src/engine/core-modules/message-queue/message-queue-worker-config.constant.ts::MESSAGE_QUEUE_WORKER_CONFIG",
+    "src/engine/core-modules/message-queue/message-queue.explorer.ts::MessageQueueExplorer.handleProcessorGroupCollection",
+    "src/engine/core-modules/message-queue/message-queue.explorer.ts::MessageQueueExplorer.handleProcessor",
+    "src/engine/core-modules/message-queue/drivers/bullmq.driver.ts::BullMQDriver.work",
+    "src/queue-worker/queue-worker.ts::bootstrap"
+  ],
+  "alternatives": [
+    "Drivers other than BullMQ exist (drivers/sync.driver.ts, drivers/memory) selected by module factory; same explorer works over the driver abstraction.",
+    "Cron jobs are registered with addCron (message-queue.service.ts ~line 82) and still dispatch by job name through the same explorer."
+  ],
+  "distractor_symbols": [
+    "src/engine/core-modules/message-queue/services/message-queue-worker-drain.service.ts::MessageQueueWorkerDrainService"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d"
+  },
+  "source": {
+    "drafted_by": "mining agent (twenty)",
+    "draft_id": "TW-T12",
+    "verification": "Read cited lines; confirm Process/Processor metadata via message-queue-metadata.accessor.ts.",
+    "notes": "Key insight an agent must find: all processor classes on a queue share ONE worker callback and each job is offered to every group; routing is by job.name vs @Process argument (handleProcessor filtering). Confounders: queue name vs job name; job name is conventionally Class.name."
+  },
+  "evidence": [
+    "packages/twenty-server/src/engine/core-modules/message-queue/__tests__/message-queue.explorer.spec.ts:29 'lets a decorated processor publish progress through its context'",
+    "packages/twenty-server/src/engine/core-modules/message-queue/drivers/__tests__/bullmq.driver.spec.ts",
+    "message-queue.explorer.ts:51-135,182-290",
+    "bullmq.driver.ts:323,364",
+    "message-queue.service.ts:116-121"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 8,
+    "communities_spanned": 2,
+    "gt_path_length": 10,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "architecture claims verified in message-queue.explorer.ts: explore() discovers @Processor providers, groups by queue (groupProcessorsByQueueName), filters with WORKER_ENABLED_QUEUES/WORKER_EXCLUDED_QUEUES via shouldCreateWorkerForQueue, passes MESSAGE_QUEUE_WORKER_CONFIG[queue].workerOptions; handleProcessorGroupCollection registers one queue.work callback per queue and offers each job to every processor group; handleProcessor filters methods by job.name === @Process jobName; request-scoped providers use createContextId + registerRequestByContextId + injector.loadPerContext",
+      "mapping note gt_path[7] / relevant[3] MESSAGE_QUEUE_WORKER_CONFIG entry at :151 is the workspaceDestroyQueue example: key is the const MESSAGE_QUEUE_WORKER_CONFIG (ok); the gt is conceptual (not a call chain) so path order is not significant",
+      "missing keys: shouldCreateWorkerForQueue (utils/should-create-worker-for-queue.util.ts), MessageQueueExplorer.groupProcessorsByQueueName, MessageQueueExplorer.invokeProcessMethods, MessageQueueService.work (message-queue.service.ts:116, bridges to the driver); BullMQDriver.work is the options->Worker mapping",
+      "distractors: MessageQueueWorkerDrainService and FairQueueScheduler exist (fairness/ is a directory; FairQueueScheduler is even used in BullMQDriver.work:364 -> not a clean distractor, drop); src/engine/core-modules/cron holds only CronModule and sentry-cron-monitor decorator (claim \"schedules cron registrations\" false) -> drop"
+    ]
+  }
+}

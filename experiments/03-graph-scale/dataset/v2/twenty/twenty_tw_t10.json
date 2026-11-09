@@ -1,0 +1,94 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_tw_t10",
+  "split": "test",
+  "repo": "twenty",
+  "task_type": "change_impact",
+  "category": "C",
+  "description": "The type that describes the input to the in-process batch event emitter (object name, action, events, object metadata, workspace id) must gain one more mandatory property. Which production code constructs values of that type and would stop compiling, and which would only be affected at run time through listeners?",
+  "root_cause_symbols": [
+    "src/engine/twenty-orm/utils/format-twenty-orm-event-to-database-batch-event.util.ts::formatTwentyOrmEventToDatabaseBatchEvent"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/engine/workspace-event-emitter/workspace-event-emitter.ts::DatabaseBatchEventInput",
+    "src/engine/twenty-orm/utils/format-twenty-orm-event-to-database-batch-event.util.ts::formatTwentyOrmEventToDatabaseBatchEvent",
+    "src/engine/metadata-modules/ai/ai-chat/services/agent-chat-thread-record-event.service.ts::AgentChatThreadRecordEventService.emitThreadCreated",
+    "src/engine/metadata-modules/ai/ai-chat/services/agent-chat-thread-record-event.service.ts::AgentChatThreadRecordEventService.emitThreadUpdated",
+    "src/engine/metadata-modules/ai/ai-chat/services/agent-chat-thread-record-event.service.ts::AgentChatThreadRecordEventService.emitThreadsUpdated"
+  ],
+  "relevant_files": [
+    "src/engine/metadata-modules/ai/ai-chat/services/agent-chat-thread-record-event.service.ts",
+    "src/engine/twenty-orm/utils/format-twenty-orm-event-to-database-batch-event.util.ts",
+    "src/engine/workspace-event-emitter/workspace-event-emitter.ts"
+  ],
+  "gt_path": [
+    "src/engine/workspace-event-emitter/workspace-event-emitter.ts::DatabaseBatchEventInput"
+  ],
+  "impact": {
+    "direct": [
+      "src/engine/metadata-modules/ai/ai-chat/services/agent-chat-thread-record-event.service.ts::AgentChatThreadRecordEventService.emitThreadCreated",
+      "src/engine/metadata-modules/ai/ai-chat/services/agent-chat-thread-record-event.service.ts::AgentChatThreadRecordEventService.emitThreadUpdated",
+      "src/engine/metadata-modules/ai/ai-chat/services/agent-chat-thread-record-event.service.ts::AgentChatThreadRecordEventService.emitThreadsUpdated",
+      "src/engine/twenty-orm/utils/format-twenty-orm-event-to-database-batch-event.util.ts::formatTwentyOrmEventToDatabaseBatchEvent"
+    ],
+    "indirect": [],
+    "tests": [
+      "src/database/commands/agent-history/__tests__/agent-history-migration.postgres.spec.ts and several test/integration suites reference emitDatabaseBatchEvent - UNVERIFIED",
+      "src/engine/twenty-orm/repository/__tests__/workspace-repository.spec.ts and src/engine/twenty-orm/datasource/__tests__/workspace-data-source.spec.ts reference emitDatabaseBatchEvent mocks - type impact UNVERIFIED (depends on whether they build typed literals)"
+    ],
+    "source": "type-checker oracle (direct, tests_with_errors) + annotated (indirect, tests)"
+  },
+  "oracle_edit": {
+    "file": "src/engine/workspace-event-emitter/workspace-event-emitter.ts",
+    "old": "  objectMetadata: FlatObjectMetadata;\n  workspaceId: string;\n};\n\n@Injectable()",
+    "new": "  objectMetadata: FlatObjectMetadata;\n  workspaceId: string;\n  emittedBy: string;\n};\n\n@Injectable()",
+    "note": "Adds a required property to DatabaseBatchEventInput; object literals of that type without it become compile errors (the util's return, the three agent-chat thread literals)."
+  },
+  "alternatives": [
+    "Making the property optional gives an empty direct set and only run-time impact."
+  ],
+  "distractor_symbols": [
+    "src/engine/workspace-event-emitter/types/workspace-event-batch.type.ts::WorkspaceEventBatch",
+    "src/engine/twenty-orm/datasource/workspace-data-source.ts::WorkspaceDataSource.transaction"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d"
+  },
+  "source": {
+    "drafted_by": "mining agent (twenty)",
+    "draft_id": "TW-T10",
+    "verification": "Apply oracle_edit, run tsc, expect errors in the util file and agent-chat-thread-record-event.service.ts (three literals). UNVERIFIED (not executed).",
+    "notes": "The expected direct set is small and is derived from reading, not tsc. The two other agent-chat participant/record call sites (lines 91, 140) were assumed to be object literals like the first - auditor should check."
+  },
+  "evidence": [
+    "grep -rn DatabaseBatchEventInput: only workspace-event-emitter.ts and format-twenty-orm-event-to-database-batch-event.util.ts reference the type by name",
+    "grep -rln emitDatabaseBatchEvent for call-site list",
+    "agent-chat-thread-record-event.service.ts:45,91,140",
+    "format-twenty-orm-event-to-database-batch-event.util.ts:263",
+    "agent-chat-thread-participant-event.service.ts:75"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 3,
+    "communities_spanned": 3,
+    "gt_path_length": 1,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "oracle_edit.old occurs exactly once in workspace-event-emitter.ts (checked)",
+      "impact.direct is INCOMPLETE: AgentChatThreadRecordEventService builds three DatabaseBatchEventInput literals (emitDatabaseBatchEvent calls at :45 emitThreadCreated, :91 emitThreadUpdated, :140 emitThreadsUpdated); the draft lists only the first (\"1st of 3\"). Mapping note resolved: add emitThreadUpdated and emitThreadsUpdated. Other direct construction: formatTwentyOrmEventToDatabaseBatchEvent (return object at util:263). All other emitDatabaseBatchEvent callers (workspace-repository.ts:1376,1787, workspace-data-source.ts:98) pass the util result through",
+      "AgentChatThreadParticipantEventService.emit (:75) spreads util output ({...event, events}); compiles unchanged: correctly indirect",
+      "impact.tests UNVERIFIED items resolved: workspace-repository.spec.ts, workspace-data-source.spec.ts and agent-history-migration.postgres.spec.ts only use jest.fn() mocks of the emit function (no typed literal): no compile impact; the integration specs only jest.spyOn it. None need change",
+      "no other production code constructs the type (grep DatabaseBatchEventInput: only the emitter and the format util)",
+      "distractors: no keys without line numbers: WorkspaceEventBatch (type, types/workspace-event-batch.type.ts) and WorkspaceDataSource.transaction (forwards the argument, workspace-data-source.ts:96-100) are valid"
+    ]
+  }
+}

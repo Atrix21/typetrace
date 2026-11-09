@@ -1,0 +1,83 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_pr24301",
+  "split": "test",
+  "repo": "twenty",
+  "task_type": "bug_localisation",
+  "description": "It's not possible to duplicate a dashboard as the following error is shown: Multiple validation errors occurred while duplicating page layout\n\nAn user created a dashboard with several widgets and want to duplicate it. When he tries, the following error message is shown: \"Multiple validation errors occurred while duplicating page layout\" without any additional information. Only when you open the network trace and check the metadata call, you see the reason:\n\n`code\": \"METADATA_VALIDATION_FAILED\",\n                \"errors\": {\n                    \"pageLayoutWidget\": [\n                        {\n                            \"status\": \"fail\",\n                            \"errors\": [\n                                {\n                                    \"code\": \"INVALID_PAGE_LAYOUT_WIDGET_DATA\",\n                                    \"message\": \"Operand \\\"DOES_NOT_CONTAIN\\\" of a chart filter of widget \\\"Created and won in Jun\\\" is not supported",
+  "root_cause_symbols": [
+    "src/engine/metadata-modules/flat-page-layout-widget/utils/from-page-layout-widget-configuration-to-universal-configuration.util.ts::convertChartFilterToUniversalFilter",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/action-handlers/page-layout-widget/services/utils/from-universal-configuration-to-flat-page-layout-widget-configuration.util.ts::convertUniversalFilterToChartFilter"
+  ],
+  "relevant_symbols": [
+    "src/engine/metadata-modules/flat-page-layout-widget/utils/from-page-layout-widget-configuration-to-universal-configuration.util.ts::convertChartFilterToUniversalFilter",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/action-handlers/page-layout-widget/services/utils/from-universal-configuration-to-flat-page-layout-widget-configuration.util.ts::convertUniversalFilterToChartFilter"
+  ],
+  "relevant_files": [
+    "src/engine/metadata-modules/flat-page-layout-widget/utils/from-page-layout-widget-configuration-to-universal-configuration.util.ts",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/action-handlers/page-layout-widget/services/utils/from-universal-configuration-to-flat-page-layout-widget-configuration.util.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d",
+    "patch": "targets/exp3/dataset-patches/twenty/twenty_pr24301.patch",
+    "patch_sha256": "875901fa6afca49ded7a72572b8eac0658b2f3901382f48367863f4319affb51",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/twentyhq/twenty/pull/24301",
+    "issue": "#24285",
+    "merge_commit": "dd2d68c8a45573e1603c1603c3357b2eb178cb79",
+    "parent_commit": "868a63e5fe53c419fe7f42a164a8ac4fbc835e26",
+    "merged_at": "2026-08-18T12:11:39Z",
+    "report_source": "issue",
+    "tests_added": [
+      "src/engine/metadata-modules/flat-page-layout-widget/utils/__tests__/from-page-layout-widget-configuration-to-universal-configuration.util.spec.ts: should convert the relation target field id of a relation-traversal chart filter to its universal identifier",
+      "src/engine/metadata-modules/flat-page-layout-widget/utils/__tests__/from-page-layout-widget-configuration-to-universal-configuration.util.spec.ts: should resolve a deleted relation target field to null instead of throwing",
+      "src/engine/metadata-modules/flat-page-layout-widget/validators/utils/__tests__/validate-chart-filter.util.spec.ts: should accept a text operand on a RELATION field whose target field is a TEXT field",
+      "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/action-handlers/page-layout-widget/services/utils/__tests__/from-universal-configuration-to-flat-page-layout-widget-configuration.util.spec.ts: should resolve the relation target universal identifier of a relation-traversal chart filter back to a field metadata id",
+      "test/integration/metadata/suites/dashboard/successful-dashboard-duplication.integration-spec.ts: should duplicate a dashboard with a chart widget filtering through a relation target field"
+    ],
+    "test_files_changed": [
+      "packages/twenty-server/src/engine/metadata-modules/flat-page-layout-widget/utils/__tests__/from-page-layout-widget-configuration-to-universal-configuration.util.spec.ts",
+      "packages/twenty-server/src/engine/metadata-modules/flat-page-layout-widget/validators/utils/__tests__/validate-chart-filter.util.spec.ts",
+      "packages/twenty-server/src/engine/workspace-manager/workspace-migration/workspace-migration-runner/action-handlers/page-layout-widget/services/utils/__tests__/from-universal-configuration-to-flat-page-layout-widget-configuration.util.spec.ts",
+      "packages/twenty-server/test/integration/metadata/suites/dashboard/successful-dashboard-duplication.integration-spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "di",
+    "gt_files": 2,
+    "communities_spanned": 2,
+    "gt_path_length": 0,
+    "locality": "cross_module"
+  },
+  "evidence": [
+    "fix dd2d68c8a45573e1603c1603c3357b2eb178cb79 (https://github.com/twentyhq/twenty/pull/24301)",
+    "test: src/engine/metadata-modules/flat-page-layout-widget/utils/__tests__/from-page-layout-widget-configuration-to-universal-configuration.util.spec.ts: should convert the relation target field id of a relation-traversal chart filter to its universal identifier",
+    "test: src/engine/metadata-modules/flat-page-layout-widget/utils/__tests__/from-page-layout-widget-configuration-to-universal-configuration.util.spec.ts: should resolve a deleted relation target field to null instead of throwing",
+    "test: src/engine/metadata-modules/flat-page-layout-widget/validators/utils/__tests__/validate-chart-filter.util.spec.ts: should accept a text operand on a RELATION field whose target field is a TEXT field",
+    "test: src/engine/workspace-manager/workspace-migration/workspace-migration-runner/action-handlers/page-layout-widget/services/utils/__tests__/from-universal-configuration-to-flat-page-layout-widget-configuration.util.spec.ts: should resolve the relation target universal identifier of a relation-traversal chart filter back to a field metadata id",
+    "test: test/integration/metadata/suites/dashboard/successful-dashboard-duplication.integration-spec.ts: should duplicate a dashboard with a chart widget filtering through a relation target field",
+    "patch: both converters carry relationTargetFieldMetadataId <-> relationTargetFieldMetadataUniversalIdentifier",
+    "convertUniversalFilterToChartFilter reached from create/update-page-layout-widget-action-handler.service.ts, dispatched by DiscoveryService registry (registry/workspace-migration-runner-action-handler-registry.service.ts:32)",
+    "validate-chart-filter spec changed but no validator source changed: error arises from the converters dropping the relation target"
+  ],
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "RC exact (convertChartFilterToUniversalFilter / convertUniversalFilterToChartFilter)",
+      "description truncated mid-JSON at 800 chars; use full issue text (error message DOES_NOT_CONTAIN is already in the retained part)",
+      "boundary db is wrong: both converters are reached via the page-layout duplicate service and, on the way back, through the migration action-handler registry"
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "not_run"
+  }
+}

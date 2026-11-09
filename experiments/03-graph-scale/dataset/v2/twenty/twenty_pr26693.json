@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_pr26693",
+  "split": "dev",
+  "repo": "twenty",
+  "task_type": "bug_localisation",
+  "description": "`upgrade --dry-run` executed pending instance commands and recorded them as completed. Skipping those commands and continuing is also unsafe: later workspace commands may read schema that the skipped commands create.",
+  "root_cause_symbols": [
+    "src/engine/core-modules/upgrade/services/upgrade-sequence-runner.service.ts::UpgradeSequenceRunnerService.runInner"
+  ],
+  "relevant_symbols": [
+    "src/engine/core-modules/upgrade/services/upgrade-sequence-runner.service.ts::UpgradeSequenceRunnerService.runInner"
+  ],
+  "relevant_files": [
+    "src/engine/core-modules/upgrade/services/upgrade-sequence-runner.service.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d",
+    "patch": "targets/exp3/dataset-patches/twenty/twenty_pr26693.patch",
+    "patch_sha256": "701d5cb3ec5d93071dca0aa4b47ab4b4f8fd27bacf64dd4e93ccf7120cd6bf81",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/twentyhq/twenty/pull/26693",
+    "issue": null,
+    "merge_commit": "acbef08e2100e9b604e20c670f5b4311bbc2c9bb",
+    "parent_commit": "ee6477422da950063a8a39f6607819107b52c49a",
+    "merged_at": "2026-09-29T13:02:24Z",
+    "report_source": "pr",
+    "tests_added": [
+      "test/integration/upgrade/suites/sequence-runner/dry-run-sequence-runner.integration-spec.ts: should stop before checking the workspace barrier when retrying a failed instance command"
+    ],
+    "test_files_changed": [
+      "packages/twenty-server/test/integration/upgrade/suites/sequence-runner/dry-run-sequence-runner.integration-spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "low",
+    "indirect_boundary": "none",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix acbef08e2100e9b604e20c670f5b4311bbc2c9bb (https://github.com/twentyhq/twenty/pull/26693)",
+    "test: test/integration/upgrade/suites/sequence-runner/dry-run-sequence-runner.integration-spec.ts: should stop before checking the workspace barrier when retrying a failed instance command",
+    "patch adds `if (options.dryRun) { log; break; }` before the instance step in UpgradeSequenceRunnerService.runInner"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "symptom clear (dry-run runs instance commands and records them as done); RC exact",
+      "second sentence (\"skipping ... is unsafe\") hints at stop-vs-skip design; flag but mechanism judged false"
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "not_run"
+  }
+}

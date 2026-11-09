@@ -1,0 +1,70 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_pr21846",
+  "split": "test",
+  "repo": "twenty",
+  "task_type": "bug_localisation",
+  "description": "Creating a record from the table view (reproduced on **People**) crashes the client even though the `createOne…` mutation succeeds server-side, so the record never appears:\n\n```\nCannot read properties of null (reading 'map')\n  getRecordConnectionFromRecords → getRecordNodeFromRecord → optimistic cache effect → createOneRecord\n```",
+  "root_cause_symbols": [
+    "src/engine/api/graphql/graphql-query-runner/helpers/object-records-to-graphql-connection.helper.ts::ObjectRecordsToGraphqlConnectionHelper.processRecord"
+  ],
+  "relevant_symbols": [
+    "src/engine/api/graphql/graphql-query-runner/helpers/object-records-to-graphql-connection.helper.ts::ObjectRecordsToGraphqlConnectionHelper.processRecord"
+  ],
+  "relevant_files": [
+    "src/engine/api/graphql/graphql-query-runner/helpers/object-records-to-graphql-connection.helper.ts"
+  ],
+  "module_level_changes": [
+    "src/engine/api/graphql/graphql-query-runner/helpers/object-records-to-graphql-connection.helper.ts::<module>"
+  ],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d",
+    "patch": "targets/exp3/dataset-patches/twenty/twenty_pr21846.patch",
+    "patch_sha256": "3e1ba2599b86f70748e2858aac9cd08a62596b5e6d9c121424f7726a0153b05a",
+    "apply": "fuzz-C1"
+  },
+  "source": {
+    "pr": "https://github.com/twentyhq/twenty/pull/21846",
+    "issue": null,
+    "merge_commit": "334e962ab5d330610f134e2d471688ef6546e28d",
+    "parent_commit": "a0689d1577add657e303081c39bd1727538e6f2e",
+    "merged_at": "2026-06-21T16:05:04Z",
+    "report_source": "pr",
+    "tests_added": [
+      "test/integration/metadata/suites/field-metadata/morph-relation/find-empty-morph-relation-to-many.integration-spec.ts: returns an empty connection (not null) for each morph to-many target"
+    ],
+    "test_files_changed": [
+      "packages/twenty-server/test/integration/metadata/suites/field-metadata/morph-relation/find-empty-morph-relation-to-many.integration-spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "graphql",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix 334e962ab5d330610f134e2d471688ef6546e28d (https://github.com/twentyhq/twenty/pull/21846)",
+    "test: test/integration/metadata/suites/field-metadata/morph-relation/find-empty-morph-relation-to-many.integration-spec.ts: returns an empty connection (not null) for each morph to-many target",
+    "patch: only processRecord hunk (object-records-to-graphql-connection.helper.ts): null to-many relation value coerced to [] (ONE_TO_MANY)",
+    "draft module-level key <module> corresponds to the added RelationType import; legitimately module-level",
+    "boundary graphql plausible: server entry is the createOne mutation executed through direct-execution, conversion helper is reached via query runner; keep"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "stack trace is client-side (frontend frames absent from the server-only corpus); never mentions relation/to-many; hard but legitimate",
+      "RC exact"
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "not_run"
+  }
+}

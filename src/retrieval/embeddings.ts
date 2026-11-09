@@ -35,24 +35,50 @@ export class Embedder {
   private key(it: EmbedItem) {
     return crypto.createHash('sha256').update(`${this.model}@${this.revision}\0${this.maxSeq}\0${it.kind}\0${it.text}`).digest('hex');
   }
-  /** Returns vectors (and model-token counts) for items, computing missing ones in one subprocess call. */
+  /**
+   * Process-level vector cache per cache file, loaded once by streaming the JSONL (experiment 3: Twenty's cache exceeds
+   * V8's maximum string length and was re-read by every method). Values and keys are unchanged.
+   */
+  private static memo = new Map<string, Map<string, { v: Float32Array; t: number }>>();
+  /** Missing items are embedded in subprocess calls of at most this many items (bounded temp files). */
+  static EMBED_BATCH_ITEMS = 5000;
+
+  private static loadCache(file: string): Map<string, { v: Float32Array; t: number }> {
+    let m = Embedder.memo.get(file);
+    if (m) return m;
+    m = new Map();
+    if (fs.existsSync(file)) {
+      const fd = fs.openSync(file, 'r');
+      const buf = Buffer.alloc(64 * 1024 * 1024);
+      let rest = '';
+      try {
+        for (;;) {
+          const n = fs.readSync(fd, buf, 0, buf.length, null);
+          if (n <= 0) break;
+          const text = rest + buf.toString('utf8', 0, n);
+          const lines = text.split('\n');
+          rest = lines.pop() ?? '';
+          for (const l of lines) { if (!l) continue; const d = JSON.parse(l); m.set(d.k, { v: Float32Array.from(d.v), t: d.t }); }
+        }
+        if (rest) { const d = JSON.parse(rest); m.set(d.k, { v: Float32Array.from(d.v), t: d.t }); }
+      } finally { fs.closeSync(fd); }
+    }
+    Embedder.memo.set(file, m);
+    return m;
+  }
+
+  /** Returns vectors (and model-token counts) for items, computing missing ones in bounded subprocess calls. */
   embed(items: EmbedItem[]): { vectors: Map<string, Float32Array>; tokens: Map<string, number>; computed: number } {
     const cacheFile = path.join(this.cacheDir, 'vectors.jsonl');
-    const cache = new Map<string, { v: number[]; t: number }>();
-    if (fs.existsSync(cacheFile)) {
-      for (const l of fs.readFileSync(cacheFile, 'utf8').split('\n')) {
-        if (!l) continue;
-        const d = JSON.parse(l);
-        cache.set(d.k, { v: d.v, t: d.t });
-      }
-    }
-    const missing = items.filter((it) => !cache.has(this.key(it)));
+    const cache = Embedder.loadCache(cacheFile);
     const uniq = new Map<string, EmbedItem>();
-    for (const it of missing) uniq.set(this.key(it), { ...it, id: this.key(it) });
-    if (uniq.size) {
+    for (const it of items) { const k = this.key(it); if (!cache.has(k)) uniq.set(k, { ...it, id: k }); }
+    const all = [...uniq.values()];
+    for (let i = 0; i < all.length; i += Embedder.EMBED_BATCH_ITEMS) {
+      const part = all.slice(i, i + Embedder.EMBED_BATCH_ITEMS);
       const tmpIn = path.join(this.cacheDir, `in-${process.pid}.jsonl`);
       const tmpOut = path.join(this.cacheDir, `out-${process.pid}.jsonl`);
-      fs.writeFileSync(tmpIn, [...uniq.values()].map((x) => JSON.stringify(x)).join('\n') + '\n');
+      fs.writeFileSync(tmpIn, part.map((x) => JSON.stringify(x)).join('\n') + '\n');
       const r = spawnSync(this.python, [this.script, '--model', this.model, '--in', tmpIn, '--out', tmpOut, '--batch', String(this.batch), '--max-seq', String(this.maxSeq), '--revision', this.revision], {
         encoding: 'utf8', env: { ...process.env, HF_HUB_OFFLINE: '1', TOKENIZERS_PARALLELISM: 'false' }, maxBuffer: 64 * 1024 * 1024,
       });
@@ -61,7 +87,7 @@ export class Embedder {
       for (const l of fs.readFileSync(tmpOut, 'utf8').split('\n')) {
         if (!l) continue;
         const d = JSON.parse(l);
-        cache.set(d.id, { v: d.vector, t: d.tokens });
+        cache.set(d.id, { v: Float32Array.from(d.vector), t: d.tokens });
         add.push(JSON.stringify({ k: d.id, v: d.vector, t: d.tokens }));
       }
       fs.appendFileSync(cacheFile, add.join('\n') + '\n');
@@ -71,7 +97,7 @@ export class Embedder {
     const tokens = new Map<string, number>();
     for (const it of items) {
       const c = cache.get(this.key(it))!;
-      vectors.set(it.id, Float32Array.from(c.v));
+      vectors.set(it.id, c.v);
       tokens.set(it.id, c.t);
     }
     return { vectors, tokens, computed: uniq.size };

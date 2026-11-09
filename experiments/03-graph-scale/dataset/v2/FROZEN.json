@@ -46,6 +46,39 @@
         "immich_pr32612": "4b091eee5483f6926749b948a01b9bc8e24a940b391e37f7cabe497ba02ed1ee"
       },
       "frozen_at": "2026-11-09T15:16:43.037Z"
+    },
+    "twenty": {
+      "tasks": 24,
+      "dev": 6,
+      "test": 18,
+      "dataset_sha256": "25ad8335f37825117bf2bb4fc7626184090a1a2038f186829fcf9215046a15d8",
+      "files": {
+        "twenty_pr21506": "6fc4881987543ffa037fe72997ef6fa73134524c4aec599ddf27e1daa969be50",
+        "twenty_pr21846": "a27a751a581100de83a369e19a4cc5abb775e1dfe252b0c5dece9887be5644ad",
+        "twenty_pr22885": "c0afce24e8362712e6f00254fb9e3941ca069ad47589fc32a4799cb85855423e",
+        "twenty_pr24301": "cff02573329e7948bdab20dbf9b68c94adfc41d59d3ab537b1131a358acb0196",
+        "twenty_pr25207": "4d89eec1e6880b0bd198b6c7f760687e2e8ca86724068d011a103f5a5d4eab8e",
+        "twenty_pr25529": "4d9f99f2984917ee741863ba76e208ece4b997a147fcaa1482f753c11779ce2d",
+        "twenty_pr26271": "734c42d9cb04b6e34962679696a54517daf2c5df1a0dad180f7cd5aee5897a7e",
+        "twenty_pr26693": "52ae51cd08d1f92c30b671d048e2d9c18c4b2f25beb4caa689e33a14deeffb68",
+        "twenty_pr27248": "b6adafed736fc79acc71c01a7b3a13600cad3e98c1bb8111bce04351df550aa4",
+        "twenty_pr29126": "367a950cf6bb911958d1abe7cd27a0e1c00526a1a891babb7f7a2273a9ce2e77",
+        "twenty_tw_t1": "a1180fd1746c55529b5e8e8f1f181ea82a28354a213b4648b4fde1afe84f6098",
+        "twenty_tw_t10": "6285d6d9eff46b9eaee02443cb4f5c3a4a02561915b690d6eb25089fb2424354",
+        "twenty_tw_t11": "6b64893b68b7dc2fc1be2da808279ebf6cec6cfea85bd83425d0019cebeae889",
+        "twenty_tw_t12": "3bac00277124642ccac8fd5389357edbfc56ac49d1c589690ef797b541abd2e5",
+        "twenty_tw_t13": "a9c51be89979064a306264cb1085ee755d52c7a0bd63184b291e0158aec0f820",
+        "twenty_tw_t14": "705f6c3e28341872e33e01a396cf9f98ddf675e431a2047f8073ce37dac1b7e9",
+        "twenty_tw_t2": "b03fd1ae2bbe444e6de9449ea13b4f233a99d7e9e5002a1a838162e4df3052f8",
+        "twenty_tw_t3": "0d15e58c1fda311ff7a0cd2d5a210c14e5d4eb9a9d52ed5480d345dc3f39aed0",
+        "twenty_tw_t4": "4ef23b0013d33a3e3a9db08fc0f99f974e1bb35df1e759c808981b5ce8816523",
+        "twenty_tw_t5": "8166a3aaa0fb61dd7e7621d616c8b18a665d36ddad6e2c53552b5a4779b3894c",
+        "twenty_tw_t6": "3d5d6c0ac2c53a8db50dc8462a1e1c71365b025886f9d40c72135bedd44ce51c",
+        "twenty_tw_t7": "70f57f9a7d8167dd1e7c6270f649cd2d26747f45e80d93d3ed679158a983d056",
+        "twenty_tw_t8": "20240f9a7d78b6de4624ec33b41947e8d2ad8a49f5727a08739fd83b650c0c7b",
+        "twenty_tw_t9": "c3512bff2c523f49a5e1b6c1bd55bbc8891c887ca4b62ee48f7cae1333717886"
+      },
+      "frozen_at": "2026-11-09T15:38:16.554Z"
     }
   }
 }

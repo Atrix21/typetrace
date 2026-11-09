@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_pr22885",
+  "split": "test",
+  "repo": "twenty",
+  "task_type": "bug_localisation",
+  "description": "Twenty shows \"Latest\" when it cannot fetch the latest version\n\n## Bug Description\n\nWhen I check for the latest version on the admin panel, I get \"latest\" as the latest version.\n\n<img width=\"274\" height=\"168\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/8217bf52-bf40-458b-9753-bdd04981695a\" />\n\nThat is not very helpful to decide, if an update is available.\n\n## Expected behavior\n\nThe current latest version is v2.20.0, so that should be shown\n\n## Technical inputs\n\nThis is probably from docker hub, where latest = v2 = v2.20 = v2.20.0 and the top one is \"latest\", but non numeric versions should not be displayed",
+  "root_cause_symbols": [
+    "src/engine/core-modules/admin-panel/dtos/version-info.dto.ts::VersionInfoDTO.latestVersion",
+    "src/engine/core-modules/admin-panel/services/admin-panel-version.service.ts::AdminPanelVersionService.getVersionInfo"
+  ],
+  "relevant_symbols": [
+    "src/engine/core-modules/admin-panel/dtos/version-info.dto.ts::VersionInfoDTO.latestVersion",
+    "src/engine/core-modules/admin-panel/services/admin-panel-version.service.ts::AdminPanelVersionService.getVersionInfo"
+  ],
+  "relevant_files": [
+    "src/engine/core-modules/admin-panel/dtos/version-info.dto.ts",
+    "src/engine/core-modules/admin-panel/services/admin-panel-version.service.ts"
+  ],
+  "module_level_changes": [
+    "src/engine/core-modules/admin-panel/dtos/version-info.dto.ts::VersionInfoDTO.latestVersion",
+    "src/engine/core-modules/admin-panel/services/admin-panel-version.service.ts::<module>",
+    "src/engine/core-modules/admin-panel/services/admin-panel-version.service.ts::AdminPanelVersionService"
+  ],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d",
+    "patch": "targets/exp3/dataset-patches/twenty/twenty_pr22885.patch",
+    "patch_sha256": "31cc7f0cde6c2e15323668b1acd061015d0e19c3e4b6c07d6d6cb92bf9303b28",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/twentyhq/twenty/pull/22885",
+    "issue": "#22849",
+    "merge_commit": "7f1e3d35416faa7ced09b5d115fb5ba6843c5d6b",
+    "parent_commit": "0a53cc745db7bfcf6e1476c9a7256cfb2119c6d9",
+    "merged_at": "2026-07-24T07:25:46Z",
+    "report_source": "issue",
+    "tests_added": [],
+    "test_files_changed": [
+      "packages/twenty-server/src/engine/core-modules/admin-panel/__tests__/admin-panel.service.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "none",
+    "gt_files": 2,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix 7f1e3d35416faa7ced09b5d115fb5ba6843c5d6b (https://github.com/twentyhq/twenty/pull/22885)",
+    "patch: getVersionInfo returns latestVersion:null instead of \"latest\" in two places and logs warn; VersionInfoDTO.latestVersion -> nullable",
+    "admin-panel.resolver.ts injects AdminPanelVersionService directly (grep): boundary none"
+  ],
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "RC lacks changed declaration VersionInfoDTO.latestVersion (type made nullable; patch version-info.dto.ts); legitimately a declaration, not a function: add to relevant/module-level",
+      "report expects \"v2.20.0 shown\" but the fix returns null when the tag list cannot be fetched/empty (service already filtered \"latest\" and non-semver tags at the snapshot): symptom (string \"latest\" shown) does arise from the pre-fix fallback, partial mismatch with the expected behaviour; keep but flag",
+      "Technical inputs hint (dockerhub, non-numeric) is a diagnosis but not the fix; mechanism false"
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "not_run"
+  }
+}

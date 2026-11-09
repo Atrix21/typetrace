@@ -1,0 +1,108 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_tw_t3",
+  "split": "dev",
+  "repo": "twenty",
+  "task_type": "data_flow",
+  "category": "D",
+  "description": "An admin adds a new text field to an existing custom object through the metadata GraphQL API. Trace how that request results in a new physical column in the workspace's database schema and how in-memory/Redis metadata caches are refreshed afterwards. Name each stage (request handling, validation/plan building, executing the plan, cache refresh) with file and function.",
+  "root_cause_symbols": [
+    "src/engine/metadata-modules/field-metadata/field-metadata.resolver.ts::FieldMetadataResolver.createOneField"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/engine/metadata-modules/field-metadata/field-metadata.resolver.ts::FieldMetadataResolver.createOneField",
+    "src/engine/metadata-modules/field-metadata/services/field-metadata.service.ts::FieldMetadataService.createOneField",
+    "src/engine/workspace-manager/workspace-migration/services/workspace-migration-validate-build-and-run-service.ts::WorkspaceMigrationValidateBuildAndRunService.validateBuildAndRunWorkspaceMigration",
+    "src/engine/workspace-manager/workspace-migration/services/workspace-migration-validate-build-and-run-service.ts::WorkspaceMigrationValidateBuildAndRunService.validateBuildAndRunWorkspaceMigrationFromRecordInternal",
+    "src/engine/workspace-manager/workspace-migration/services/workspace-migration-validate-build-and-run-service.ts::WorkspaceMigrationValidateBuildAndRunService.validateBuildAndRunWorkspaceMigrationFromTo",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/services/workspace-migration-runner.service.ts::WorkspaceMigrationRunnerService.executeRun",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/action-handlers/field/services/create-field-action-handler.service.ts::CreateFieldActionHandlerService.executeForMetadata",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/action-handlers/field/services/create-field-action-handler.service.ts::CreateFieldActionHandlerService.executeForWorkspaceSchema",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/action-handlers/field/services/create-field-action-handler.service.ts::CreateFieldActionHandlerService.executeSingleFieldMetadataWorkspaceSchema",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/services/workspace-migration-runner.service.ts::WorkspaceMigrationRunnerService.invalidateCache",
+    "src/engine/workspace-cache/services/workspace-cache.service.ts::WorkspaceCacheService.invalidateAndRecompute",
+    "src/engine/metadata-modules/field-metadata/services/field-metadata.service.ts::FieldMetadataService.createManyFields",
+    "src/engine/workspace-manager/workspace-migration/services/workspace-migration-validate-build-and-run-service.ts::WorkspaceMigrationValidateBuildAndRunService.validateBuildAndRunWorkspaceMigrationFromRecord",
+    "src/engine/workspace-manager/workspace-migration/services/workspace-migration-build-orchestrator.service.ts::WorkspaceMigrationBuildOrchestratorService.buildWorkspaceMigration",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/services/workspace-migration-runner.service.ts::WorkspaceMigrationRunnerService.run",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/registry/workspace-migration-runner-action-handler-registry.service.ts::WorkspaceMigrationRunnerActionHandlerRegistryService.executeActionHandler"
+  ],
+  "relevant_files": [
+    "src/engine/metadata-modules/field-metadata/field-metadata.resolver.ts",
+    "src/engine/metadata-modules/field-metadata/services/field-metadata.service.ts",
+    "src/engine/workspace-cache/services/workspace-cache.service.ts",
+    "src/engine/workspace-manager/workspace-migration/services/workspace-migration-build-orchestrator.service.ts",
+    "src/engine/workspace-manager/workspace-migration/services/workspace-migration-validate-build-and-run-service.ts",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/action-handlers/field/services/create-field-action-handler.service.ts",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/registry/workspace-migration-runner-action-handler-registry.service.ts",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/services/workspace-migration-runner.service.ts"
+  ],
+  "gt_path": [
+    "src/engine/metadata-modules/field-metadata/field-metadata.resolver.ts::FieldMetadataResolver.createOneField",
+    "src/engine/metadata-modules/field-metadata/services/field-metadata.service.ts::FieldMetadataService.createOneField",
+    "src/engine/metadata-modules/field-metadata/services/field-metadata.service.ts::FieldMetadataService.createManyFields",
+    "src/engine/workspace-manager/workspace-migration/services/workspace-migration-validate-build-and-run-service.ts::WorkspaceMigrationValidateBuildAndRunService.validateBuildAndRunWorkspaceMigration",
+    "src/engine/workspace-manager/workspace-migration/services/workspace-migration-validate-build-and-run-service.ts::WorkspaceMigrationValidateBuildAndRunService.validateBuildAndRunWorkspaceMigrationFromRecord",
+    "src/engine/workspace-manager/workspace-migration/services/workspace-migration-validate-build-and-run-service.ts::WorkspaceMigrationValidateBuildAndRunService.validateBuildAndRunWorkspaceMigrationFromRecordInternal",
+    "src/engine/workspace-manager/workspace-migration/services/workspace-migration-validate-build-and-run-service.ts::WorkspaceMigrationValidateBuildAndRunService.validateBuildAndRunWorkspaceMigrationFromTo",
+    "src/engine/workspace-manager/workspace-migration/services/workspace-migration-build-orchestrator.service.ts::WorkspaceMigrationBuildOrchestratorService.buildWorkspaceMigration",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/services/workspace-migration-runner.service.ts::WorkspaceMigrationRunnerService.run",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/services/workspace-migration-runner.service.ts::WorkspaceMigrationRunnerService.executeRun",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/registry/workspace-migration-runner-action-handler-registry.service.ts::WorkspaceMigrationRunnerActionHandlerRegistryService.executeActionHandler",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/action-handlers/field/services/create-field-action-handler.service.ts::CreateFieldActionHandlerService.executeForMetadata",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/action-handlers/field/services/create-field-action-handler.service.ts::CreateFieldActionHandlerService.executeForWorkspaceSchema",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/action-handlers/field/services/create-field-action-handler.service.ts::CreateFieldActionHandlerService.executeSingleFieldMetadataWorkspaceSchema",
+    "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/services/workspace-migration-runner.service.ts::WorkspaceMigrationRunnerService.invalidateCache",
+    "src/engine/workspace-cache/services/workspace-cache.service.ts::WorkspaceCacheService.invalidateAndRecompute"
+  ],
+  "alternatives": [
+    "Object creation, field update and field deletion go through the same validate-build-run pipeline with different action handlers (create/update/delete-field-action-handler.service.ts).",
+    "Application manifest sync and upgrade commands feed the same runner via validateBuildAndRunWorkspaceMigrationFromTo."
+  ],
+  "distractor_symbols": [
+    "src/engine/metadata-modules/field-metadata/field-metadata.resolver.ts::FieldMetadataResolver.updateOneField"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d"
+  },
+  "source": {
+    "drafted_by": "mining agent (twenty)",
+    "draft_id": "TW-T3",
+    "verification": "Read cited lines; confirm that executeForWorkspaceSchema is invoked by the runner inside executeRun (search for executeForWorkspaceSchema in workspace-migration-runner.service.ts).",
+    "notes": "Confounders: both a metadata-row write and a DDL write happen, in different handler methods of the same class; cache invalidation is conditioned on SCHEMA_AFFECTING_WORKSPACE_MIGRATION_METADATA_NAMES. UNVERIFIED: the exact line where executeRun calls the handlers (not cited)."
+  },
+  "evidence": [
+    "packages/twenty-server/test/integration/metadata (field creation integration suites) exercise the path - UNVERIFIED which spec",
+    "git log for create-field-action-handler.service.ts shows fixes after 2026-06-01 (e.g. PR #21875 touched the validator, not the handler)",
+    "field-metadata.service.ts:65-85,389,459",
+    "workspace-migration-validate-build-and-run-service.ts:101-140,224-240,274-345",
+    "workspace-migration-runner.service.ts:56-110,170-195,380-395,522,556",
+    "registry/...registry.service.ts:74-84"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 8,
+    "communities_spanned": 5,
+    "gt_path_length": 16,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "mapping note gt_path[2] (field-metadata.service.ts:172): line 172 is in deleteOneField (wrong method). createOneField (:65) delegates to createManyFields (:389) whose call to validateBuildAndRunWorkspaceMigration is at :459. Replace deleteOneField by createManyFields; remove deleteOneField from relevant",
+      "mapping notes gt_path[4,5,6] resolve to FromRecordInternal (:322), FromTo (:101; orchestrator call buildWorkspaceMigration at :133, runner.run at :224): keep these three real keys; the \"orchestrator\" and \"runner.run\" hops get their own keys (WorkspaceMigrationBuildOrchestratorService.buildWorkspaceMigration, WorkspaceMigrationRunnerService.run)",
+      "missing intermediate hop validateBuildAndRunWorkspaceMigrationFromRecord (public, :274) between the public entry and FromRecordInternal",
+      "handler dispatch goes through WorkspaceMigrationRunnerActionHandlerRegistryService.executeActionHandler (DiscoveryService registry), not a direct executeRun->handler call; the base mixin executes executeForMetadata/executeForWorkspaceSchema (interfaces/workspace-migration-runner-action-handler-service.interface.ts:266)",
+      "relevant[3] \"addColumns call\" (line 267) = CreateFieldActionHandlerService.executeSingleFieldMetadataWorkspaceSchema (already a key)",
+      "invalidateCache is called from executeRun (runner.service.ts:522,556) after commit, not from the handler; ordering by time is fine. invalidateCache also calls WorkspaceMetadataVersionService.incrementMetadataVersion when schema affected (:108)",
+      "distractors: updateOneField key given; src/engine/twenty-orm/table-shape and src/engine/workspace-manager/workspace-sync do not exist at the snapshot (tableShape is a field on repository options, workspace-repository.ts) -> drop both",
+      "default shouldDeferActions=true (runner.service.ts:182) defers only index build / FK validation / resource deletion handlers (deferred-action-handlers/services); text-column DDL runs inline"
+    ]
+  }
+}

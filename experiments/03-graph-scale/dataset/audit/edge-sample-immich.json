@@ -1,0 +1,517 @@
+{
+ "repo": "immich",
+ "graph": ".cache/exp3/stage1/M/graphs/d6327aaa84fb3b2b",
+ "population": {
+  "dispatch_pairs": 404,
+  "graphql_routes": 0,
+  "query_builder_edges": 774
+ },
+ "seed": 20261110,
+ "sample": [
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.AssetEncodeVideo",
+   "producer": "src/services/job.service.ts:102 JobService.onDone",
+   "producer_site": "src/services/job.service.ts:183",
+   "producer_evidence": "jobs.push({ name: JobName.AssetEncodeVideo, data: item.data })",
+   "handler": "src/services/media.service.ts:561 MediaService.handleVideoConversion",
+   "handler_registration": "src/services/media.service.ts:561",
+   "handler_evidence": "@OnJob({ name: JobName.AssetEncodeVideo, queue: QueueName.VideoConversion })",
+   "id": "immich-01"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.FacialRecognition",
+   "producer": "src/services/person.service.spec.ts:1 src/services/person.service.spec.ts",
+   "producer_site": "src/services/person.service.spec.ts:1524",
+   "producer_evidence": "expect(mocks.job.queue).toHaveBeenCalledWith({ name: JobName.FacialRecognition, data: { id: noPerson1.id, deferred: true }, })",
+   "handler": "src/services/person.service.ts:561 PersonService.handleRecognizeFaces",
+   "handler_registration": "src/services/person.service.ts:561",
+   "handler_evidence": "@OnJob({ name: JobName.FacialRecognition, queue: QueueName.FacialRecognition })",
+   "id": "immich-02"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "ImmichWorker.Microservices",
+   "producer": "src/services/metadata.service.spec.ts:1 src/services/metadata.service.spec.ts",
+   "producer_site": "src/services/metadata.service.spec.ts:93",
+   "producer_evidence": "mocks.config.getWorker.mockReturnValue(ImmichWorker.Microservices)",
+   "handler": "src/services/transcoding.service.ts:65 TranscodingService.onSessionRequest",
+   "handler_registration": "src/services/transcoding.service.ts:65",
+   "handler_evidence": "@OnEvent({ name: 'HlsSessionRequest', server: true, workers: [ImmichWorker.Microservices] })",
+   "id": "immich-03"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.SendMail",
+   "producer": "src/services/notification.service.ts:308 NotificationService.handleUserSignup",
+   "producer_site": "src/services/notification.service.ts:328",
+   "producer_evidence": "this.jobRepository.queue({ name: JobName.SendMail, data: { to: user.email, subject: 'Welcome to Immich', html, text, }, })",
+   "handler": "src/services/notification.service.ts:446 NotificationService.handleSendEmail",
+   "handler_registration": "src/services/notification.service.ts:446",
+   "handler_evidence": "@OnJob({ name: JobName.SendMail, queue: QueueName.Notification })",
+   "id": "immich-04"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.FileDelete",
+   "producer": "src/services/user.service.spec.ts:1 src/services/user.service.spec.ts",
+   "producer_site": "src/services/user.service.spec.ts:151",
+   "producer_evidence": "expect(mocks.job.queue.mock.calls).toEqual([[{ name: JobName.FileDelete, data: { files: [file.path] } }]])",
+   "handler": "src/services/storage.service.ts:120 StorageService.handleDeleteFiles",
+   "handler_registration": "src/services/storage.service.ts:120",
+   "handler_evidence": "@OnJob({ name: JobName.FileDelete, queue: QueueName.BackgroundTask })",
+   "id": "immich-05"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.PersonGenerateThumbnail",
+   "producer": "src/services/metadata.service.ts:912 MetadataService.applyTaggedFaces",
+   "producer_site": "src/services/metadata.service.ts:989",
+   "producer_evidence": "missing.map( ({ personGroupId, ownerId }) => ({ name: JobName.PersonGenerateThumbnail, data: { personGroupId, ownerId } }) as const, )",
+   "handler": "src/services/media.service.ts:397 MediaService.handleGeneratePersonThumbnail",
+   "handler_registration": "src/services/media.service.ts:397",
+   "handler_evidence": "@OnJob({ name: JobName.PersonGenerateThumbnail, queue: QueueName.ThumbnailGeneration })",
+   "id": "immich-06"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.DatabaseBackup",
+   "producer": "src/services/database-backup.service.ts:57 DatabaseBackupService.onConfigInit",
+   "producer_site": "src/services/database-backup.service.ts:73",
+   "producer_evidence": "handlePromiseError(this.jobRepository.queue({ name: JobName.DatabaseBackup }), this.logger)",
+   "handler": "src/services/database-backup.service.ts:92 DatabaseBackupService.handleBackupDatabase",
+   "handler_registration": "src/services/database-backup.service.ts:92",
+   "handler_evidence": "@OnJob({ name: JobName.DatabaseBackup, queue: QueueName.BackupDatabase })",
+   "id": "immich-07"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.UserDelete",
+   "producer": "src/services/user.service.ts:247 UserService.handleUserDeleteCheck",
+   "producer_site": "src/services/user.service.ts:251",
+   "producer_evidence": "this.jobRepository.queueAll(users.map((user) => ({ name: JobName.UserDelete, data: { id: user.id } })))",
+   "handler": "src/services/user.service.ts:255 UserService.handleUserDelete",
+   "handler_registration": "src/services/user.service.ts:255",
+   "handler_evidence": "@OnJob({ name: JobName.UserDelete, queue: QueueName.BackgroundTask })",
+   "id": "immich-08"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.FileDelete",
+   "producer": "src/services/user.service.ts:129 UserService.deleteProfileImage",
+   "producer_site": "src/services/user.service.ts:135",
+   "producer_evidence": "this.jobRepository.queue({ name: JobName.FileDelete, data: { files: [user.profileImagePath] } })",
+   "handler": "src/services/storage.service.ts:120 StorageService.handleDeleteFiles",
+   "handler_registration": "src/services/storage.service.ts:120",
+   "handler_evidence": "@OnJob({ name: JobName.FileDelete, queue: QueueName.BackgroundTask })",
+   "id": "immich-09"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.FacialRecognition",
+   "producer": "src/services/person.service.spec.ts:1 src/services/person.service.spec.ts",
+   "producer_site": "src/services/person.service.spec.ts:1195",
+   "producer_evidence": "expect(mocks.job.queueAll).toHaveBeenCalledWith([ { name: JobName.FacialRecognitionQueueAll, data: { force: false } }, { name: JobName.Faci\u2026",
+   "handler": "src/services/person.service.ts:561 PersonService.handleRecognizeFaces",
+   "handler_registration": "src/services/person.service.ts:561",
+   "handler_evidence": "@OnJob({ name: JobName.FacialRecognition, queue: QueueName.FacialRecognition })",
+   "id": "immich-10"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.LibraryDeleteCheck",
+   "producer": "src/services/library.service.spec.ts:1 src/services/library.service.spec.ts",
+   "producer_site": "src/services/library.service.spec.ts:1192",
+   "producer_evidence": "expect(mocks.job.queue).toHaveBeenCalledWith({ name: JobName.LibraryDeleteCheck, data: {}, })",
+   "handler": "src/services/library.service.ts:220 LibraryService.handleQueueCleanup",
+   "handler_registration": "src/services/library.service.ts:220",
+   "handler_evidence": "@OnJob({ name: JobName.LibraryDeleteCheck, queue: QueueName.Library })",
+   "id": "immich-11"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.AssetEncodeVideo",
+   "producer": "src/services/metadata.service.spec.ts:1 src/services/metadata.service.spec.ts",
+   "producer_site": "src/services/metadata.service.spec.ts:939",
+   "producer_evidence": "expect(mocks.job.queue).toHaveBeenCalledExactlyOnceWith({ name: JobName.AssetEncodeVideo, data: { id: motionAsset.id }, })",
+   "handler": "src/services/media.service.ts:561 MediaService.handleVideoConversion",
+   "handler_registration": "src/services/media.service.ts:561",
+   "handler_evidence": "@OnJob({ name: JobName.AssetEncodeVideo, queue: QueueName.VideoConversion })",
+   "id": "immich-12"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.FileDelete",
+   "producer": "src/services/auth.service.ts:385 AuthService.syncProfilePicture",
+   "producer_site": "src/services/auth.service.ts:401",
+   "producer_evidence": "this.jobRepository.queue({ name: JobName.FileDelete, data: { files: [oldPath] } })",
+   "handler": "src/services/storage.service.ts:120 StorageService.handleDeleteFiles",
+   "handler_registration": "src/services/storage.service.ts:120",
+   "handler_evidence": "@OnJob({ name: JobName.FileDelete, queue: QueueName.BackgroundTask })",
+   "id": "immich-13"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.MemoryGenerate",
+   "producer": "src/services/queue.service.spec.ts:1 src/services/queue.service.spec.ts",
+   "producer_site": "src/services/queue.service.spec.ts:47",
+   "producer_evidence": "expect(mocks.job.queueAll).toHaveBeenCalledWith([ { name: JobName.AssetDeleteCheck }, { name: JobName.UserDeleteCheck }, { name: JobName.Pe\u2026",
+   "handler": "src/services/memory.service.ts:28 MemoryService.onMemoriesCreate",
+   "handler_registration": "src/services/memory.service.ts:28",
+   "handler_evidence": "@OnJob({ name: JobName.MemoryGenerate, queue: QueueName.BackgroundTask })",
+   "id": "immich-14"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.AssetDeleteCheck",
+   "producer": "src/services/queue.service.ts:267 QueueService.handleNightlyJobs",
+   "producer_site": "src/services/queue.service.ts:273",
+   "producer_evidence": "jobs.push( { name: JobName.AssetDeleteCheck }, { name: JobName.UserDeleteCheck }, { name: JobName.PersonCleanup }, { name: JobName.MemoryCl\u2026",
+   "handler": "src/services/asset.service.ts:279 AssetService.handleAssetDeletionCheck",
+   "handler_registration": "src/services/asset.service.ts:279",
+   "handler_evidence": "@OnJob({ name: JobName.AssetDeleteCheck, queue: QueueName.BackgroundTask })",
+   "id": "immich-15"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.HlsSessionCleanup",
+   "producer": "src/services/queue.service.ts:267 QueueService.handleNightlyJobs",
+   "producer_site": "src/services/queue.service.ts:279",
+   "producer_evidence": "jobs.push( { name: JobName.AssetDeleteCheck }, { name: JobName.UserDeleteCheck }, { name: JobName.PersonCleanup }, { name: JobName.MemoryCl\u2026",
+   "handler": "src/services/transcoding.service.ts:60 TranscodingService.onHlsSessionCleanup",
+   "handler_registration": "src/services/transcoding.service.ts:60",
+   "handler_evidence": "@OnJob({ name: JobName.HlsSessionCleanup, queue: QueueName.BackgroundTask })",
+   "id": "immich-16"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "ImmichWorker.Microservices",
+   "producer": "src/services/library.service.spec.ts:1 src/services/library.service.spec.ts",
+   "producer_site": "src/services/library.service.spec.ts:31",
+   "producer_evidence": "mocks.config.getWorker.mockReturnValue(ImmichWorker.Microservices)",
+   "handler": "src/services/metadata.service.ts:155 MetadataService.onConfigUpdate",
+   "handler_registration": "src/services/metadata.service.ts:155",
+   "handler_evidence": "@OnEvent({ name: 'ConfigUpdate', workers: [ImmichWorker.Microservices], server: true })",
+   "id": "immich-17"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.AssetGenerateThumbnails",
+   "producer": "src/services/media.service.spec.ts:1 src/services/media.service.spec.ts",
+   "producer_site": "src/services/media.service.spec.ts:106",
+   "producer_evidence": "expect(mocks.job.queueAll).toHaveBeenCalledWith([ { name: JobName.AssetGenerateThumbnails, data: { id: asset.id }, }, ])",
+   "handler": "src/services/media.service.ts:191 MediaService.handleGenerateThumbnails",
+   "handler_registration": "src/services/media.service.ts:191",
+   "handler_evidence": "@OnJob({ name: JobName.AssetGenerateThumbnails, queue: QueueName.ThumbnailGeneration })",
+   "id": "immich-18"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "ImmichWorker.Microservices",
+   "producer": "src/services/library.service.spec.ts:1 src/services/library.service.spec.ts",
+   "producer_site": "src/services/library.service.spec.ts:31",
+   "producer_evidence": "mocks.config.getWorker.mockReturnValue(ImmichWorker.Microservices)",
+   "handler": "src/services/version.service.ts:40 VersionService.onBootstrap",
+   "handler_registration": "src/services/version.service.ts:40",
+   "handler_evidence": "@OnEvent({ name: 'AppBootstrap', workers: [ImmichWorker.Microservices] })",
+   "id": "immich-19"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "ImmichWorker.Api",
+   "producer": "src/repositories/config.repository.ts:208 getEnv",
+   "producer_site": "src/repositories/config.repository.ts:220",
+   "producer_evidence": "asSet(dto.IMMICH_WORKERS_INCLUDE, [ImmichWorker.Api, ImmichWorker.Microservices])",
+   "handler": "src/services/futo-backups.service.ts:98 FutoBackupsService.onLibraryDelete",
+   "handler_registration": "src/services/futo-backups.service.ts:98",
+   "handler_evidence": "@OnEvent({ name: 'LibraryDelete', workers: [ImmichWorker.Api], server: true })",
+   "id": "immich-20"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.PersonGenerateThumbnail",
+   "producer": "src/services/person.service.ts:163 PersonService.createNewFeaturePhoto",
+   "producer_site": "src/services/person.service.ts:177",
+   "producer_evidence": "jobs.push({ name: JobName.PersonGenerateThumbnail, data: { ownerId, personGroupId } })",
+   "handler": "src/services/media.service.ts:397 MediaService.handleGeneratePersonThumbnail",
+   "handler_registration": "src/services/media.service.ts:397",
+   "handler_evidence": "@OnJob({ name: JobName.PersonGenerateThumbnail, queue: QueueName.ThumbnailGeneration })",
+   "id": "immich-21"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "ImmichWorker.Microservices",
+   "producer": "src/services/ocr.service.spec.ts:1 src/services/ocr.service.spec.ts",
+   "producer_site": "src/services/ocr.service.spec.ts:14",
+   "producer_evidence": "mocks.config.getWorker.mockReturnValue(ImmichWorker.Microservices)",
+   "handler": "src/services/smart-info.service.ts:12 SmartInfoService.onConfigInit",
+   "handler_registration": "src/services/smart-info.service.ts:12",
+   "handler_evidence": "@OnEvent({ name: 'ConfigInit', workers: [ImmichWorker.Microservices] })",
+   "id": "immich-22"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.FileDelete",
+   "producer": "src/services/user.service.ts:97 UserService.createProfileImage",
+   "producer_site": "src/services/user.service.ts:110",
+   "producer_evidence": "this.jobRepository.queue({ name: JobName.FileDelete, data: { files: [file.path] } })",
+   "handler": "src/services/storage.service.ts:120 StorageService.handleDeleteFiles",
+   "handler_registration": "src/services/storage.service.ts:120",
+   "handler_evidence": "@OnJob({ name: JobName.FileDelete, queue: QueueName.BackgroundTask })",
+   "id": "immich-23"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.AssetDetectDuplicates",
+   "producer": "src/services/duplicate.service.spec.ts:1 src/services/duplicate.service.spec.ts",
+   "producer_site": "src/services/duplicate.service.spec.ts:131",
+   "producer_evidence": "expect(mocks.job.queueAll).toHaveBeenCalledWith([ { name: JobName.AssetDetectDuplicates, data: { id: asset.id }, }, ])",
+   "handler": "src/services/duplicate.service.ts:318 DuplicateService.handleSearchDuplicates",
+   "handler_registration": "src/services/duplicate.service.ts:318",
+   "handler_evidence": "@OnJob({ name: JobName.AssetDetectDuplicates, queue: QueueName.DuplicateDetection })",
+   "id": "immich-24"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "ImmichWorker.Microservices",
+   "producer": "src/services/database-backup.service.spec.ts:1 src/services/database-backup.service.spec.ts",
+   "producer_site": "src/services/database-backup.service.spec.ts:61",
+   "producer_evidence": "mocks.config.getWorker.mockReturnValue(ImmichWorker.Microservices)",
+   "handler": "src/services/transcoding.service.ts:45 TranscodingService.onBootstrap",
+   "handler_registration": "src/services/transcoding.service.ts:45",
+   "handler_evidence": "@OnEvent({ name: 'AppBootstrap', workers: [ImmichWorker.Microservices] })",
+   "id": "immich-25"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "ImmichWorker.Microservices",
+   "producer": "src/services/job.service.spec.ts:1 src/services/job.service.spec.ts",
+   "producer_site": "src/services/job.service.spec.ts:15",
+   "producer_evidence": "mocks.config.getWorker.mockReturnValue(ImmichWorker.Microservices)",
+   "handler": "src/services/smart-info.service.ts:12 SmartInfoService.onConfigInit",
+   "handler_registration": "src/services/smart-info.service.ts:12",
+   "handler_evidence": "@OnEvent({ name: 'ConfigInit', workers: [ImmichWorker.Microservices] })",
+   "id": "immich-26"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.FacialRecognition",
+   "producer": "src/services/person.service.spec.ts:1 src/services/person.service.spec.ts",
+   "producer_site": "src/services/person.service.spec.ts:1084",
+   "producer_evidence": "expect(mocks.job.queueAll).toHaveBeenCalledWith([ { name: JobName.FacialRecognition, data: { id: face.id, deferred: false }, }, ])",
+   "handler": "src/services/person.service.ts:561 PersonService.handleRecognizeFaces",
+   "handler_registration": "src/services/person.service.ts:561",
+   "handler_evidence": "@OnJob({ name: JobName.FacialRecognition, queue: QueueName.FacialRecognition })",
+   "id": "immich-27"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "ImmichWorker.Microservices",
+   "producer": "src/services/queue.service.spec.ts:1 src/services/queue.service.spec.ts",
+   "producer_site": "src/services/queue.service.spec.ts:15",
+   "producer_evidence": "mocks.config.getWorker.mockReturnValue(ImmichWorker.Microservices)",
+   "handler": "src/services/version.service.ts:40 VersionService.onBootstrap",
+   "handler_registration": "src/services/version.service.ts:40",
+   "handler_evidence": "@OnEvent({ name: 'AppBootstrap', workers: [ImmichWorker.Microservices] })",
+   "id": "immich-28"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "ImmichWorker.Microservices",
+   "producer": "src/services/ocr.service.spec.ts:1 src/services/ocr.service.spec.ts",
+   "producer_site": "src/services/ocr.service.spec.ts:14",
+   "producer_evidence": "mocks.config.getWorker.mockReturnValue(ImmichWorker.Microservices)",
+   "handler": "src/services/database-backup.service.ts:57 DatabaseBackupService.onConfigInit",
+   "handler_registration": "src/services/database-backup.service.ts:57",
+   "handler_evidence": "@OnEvent({ name: 'ConfigInit', workers: [ImmichWorker.Microservices] })",
+   "id": "immich-29"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.SidecarWrite",
+   "producer": "src/services/duplicate.service.spec.ts:1 src/services/duplicate.service.spec.ts",
+   "producer_site": "src/services/duplicate.service.spec.ts:391",
+   "producer_evidence": "expect(mocks.job.queueAll).toHaveBeenCalledWith([{ name: JobName.SidecarWrite, data: { id: asset1.id } }])",
+   "handler": "src/services/metadata.service.ts:482 MetadataService.handleSidecarWrite",
+   "handler_registration": "src/services/metadata.service.ts:482",
+   "handler_evidence": "@OnJob({ name: JobName.SidecarWrite, queue: QueueName.Sidecar })",
+   "id": "immich-30"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "ImmichWorker.Microservices",
+   "producer": "src/repositories/config.repository.ts:208 getEnv",
+   "producer_site": "src/repositories/config.repository.ts:220",
+   "producer_evidence": "asSet(dto.IMMICH_WORKERS_INCLUDE, [ImmichWorker.Api, ImmichWorker.Microservices])",
+   "handler": "src/services/version.service.ts:40 VersionService.onBootstrap",
+   "handler_registration": "src/services/version.service.ts:40",
+   "handler_evidence": "@OnEvent({ name: 'AppBootstrap', workers: [ImmichWorker.Microservices] })",
+   "id": "immich-31"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.FileDelete",
+   "producer": "src/services/media.service.spec.ts:1 src/services/media.service.spec.ts",
+   "producer_site": "src/services/media.service.spec.ts:4402",
+   "producer_evidence": "expect(mocks.job.queue).toHaveBeenCalledWith({ name: JobName.FileDelete, data: { files: ['/old/preview.jpg', '/old/thumbnail.jpg'] }, })",
+   "handler": "src/services/storage.service.ts:120 StorageService.handleDeleteFiles",
+   "handler_registration": "src/services/storage.service.ts:120",
+   "handler_evidence": "@OnJob({ name: JobName.FileDelete, queue: QueueName.BackgroundTask })",
+   "id": "immich-32"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "ImmichWorker.Microservices",
+   "producer": "src/services/smart-info.service.spec.ts:1 src/services/smart-info.service.spec.ts",
+   "producer_site": "src/services/smart-info.service.spec.ts:17",
+   "producer_evidence": "mocks.config.getWorker.mockReturnValue(ImmichWorker.Microservices)",
+   "handler": "src/services/library.service.ts:45 LibraryService.onConfigInit",
+   "handler_registration": "src/services/library.service.ts:45",
+   "handler_evidence": "@OnEvent({ name: 'ConfigInit', workers: [ImmichWorker.Microservices] })",
+   "id": "immich-33"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.SendMail",
+   "producer": "src/services/notification.service.ts:390 NotificationService.handleAlbumUpdate",
+   "producer_site": "src/services/notification.service.ts:433",
+   "producer_evidence": "this.jobRepository.queue({ name: JobName.SendMail, data: { to: user.email, subject: `New media has been added to an album - ${album.albumNa\u2026",
+   "handler": "src/services/notification.service.ts:446 NotificationService.handleSendEmail",
+   "handler_registration": "src/services/notification.service.ts:446",
+   "handler_evidence": "@OnJob({ name: JobName.SendMail, queue: QueueName.Notification })",
+   "id": "immich-34"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "ImmichWorker.Microservices",
+   "producer": "src/services/metadata.service.spec.ts:1 src/services/metadata.service.spec.ts",
+   "producer_site": "src/services/metadata.service.spec.ts:93",
+   "producer_evidence": "mocks.config.getWorker.mockReturnValue(ImmichWorker.Microservices)",
+   "handler": "src/services/transcoding.service.ts:51 TranscodingService.onShutdown",
+   "handler_registration": "src/services/transcoding.service.ts:51",
+   "handler_evidence": "@OnEvent({ name: 'AppShutdown', workers: [ImmichWorker.Microservices] })",
+   "id": "immich-35"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/person.repository.ts:297 PersonRepository.deleteFaces",
+   "target": "None:None asset_face",
+   "site": "src/repositories/person.repository.ts:298",
+   "evidence": "this.db.deleteFrom('asset_face')",
+   "id": "immich-36"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/map.repository.ts:154 MapRepository.reverseGeocode",
+   "target": "None:None geodata_places",
+   "site": "src/repositories/map.repository.ts:160",
+   "evidence": "this.db .selectFrom('geodata_places')",
+   "id": "immich-37"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/cluster-group.repository.ts:54 ClusterGroupRepository.searchRequests",
+   "target": "None:None cluster_group_request",
+   "site": "src/repositories/cluster-group.repository.ts:57",
+   "evidence": "this.db .selectFrom('cluster_group_request')",
+   "id": "immich-38"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/passkey.repository.ts:32 PasskeyRepository.delete",
+   "target": "None:None passkey",
+   "site": "src/repositories/passkey.repository.ts:34",
+   "evidence": "this.db.deleteFrom('passkey')",
+   "id": "immich-39"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/asset-job.repository.ts:212 AssetJobRepository.streamForEncodeClip",
+   "target": "None:None smart_search",
+   "site": "src/repositories/asset-job.repository.ts:217",
+   "evidence": "eb.selectFrom('smart_search')",
+   "id": "immich-40"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/asset.repository.ts:450 AssetRepository.createAll",
+   "target": "None:None asset",
+   "site": "src/repositories/asset.repository.ts:455",
+   "evidence": "this.db.insertInto('asset')",
+   "id": "immich-41"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/library.repository.ts:121 LibraryRepository.streamAssetIds",
+   "target": "None:None asset",
+   "site": "src/repositories/library.repository.ts:122",
+   "evidence": "this.db.selectFrom('asset')",
+   "id": "immich-42"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/library.repository.ts:72 LibraryRepository.getStatistics",
+   "target": "None:None library",
+   "site": "src/repositories/library.repository.ts:75",
+   "evidence": "this.db .selectFrom('library')",
+   "id": "immich-43"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/sync.repository.ts:626 PartnerSync.getCreatedAfter",
+   "target": "None:None partner",
+   "site": "src/repositories/sync.repository.ts:629",
+   "evidence": "this.db .selectFrom('partner')",
+   "id": "immich-44"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/asset.repository.ts:638 AssetRepository.update",
+   "target": "None:None asset",
+   "site": "src/repositories/asset.repository.ts:643",
+   "evidence": "qb.updateTable('asset')",
+   "id": "immich-45"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/person.repository.ts:556 PersonRepository.getDataForThumbnailGenerationJob",
+   "target": "None:None person",
+   "site": "src/repositories/person.repository.ts:559",
+   "evidence": "this.db .selectFrom('person')",
+   "id": "immich-46"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/asset.repository.ts:459 AssetRepository.getByDayOfYear",
+   "target": "None:None asset",
+   "site": "src/repositories/asset.repository.ts:480",
+   "evidence": "qb .selectFrom('asset')",
+   "id": "immich-47"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/asset.repository.ts:379 AssetRepository.getMetadata",
+   "target": "None:None asset_metadata",
+   "site": "src/repositories/asset.repository.ts:382",
+   "evidence": "this.db .selectFrom('asset_metadata')",
+   "id": "immich-48"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/access.repository.ts:30 ActivityAccess.checkAlbumOwnerAccess",
+   "target": "None:None album",
+   "site": "src/repositories/access.repository.ts:40",
+   "evidence": "this.db .selectFrom('activity') .select('activity.id') .innerJoin('album', (join) => join.onRef('activity.albumId', '=', 'album.id').on('al\u2026",
+   "id": "immich-49"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/utils/database.ts:435 searchAssetBuilderLegacy",
+   "target": "None:None asset_exif",
+   "site": "src/utils/database.ts:526",
+   "evidence": "qb .innerJoin('asset_exif', 'asset.id', 'asset_exif.assetId')",
+   "id": "immich-50"
+  }
+ ]
+}

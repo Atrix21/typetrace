@@ -1,0 +1,95 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_tw_t11",
+  "split": "test",
+  "repo": "twenty",
+  "task_type": "change_impact",
+  "category": "C",
+  "description": "The input type of the workflow executor's multi-step entry point must gain one more mandatory property. Which code would fail to compile, and which job classes and queue messages would be affected only through behaviour?",
+  "root_cause_symbols": [
+    "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts::RunWorkflowJob.startWorkflowExecution"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/modules/workflow/workflow-executor/types/workflow-executor-input.type.ts::WorkflowExecutorInput",
+    "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts::WorkflowExecutorWorkspaceService.executeFromSteps",
+    "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts::RunWorkflowJob.startWorkflowExecution",
+    "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts::RunWorkflowJob.retryWorkflowExecution",
+    "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts::RunWorkflowJob.completeAwaitedStep",
+    "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts::RunWorkflowJob.resumeWorkflowExecution",
+    "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts::WorkflowExecutorWorkspaceService.executeFromStep",
+    "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts::WorkflowExecutorWorkspaceService.skipAndFailSafelyStepsThenContinue"
+  ],
+  "relevant_files": [
+    "src/modules/workflow/workflow-executor/types/workflow-executor-input.type.ts",
+    "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts",
+    "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts"
+  ],
+  "gt_path": [
+    "src/modules/workflow/workflow-executor/types/workflow-executor-input.type.ts::WorkflowExecutorInput",
+    "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts::WorkflowExecutorWorkspaceService.executeFromSteps"
+  ],
+  "impact": {
+    "direct": [
+      "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts::WorkflowExecutorWorkspaceService.executeFromStep",
+      "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts::WorkflowExecutorWorkspaceService.skipAndFailSafelyStepsThenContinue",
+      "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts::RunWorkflowJob.completeAwaitedStep",
+      "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts::RunWorkflowJob.resumeWorkflowExecution",
+      "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts::RunWorkflowJob.retryWorkflowExecution",
+      "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts::RunWorkflowJob.startWorkflowExecution"
+    ],
+    "indirect": [],
+    "tests": [
+      "No spec found referencing executeFromSteps (grep over src and test)."
+    ],
+    "source": "type-checker oracle (direct, tests_with_errors) + annotated (indirect, tests)"
+  },
+  "oracle_edit": {
+    "file": "src/modules/workflow/workflow-executor/types/workflow-executor-input.type.ts",
+    "old": "  executedStepsCount?: number;\n  // What a step that waited on a callback",
+    "new": "  executedStepsCount?: number;\n  executionOrigin: string;\n  // What a step that waited on a callback",
+    "note": "Adds a required property to WorkflowExecutorInput; all 6 object-literal call sites of executeFromSteps then fail to compile."
+  },
+  "alternatives": [
+    "Making it optional gives no compile errors."
+  ],
+  "distractor_symbols": [
+    "src/modules/workflow/workflow-executor/types/workflow-executor-input.type.ts::WorkflowBranchExecutorInput",
+    "src/modules/workflow/workflow-runner/workspace-services/workflow-runner.workspace-service.ts::WorkflowRunnerWorkspaceService"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d"
+  },
+  "source": {
+    "drafted_by": "mining agent (twenty)",
+    "draft_id": "TW-T11",
+    "verification": "Apply oracle_edit, run tsc, expect errors at the 6 call sites. UNVERIFIED (not executed).",
+    "notes": "Call sites at run-workflow.job.ts lines 169/223/252/344 and workflow-executor.workspace-service.ts 301/749 (from grep). Optional property awaitedActionOutput is not relevant to the edit."
+  },
+  "evidence": [
+    "grep -rn executeFromSteps src test: 4 calls in run-workflow.job.ts, 2 in workflow-executor.workspace-service.ts",
+    "grep -rn executeFromSteps src test"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 3,
+    "communities_spanned": 2,
+    "gt_path_length": 2,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "oracle_edit.old occurs exactly once in workflow-executor-input.type.ts (checked); the edit adds a required property to WorkflowExecutorInput only",
+      "impact.direct (6) verified exactly by grep of executeFromSteps: run-workflow.job.ts:169 (startWorkflowExecution), :223 (retryWorkflowExecution), :252 (completeAwaitedStep), :344 (resumeWorkflowExecution); workflow-executor.workspace-service.ts:301 (executeFromStep), :749 (skipAndFailSafelyStepsThenContinue). Mapping notes: \"call 2\" = RunWorkflowJob.retryWorkflowExecution, \"call 3\" = RunWorkflowJob.completeAwaitedStep (keys already in relevant)",
+      "tests claim verified: no spec/integration test references executeFromSteps",
+      "distractors: WorkflowBranchExecutorInput (type, same file) and WorkflowRunnerWorkspaceService (no executeFromSteps caller) valid; give keys",
+      "query does not paste identifiers; anchor (root_cause_symbols) is startWorkflowExecution, fine"
+    ]
+  }
+}

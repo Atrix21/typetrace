@@ -1,0 +1,75 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_pr25529",
+  "split": "test",
+  "repo": "twenty",
+  "task_type": "bug_localisation",
+  "description": "Attachments not syncing to Outlook365 Drafts using 'Draft Email' action in Workflow\n\n## Bug Description\n\nI am trying to create draft using workflow using 'Draft Email' action. The attachments are not being posted with the draft to Outlook365 email draft. email body, cc, bbc area all syncing and working file, it's just the attachments that won't show. \nOn a side note, 'send email' action is flawlessly sending attachment with email. \n\n\nDo note that I am behind Cloudflare and nginx.",
+  "root_cause_symbols": [
+    "src/modules/messaging/message-outbound-manager/drivers/microsoft/services/microsoft-message-outbound.service.ts::MicrosoftMessageOutboundService.composeMicrosoftMessage",
+    "src/modules/messaging/message-outbound-manager/drivers/microsoft/services/microsoft-message-outbound.service.ts::MicrosoftMessageOutboundService.createDraftMessage"
+  ],
+  "relevant_symbols": [
+    "src/modules/messaging/message-outbound-manager/drivers/microsoft/services/microsoft-message-outbound.service.ts::MicrosoftMessageOutboundService.composeMicrosoftMessage",
+    "src/modules/messaging/message-outbound-manager/drivers/microsoft/services/microsoft-message-outbound.service.ts::MicrosoftMessageOutboundService.createDraftMessage"
+  ],
+  "relevant_files": [
+    "src/modules/messaging/message-outbound-manager/drivers/microsoft/services/microsoft-message-outbound.service.ts"
+  ],
+  "module_level_changes": [
+    "src/modules/messaging/message-outbound-manager/drivers/microsoft/services/microsoft-message-outbound.service.ts::<module>",
+    "src/modules/messaging/message-outbound-manager/drivers/microsoft/services/microsoft-message-outbound.service.ts::MicrosoftMessageOutboundService"
+  ],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d",
+    "patch": "targets/exp3/dataset-patches/twenty/twenty_pr25529.patch",
+    "patch_sha256": "0f71f446abe977fde84b9284479225b1e63b4edf348ddad7323be8b91b524c34",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/twentyhq/twenty/pull/25529",
+    "issue": "#25508",
+    "merge_commit": "52542a0008170997472e59633aa192fc10da8097",
+    "parent_commit": "e124e981c3299d079930bc13cbcb263e5c6e8e84",
+    "merged_at": "2026-09-07T11:33:35Z",
+    "report_source": "issue",
+    "tests_added": [
+      "test/integration/workflow-actions/draft-email/drivers/microsoft.integration-spec.ts: attaches files to the drafted message",
+      "test/integration/workflow-actions/draft-email/drivers/microsoft.integration-spec.ts: attaches files to a drafted reply"
+    ],
+    "test_files_changed": [
+      "packages/twenty-server/test/integration/microsoft/mocks/setup-microsoft-mock.util.ts",
+      "packages/twenty-server/test/integration/workflow-actions/draft-email/drivers/microsoft.integration-spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "di",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix 52542a0008170997472e59633aa192fc10da8097 (https://github.com/twentyhq/twenty/pull/25529)",
+    "test: test/integration/workflow-actions/draft-email/drivers/microsoft.integration-spec.ts: attaches files to the drafted message",
+    "test: test/integration/workflow-actions/draft-email/drivers/microsoft.integration-spec.ts: attaches files to a drafted reply",
+    "patch removes the inline attachments block from composeMicrosoftMessage and posts attachments to /me/messages/{id}/attachments after the draft is created",
+    "callers of MessagingMessageOutboundService: engine/core-modules/tool/tools/email-tool/draft-email-tool.ts (grep)"
+  ],
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "RC exact for the pre-existing functions (composeMicrosoftMessage lost the inline attachments, createDraftMessage restructured); createNewDraftMessage/createReplyDraftMessage/postAttachmentsToMessageCollection are new and absent from the bug snapshot",
+      "boundary: Draft Email runs as a workflow tool call: draft-email-tool.ts -> MessagingMessageOutboundService -> provider driver, not a bare call chain"
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "not_run"
+  }
+}

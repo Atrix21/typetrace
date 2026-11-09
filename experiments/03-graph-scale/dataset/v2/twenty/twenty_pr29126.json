@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_pr29126",
+  "split": "test",
+  "repo": "twenty",
+  "task_type": "bug_localisation",
+  "description": "Opportunity amount with an unknown currency code is saved but not shown in the app\n\n## Bug Description\n\nWhen I create an opportunity over the API with a currency code that does not exist, for example `XYZ`, the API accepts it and stores the code as sent. On the record page the Amount field then looks empty, as if the deal had no value. The same deal in EUR shows \"€12.5k\".\n\n1. `POST /rest/opportunities` with `{\"name\": \"Deal in XYZ\", \"amount\": {\"amountMicros\": 12500000000, \"currencyCode\": \"XYZ\"}}`\n2. Open the opportunity in the app\n\n| Currency `XYZ` | Currency `EUR` |\n|---|---|\n| ![Deal in XYZ: the Amount field looks empty](https://raw.githubusercontent.com/Nikolay-Chillev/twenty-qa/80a4f2d5aca6be52b47e04d396f3913c7e75019b/docs/images/finding-30-xyz.png) | ![The same deal in EUR: €12.5k](https://raw.githubusercontent.com/Nikolay-Chillev/twenty-qa/80a4f2d5aca6be52b47e04d396f",
+  "root_cause_symbols": [
+    "src/engine/api/common/common-args-processors/data-arg-processor/validator-utils/validate-currency-field-or-throw.util.ts::validateCurrencyFieldOrThrow"
+  ],
+  "relevant_symbols": [
+    "src/engine/api/common/common-args-processors/data-arg-processor/validator-utils/validate-currency-field-or-throw.util.ts::validateCurrencyFieldOrThrow"
+  ],
+  "relevant_files": [
+    "src/engine/api/common/common-args-processors/data-arg-processor/validator-utils/validate-currency-field-or-throw.util.ts"
+  ],
+  "module_level_changes": [
+    "src/engine/api/common/common-args-processors/data-arg-processor/validator-utils/validate-currency-field-or-throw.util.ts::<module>"
+  ],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d",
+    "patch": "targets/exp3/dataset-patches/twenty/twenty_pr29126.patch",
+    "patch_sha256": "7a9aaa83bd04f040e0c65c61432c3b3288828df5477850ddde376164a77aeb70",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/twentyhq/twenty/pull/29126",
+    "issue": "#28761",
+    "merge_commit": "7ee323e20def47390e1dba0e6c4ae729284b742f",
+    "parent_commit": "3b62f2836e664eaafbe305bf7b4e925dcb3dfbe8",
+    "merged_at": "2026-10-28T15:01:00Z",
+    "report_source": "issue",
+    "tests_added": [
+      "src/engine/api/common/common-args-processors/data-arg-processor/validator-utils/__tests__/validate-currency-field-or-throw.util.spec.ts: should accept a null or empty currencyCode"
+    ],
+    "test_files_changed": [
+      "packages/twenty-server/src/engine/api/common/common-args-processors/data-arg-processor/validator-utils/__tests__/validate-currency-field-or-throw.util.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "low",
+    "indirect_boundary": "none",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix 7ee323e20def47390e1dba0e6c4ae729284b742f (https://github.com/twentyhq/twenty/pull/29126)",
+    "test: src/engine/api/common/common-args-processors/data-arg-processor/validator-utils/__tests__/validate-currency-field-or-throw.util.spec.ts: should accept a null or empty currencyCode",
+    "patch: currencyCode case in validateCurrencyFieldOrThrow throws CommonQueryRunnerException for codes not in CurrencyCode"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "symptom sufficient (unknown currency code accepted over REST, record page shows empty amount); RC exact",
+      "visible symptom is front-end, fix is server-side validation; expected behaviour (reject) inferable"
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "not_run"
+  }
+}

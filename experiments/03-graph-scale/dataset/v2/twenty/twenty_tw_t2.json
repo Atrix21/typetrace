@@ -1,0 +1,123 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_tw_t2",
+  "split": "test",
+  "repo": "twenty",
+  "task_type": "data_flow",
+  "category": "D",
+  "description": "A workflow is active and triggered whenever a record of some object is updated, optionally only when certain fields changed or a filter matches. A user edits such a record. Trace how that edit ends up executing the first step of a new workflow run and then how the run continues to a following step. Identify every queue hand-off and say which worker-side class picks up each job, and where the trigger's own filter is evaluated.",
+  "root_cause_symbols": [
+    "src/engine/twenty-orm/repository/workspace-repository.ts::WorkspaceRepository.emitMutationEvent"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/engine/twenty-orm/repository/workspace-repository.ts::WorkspaceRepository.emitMutationEvent",
+    "src/engine/workspace-event-emitter/workspace-event-emitter.ts::WorkspaceEventEmitter.emitDatabaseBatchEvent",
+    "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts::WorkflowDatabaseEventTriggerListener.handleObjectRecordUpdateEvent",
+    "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts::WorkflowDatabaseEventTriggerListener.handleEvent",
+    "src/modules/workflow/workflow-trigger/jobs/workflow-trigger.job.ts::WorkflowTriggerJob.handle",
+    "src/modules/workflow/workflow-trigger/jobs/workflow-trigger.job.ts::WorkflowTriggerJob.handleFromCore",
+    "src/modules/workflow/workflow-runner/services/core-workflow-runner.service.ts::CoreWorkflowRunnerService.run",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/jobs/workflow-run-enqueue.job.ts::WorkflowRunEnqueueJob.handle",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-run-enqueue.workspace-service.ts::WorkflowRunEnqueueWorkspaceService.enqueueRunsForWorkspace",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-run-enqueue.workspace-service.ts::WorkflowRunEnqueueWorkspaceService.enqueueRunOrFailIt",
+    "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts::RunWorkflowJob.handle",
+    "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts::RunWorkflowJob.startWorkflowExecution",
+    "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts::WorkflowExecutorWorkspaceService.executeFromSteps",
+    "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts::WorkflowExecutorWorkspaceService.executeFromStep",
+    "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts::WorkflowExecutorWorkspaceService.executeStep",
+    "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts::WorkflowDatabaseEventTriggerListener.shouldTriggerJob",
+    "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts::WorkflowDatabaseEventTriggerListener.eventMatchesRecordFilter",
+    "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts::WorkflowDatabaseEventTriggerListener.eventMatchesWatchedFields",
+    "src/modules/workflow/workflow-executor/workflow-actions/filter/utils/evaluate-step-filters.util.ts::evaluateStepFilters",
+    "src/modules/workflow/workflow-executor/factories/workflow-action.factory.ts::WorkflowActionFactory.get",
+    "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts::WorkflowExecutorWorkspaceService.getNextStepIdsToExecute",
+    "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts::WorkflowDatabaseEventTriggerListener.shouldIgnoreEvent",
+    "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts::WorkflowDatabaseEventTriggerListener.enrichUpdatedEvent"
+  ],
+  "relevant_files": [
+    "src/engine/twenty-orm/repository/workspace-repository.ts",
+    "src/engine/workspace-event-emitter/workspace-event-emitter.ts",
+    "src/modules/workflow/workflow-executor/factories/workflow-action.factory.ts",
+    "src/modules/workflow/workflow-executor/workflow-actions/filter/utils/evaluate-step-filters.util.ts",
+    "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts",
+    "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts",
+    "src/modules/workflow/workflow-runner/services/core-workflow-runner.service.ts",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/jobs/workflow-run-enqueue.job.ts",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-run-enqueue.workspace-service.ts",
+    "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts",
+    "src/modules/workflow/workflow-trigger/jobs/workflow-trigger.job.ts"
+  ],
+  "gt_path": [
+    "src/engine/twenty-orm/repository/workspace-repository.ts::WorkspaceRepository.emitMutationEvent",
+    "src/engine/workspace-event-emitter/workspace-event-emitter.ts::WorkspaceEventEmitter.emitDatabaseBatchEvent",
+    "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts::WorkflowDatabaseEventTriggerListener.handleObjectRecordUpdateEvent",
+    "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts::WorkflowDatabaseEventTriggerListener.handleEvent",
+    "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts::WorkflowDatabaseEventTriggerListener.shouldTriggerJob",
+    "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts::WorkflowDatabaseEventTriggerListener.eventMatchesWatchedFields",
+    "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts::WorkflowDatabaseEventTriggerListener.eventMatchesRecordFilter",
+    "src/modules/workflow/workflow-executor/workflow-actions/filter/utils/evaluate-step-filters.util.ts::evaluateStepFilters",
+    "src/modules/workflow/workflow-trigger/jobs/workflow-trigger.job.ts::WorkflowTriggerJob.handle",
+    "src/modules/workflow/workflow-trigger/jobs/workflow-trigger.job.ts::WorkflowTriggerJob.handleFromCore",
+    "src/modules/workflow/workflow-runner/services/core-workflow-runner.service.ts::CoreWorkflowRunnerService.run",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/jobs/workflow-run-enqueue.job.ts::WorkflowRunEnqueueJob.handle",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-run-enqueue.workspace-service.ts::WorkflowRunEnqueueWorkspaceService.enqueueRunsForWorkspace",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-run-enqueue.workspace-service.ts::WorkflowRunEnqueueWorkspaceService.enqueueRunOrFailIt",
+    "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts::RunWorkflowJob.handle",
+    "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts::RunWorkflowJob.startWorkflowExecution",
+    "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts::WorkflowExecutorWorkspaceService.executeFromSteps",
+    "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts::WorkflowExecutorWorkspaceService.executeFromStep",
+    "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts::WorkflowExecutorWorkspaceService.executeStep",
+    "src/modules/workflow/workflow-executor/factories/workflow-action.factory.ts::WorkflowActionFactory.get",
+    "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts::WorkflowExecutorWorkspaceService.getNextStepIdsToExecute"
+  ],
+  "alternatives": [
+    "Manual triggers skip WorkflowRunEnqueueJob: CoreWorkflowRunnerService.run calls enqueueRunOrFailIt directly (core-workflow-runner.service.ts near line 150).",
+    "If the legacy dispatch mode is selected, WorkflowTriggerJob.handleLegacyDispatch is taken instead of handleFromCore.",
+    "Step 18-20 repeat per step: each follow-up step is dispatched as a new RunWorkflowJob when the continuation crosses a job boundary."
+  ],
+  "distractor_symbols": [
+    "src/modules/workflow/workflow-runner/workspace-services/workflow-runner.workspace-service.ts::WorkflowRunnerWorkspaceService",
+    "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts::EntityEventsToDbListener"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d"
+  },
+  "source": {
+    "drafted_by": "mining agent (twenty)",
+    "draft_id": "TW-T2",
+    "verification": "Each edge is a literal string/class correspondence: queue add(X.name) matches @Process(X.name). A third party can confirm by grepping the job class name and reading the cited lines.",
+    "notes": "Confounders: three different job classes live on the same workflow queue (WorkflowTriggerJob, WorkflowRunEnqueueJob, RunWorkflowJob); the legacy runner service duplicates part of the path. UNVERIFIED: which public repository method (update/updateMany/upsert) calls emitMutationEvent for UPDATED; step 1 cites the shared emitter."
+  },
+  "evidence": [
+    "packages/twenty-server/src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/__tests__/workflow-run-enqueue.workspace-service.spec.ts:79",
+    "commit 12e8fae471 is unrelated; for workflow continuation fixes see commits for PRs #26271, #26301, #26405 (git log --grep)",
+    "workflow-database-event-trigger.listener.ts:99-113,396-436,526-585",
+    "workflow-executor.workspace-service.ts:258-308,811-835",
+    "core-workflow-runner.service.ts:114-170",
+    "workflow-trigger.job.ts:36-52"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 11,
+    "communities_spanned": 3,
+    "gt_path_length": 21,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "mapping note gt_path[17] (line 594): the call is this.workflowActionFactory.get inside executeStep; key = WorkflowActionFactory.get in workflow-action.factory.ts (keep both)",
+      "query asks where the trigger filter is evaluated but the gt only names handleEvent; actual evaluation: handleEvent:416 -> shouldTriggerJob:526 -> eventMatchesWatchedFields/eventMatchesRecordFilter:561 -> evaluateStepFilters (evaluate-step-filters.util.ts:7). Add as gt keys",
+      "the draft presents continueExecutionFromStepInAnotherJob/resumeWorkflowExecution as the default way the run reaches the next step; in source the next step runs in the SAME job (executeFromStep -> getNextStepIdsToExecute -> executeFromSteps, workflow-executor.workspace-service.ts:300-308); the hand-off occurs only when executedStepsCount > MAX_EXECUTED_STEPS_COUNT (=20, line 62) at :269-277 (other hand-offs: awaited steps). Mark both as conditional (alternative), add getNextStepIdsToExecute",
+      "step 19 text \"processStepExecutionResult decides in-job vs another job\" is wrong: processStepExecutionResult returns shouldProcessNextSteps; the job decision is shouldRunAnotherJob at :267",
+      "distractor enrichUpdatedEvent is on the path (passed as enrichPayload and invoked inside handleEvent, listener:111) -> remove; WorkflowRunnerWorkspaceService and EntityEventsToDbListener keep with class keys (no executeFromSteps caller in WorkflowRunnerWorkspaceService, grep)",
+      "dispatch-mode caveat: WorkflowTriggerJob.handle selects CORE vs legacy (workflow-trigger.job.ts:36-52); handleFromCore verified"
+    ]
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_tw_t7",
+  "split": "dev",
+  "repo": "twenty",
+  "task_type": "feature_understanding",
+  "category": "B",
+  "description": "A workspace triggers far more workflow runs than it is allowed to execute at once. Explain the lifecycle of such a run: what status it has when created, what two different kinds of limits can hold it back (one that rejects outright and one that merely delays), which component later promotes delayed runs and how it avoids two promoters racing, and how the counters it relies on are kept in sync with the database.",
+  "root_cause_symbols": [
+    "src/modules/workflow/workflow-runner/services/core-workflow-runner.service.ts::CoreWorkflowRunnerService.run"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/modules/workflow/workflow-runner/services/core-workflow-runner.service.ts::CoreWorkflowRunnerService.run",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.throttleOrThrowIfHardLimitReached",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/cron/jobs/workflow-run-enqueue.cron.job.ts::WorkflowRunEnqueueCronJob.checkAndEnqueue",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/jobs/workflow-run-enqueue.job.ts::WorkflowRunEnqueueJob.handle",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-run-enqueue.workspace-service.ts::WorkflowRunEnqueueWorkspaceService.enqueueRunsForWorkspace",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.recomputeWorkflowRunNotStartedCount",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.consumeRemainingRunsToEnqueueCount",
+    "src/modules/workflow/workflow-runner/services/core-workflow-runner.service.ts::CoreWorkflowRunnerService.checkHardThrottleLimit",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.increaseWorkflowRunNotStartedCount",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.decreaseWorkflowRunNotStartedCount",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.acquireWorkflowEnqueueLock",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.releaseWorkflowEnqueueLock",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-run-enqueue.workspace-service.ts::WorkflowRunEnqueueWorkspaceService.enqueueRunOrFailIt",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-handle-staled-runs.workspace-service.ts::WorkflowHandleStaledRunsWorkspaceService.handleStaledRunsForWorkspace",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.getNotStartedRunsCountFromCache",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.getNotStartedRunsCountFromDatabase"
+  ],
+  "relevant_files": [
+    "src/modules/workflow/workflow-runner/services/core-workflow-runner.service.ts",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/cron/jobs/workflow-run-enqueue.cron.job.ts",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/jobs/workflow-run-enqueue.job.ts",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-handle-staled-runs.workspace-service.ts",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-run-enqueue.workspace-service.ts",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts"
+  ],
+  "gt_path": [
+    "src/modules/workflow/workflow-runner/services/core-workflow-runner.service.ts::CoreWorkflowRunnerService.run",
+    "src/modules/workflow/workflow-runner/services/core-workflow-runner.service.ts::CoreWorkflowRunnerService.checkHardThrottleLimit",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.throttleOrThrowIfHardLimitReached",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.increaseWorkflowRunNotStartedCount",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/cron/jobs/workflow-run-enqueue.cron.job.ts::WorkflowRunEnqueueCronJob.checkAndEnqueue",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/jobs/workflow-run-enqueue.job.ts::WorkflowRunEnqueueJob.handle",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-run-enqueue.workspace-service.ts::WorkflowRunEnqueueWorkspaceService.enqueueRunsForWorkspace",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.acquireWorkflowEnqueueLock",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.getNotStartedRunsCountFromCache",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.getNotStartedRunsCountFromDatabase",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.consumeRemainingRunsToEnqueueCount",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-run-enqueue.workspace-service.ts::WorkflowRunEnqueueWorkspaceService.enqueueRunOrFailIt",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.decreaseWorkflowRunNotStartedCount",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.recomputeWorkflowRunNotStartedCount",
+    "src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/workflow-throttling.workspace-service.ts::WorkflowThrottlingWorkspaceService.releaseWorkflowEnqueueLock"
+  ],
+  "alternatives": [
+    "Manual-trigger runs are created ENQUEUED and bypass the NOT_STARTED backlog (core-workflow-runner.service.ts ~line 148)."
+  ],
+  "distractor_symbols": [
+    "src/engine/core-modules/message-queue/message-queue-worker-config.constant.ts::MESSAGE_QUEUE_WORKER_CONFIG"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d"
+  },
+  "source": {
+    "drafted_by": "mining agent (twenty)",
+    "draft_id": "TW-T7",
+    "verification": "Read cited lines; the unit spec exercises enqueueRunOrFailIt scoping only (not the throttle) so no direct test - UNVERIFIED by test.",
+    "notes": "Hard limit values/config names not read (UNVERIFIED). Confounder: two counters (cache vs database) selected by isCacheMode."
+  },
+  "evidence": [
+    "packages/twenty-server/src/modules/workflow/workflow-runner/workflow-run-queue/workspace-services/__tests__/workflow-run-enqueue.workspace-service.spec.ts:79",
+    "commit 6bc4d8efac (PR #22654) 'batch staled run reset to avoid Postgres param limit' as an adjacent change",
+    "core-workflow-runner.service.ts:100-192",
+    "workflow-throttling.workspace-service.ts:23-140",
+    "workflow-run-enqueue.workspace-service.ts:40-160",
+    "workflow-run-enqueue.cron.job.ts:95-115",
+    "workflow-handle-staled-runs.workspace-service.ts:93"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 6,
+    "communities_spanned": 1,
+    "gt_path_length": 15,
+    "locality": "local"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "mapping notes gt_path[3] (cron.job:106) = WorkflowRunEnqueueCronJob.checkAndEnqueue; gt_path[7],[8],[9] (enqueue.workspace-service:108/126/151) are all inside enqueueRunsForWorkspace; the callees have their own keys: consumeRemainingRunsToEnqueueCount (soft throttle), enqueueRunOrFailIt (ENQUEUED + add RunWorkflowJob), decreaseWorkflowRunNotStartedCount (cache-mode counter). relevant[0],[1],[3] keys are correct as listed",
+      "lock that prevents two promoters racing is WorkflowThrottlingWorkspaceService.acquireWorkflowEnqueueLock/releaseWorkflowEnqueueLock (cache lock, 60 s TTL, enqueue.workspace-service:48): drafted only as text inside enqueueRunsForWorkspace; add keys",
+      "status at creation: FAILED when hard-throttled (error \"Throttle limit reached\"), ENQUEUED for manual triggers, NOT_STARTED otherwise (core-workflow-runner.service.ts:114-127); also core runner itself adds WorkflowRunEnqueueJob(isCacheMode:true) right after increasing the counter (:162-170), cron adds isCacheMode:false",
+      "counter sync with DB: isCacheMode chooses cache counter vs database count (enqueue.workspace-service:66-80); recomputeWorkflowRunNotStartedCount is also called from WorkflowHandleStaledRunsWorkspaceService.handleStaledRunsForWorkspace:93, so WorkflowHandleStaledRunsJob is NOT a pure distractor (draft says unrelated failure mode): remove it",
+      "hard-throttle limit config: WORKFLOW_EXEC_HARD_THROTTLE_LIMIT/TTL and soft WORKFLOW_EXEC_SOFT_THROTTLE_LIMIT/TTL (throttling service:23-45) resolve the draft UNVERIFIED note",
+      "distractor MESSAGE_QUEUE_WORKER_CONFIG key given (also gt of T8)"
+    ]
+  }
+}

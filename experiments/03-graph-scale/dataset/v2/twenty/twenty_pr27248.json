@@ -1,0 +1,86 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_pr27248",
+  "split": "test",
+  "repo": "twenty",
+  "task_type": "bug_localisation",
+  "description": "v2.45 frontend returns empty 404 when SERVER_URL is a subdomain of existing PUBLIC_DOMAIN_URL\n\n### Description\n\nAfter upgrading a self-hosted Twenty installation from `v2.41.0` to `v2.45.0`, the frontend is no longer served.\n\nThe Twenty server itself starts normally, all Docker containers are healthy, database/application upgrade commands complete successfully, and the server is reachable both locally and externally.\n\nHowever, requests for the frontend return `404 Not Found`.\n\nThis installation previously worked correctly on `v2.41.0` with the same infrastructure and configuration.\n\n### Environment\n\n- Twenty version: `v2.45.0`\n- Previous working version: `v2.41.0`\n- Deployment: Docker / Docker Compose\n- Hosting: Google Cloud Compute Engine VM\n- Reverse proxy: Google Cloud HTTPS Load Balancer\n- TLS termination: Google Cloud Load Balancer\n- Backend Twenty port: `3000`\n- `IS_CONFIG_VAR",
+  "root_cause_symbols": [
+    "src/engine/core-modules/domain/domain-server-config/services/domain-server-config.service.ts::DomainServerConfigService.getSubdomainAndDomainFromUrl",
+    "src/engine/core-modules/domain/domain-server-config/services/domain-server-config.service.ts::DomainServerConfigService.isDefaultSubdomain"
+  ],
+  "relevant_symbols": [
+    "src/engine/core-modules/domain/domain-server-config/services/domain-server-config.service.ts::DomainServerConfigService.getSubdomainAndDomainFromUrl",
+    "src/engine/core-modules/domain/domain-server-config/services/domain-server-config.service.ts::DomainServerConfigService.isDefaultSubdomain"
+  ],
+  "relevant_files": [
+    "src/engine/core-modules/domain/domain-server-config/services/domain-server-config.service.ts",
+    "src/engine/core-modules/domain/workspace-domains/services/workspace-domains.service.ts",
+    "src/engine/core-modules/frontend/frontend.service.ts",
+    "src/engine/core-modules/guard-redirect/services/guard-redirect.service.ts",
+    "src/engine/core-modules/logic-function/logic-function-trigger/triggers/route/route-trigger.service.ts",
+    "src/engine/metadata-modules/route-trigger/route-trigger.controller.ts"
+  ],
+  "module_level_changes": [
+    "src/engine/core-modules/domain/domain-server-config/services/domain-server-config.service.ts::<module>",
+    "src/engine/core-modules/domain/domain-server-config/services/domain-server-config.service.ts::DomainServerConfigService",
+    "src/engine/core-modules/logic-function/logic-function-trigger/triggers/route/route-trigger.service.ts::RouteTriggerRequestContext"
+  ],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d",
+    "patch": "targets/exp3/dataset-patches/twenty/twenty_pr27248.patch",
+    "patch_sha256": "2418e15bfcd3827de83426c6f7f3e7ef0325a644326edd698cda184314c184c4",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/twentyhq/twenty/pull/27248",
+    "issue": "#27159",
+    "merge_commit": "41849ba09fe082e139fdb3a7a7d1cae48edfe985",
+    "parent_commit": "c3ee08df58bd65e5fb0db24531c300c06a7cfde9",
+    "merged_at": "2026-10-05T16:11:33Z",
+    "report_source": "issue",
+    "tests_added": [
+      "src/engine/core-modules/domain/domain-server-config/utils/__tests__/get-subdomain-and-custom-domain-from-hostname.util.spec.ts: should resolve the front host as the front domain when it sits under the public domain",
+      "src/engine/core-modules/domain/domain-server-config/utils/__tests__/get-subdomain-and-custom-domain-from-hostname.util.spec.ts: should resolve workspace subdomains of a front host under the public domain",
+      "src/engine/core-modules/domain/domain-server-config/utils/__tests__/get-subdomain-and-custom-domain-from-hostname.util.spec.ts: should not treat hosts as public domains when no public domain is configured",
+      "src/engine/metadata-modules/route-trigger/__tests__/route-trigger.controller.spec.ts: forwards every header when the request is served from a public domain"
+    ],
+    "test_files_changed": [
+      "packages/twenty-server/src/engine/core-modules/domain/domain-server-config/utils/__tests__/get-subdomain-and-custom-domain-from-hostname.util.spec.ts",
+      "packages/twenty-server/src/engine/metadata-modules/route-trigger/__tests__/route-trigger.controller.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "low",
+    "indirect_boundary": "other",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix 41849ba09fe082e139fdb3a7a7d1cae48edfe985 (https://github.com/twentyhq/twenty/pull/27248)",
+    "test: src/engine/core-modules/domain/domain-server-config/utils/__tests__/get-subdomain-and-custom-domain-from-hostname.util.spec.ts: should resolve the front host as the front domain when it sits under the public domain",
+    "test: src/engine/core-modules/domain/domain-server-config/utils/__tests__/get-subdomain-and-custom-domain-from-hostname.util.spec.ts: should resolve workspace subdomains of a front host under the public domain",
+    "test: src/engine/core-modules/domain/domain-server-config/utils/__tests__/get-subdomain-and-custom-domain-from-hostname.util.spec.ts: should not treat hosts as public domains when no public domain is configured",
+    "test: src/engine/metadata-modules/route-trigger/__tests__/route-trigger.controller.spec.ts: forwards every header when the request is served from a public domain",
+    "patch diff: old getSubdomainAndDomainFromUrl used `originHostname.endsWith(\".\"+frontDomain)` only; new util adds `hostname === frontDomain`",
+    "frontend.module.ts:64 adapter.use(frontendService.serveDocument) registers it as raw express middleware: boundary other confirmed"
+  ],
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "RC over-inclusive: only DomainServerConfigService.getSubdomainAndDomainFromUrl (old name; logic moved to new util getSubdomainAndCustomDomainFromHostname) carries the behavioural fix (front host equal to front domain / under the public domain); the other symbols are rename-only (isIsolatedOrigin->isPublicDomain, domain->customDomain)",
+      "title gives the trigger (SERVER_URL under PUBLIC_DOMAIN_URL) but not the code change; candidates flag was a false positive on \"document request handling\"",
+      "description truncated in the env list"
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "not_run"
+  }
+}

@@ -41,13 +41,13 @@ def cmd_communities(a):
             u, v = s[5:], d[5:]
             if u != v and u in G and v in G:
                 G.add_edge(u, v, weight=G[u][v]['weight'] + 1 if G.has_edge(u, v) else 1)
-    comms = louvain_communities(G, weight='weight', seed=a.seed)
+    comms = louvain_communities(G, weight='weight', seed=a.seed, resolution=a.resolution)
     comms = sorted((sorted(c) for c in comms), key=lambda c: (-len(c), c[0]))
     of = {f: i for i, c in enumerate(comms) for f in c}
     lines = {f: file_lines(a.repo, f) for f in files}
     out = {
         'generated_by': 'scripts/exp3/corpora.py communities', 'name': a.name, 'graph': os.path.relpath(a.graph), 'seed': a.seed,
-        'definition': 'Louvain (networkx, weight = number of import statements) on the undirected file import graph',
+        'definition': 'Louvain (networkx, weight = number of import statements) on the undirected file import graph', 'resolution': a.resolution,
         'files': len(files), 'import_edges': G.number_of_edges(), 'modularity_Q': round(modularity(G, comms, weight='weight'), 4),
         'total_lines': sum(lines.values()),
         'communities': [{'id': i, 'files': c, 'lines': sum(lines[f] for f in c)} for i, c in enumerate(comms)],
@@ -129,6 +129,7 @@ def main():
     c = sub.add_parser('communities')
     c.add_argument('--name', required=True); c.add_argument('--graph', required=True); c.add_argument('--repo', required=True)
     c.add_argument('--out', required=True); c.add_argument('--seed', type=int, default=20261110)
+    c.add_argument('--resolution', type=float, default=1.0)
     n = sub.add_parser('nested')
     n.add_argument('--communities', required=True); n.add_argument('--tasks', required=True); n.add_argument('--targets', required=True)
     n.add_argument('--out', required=True); n.add_argument('--seed', type=int, default=20261110)

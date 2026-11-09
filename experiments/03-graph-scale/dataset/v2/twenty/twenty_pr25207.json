@@ -1,0 +1,78 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_pr25207",
+  "split": "dev",
+  "repo": "twenty",
+  "task_type": "bug_localisation",
+  "description": "`TWENTY-SERVER-JVT` keeps taking down workspace creation: an affected pod fails every S3 call with the 30s connection timeout for hours and only recovers on restart.",
+  "root_cause_symbols": [
+    "src/engine/core-modules/file-storage/drivers/s3.driver.ts::S3Driver.readFile"
+  ],
+  "relevant_symbols": [
+    "src/engine/core-modules/file-storage/drivers/s3.driver.ts::S3Driver.readFile"
+  ],
+  "relevant_files": [
+    "src/engine/core-modules/file-storage/drivers/s3.driver.ts"
+  ],
+  "module_level_changes": [
+    "src/engine/core-modules/file-storage/drivers/s3.driver.ts::<module>"
+  ],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d",
+    "patch": "targets/exp3/dataset-patches/twenty/twenty_pr25207.patch",
+    "patch_sha256": "bc33860328a59c65cf8e9f22c51a901a64260960fcfb937b5a4f726c8aefe86c",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/twentyhq/twenty/pull/25207",
+    "issue": null,
+    "merge_commit": "d0f1f75d163e4ee58613c2eea94fb79ab9aaa4ce",
+    "parent_commit": "1d5b9ac9cdbe74b84fe0552820ced1cf1e0f4e73",
+    "merged_at": "2026-09-02T15:56:16Z",
+    "report_source": "pr",
+    "tests_added": [
+      "src/utils/__tests__/propagate-destroy-to-source.util.spec.ts: returns the same stream instance",
+      "src/utils/__tests__/propagate-destroy-to-source.util.spec.ts: destroys the wrapped source when the wrapper is destroyed unread",
+      "src/utils/__tests__/propagate-destroy-to-source.util.spec.ts: leaves a fully consumed source alone so its socket stays reusable",
+      "src/utils/__tests__/propagate-destroy-to-source.util.spec.ts: tolerates a stream with no source",
+      "src/utils/__tests__/propagate-destroy-to-source.util.spec.ts: reaches the response stream behind a real SDK ChecksumStream"
+    ],
+    "test_files_changed": [
+      "packages/twenty-server/src/utils/__tests__/propagate-destroy-to-source.util.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "di",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix d0f1f75d163e4ee58613c2eea94fb79ab9aaa4ce (https://github.com/twentyhq/twenty/pull/25207)",
+    "test: src/utils/__tests__/propagate-destroy-to-source.util.spec.ts: returns the same stream instance",
+    "test: src/utils/__tests__/propagate-destroy-to-source.util.spec.ts: destroys the wrapped source when the wrapper is destroyed unread",
+    "test: src/utils/__tests__/propagate-destroy-to-source.util.spec.ts: leaves a fully consumed source alone so its socket stays reusable",
+    "test: src/utils/__tests__/propagate-destroy-to-source.util.spec.ts: tolerates a stream with no source",
+    "test: src/utils/__tests__/propagate-destroy-to-source.util.spec.ts: reaches the response stream behind a real SDK ChecksumStream",
+    "patch: s3.driver.ts readFile returns propagateDestroyToSource(file.Body); new util added",
+    "file-storage-driver.factory.ts:77 new S3Driver(...) (factory/interface dispatch)"
+  ],
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "low",
+    "adjudicated": false,
+    "notes": [
+      "thin symptom (production Sentry id + \"S3 calls time out for hours\"): no mention of streams/readFile; flag for lead (borderline insufficient symptom)",
+      "RC exact; new helper propagateDestroyToSource does not exist in the bug snapshot so it cannot be a GT key",
+      "boundary none is wrong: S3Driver is instantiated by FileStorageDriverFactory and used through the StorageDriver interface"
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "not_run"
+  }
+}

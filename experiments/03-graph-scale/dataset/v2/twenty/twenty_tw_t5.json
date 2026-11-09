@@ -1,0 +1,94 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_tw_t5",
+  "split": "test",
+  "repo": "twenty",
+  "task_type": "data_flow",
+  "category": "D",
+  "description": "A user changes a field of a company record. Explain how a corresponding entry appears on that record's timeline: which in-process listener reacts to the change, what decides whether a timeline entry is produced at all, how the work is moved off the request path, which worker class does the write, and where the timeline row is finally persisted. Also explain why writing that timeline row does not cause the timeline machinery to trigger itself again.",
+  "root_cause_symbols": [
+    "src/engine/twenty-orm/repository/workspace-repository.ts::WorkspaceRepository.emitMutationEvent"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/engine/twenty-orm/repository/workspace-repository.ts::WorkspaceRepository.emitMutationEvent",
+    "src/engine/workspace-event-emitter/workspace-event-emitter.ts::WorkspaceEventEmitter.emitDatabaseBatchEvent",
+    "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts::EntityEventsToDbListener.handleUpdate",
+    "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts::EntityEventsToDbListener.handleEvent",
+    "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts::EntityEventsToDbListener.handleUpsert",
+    "src/modules/timeline/jobs/upsert-timeline-activity-from-internal-event.job.ts::UpsertTimelineActivityFromInternalEvent.handle",
+    "src/modules/timeline/services/timeline-activity.service.ts::TimelineActivityService.upsertEvents",
+    "src/modules/timeline/repositories/timeline-activity.repository.ts::TimelineActivityRepository.upsertTimelineActivities",
+    "src/modules/timeline/services/timeline-activity-routing-plan.service.ts::TimelineActivityRoutingPlanService.shouldProcessEvent",
+    "src/modules/timeline/services/timeline-activity-routing-plan.service.ts::TimelineActivityRoutingPlanService.getRulesForEventBatch",
+    "src/modules/timeline/services/timeline-activity.service.ts::TimelineActivityService.buildPayloadsForSourceRule",
+    "src/modules/timeline/services/timeline-activity.service.ts::TimelineActivityService.buildPayloadsForJunctionRule"
+  ],
+  "relevant_files": [
+    "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts",
+    "src/engine/twenty-orm/repository/workspace-repository.ts",
+    "src/engine/workspace-event-emitter/workspace-event-emitter.ts",
+    "src/modules/timeline/jobs/upsert-timeline-activity-from-internal-event.job.ts",
+    "src/modules/timeline/repositories/timeline-activity.repository.ts",
+    "src/modules/timeline/services/timeline-activity-routing-plan.service.ts",
+    "src/modules/timeline/services/timeline-activity.service.ts"
+  ],
+  "gt_path": [
+    "src/engine/twenty-orm/repository/workspace-repository.ts::WorkspaceRepository.emitMutationEvent",
+    "src/engine/workspace-event-emitter/workspace-event-emitter.ts::WorkspaceEventEmitter.emitDatabaseBatchEvent",
+    "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts::EntityEventsToDbListener.handleUpdate",
+    "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts::EntityEventsToDbListener.handleEvent",
+    "src/modules/timeline/services/timeline-activity-routing-plan.service.ts::TimelineActivityRoutingPlanService.shouldProcessEvent",
+    "src/modules/timeline/jobs/upsert-timeline-activity-from-internal-event.job.ts::UpsertTimelineActivityFromInternalEvent.handle",
+    "src/modules/timeline/services/timeline-activity.service.ts::TimelineActivityService.upsertEvents",
+    "src/modules/timeline/services/timeline-activity-routing-plan.service.ts::TimelineActivityRoutingPlanService.getRulesForEventBatch",
+    "src/modules/timeline/services/timeline-activity.service.ts::TimelineActivityService.buildPayloadsForSourceRule",
+    "src/modules/timeline/repositories/timeline-activity.repository.ts::TimelineActivityRepository.upsertTimelineActivities"
+  ],
+  "alternatives": [
+    "Records of objects with audit logging also enqueue an event-log job from the same handleEvent (isAuditLogBatchEvent), a parallel branch.",
+    "Junction-rule payloads (e.g. note/task targets) produce entries on the related record's timeline via buildPayloadsForJunctionRule."
+  ],
+  "distractor_symbols": [
+    "src/engine/api/graphql/workspace-query-runner/listeners/entity-events-to-db.listener.ts::EntityEventsToDbListener.enqueueWebhookJobsIfAnyWebhookMatches",
+    "src/modules/timeline/query-hooks/timeline-activity-create-one.pre-query-hook.ts::TimelineActivityCreateOnePreQueryHook"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d"
+  },
+  "source": {
+    "drafted_by": "mining agent (twenty)",
+    "draft_id": "TW-T5",
+    "verification": "Run timeline-activity-write-path.integration-spec.ts; or confirm via cited lines that the queue-add string equals the @Process argument.",
+    "notes": "Confounders: handleEvent fans out to five consumers; the loop-prevention guard (step 5) is easy to miss. UNVERIFIED: which routing rule makes a position-only change skip (spec at :479 asserts it; mechanism not traced)."
+  },
+  "evidence": [
+    "packages/twenty-server/test/integration/graphql/suites/timeline/timeline-activity-write-path.integration-spec.ts:351 'should write an updated entry holding the field diff'",
+    "packages/twenty-server/test/integration/graphql/suites/timeline/timeline-activity-write-path.integration-spec.ts:479 'should not write an entry for a position only change'",
+    "entity-events-to-db.listener.ts:84-90 (handleUpsert guard), 95-150 (handleEvent)",
+    "timeline-activity.service.ts:114-205,244,385",
+    "timeline-activity-routing-plan.service.ts:59-110"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 7,
+    "communities_spanned": 2,
+    "gt_path_length": 10,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "mapping note gt_path[4] (listener:87): line 87 is in handleUpsert (a second guard that skips timelineActivity upserts for agent triggers). The self-trigger guard the query asks about is the first statement of handleEvent (listener:99-106: timelineActivity batches are only published, never queued). Correct key: handleEvent; keep handleUpsert as additional relevant, not as gt",
+      "mapping note gt_path[11] (timeline-activity.service.ts:155) is the call this.buildPayloadsForSourceRule inside upsertEvents; real key TimelineActivityService.buildPayloadsForSourceRule (:244), also buildPayloadsForJunctionRule (:385)",
+      "what decides whether an entry is produced = shouldProcessEvent (routing-plan:59, isAuditLogged or eligible routing plan) evaluated in handleEvent:111-115; present in relevant but missing from gt_path; add after handleEvent. Rules per batch: getRulesForEventBatch (:~80)",
+      "distractors: query-hooks and message-cleaner exist (as directories); give keys or drop. TimelineActivityCreateOnePreQueryHook exists; the cleaner is arbitrary name-similarity -> drop; enqueueWebhookJobsIfAnyWebhookMatches key given",
+      "whole path verified (handleEvent:136 add(UpsertTimelineActivityFromInternalEvent.name) -> job -> upsertEvents -> repository.upsertTimelineActivities)"
+    ]
+  }
+}

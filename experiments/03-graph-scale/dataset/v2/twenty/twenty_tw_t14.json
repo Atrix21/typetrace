@@ -1,0 +1,92 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_tw_t14",
+  "split": "test",
+  "repo": "twenty",
+  "task_type": "architecture",
+  "category": "E",
+  "description": "The workspace-specific GraphQL API (queries such as listing people, mutations such as creating a company) is derived from the workspace's metadata. Explain how the server actually serves these operations: is a GraphQL schema built per workspace and executed by the GraphQL engine, or is something else done? Describe the components, what cached data makes the fast path possible, how errors are formatted, and where the generated-schema code path is still used.",
+  "root_cause_symbols": [
+    "src/engine/api/graphql/graphql-config/graphql-config.service.ts::GraphQLConfigService.createGqlOptions"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/engine/api/graphql/graphql-config/graphql-config.service.ts::GraphQLConfigService.createGqlOptions",
+    "src/engine/api/graphql/direct-execution/hooks/use-direct-execution.hook.ts::useDirectExecution",
+    "src/engine/api/graphql/direct-execution/direct-execution.service.ts::DirectExecutionService.getWorkspaceResolverNames",
+    "src/engine/api/graphql/direct-execution/direct-execution.service.ts::DirectExecutionService.executeWorkspaceQuery",
+    "src/engine/api/graphql/direct-execution/direct-execution.service.ts::DirectExecutionService.executeField",
+    "src/engine/api/graphql/direct-execution/direct-execution.service.ts::DirectExecutionService.formatError",
+    "src/engine/api/graphql/workspace-schema.factory.ts::WorkspaceSchemaFactory.createGraphQLSchema",
+    "src/engine/core-modules/sdk-client/sdk-client-generation.service.ts::SdkClientGenerationService.generateSdkClientForApplication",
+    "src/engine/api/graphql/direct-execution/services/workspace-resolver-name-map-cache.service.ts::WorkspaceResolverNameMapCacheService",
+    "src/engine/api/graphql/workspace-query-runner/utils/workspace-query-runner-graphql-api-exception-handler.util.ts::workspaceQueryRunnerGraphqlApiExceptionHandler",
+    "src/engine/core-modules/graphql/hooks/use-graphql-error-handler.hook.ts::useGraphQLErrorHandlerHook"
+  ],
+  "relevant_files": [
+    "src/engine/api/graphql/direct-execution/direct-execution.service.ts",
+    "src/engine/api/graphql/direct-execution/hooks/use-direct-execution.hook.ts",
+    "src/engine/api/graphql/direct-execution/services/workspace-resolver-name-map-cache.service.ts",
+    "src/engine/api/graphql/graphql-config/graphql-config.service.ts",
+    "src/engine/api/graphql/workspace-query-runner/utils/workspace-query-runner-graphql-api-exception-handler.util.ts",
+    "src/engine/api/graphql/workspace-schema.factory.ts",
+    "src/engine/core-modules/graphql/hooks/use-graphql-error-handler.hook.ts",
+    "src/engine/core-modules/sdk-client/sdk-client-generation.service.ts"
+  ],
+  "gt_path": [
+    "src/engine/api/graphql/graphql-config/graphql-config.service.ts::GraphQLConfigService.createGqlOptions",
+    "src/engine/api/graphql/direct-execution/hooks/use-direct-execution.hook.ts::useDirectExecution",
+    "src/engine/api/graphql/direct-execution/direct-execution.service.ts::DirectExecutionService.getWorkspaceResolverNames",
+    "src/engine/api/graphql/direct-execution/direct-execution.service.ts::DirectExecutionService.executeWorkspaceQuery",
+    "src/engine/api/graphql/direct-execution/direct-execution.service.ts::DirectExecutionService.executeField",
+    "src/engine/api/graphql/direct-execution/direct-execution.service.ts::DirectExecutionService.formatError",
+    "src/engine/api/graphql/workspace-schema.factory.ts::WorkspaceSchemaFactory.createGraphQLSchema",
+    "src/engine/core-modules/sdk-client/sdk-client-generation.service.ts::SdkClientGenerationService.generateSdkClientForApplication"
+  ],
+  "alternatives": [
+    "Introspection queries are handled by executeIntrospectionQuery in direct-execution.service.ts (line ~340), merged with workspace results.",
+    "Operations the direct path cannot classify fall through to the regular GraphQL engine (classify-top-level-fields util)."
+  ],
+  "distractor_symbols": [
+    "src/engine/api/graphql/workspace-resolver-builder/workspace-resolver-builder.service.ts::WorkspaceResolverBuilderService"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d"
+  },
+  "source": {
+    "drafted_by": "mining agent (twenty)",
+    "draft_id": "TW-T14",
+    "verification": "Read cited lines; grep callers of createGraphQLSchema (1 non-test caller).",
+    "notes": "Counter-intuitive architecture: no per-workspace GraphQLSchema is built for serving. An agent that explains makeExecutableSchema/WorkspaceSchemaFactory as the serving path is wrong. UNVERIFIED: rn cache service class name regex (build asserts it exists). Whether subscriptions/other operation types bypass direct execution not traced."
+  },
+  "evidence": [
+    "packages/twenty-server/src/engine/api/graphql/direct-execution/utils/__tests__/classify-top-level-fields.util.spec.ts",
+    "packages/twenty-server/src/engine/api/graphql/graphql-config/graphql-config.service.ts:56",
+    "graphql-config.service.ts:50-62",
+    "direct-execution.service.ts:425-470",
+    "workspace-resolver-builder.service.ts (only shouldBuildResolver)",
+    "sdk-client-generation.service.ts:127"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 8,
+    "communities_spanned": 4,
+    "gt_path_length": 8,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "mapping notes gt_path[0] (graphql-config.service.ts:56) = GraphQLConfigService.createGqlOptions (registers useDirectExecution first); gt_path[2] (direct-execution.service.ts:186) = DirectExecutionService.getWorkspaceResolverNames (reads graphQLResolverNameMap from the workspace cache; the cache provider is WorkspaceResolverNameMapCacheService); gt_path[3] (:279) is the lookup inside executeWorkspaceQuery; gt_path[7] (sdk-client-generation.service.ts:127) = SdkClientGenerationService.generateSdkClientForApplication; all keys already correct",
+      "only non-test production caller of createGraphQLSchema is sdk-client-generation.service.ts:127 (grep over src); WorkspaceSchemaFactory is also registered in core-graphql-api.module.ts",
+      "add cached-data key WorkspaceResolverNameMapCacheService to the gt (query asks \"what cached data makes the fast path possible\") and the error formatting handler workspaceQueryRunnerGraphqlApiExceptionHandler (workspace-query-runner/utils/...exception-handler.util.ts:38) called by formatError; useGraphQLErrorHandlerHook (core-modules/graphql/hooks) covers the engine path",
+      "distractor WorkspaceResolverBuilderService: claim \"builds resolver factories used by both paths\" is wrong: the class only has shouldBuildResolver, used by the generated-schema path (workspace-schema-builder/graphql-type-generators); the resolver factories (CreateOneResolverFactory etc.) are injected directly into DirectExecutionService. Keep as distractor with corrected rationale; workspace-query-builder exists (interfaces/types/utils only, no symbol) -> drop; graphql-query-runner/ holds helpers used for response shaping on the live path (e.g. ObjectRecordsToGraphqlConnectionHelper) -> drop",
+      "caveat: direct path returns null/falls through to the engine for unclassifiable or core operations (use-direct-execution.hook.ts:60-75,133-141); the claim \"no per-workspace schema is built for serving\" holds for classified workspace operations only"
+    ]
+  }
+}

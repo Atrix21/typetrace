@@ -1,0 +1,482 @@
+{
+  "repo": "twenty",
+  "kept": 24,
+  "excluded": 16,
+  "dataset_sha256": "25ad8335f37825117bf2bb4fc7626184090a1a2038f186829fcf9215046a15d8",
+  "report": [
+    {
+      "task_id": "twenty_pr21506",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "low",
+        "indirect_boundary": "none",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "twenty_pr21846",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "graphql",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "twenty_pr22640",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "report_states_mechanism: description names evaluateTextAndArrayFilter, lists the handled operands and says it hits default: throw, i.e. which operands to add in which function"
+      ]
+    },
+    {
+      "task_id": "twenty_pr22885",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "none",
+        "gt_files": 2,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "twenty_pr23411",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "report_fix_mismatch: description is about front-end behaviour (APPLICATION_FRAGMENT/FIND_MANY_APPLICATIONS not selecting logoUrl, installedApplications not refreshed, useApplicationChipData fallback); the server patch only renames MarketplaceAppDTO/MarketplaceAppDetailDTO field logo -> logoUrl in two mappers and removes @Field from ApplicationDTO.logo",
+        "description is cut mid-sentence (\"callers populated w\") and pastes the new field name logoUrl",
+        "RC symbols are renames, not where the described bug is"
+      ]
+    },
+    {
+      "task_id": "twenty_pr23634",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "report_states_mechanism: the issue title/summary names the exact change (RecordTableConfiguration.viewId must be a SerializedRelation so it is rewritten to a viewUniversalIdentifier)",
+        "also a feature request/gap rather than a malfunction"
+      ]
+    },
+    {
+      "task_id": "twenty_pr23758",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "report_states_mechanism: repro imports findMatchingBranch from its file path and the report says the dangling filterGroupId is never validated (expected: skipped or raising an error); pastes the answer identifiers",
+        "also candidates metadata flagged mechanism_in_report"
+      ]
+    },
+    {
+      "task_id": "twenty_pr24301",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "di",
+        "gt_files": 2,
+        "communities_spanned": 2,
+        "gt_path_length": 0,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "twenty_pr24534",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "report_states_mechanism: PR text quotes the constructor and says statusCode is declared, accepted but never destructured/assigned"
+      ]
+    },
+    {
+      "task_id": "twenty_pr25207",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "di",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "twenty_pr25529",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "di",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "twenty_pr25828",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "report_states_mechanism: issue says SELECT IS matches INVALID for VALID \"because it's checking substring containment, not equality\" and the title repeats it"
+      ]
+    },
+    {
+      "task_id": "twenty_pr26271",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "job",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "twenty_pr26403",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "report_states_mechanism: PR text names isEmailBlocklisted and says it compares with strict equality while handles are lowercased -> case-insensitive match"
+      ]
+    },
+    {
+      "task_id": "twenty_pr26614",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "report_states_mechanism: issue names LoginTokenService.generateLoginToken (no jti), verifyLoginToken and auth.resolver getAuthTokensFromLoginToken with file paths",
+        "RC extra: verifyLoginToken is not modified by the patch; missing: LoginTokenService.consumeLoginTokenOrThrow (new, absent at bug snapshot), CONSUMED_LOGIN_TOKEN_CACHE_KEY_PREFIX (new)"
+      ]
+    },
+    {
+      "task_id": "twenty_pr26693",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "low",
+        "indirect_boundary": "none",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "twenty_pr27245",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "report_states_mechanism: title says \"userWorkspace.locale is not synced\", body says only updateWorkspaceMemberSettings writes userWorkspace.locale and the record API writes workspaceMember.locale only: names the missing sync",
+        "RC extra: handleWorkspaceMemberEvent is unchanged (mechanical old-side range artefact); the added method syncUserWorkspaceLocale is new (absent at bug snapshot)"
+      ]
+    },
+    {
+      "task_id": "twenty_pr27248",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "low",
+        "indirect_boundary": "other",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "twenty_pr27486",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "report_states_mechanism: PR text says SAML/OIDC callbacks pass only the email to formatUserDataPayload without isEmailAlreadyVerified",
+        "PR bundles two unrelated defects (unverified SSO users; wrong ACS URL/Entity ID display); description truncated",
+        "RC missing declaration ClientConfig.serverUrl (entity field added)"
+      ]
+    },
+    {
+      "task_id": "twenty_pr27918",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "report_states_mechanism: PR text says the npm-style author object \"was written as-is into the author text column\" (normalise object to name)",
+        "boundary job in strata is unsupported by the patch (all changed code is resolver/service/util)"
+      ]
+    },
+    {
+      "task_id": "twenty_pr27962",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "report_states_mechanism: issue names database-tool.provider.ts, the canObjectBeManagedByAutomation gate on create/update and its absence on delete tools"
+      ]
+    },
+    {
+      "task_id": "twenty_pr28494",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Materialisation defect found when validating the auditor fix: the fix renames utils/expand-flat-field-metadata-maps.util.ts to ...-or-throw.util.ts; the mined patch lists only the new path, so reverting it deletes the new file without restoring the old one and the bug snapshot does not compile. Excluded (not repaired)."
+      ]
+    },
+    {
+      "task_id": "twenty_pr28825",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "report_states_mechanism: the retained \"Technical inputs\" section names fillSelectGaps/fillDateGaps and their two-dimensional variants and the skipped null bucket; full issue also names the three files and a possible fix",
+        "salvageable (accept) if the Technical inputs/Files lines are cut and only Bug/Expected are kept; lead to adjudicate"
+      ]
+    },
+    {
+      "task_id": "twenty_pr29126",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "low",
+        "indirect_boundary": "none",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "twenty_pr29193",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "report_states_mechanism: issue has a \"Root cause\" section naming learn-tools.tool.ts and the filter that drops unknown names"
+      ]
+    },
+    {
+      "task_id": "twenty_pr29754",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "report_states_mechanism: title and body state the diagnosis: eventExternalId stored as absolute URL vs relative href returned by sync; fix stores pathname"
+      ]
+    },
+    {
+      "task_id": "twenty_tw_t1",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 13,
+        "communities_spanned": 4,
+        "gt_path_length": 20,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "twenty_tw_t10",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 3,
+        "communities_spanned": 3,
+        "gt_path_length": 1,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "twenty_tw_t11",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 3,
+        "communities_spanned": 2,
+        "gt_path_length": 2,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "twenty_tw_t12",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 8,
+        "communities_spanned": 2,
+        "gt_path_length": 10,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "twenty_tw_t13",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 7,
+        "communities_spanned": 3,
+        "gt_path_length": 10,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "twenty_tw_t14",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 8,
+        "communities_spanned": 4,
+        "gt_path_length": 8,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "twenty_tw_t2",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 11,
+        "communities_spanned": 3,
+        "gt_path_length": 21,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "twenty_tw_t3",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 8,
+        "communities_spanned": 5,
+        "gt_path_length": 16,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "twenty_tw_t4",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 6,
+        "communities_spanned": 1,
+        "gt_path_length": 5,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "twenty_tw_t5",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 7,
+        "communities_spanned": 2,
+        "gt_path_length": 10,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "twenty_tw_t6",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 6,
+        "communities_spanned": 3,
+        "gt_path_length": 11,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "twenty_tw_t7",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 6,
+        "communities_spanned": 1,
+        "gt_path_length": 15,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "twenty_tw_t8",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "medium",
+        "indirect_boundary": "see-path",
+        "gt_files": 7,
+        "communities_spanned": 3,
+        "gt_path_length": 9,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "twenty_tw_t9",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 6,
+        "communities_spanned": 2,
+        "gt_path_length": 1,
+        "locality": "cross_module"
+      }
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_tw_t4",
+  "split": "test",
+  "repo": "twenty",
+  "task_type": "data_flow",
+  "category": "D",
+  "description": "A user adds a new entry to the email blocklist (an address or a whole domain). Describe exactly how the server reacts: which component notices the new blocklist record, how the work is handed off, which stored message data is removed and how orphaned messages/threads are cleaned up afterwards. Include how domain entries are matched and what is protected from deletion.",
+  "root_cause_symbols": [
+    "src/engine/workspace-event-emitter/workspace-event-emitter.ts::WorkspaceEventEmitter.emitDatabaseBatchEvent"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/engine/workspace-event-emitter/workspace-event-emitter.ts::WorkspaceEventEmitter.emitDatabaseBatchEvent",
+    "src/modules/messaging/blocklist-manager/listeners/messaging-blocklist.listener.ts::MessagingBlocklistListener.handleCreatedEvent",
+    "src/modules/messaging/blocklist-manager/jobs/messaging-blocklist-item-delete-messages.job.ts::BlocklistItemDeleteMessagesJob.handle",
+    "src/modules/messaging/blocklist-manager/jobs/messaging-blocklist-item-delete-messages.job.ts::BlocklistItemDeleteMessagesJob.deleteMessagesForMessageChannels",
+    "src/modules/messaging/message-cleaner/services/messaging-message-cleaner.service.ts::MessagingMessageCleanerService.cleanOrphanMessagesAndThreads",
+    "src/modules/blocklist/utils/group-blocklist-handles-by-owner.util.ts::groupBlocklistHandlesByOwner",
+    "src/modules/messaging/blocklist-manager/constants/blocklisted-participant-roles.constant.ts::BLOCKLISTED_PARTICIPANT_ROLES",
+    "src/modules/messaging/blocklist-manager/jobs/messaging-blocklist-item-delete-messages.job.ts::BlocklistItemDeleteMessagesJob.findWorkspaceMessageChannels",
+    "src/modules/messaging/blocklist-manager/jobs/messaging-blocklist-item-delete-messages.job.ts::BlocklistItemDeleteMessagesJob.findWorkspaceMemberMessageChannels",
+    "src/modules/messaging/message-cleaner/services/messaging-message-cleaner.service.ts::MessagingMessageCleanerService.deleteOrphansByKeyset"
+  ],
+  "relevant_files": [
+    "src/engine/workspace-event-emitter/workspace-event-emitter.ts",
+    "src/modules/blocklist/utils/group-blocklist-handles-by-owner.util.ts",
+    "src/modules/messaging/blocklist-manager/constants/blocklisted-participant-roles.constant.ts",
+    "src/modules/messaging/blocklist-manager/jobs/messaging-blocklist-item-delete-messages.job.ts",
+    "src/modules/messaging/blocklist-manager/listeners/messaging-blocklist.listener.ts",
+    "src/modules/messaging/message-cleaner/services/messaging-message-cleaner.service.ts"
+  ],
+  "gt_path": [
+    "src/engine/workspace-event-emitter/workspace-event-emitter.ts::WorkspaceEventEmitter.emitDatabaseBatchEvent",
+    "src/modules/messaging/blocklist-manager/listeners/messaging-blocklist.listener.ts::MessagingBlocklistListener.handleCreatedEvent",
+    "src/modules/messaging/blocklist-manager/jobs/messaging-blocklist-item-delete-messages.job.ts::BlocklistItemDeleteMessagesJob.handle",
+    "src/modules/messaging/blocklist-manager/jobs/messaging-blocklist-item-delete-messages.job.ts::BlocklistItemDeleteMessagesJob.deleteMessagesForMessageChannels",
+    "src/modules/messaging/message-cleaner/services/messaging-message-cleaner.service.ts::MessagingMessageCleanerService.cleanOrphanMessagesAndThreads"
+  ],
+  "alternatives": [
+    "Update of a blocklist entry enqueues both the delete job and the reimport job (listener lines near handleUpdatedEvent).",
+    "Calendar has an analogous listener under modules/calendar/blocklist-manager/listeners/calendar-blocklist.listener.ts."
+  ],
+  "distractor_symbols": [
+    "src/modules/messaging/blocklist-manager/jobs/messaging-blocklist-reimport-messages.job.ts::BlocklistReimportMessagesJob",
+    "src/modules/messaging/message-participant-manager/listeners/message-participant-person.listener.ts::MessageParticipantPersonListener"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d"
+  },
+  "source": {
+    "drafted_by": "mining agent (twenty)",
+    "draft_id": "TW-T4",
+    "verification": "Run blocklist-cleanup.integration-spec.ts; or read the cited lines.",
+    "notes": "Confounders: the job deletes channel-message ASSOCIATIONS, not message rows; orphan removal is a separate step. Both messaging and calendar have same-named patterns. The messaging cleaner method line was matched by regex 'public async cleanOrphanMessagesAndThreads' - if the declaration is 'async cleanOrphanMessagesAndThreads' the build would have failed."
+  },
+  "evidence": [
+    "packages/twenty-server/test/integration/google/messaging/blocklist-cleanup.integration-spec.ts:114 'deletes the blocked handle messages and keeps the calendar events imported before the block'",
+    "packages/twenty-server/test/integration/google/messaging/blocklist-cleanup.integration-spec.ts:144 'deletes the messages of a handle blocked for the whole workspace'",
+    "messaging-blocklist.listener.ts:32-45",
+    "messaging-blocklist-item-delete-messages.job.ts:45-95,168-240",
+    "messaging-message-cleaner.service.ts:185-260"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 6,
+    "communities_spanned": 1,
+    "gt_path_length": 5,
+    "locality": "local"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "path verified: listener handleCreatedEvent:32-45 -> messagingQueue.add(BlocklistItemDeleteMessagesJob.name); job.handle:45-95 -> deleteMessagesForMessageChannels -> cleanOrphanMessagesAndThreads",
+      "draft note: step 7 (line 232, association delete) is inside deleteMessagesForMessageChannels, same key as step 6: dedupe (draft already merged)",
+      "domain matching and protection live in deleteMessagesForMessageChannels:195-215 (ILike %@domain and %.domain, Not(In(channel handle + handleAliases)) protects own addresses, role In(BLOCKLISTED_PARTICIPANT_ROLES)); add BLOCKLISTED_PARTICIPANT_ROLES constant and the channel lookup helpers findWorkspaceMessageChannels/findWorkspaceMemberMessageChannels (own-vs-workspace scope)",
+      "groupBlocklistHandlesByOwner (modules/blocklist/utils/group-blocklist-handles-by-owner.util.ts) is called at job.handle:69 and decides workspace-wide vs per-member scope: it is on the path, so it is not a valid distractor (draft says \"helper, not a hop\"); move to relevant",
+      "orphan cleanup detail: cleanOrphanMessagesAndThreads uses deleteOrphansByKeyset (cursor pages of messages without associations, deletes attachments/messages, then reconciles thread targets); add deleteOrphansByKeyset as optional relevant",
+      "distractor keys: BlocklistReimportMessagesJob (class), MessageParticipantPersonListener (class) exist; mapping \"no declaration\" was because no line numbers were given"
+    ]
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "task_id": "twenty_pr21506",
+  "split": "test",
+  "repo": "twenty",
+  "task_type": "bug_localisation",
+  "description": "On a record **show page**, prev/next navigation fails with toasts like:\n\n```\nInvalid filter : Operator \"lt\" is not valid for this \"severity\" SELECT field\n```\n\n…but only when the record is reached via in-app navigation from an index view sorted by a SELECT field (a hard reload is clean).",
+  "root_cause_symbols": [
+    "src/engine/api/common/common-args-processors/filter-arg-processor/constants/filter-operators.constant.ts::ENUM_FILTER_OPERATORS"
+  ],
+  "relevant_symbols": [
+    "src/engine/api/common/common-args-processors/filter-arg-processor/constants/filter-operators.constant.ts::ENUM_FILTER_OPERATORS"
+  ],
+  "relevant_files": [
+    "src/engine/api/common/common-args-processors/filter-arg-processor/constants/filter-operators.constant.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "bde4ff135765e8590d64874cebd5404c0919528d",
+    "patch": "targets/exp3/dataset-patches/twenty/twenty_pr21506.patch",
+    "patch_sha256": "e15438e55c9f49ab30cc8f6fb68a6fa25949b68a96fc7b6c3569d4d785e78d48",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/twentyhq/twenty/pull/21506",
+    "issue": null,
+    "merge_commit": "050f7dcf859ca628274de9587c0732ec2747b8f8",
+    "parent_commit": "1efa3567ef35ac43b367da00eb28c70521fa468f",
+    "merged_at": "2026-06-13T06:52:21Z",
+    "report_source": "pr",
+    "tests_added": [],
+    "test_files_changed": [
+      "packages/twenty-server/src/engine/api/common/common-args-processors/filter-arg-processor/__tests__/__snapshots__/filter-arg-processor.service.spec.ts.snap",
+      "packages/twenty-server/src/engine/api/common/common-args-processors/filter-arg-processor/__tests__/constants/successful-filter-inputs-by-field-metadata-type.constant.ts",
+      "packages/twenty-server/src/engine/api/common/common-args-processors/filter-arg-processor/utils/__tests__/get-operators-for-field-type.util.spec.ts",
+      "packages/twenty-server/src/engine/api/common/common-args-processors/filter-arg-processor/utils/__tests__/validate-operator-for-field-type-or-throw.util.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "low",
+    "indirect_boundary": "none",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix 050f7dcf859ca628274de9587c0732ec2747b8f8 (https://github.com/twentyhq/twenty/pull/21506)",
+    "patch twenty_pr21506.patch: only hunk adds gt/gte/lt/lte inside ENUM_FILTER_OPERATORS (filter-operators.constant.ts, merge 050f7dc)",
+    "error text \"Operator lt is not valid for this severity SELECT field\" arises from validateOperatorForFieldTypeOrThrow reading this constant (fixed code lacks lt for SELECT/RATING before the change)",
+    "boundary: HTTP/GraphQL request -> filter-arg-processor -> constant, direct imports; none confirmed"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "symptom is the server error text; no fix named; RC exact"
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "not_run"
+  }
+}
