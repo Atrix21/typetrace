@@ -10,3 +10,6 @@ __pycache__/
 targets/node_modules
 evaluation/results/smoke*/
 experiments/02-agent-diagnosis/results/isolation-report-raw/control__*
+# Experiment 3: raw retrieval outputs contain code from AGPL-licensed repositories (Immich, Twenty) — kept local only;
+# metrics.jsonl / infra.jsonl / graph-builds.jsonl (no code) are tracked.
+experiments/03-graph-scale/results/stage1-*/raw/

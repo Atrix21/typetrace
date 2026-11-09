@@ -98,6 +98,9 @@ async function evalCorpus(task: GroundTruthTask, spec: CorpusSpec, root: string,
     primeGraphCache(corpus, { nodes: g.nodes, edges: g.edges, build_ms: 0, cached: true });
   }
   const index = new SymbolIndex(root, spec.files);
+  // Distractors are not scored; on a subset corpus those outside it are dropped before validation (ground-truth files are
+  // in every corpus by construction, E3-D19).
+  if (spec.name !== 'full' && task.distractor_symbols?.length) task = { ...task, distractor_symbols: task.distractor_symbols.filter((k) => index.byKey.has(k)) };
   const bad = validateTasks([task], index).filter((i) => i.level === 'error');
   if (bad.length) throw new Error(`ground truth invalid on ${task.task_id}/${spec.name}: ${bad.map((b) => b.msg).join('; ')}`);
   const q = { task_id: task.task_id, query: task.description };
@@ -120,6 +123,17 @@ async function evalCorpus(task: GroundTruthTask, spec: CorpusSpec, root: string,
   }
 }
 
+// A killed run must not leave a bug reverted into the shared snapshot.
+let currentRestore: (() => void) | null = null;
+for (const sig of ['SIGINT', 'SIGTERM'] as const) process.on(sig, () => { try { currentRestore?.(); } finally { process.exit(130); } });
+
+/** The shared snapshot's source tree must equal the pinned commit (no reverted fix, no stray file). */
+function assertClean() {
+  const R = REPOS[repoName!];
+  const r = spawnSync('git', ['status', '--porcelain', '--', R.src], { cwd: abs(R.root), encoding: 'utf8' });
+  if (r.status !== 0 || r.stdout.trim()) throw new Error(`snapshot ${R.root} is not clean — refusing to run:\n${r.stdout.slice(0, 500)}`);
+}
+
 let pinnedCache: { nodes: Set<string>; edges: Set<string> } | null = null;
 function pinnedIds(): { nodes: Set<string>; edges: Set<string> } {
   if (pinnedCache) return pinnedCache;
@@ -139,6 +153,9 @@ async function main() {
   const tasks = (REPO === 'S' ? selectTasks(cfg, SPLIT) : loadV2Tasks()).filter((t) => !ONLY || ONLY.includes(t.task_id));
   const nested = NESTED ? JSON.parse(fs.readFileSync(abs(NESTED), 'utf8')) : null;
   fs.writeFileSync(path.join(OUT, 'meta.json'), JSON.stringify({ repo: REPO, split: SPLIT, methods: METHODS, budget: BUDGET, tasks: tasks.map((t) => t.task_id), nested: NESTED ?? null, max_package_declaration_bytes: REPO === 'S' ? null : MAX_DECL_BYTES, started: new Date().toISOString() }, null, 2) + '\n');
+  // The pinned graph must be built from the CLEAN snapshot, before any task materialises a bug (it is the graph of
+  // every pinned-snapshot task and the freshness reference).
+  if (REPO !== 'S') { assertClean(); pinnedIds(); }
   for (const t of tasks) {
     const pendingAny = () => METHODS.some((m) => !done.has(`${t.task_id}|full|${m}`)) || (nested?.tasks?.[t.task_id]?.corpora ?? []).some((c: any) => METHODS.some((m) => !done.has(`${t.task_id}|${c.strategy}-${c.target_lines}|${m}`)));
     if (!pendingAny()) continue;
@@ -151,8 +168,10 @@ async function main() {
       continue;
     }
     const R = REPOS[repoName!];
+    assertClean(); // a previous interruption must never leave another task's bug in the tree
     const snap = (t as { snapshot?: { kind: string; patch?: string; apply?: string; patch_sha256?: string } }).snapshot;
     const restore = snap?.kind === 'revert_fix' ? materialise(repoName!, snap.patch!, snap.apply ?? 'exact') : () => {};
+    currentRestore = restore;
     try {
       const root = abs(R.corpusRoot);
       const files = listCorpusFiles(root, ['src']);
@@ -185,7 +204,7 @@ async function main() {
         await evalCorpus(t, { name: `${c.strategy}-${c.target_lines}`, files: cf, strategy: c.strategy, target_lines: c.target_lines, lines: c.lines }, root, commit, g);
       }
       if (snap?.kind === 'revert_fix') fs.rmSync(path.join(gdir, 'graph.sqlite'), { force: true }); // per-task bug graphs: 0.1–1.2 GB each; stats kept in graph-builds.jsonl
-    } finally { restore(); }
+    } finally { restore(); currentRestore = null; }
     console.error(`[${REPO}] ${t.task_id} ${Math.round((performance.now() - t0) / 1000)}s rss ${rss()} MB`);
   }
   console.log(`done: ${done.size} (task, corpus, method) rows in ${path.relative(process.cwd(), OUT)}`);

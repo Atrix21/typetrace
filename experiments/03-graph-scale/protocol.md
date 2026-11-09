@@ -1,6 +1,6 @@
 # Experiment 3 protocol: does graph-based retrieval become more valuable at scale?
 
-**Status: DRAFT for review — not frozen. No billable stage may start before the owner approves it (§11).**
+**Status: stage 1 (retrieval-only) executed under Amendment B (below); results in `stage1-findings.md`. The agent stages (§5, stages 2–4) are NOT approved and were not run.**
 Decisions and amendments: `decision-log.md` (E3-Dxx). Experiments 1–2 are immutable reference points.
 
 ## 1. Question and hypotheses
@@ -159,3 +159,13 @@ Owner authorisation for milestone 2: non-billable implementation and the determi
 **B6. Tasks.** Category A = historical fixes merged after 2026-06-01 whose non-test change reverts cleanly (or with one line of fuzz) on the pinned snapshot; bug snapshot = pinned snapshot with that change reverted; ground truth = declarations enclosing the changed lines (mechanical), then independently audited. Categories B–E drafted by the mining agents, mapped mechanically to symbols, independently audited; category C direct impact replaced by the type-checker oracle's set. Selection, exclusion and strata never use a retrieval result (E3-D10); the mining agents' BM25 screen was stripped from every file the auditors and the freeze used. Sample sizes are what survived the audit (M: 37 tasks, 26 test; L: frozen after its audit) — below the 30-test-task plan for at least one repository; results are exploratory and reported with CIs.
 
 **B7. Environment differences (unavoidable, documented).** M builds its graphs with all dependencies typed. L stubs third-party declaration files (workspace packages, `@types/*` and the TypeScript library stay typed): a fully typed Twenty walk needed > 6.5 GB and > 15 minutes per build on the 15 GB machine (twice killed), which is infeasible for one build per task snapshot. Effect measured on the pinned snapshot (stage-1 report). Corpora: S = `src`, `test` (experiment 1); M and L = `src` (co-located unit tests included, top-level integration/e2e test directories excluded).
+
+**B8. Changes after Amendment B** (decision log). Decided before any M/L retrieval result was read:
+- the dispatch-rule precision fixes R1–R3 and declared-type literal domains, after the independent edge audit (E3-D21, E3-D22);
+- the finer import-graph partition (Louvain resolution 8) used as the building blocks of the nested corpora (E3-D19).
+
+Made after preliminary M results had been seen; mechanical fixes that changed no method, metric, task or analysis:
+- the runner safeguards after two process incidents, with the affected runs discarded and rerun (E3-D23);
+- dropping distractors outside a subset corpus before validation (E3-D24).
+
+The confirmatory analysis (H1, H2, Holm) in `scripts/exp3/analyse.py` is as committed with Amendment B (370230b); only descriptive infrastructure and freshness tables were added later.

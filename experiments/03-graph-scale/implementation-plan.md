@@ -1,5 +1,26 @@
 # Experiment 3: implementation plan
 
+> **Milestone 2 status (2026-11-10).**
+>
+> **Done:**
+> - M2.1: environments, with Twenty's third-party types stubbed (E3-D15).
+> - M2.2: generic extractor rules, with edge precision 100/100 after the audit-driven fixes.
+> - M2.3: task schema v2 (backward compatible; experiment-1 tasks load unchanged).
+> - M2.4: category-A pipeline, by reverting fixes on the pinned snapshot.
+> - M2.5: FAIL_TO_PASS (Immich) and the type-checker impact oracle.
+> - M2.6: independent audits and the frozen dataset v2.
+> - M2.7: nested corpora (community and random).
+> - M2.8: `hybrid_nograph`, `compact_graph` and `compact_nograph`.
+> - M2.9: path, impact and token-budget metrics, plus infrastructure timing.
+> - M2.10: stage 1 run and reported (`stage1-findings.md`).
+>
+> **Not done, as stated in the report:**
+> - Incremental graph extraction: updates are full rebuilds, timed and with staleness measured.
+> - FAIL_TO_PASS for Twenty (heavy jest/nx setup).
+>
+> **M3 (agent arms) not started; it needs approval.**
+
+
 The principle is to extend, not rewrite. Everything in the reuse table runs today on the new repositories; the remaining work is task data, a few generic extractor rules, nested corpora, two renderers and new scorers.
 
 ## 1. Reused as is

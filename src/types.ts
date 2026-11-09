@@ -105,4 +105,22 @@ export interface GroundTruthTask {
   lexical_overlap?: 'high' | 'medium' | 'low';
   bug_category?: string;
   notes?: string;
+
+  /* ---- Task schema v2 (experiment 3). All optional: v1 tasks load and validate unchanged. ---- */
+  schema_version?: 2;
+  repo?: string;
+  task_type?: 'bug_localisation' | 'feature_understanding' | 'change_impact' | 'data_flow' | 'architecture';
+  /** How the task's snapshot is materialised (experiment-1 branch, pinned commit, or pinned commit with a fix reverted). */
+  snapshot?: { kind: 'experiment1' | 'pinned' | 'revert_fix'; base_commit: string; patch?: string; patch_sha256?: string; apply?: 'exact' | 'fuzz-C1' };
+  source?: Record<string, unknown>;
+  /** Ordered ground-truth path (B/D tasks). */
+  gt_path?: SymbolKey[];
+  /** Change-impact ground truth (C tasks): direct = type-checker oracle; tests = files that must change. */
+  impact?: { direct: SymbolKey[]; indirect?: SymbolKey[]; tests?: string[]; source?: string };
+  alternatives?: unknown[];
+  evidence?: string[];
+  executable_evidence?: { fail_to_pass: string; tests: string[] };
+  /** Mechanically computed strata (never from a retrieval result). */
+  strata?: { difficulty: 'easy' | 'medium' | 'hard'; lexical_overlap: 'high' | 'medium' | 'low'; indirect_boundary: string; gt_files: number; communities_spanned?: number; gt_path_length?: number; locality?: 'local' | 'cross_module' } | null;
+  audit?: { status: string; auditor_confidence?: string | null; adjudicated?: boolean; notes?: string[] };
 }

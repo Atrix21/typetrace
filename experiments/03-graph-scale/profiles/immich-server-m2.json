@@ -34,8 +34,8 @@
     }
   },
   "graph_full": {
-    "nodes": 22144,
-    "edges": 91811,
+    "nodes": 22186,
+    "edges": 91917,
     "nodes_by_type": {
       "parameter": 3782,
       "import": 3061,
@@ -54,8 +54,8 @@
       "interface": 143,
       "exception_handler": 118,
       "external_dependency": 118,
+      "event": 113,
       "db_entity": 71,
-      "event": 71,
       "export": 1,
       "repository": 1
     },
@@ -84,24 +84,24 @@
       "ROUTES_TO": 315,
       "CONTROLLER_CALLS": 312,
       "INJECTS_DEPENDENCY": 303,
+      "PUBLISHES_EVENT": 160,
+      "CONSUMES_EVENT": 156,
       "CATCHES": 140,
       "WRITES": 120,
       "MUTATES": 118,
-      "PUBLISHES_EVENT": 116,
-      "CONSUMES_EVENT": 94,
       "IMPLEMENTS": 19,
       "CALLS_EXTERNAL_API": 12,
       "RECURSES_TO": 11
     },
     "edges_by_verification": {
       "static_verified": 85407,
-      "framework_inferred": 6329,
+      "framework_inferred": 6435,
       "unknown": 57,
       "ambiguous": 18
     },
     "edge_confidence": {
-      "mean": 0.9926,
-      "share_ge_0_9": 0.997
+      "mean": 0.9923,
+      "share_ge_0_9": 0.9959
     }
   },
   "extraction_coverage": {
@@ -145,8 +145,8 @@
     "database_query_edges": 818,
     "external_api_edges": 12,
     "event_edges_extracted": {
-      "PUBLISHES_EVENT": 116,
-      "CONSUMES_EVENT": 94
+      "PUBLISHES_EVENT": 160,
+      "CONSUMES_EVENT": 156
     },
     "decorator_counts": {
       "Get": 272,
@@ -326,5 +326,5 @@
       }
     }
   },
-  "elapsed_s": 0.8
+  "elapsed_s": 1.0
 }

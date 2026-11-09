@@ -1,7 +1,7 @@
 {
   "name": "twenty-server-m2",
   "repo": "targets/exp3/twenty/packages/twenty-server",
-  "graph": ".cache/exp3/graph-twenty-stub",
+  "graph": ".cache/exp3/stage1/L/graphs/f090be22da7f385c",
   "generated_by": "scripts/exp3/graph_profile.py",
   "seed": 20261109,
   "definitions": {
@@ -34,8 +34,8 @@
     }
   },
   "graph_full": {
-    "nodes": 214519,
-    "edges": 697398,
+    "nodes": 214513,
+    "edges": 697332,
     "nodes_by_type": {
       "import": 59193,
       "branch": 29812,
@@ -54,7 +54,7 @@
       "route": 869,
       "external_dependency": 204,
       "interface": 125,
-      "event": 112,
+      "event": 106,
       "db_entity": 85,
       "export": 83,
       "repository": 1
@@ -88,20 +88,20 @@
       "WRITES": 515,
       "CONTROLLER_CALLS": 222,
       "RECURSES_TO": 189,
-      "CONSUMES_EVENT": 188,
-      "PUBLISHES_EVENT": 157,
+      "CONSUMES_EVENT": 144,
+      "PUBLISHES_EVENT": 135,
       "CALLS_EXTERNAL_API": 11
     },
     "edges_by_verification": {
       "static_verified": 637544,
       "unknown": 38139,
-      "framework_inferred": 19157,
+      "framework_inferred": 19091,
       "ambiguous": 2081,
       "semantic_inferred": 477
     },
     "edge_confidence": {
       "mean": 0.9399,
-      "share_ge_0_9": 0.9407
+      "share_ge_0_9": 0.9408
     }
   },
   "extraction_coverage": {
@@ -148,8 +148,8 @@
     "database_query_edges": 0,
     "external_api_edges": 11,
     "event_edges_extracted": {
-      "PUBLISHES_EVENT": 157,
-      "CONSUMES_EVENT": 188
+      "PUBLISHES_EVENT": 135,
+      "CONSUMES_EVENT": 144
     },
     "decorator_counts": {
       "Get": 144,
@@ -336,5 +336,5 @@
       }
     }
   },
-  "elapsed_s": 9.6
+  "elapsed_s": 10.2
 }

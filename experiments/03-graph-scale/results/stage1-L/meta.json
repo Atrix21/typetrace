@@ -1,0 +1,47 @@
+{
+  "repo": "L",
+  "split": "all",
+  "methods": [
+    "ripgrep",
+    "bm25",
+    "embeddings",
+    "hybrid_nograph",
+    "hybrid",
+    "custom_graph",
+    "compact_nograph",
+    "compact_graph"
+  ],
+  "budget": {
+    "maxResults": 50,
+    "maxContextTokens": 8000
+  },
+  "tasks": [
+    "twenty_pr21506",
+    "twenty_pr21846",
+    "twenty_pr22885",
+    "twenty_pr24301",
+    "twenty_pr25207",
+    "twenty_pr25529",
+    "twenty_pr26271",
+    "twenty_pr26693",
+    "twenty_pr27248",
+    "twenty_pr29126",
+    "twenty_tw_t1",
+    "twenty_tw_t10",
+    "twenty_tw_t11",
+    "twenty_tw_t12",
+    "twenty_tw_t13",
+    "twenty_tw_t14",
+    "twenty_tw_t2",
+    "twenty_tw_t3",
+    "twenty_tw_t4",
+    "twenty_tw_t5",
+    "twenty_tw_t6",
+    "twenty_tw_t7",
+    "twenty_tw_t8",
+    "twenty_tw_t9"
+  ],
+  "nested": "experiments/03-graph-scale/manifests/corpora-twenty.json",
+  "max_package_declaration_bytes": 0,
+  "started": "2026-11-09T20:01:00.582Z"
+}

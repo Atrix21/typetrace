@@ -1,0 +1,67 @@
+{
+  "generated_by": "scripts/exp3/manifests.ts",
+  "generated_at": "2026-11-09T21:12:59.394Z",
+  "tools": {
+    "node": "v22.22.3",
+    "typescript_extractor": "5.9.3",
+    "embeddings": {
+      "model": "Qwen/Qwen3-Embedding-0.6B",
+      "python": "vendor/.venvs/embeddings/bin/python",
+      "script": "scripts/embeddings/embed.py",
+      "batch": 16,
+      "max_seq": 1024,
+      "revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3"
+    },
+    "ripgrep": "ripgrep 15.0.0 (rev 3a612f88b8)"
+  },
+  "repositories": {
+    "S": {
+      "name": "brocoders/nestjs-boilerplate",
+      "commit": "9620f159eefe38f47747d02ab162852367c5472c",
+      "snapshot": "targets/bench (experiment-1 single-bug branches)",
+      "corpus_root": "targets/bench",
+      "include": [
+        "src",
+        "test"
+      ],
+      "base_corpus": {
+        "files": 170,
+        "sha256": "99bcd8b0605e90b4411476e3b45c25b2c57c93da9f4df0a7bca1691bc12dfd45"
+      },
+      "lockfile_sha256": null,
+      "type_stub_policy": "none (experiment-1 configuration)"
+    },
+    "M": {
+      "name": "immich-app/immich (server/)",
+      "commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+      "corpus_root": "targets/exp3/immich/server",
+      "include": [
+        "src"
+      ],
+      "pinned_corpus": {
+        "files": 572,
+        "sha256": "054dc043dfe40e14064569b69d9fb416162a2bb98e1c8274a7fd5fd97ed5c7b2"
+      },
+      "lockfile": "pnpm-lock.yaml",
+      "lockfile_sha256": "6de541040dcb122f140ee7dd702151241603fad997ebc87bfa579ec8bd278840",
+      "install": "pnpm install --ignore-scripts --filter ./server --filter ./packages/plugin-sdk --filter ./packages/sdk; plugin-sdk built (esbuild + tsc declarations)",
+      "type_stub_policy": "packages with > 50 MB of declarations (none in Immich)"
+    },
+    "L": {
+      "name": "twentyhq/twenty (packages/twenty-server/)",
+      "commit": "bde4ff135765e8590d64874cebd5404c0919528d",
+      "corpus_root": "targets/exp3/twenty/packages/twenty-server",
+      "include": [
+        "src"
+      ],
+      "pinned_corpus": {
+        "files": 11894,
+        "sha256": "50800ed6145b0fd2c5df3987f7132f6f6ed3c105dd23fcaa97542d7ff2d7291a"
+      },
+      "lockfile": "yarn.lock",
+      "lockfile_sha256": "c271c88798d691052983f1e2c5976ecbc2109986909bcf12e5d2b941f05030cc",
+      "install": "yarn workspaces focus twenty-server twenty-shared twenty-emails twenty-client-sdk (enableScripts false, constraints checks off); twenty-shared and twenty-emails declarations built with tsc",
+      "type_stub_policy": "all third-party declaration files stubbed (workspace packages, @types/*, TS lib typed) — E3-D15"
+    }
+  }
+}

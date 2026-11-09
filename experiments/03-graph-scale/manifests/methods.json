@@ -1,0 +1,167 @@
+{
+  "generated_by": "scripts/exp3/manifests.ts",
+  "methods": [
+    "ripgrep",
+    "bm25",
+    "embeddings",
+    "hybrid_nograph",
+    "hybrid",
+    "custom_graph",
+    "compact_nograph",
+    "compact_graph"
+  ],
+  "budget": {
+    "maxResults": 50,
+    "maxContextTokens": 8000,
+    "note": "experiment-1 frozen budget; natural output = native context under this budget"
+  },
+  "fixed_token_budgets": [
+    500,
+    800,
+    1000,
+    2000,
+    4000,
+    8000
+  ],
+  "hybrid": {
+    "wLex": 1,
+    "wSem": 0.5,
+    "wSym": 0.5,
+    "wFact": 0,
+    "wGraph": 1,
+    "graph": {
+      "depth": 3,
+      "seeds": 8,
+      "maxVisited": 3000,
+      "decay": 0.85,
+      "hubPenalty": 0.5,
+      "hubThreshold": 10,
+      "useConfidence": true,
+      "aggregation": "sum",
+      "disabledFamilies": [],
+      "disableControlFlow": false,
+      "edgeWeights": {},
+      "factWeights": {
+        "name": 3,
+        "path": 1,
+        "route": 2,
+        "control_flow": 1,
+        "data_flow": 1,
+        "execution": 1,
+        "application": 1,
+        "structural": 0
+      },
+      "outputTypes": [
+        "function",
+        "method",
+        "class",
+        "variable",
+        "property",
+        "interface",
+        "type"
+      ],
+      "priors": {
+        "enabled": true,
+        "types": {
+          "method": 1,
+          "function": 1,
+          "class": 0.6,
+          "variable": 0.5,
+          "property": 0.5,
+          "interface": 0.4,
+          "type": 0.4,
+          "module": 0.4
+        },
+        "testPath": 0.3
+      },
+      "cfBonus": 0.3
+    },
+    "snippets": {
+      "fullTop": 5,
+      "maxLinesFull": 80,
+      "skeletonMaxLines": 14,
+      "evidence": true
+    },
+    "candidatePool": 200
+  },
+  "hybrid_nograph_override": {
+    "wGraph": 0,
+    "wFact": 0
+  },
+  "custom_graph": {
+    "graph": {
+      "depth": 3,
+      "seeds": 8,
+      "maxVisited": 3000,
+      "decay": 0.85,
+      "hubPenalty": 0.5,
+      "hubThreshold": 10,
+      "useConfidence": true,
+      "aggregation": "sum",
+      "disabledFamilies": [],
+      "disableControlFlow": false,
+      "edgeWeights": {},
+      "factWeights": {
+        "name": 3,
+        "path": 1,
+        "route": 2,
+        "control_flow": 1,
+        "data_flow": 1,
+        "execution": 1,
+        "application": 1,
+        "structural": 0
+      },
+      "outputTypes": [
+        "function",
+        "method",
+        "class",
+        "variable",
+        "property",
+        "interface",
+        "type"
+      ],
+      "priors": {
+        "enabled": true,
+        "types": {
+          "method": 1,
+          "function": 1,
+          "class": 0.6,
+          "variable": 0.5,
+          "property": 0.5,
+          "interface": 0.4,
+          "type": 0.4,
+          "module": 0.4
+        },
+        "testPath": 0.3
+      },
+      "cfBonus": 0
+    },
+    "propagationWeight": 0.7,
+    "snippets": {
+      "fullTop": 5,
+      "maxLinesFull": 80,
+      "skeletonMaxLines": 14,
+      "evidence": true
+    }
+  },
+  "compact": {
+    "maxTokens": 800,
+    "maxSymbols": 25,
+    "neighbours": 3,
+    "relations": true,
+    "compact_graph": {
+      "ranking": "hybrid",
+      "relations": true
+    },
+    "compact_nograph": {
+      "ranking": "hybrid_nograph",
+      "relations": false
+    },
+    "signature": "first non-decorator line of the declaration (source text), both variants"
+  },
+  "dispatch_extractor": {
+    "min_domain_specificity": 0.25,
+    "rules": "E3-D14, E3-D21, E3-D22"
+  },
+  "frozen_from": "evaluation/configs/FROZEN-CONFIG.json (experiment 1); no per-repository tuning"
+}

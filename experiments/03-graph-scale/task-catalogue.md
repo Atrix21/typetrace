@@ -1,4 +1,16 @@
-# Experiment 3: task catalogue (DRAFT — nothing here is frozen ground truth)
+# Experiment 3: task catalogue
+
+> **Milestone 2 update (frozen).** The audited, frozen dataset is in `dataset/v2/`; hashes are in `dataset/v2/FROZEN.json`, and the audit and adjudication summary is in `dataset/ADJUDICATION.md`.
+>
+> | Repository | Tasks | Dev / test | Category A (bug) | Understanding (B–E) |
+> |---|---:|---|---:|---:|
+> | Immich | 37 | 11 / 26 | 22 | 15 |
+> | Twenty | 24 | 6 / 18 | 10 | 14 |
+>
+> - **Category A pool.** Only fixes whose non-test change reverts on the pinned snapshot were used: 56 of 98 Immich candidates and 26 of 80 Twenty candidates.
+> - **Audit outcome.** The audit rejected 34 Immich tasks and 16 Twenty tasks. Most rejections were reports that state the fix.
+> - **Status of the sections below.** They are the milestone-1 candidate lists, kept for provenance. The tier labels mentioned there came from a BM25 screen and were never used for selection (E3-D10).
+
 
 **Status.** Every task below is a *candidate*. None has passed the independent audit (protocol §3, implementation plan M2.6). Each has a ground-truth *strategy* and, where available, *draft* ground truth from the mining agent.
 - **Draft ground truth is mechanical, not audited.** "Fixed functions" map each fix's diff hunks to their enclosing declarations at the parent commit.
