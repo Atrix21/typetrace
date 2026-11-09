@@ -70,7 +70,7 @@ About 404M input-side tokens and 5.4M output tokens (central). Sequential wall c
 | Risk | the Sonnet portion of the full plan (about $16–56) dominates; the weekly cap may stop a run before it finishes | none beyond spend; caps enforced by the harness |
 
 Supporting work also uses plan usage, even though it is not billed per call:
-- **Sessions and sub-agents already used.** This session and its sub-agents consume the plan they run on. Milestone 2's sub-agents used about 1.6M Sonnet tokens in total: mining 0.26M, audits 0.23M + 0.04M + 0.34M, understanding-task conversion 0.05M, plus the edge audit.
+- **Sessions and sub-agents already used.** This session and its sub-agents consume the plan they run on. Milestone 2's sub-agents used about 1.0M Sonnet tokens in total, as reported by each agent: Twenty mining 0.26M; Immich understanding-task conversion 0.05M; audits 0.23M + 0.04M (Immich) and 0.34M (Twenty); edge-precision audits 0.09M + 0.03M
 - **Before an agent stage.** A further independent audit of agent prompts and arms would cost about 0.1–0.2M.
 
 ## 5. Controls (unchanged from experiment 2; all tested)
