@@ -1,0 +1,77 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_im_t12",
+  "split": "dev",
+  "repo": "immich",
+  "task_type": "feature_understanding",
+  "category": "B",
+  "description": "When a video is queued for conversion, how does the server decide whether it needs transcoding at all, which encoder settings are chosen, and what happens if hardware acceleration fails?",
+  "root_cause_symbols": [
+    "src/services/media.service.ts::MediaService.handleVideoConversion"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/services/media.service.ts::MediaService.handleVideoConversion",
+    "src/services/media.service.ts::MediaService.getTranscodeTarget",
+    "src/services/media.service.ts::MediaService.isRemuxRequired",
+    "src/utils/media.ts::BaseConfig.create",
+    "src/utils/media.ts::BaseConfig.getCommand",
+    "src/repositories/media.repository.ts::MediaRepository.transcode",
+    "src/services/media.service.ts::MediaService.isVideoTranscodeRequired",
+    "src/services/media.service.ts::MediaService.isAudioTranscodeRequired"
+  ],
+  "relevant_files": [
+    "src/repositories/media.repository.ts",
+    "src/services/media.service.ts",
+    "src/utils/media.ts"
+  ],
+  "gt_path": [
+    "src/services/media.service.ts::MediaService.handleVideoConversion",
+    "src/services/media.service.ts::MediaService.getTranscodeTarget",
+    "src/services/media.service.ts::MediaService.isRemuxRequired",
+    "src/utils/media.ts::BaseConfig.create",
+    "src/utils/media.ts::BaseConfig.getCommand",
+    "src/repositories/media.repository.ts::MediaRepository.transcode"
+  ],
+  "alternatives": [],
+  "distractor_symbols": [
+    "src/services/transcoding.service.ts::TranscodingService.removeInactiveSessions",
+    "src/services/media.service.ts::MediaService.handleQueueVideoConversion",
+    "src/utils/media.ts::ThumbnailConfig"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd"
+  },
+  "source": {
+    "drafted_by": "mining agent (immich)",
+    "draft_id": "IM-T12",
+    "verification": "server/src/services/media.service.spec.ts transcoding tests (describe for handleVideoConversion; names not enumerated - UNVERIFIED) and no utils/media spec exists in the snapshot; the four commits above added tests in the specs listed in their records in immich-bug-candidates.jsonl (test_files_changed).",
+    "notes": "Step 7 repeats the handler symbol on purpose: the fallback logic is inside the same method (lines :613-640)."
+  },
+  "evidence": [
+    "server/src/services/media.service.ts:561-640 handleVideoConversion (getTranscodeTarget call :584, isRemuxRequired :585, getCommand :598, transcode :608, retry :616-631); :648 getTranscodeTarget",
+    "server/src/utils/media.ts:70 BaseConfig, HW subclasses :437-1125",
+    "server/src/repositories/media.repository.ts:398 transcode",
+    "history: commits 4bdc4480b (PR #32474), d1faeb819 (PR #31473), 89b0d906e (PR #29908), c0bf5a4c5 (PR #29240) all fixed ffmpeg option building in utils/media.ts with tests",
+    "src/services/media.service.ts:561-740"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 3,
+    "communities_spanned": 1,
+    "gt_path_length": 6,
+    "locality": "local"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "Verified: handleVideoConversion (media.service.ts:561-640) -> getTranscodeTarget (:648) -> isRemuxRequired (:585,726) -> BaseConfig.create/getCommand (:598) -> MediaRepository.transcode with accel fallback (:608-631: software decode retry, then accel disabled).",
+      "Missing the functions that actually decide whether transcoding is needed: isVideoTranscodeRequired (:694) and isAudioTranscodeRequired (:671), called from getTranscodeTarget (:653-654)."
+    ]
+  }
+}

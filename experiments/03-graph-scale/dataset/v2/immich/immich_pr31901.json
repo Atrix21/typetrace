@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr31901",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "Birth dates keep being changed to one day earlier\n\nEven though I have repeatedly changed and corrected the birth dates I entered, I keep seeing that the date I entered keeps changing to one day earlier. I correct it, and the same thing happens again.",
+  "root_cause_symbols": [
+    "src/validation.ts::isoDateToDate"
+  ],
+  "relevant_symbols": [
+    "src/validation.ts::isoDateToDate"
+  ],
+  "relevant_files": [
+    "src/validation.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr31901.patch",
+    "patch_sha256": "3c1b54d40324f9052489779a6099c8fa759e6bb4f7d2e335bd4c0d47cc75e9af",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/31901",
+    "issue": "#28091",
+    "merge_commit": "4b1b1f8c2ab70db165088d857906420b967a9241",
+    "parent_commit": "5dacabb935e5ecc7e15ceaf1da9526303b12d3f7",
+    "merged_at": "2026-09-29T16:22:16Z",
+    "report_source": "issue",
+    "tests_added": [],
+    "test_files_changed": [
+      "server/src/utils/date.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "low",
+    "indirect_boundary": "other",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix 4b1b1f8c2ab70db165088d857906420b967a9241 (https://github.com/immich-app/immich/pull/31901)",
+    "targets/exp3/dataset-patches/immich/immich_pr31901.patch",
+    "src/validation.ts:171-175"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "Symptom-only (birth date shifts one day earlier). Fix: encode uses UTC zone in isoDateToDate; RC exact. Boundary other (zod codec at DTO layer) ok."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "verified",
+    "tests": [
+      "date.spec.ts: asDateString should return the UTC calendar date of a date column when the server time zone is America/Los_Angeles",
+      "date.spec.ts: asDateString should return the UTC calendar date of a date column when the server time zone is America/New_York"
+    ]
+  }
+}

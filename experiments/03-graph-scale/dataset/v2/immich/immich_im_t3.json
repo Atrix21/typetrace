@@ -1,0 +1,81 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_im_t3",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "data_flow",
+  "category": "D",
+  "description": "A user types a sentence into the photo search box. Trace how that sentence becomes an ordered list of photos: name each component in order, say where the sentence is turned into numbers, and where similarity is computed.",
+  "root_cause_symbols": [
+    "src/controllers/search.controller.ts::SearchController.searchSmart"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/controllers/search.controller.ts::SearchController.searchSmart",
+    "src/services/search.service.ts::SearchService.searchSmart",
+    "src/services/search.service.ts::SearchService.resolveEmbedding",
+    "src/repositories/machine-learning.repository.ts::MachineLearningRepository.encodeText",
+    "src/repositories/machine-learning.repository.ts::MachineLearningRepository.predict",
+    "src/repositories/search.repository.ts::SearchRepository.searchSmart",
+    "src/services/search.service.ts::SearchService.mapResponse"
+  ],
+  "relevant_files": [
+    "src/controllers/search.controller.ts",
+    "src/repositories/machine-learning.repository.ts",
+    "src/repositories/search.repository.ts",
+    "src/services/search.service.ts"
+  ],
+  "gt_path": [
+    "src/controllers/search.controller.ts::SearchController.searchSmart",
+    "src/services/search.service.ts::SearchService.searchSmart",
+    "src/services/search.service.ts::SearchService.resolveEmbedding",
+    "src/repositories/machine-learning.repository.ts::MachineLearningRepository.encodeText",
+    "src/repositories/machine-learning.repository.ts::MachineLearningRepository.predict",
+    "src/repositories/search.repository.ts::SearchRepository.searchSmart",
+    "src/services/search.service.ts::SearchService.mapResponse"
+  ],
+  "alternatives": [
+    "New-shape requests take SearchService.searchSmartV3 -> SearchRepository.searchSmartV3 (search.service.ts:168-170 branch on isNewShapeRequest); same resolveEmbedding/encodeText link.",
+    "Query-by-asset: resolveEmbedding reads SearchRepository.getEmbedding instead of calling ML."
+  ],
+  "distractor_symbols": [
+    "src/services/smart-info.service.ts::SmartInfoService.handleEncodeClip",
+    "src/services/search.service.ts::SearchService.searchMetadata"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd"
+  },
+  "source": {
+    "drafted_by": "mining agent (immich)",
+    "draft_id": "IM-T3",
+    "verification": "Static (call-site reading). Candidate tests, UNVERIFIED names: server/src/services/search.service.spec.ts and server/test/medium/specs/services/search.service.spec.ts (smart search cases). History: commit b4cc406a3 (PR #29385) edited SearchService.searchSmart.",
+    "notes": "The ML service itself is outside server/. Heavy computation is the remote ML call (text -> vector) and the pgvector ordering in SearchRepository.searchSmart; an answer that places similarity in the service layer is wrong."
+  },
+  "evidence": [
+    "server/src/controllers/search.controller.ts:90-91",
+    "server/src/services/search.service.ts:168-190 (calls resolveEmbedding :183 and searchRepository.searchSmart :186); :325-338 encodeText + embeddingCache",
+    "server/src/repositories/machine-learning.repository.ts:162-188 predict (fetch :171), :211 encodeText",
+    "server/src/repositories/search.repository.ts:320",
+    "src/services/search.service.ts:168-198,281-299,325-352"
+  ],
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "medium",
+    "indirect_boundary": "see-path",
+    "gt_files": 4,
+    "communities_spanned": 3,
+    "gt_path_length": 7,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "Path verified: search.controller.ts:90-91 -> SearchService.searchSmart (search.service.ts:168-198) -> resolveEmbedding (:325-352) -> MachineLearningRepository.encodeText -> predict -> SearchRepository.searchSmart (search.repository.ts:320, ORDER BY smart_search.embedding <=> ...) -> mapResponse.",
+      "SearchService.searchSmartV3 / SearchRepository.searchSmartV3 are a parallel valid answer for new-shape requests (search.service.ts:169-171,281-299), also using resolveEmbedding and a vector distance query. They should not be distractors (the draft itself lists them under alternatives).",
+      "Query has no pasted identifiers."
+    ]
+  }
+}

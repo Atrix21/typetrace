@@ -1,0 +1,86 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_im_t15",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "change_impact",
+  "category": "C",
+  "description": "If the method that inserts many assets at once stopped returning the ids of the created rows, which code would break and which tests are tied to it? (compile-oracle control)",
+  "root_cause_symbols": [
+    "src/services/library.service.ts::LibraryService.handleSyncFiles"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/services/library.service.ts::LibraryService.handleSyncFiles",
+    "src/repositories/asset.repository.ts::AssetRepository.createAll",
+    "src/services/library.service.ts::LibraryService.queuePostSyncJobs"
+  ],
+  "relevant_files": [
+    "src/repositories/asset.repository.ts",
+    "src/services/library.service.ts"
+  ],
+  "gt_path": [
+    "src/services/library.service.ts::LibraryService.handleSyncFiles",
+    "src/repositories/asset.repository.ts::AssetRepository.createAll",
+    "src/services/library.service.ts::LibraryService.queuePostSyncJobs"
+  ],
+  "impact": {
+    "direct": [
+      "src/services/library.service.ts::LibraryService.handleSyncFiles"
+    ],
+    "indirect": [],
+    "tests": [
+      "src/services/library.service.spec.ts",
+      "test/medium/specs/services/library.service.spec.ts"
+    ],
+    "source": "type-checker oracle (direct, tests_with_errors) + annotated (indirect, tests)"
+  },
+  "oracle_edit": {
+    "file": "src/repositories/asset.repository.ts",
+    "old": "return ids.map(({ id }) => id);",
+    "new": "return ids.length;",
+    "note": "createAll now returns number | never[] (the early return [] is kept). tsc flags the consumer in LibraryService.handleSyncFiles (assetIds.length / .map / queuePostSyncJobs(assetIds)). Only one production caller of AssetRepository.createAll exists (person/metadata createAll calls belong to other repositories)."
+  },
+  "alternatives": [],
+  "distractor_symbols": [
+    "src/repositories/person-user.repository.ts::PersonUserRepository.createAll",
+    "src/repositories/person.repository.ts::PersonRepository.createAll"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd"
+  },
+  "source": {
+    "drafted_by": "mining agent (immich)",
+    "draft_id": "IM-T15",
+    "verification": "Type-check oracle on a COPY: apply oracle_edit, tsc --noEmit; errors must be located only in LibraryService.handleSyncFiles (and possibly spec mocks if specs are in tsconfig: UNVERIFIED). Existing tests: server/src/services/library.service.spec.ts (handleSyncFiles cases) and server/test/medium/specs/services/library.service.spec.ts.",
+    "notes": "Control task with a one-function impact set; includes same-name distractors in other repositories (grep on 'createAll' returns 3 production call sites, only 1 relevant)."
+  },
+  "evidence": [
+    "server/src/repositories/asset.repository.ts:450-457 createAll (decorated with ChunkedArray, which merges chunk results)",
+    "server/src/services/library.service.ts:280 sole call of assetRepository.createAll; :291 emit uses ids; :295 queuePostSyncJobs",
+    "server/test/repositories/asset.repository.mock.ts:8 mock",
+    "specs: server/src/services/library.service.spec.ts:570-613 use createAll mock; medium spec :734",
+    "history: commit b0a9468da (PR #30837) edited createAll",
+    "src/repositories/asset.repository.ts:450-457",
+    "src/services/library.service.ts:280-295"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 2,
+    "communities_spanned": 2,
+    "gt_path_length": 3,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "Oracle old string occurs once (asset.repository.ts:456). Only one production caller (library.service.ts:280); tsc errors at assetIds.length/.map and queuePostSyncJobs(assetIds) in handleSyncFiles (:285-295) - direct set correct.",
+      "Tests tied to it are incomplete: also test/medium/specs/repositories/asset.repository.spec.ts:599,643 (createAll direct) and unit src/services/library.service.spec.ts:570 (mocks.asset.createAll.mockResolvedValue([asset.id]) would be a tsc error with number|never[]). Note the @ChunkedArray decorator (decorators.ts:102-104) merges chunk results with flatten at runtime, so the oracle edit changes runtime behaviour as well as types; fine for a compile-oracle control."
+    ]
+  }
+}

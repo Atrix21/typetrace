@@ -139,3 +139,23 @@ The scaling hypothesis is falsified (for this ladder and these methods) if H1 an
 ## 11. Approvals required
 
 Stages 0–1 are authorised (non-billable). Stages 2, 3 and 4 each require explicit owner approval naming: account, billing mode, model(s), maximum runs, maximum list-price spend, and the expected number of 5-hour usage windows (`cost-estimate.md`).
+
+---
+
+## Amendment B (2026-11-09, milestone 2; written before any M or L retrieval result was inspected)
+
+Owner authorisation for milestone 2: non-billable implementation and the deterministic retrieval-only stage only. No agent stage, no model calls (H3, H4 deferred; no approval exists for milestone 3).
+
+**B1. Primary contrast and context.** Δ_graph = Recall@10(hybrid) − Recall@10(hybrid_nograph); hybrid_nograph is the frozen experiment-1 configuration with wGraph = wFact = 0, i.e. experiment 1's `no_graph_at_all` ablation (reproduced per task on S, `manifests/s-reproduction.json`). Always reported next to BM25, embeddings, hybrid_nograph, hybrid and custom graph (plus ripgrep as the lexical floor, and the two compact variants). Graphify and CRG are dropped from stage 1 (not in the approved method list). All methods use the frozen experiment-1 configurations on every repository; no per-repository tuning.
+
+**B2. Output sizes.** Every contrast is reported (a) at the natural output of each method (its native context under the experiment-1 budget of 50 results / 8k tokens; compact methods: their 800-token pointer output) and (b) at fixed token budgets (500, 800, 1k, 2k, 4k, 8k) using experiment 1's uniform rendering, so no method wins by returning more text.
+
+**B3. Nested corpora (L).** Two expansion strategies, reported separately: *community* (whole import-graph communities added by community-graph distance from the ground-truth communities) and *random* (whole communities added in a seeded random order). Both start from the communities holding the ground-truth files, use the same size targets (≈ 97k lines = Immich's corpus, ≈ 300k lines) plus the full corpus (1.01M lines), record sizes and SHA-256 file-list hashes, and never use any retrieval result. Communities come from the import graph only. Subset corpora use the induced subgraph of the task's full graph and their own text indexes.
+
+**B4. Confirmatory family.** H1 = mean per-task slope of Δ_graph on log10(corpus lines) on the community-strategy corpora (the random strategy is the pre-specified sensitivity analysis, reported unadjusted); H2 = Δ_graph(cross-module) − Δ_graph(local) on M+L full corpora. Holm over {H1, H2}. All other contrasts are descriptive with CIs. Unit = task; test split only for confirmatory statements (dev reported separately).
+
+**B5. Retrieval vs agent.** Stage-1 results are about retrieval only. No statement about agent performance is derived from them; a positive retrieval result is at most a reason to test agents.
+
+**B6. Tasks.** Category A = historical fixes merged after 2026-06-01 whose non-test change reverts cleanly (or with one line of fuzz) on the pinned snapshot; bug snapshot = pinned snapshot with that change reverted; ground truth = declarations enclosing the changed lines (mechanical), then independently audited. Categories B–E drafted by the mining agents, mapped mechanically to symbols, independently audited; category C direct impact replaced by the type-checker oracle's set. Selection, exclusion and strata never use a retrieval result (E3-D10); the mining agents' BM25 screen was stripped from every file the auditors and the freeze used. Sample sizes are what survived the audit (M: 37 tasks, 26 test; L: frozen after its audit) — below the 30-test-task plan for at least one repository; results are exploratory and reported with CIs.
+
+**B7. Environment differences (unavoidable, documented).** M builds its graphs with all dependencies typed. L stubs third-party declaration files (workspace packages, `@types/*` and the TypeScript library stay typed): a fully typed Twenty walk needed > 6.5 GB and > 15 minutes per build on the 15 GB machine (twice killed), which is infeasible for one build per task snapshot. Effect measured on the pinned snapshot (stage-1 report). Corpora: S = `src`, `test` (experiment 1); M and L = `src` (co-located unit tests included, top-level integration/e2e test directories excluded).

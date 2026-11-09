@@ -1,0 +1,76 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_im_t9",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "architecture",
+  "category": "E",
+  "description": "With several server containers running, how is it ensured that nightly maintenance (cleanup, memories, quota sync, missing thumbnails, new-face clustering) is scheduled exactly once, what exactly is scheduled, and which process executes it?",
+  "root_cause_symbols": [
+    "src/services/queue.service.ts::QueueService.onConfigInit"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/services/queue.service.ts::QueueService.onConfigInit",
+    "src/repositories/database.repository.ts::DatabaseRepository.tryLock",
+    "src/repositories/cron.repository.ts::CronRepository.create",
+    "src/services/queue.service.ts::QueueService.handleNightlyJobs",
+    "src/repositories/job.repository.ts::JobRepository.queueAll",
+    "src/services/queue.service.ts::QueueService.onConfigUpdate",
+    "src/repositories/cron.repository.ts::CronRepository.update"
+  ],
+  "relevant_files": [
+    "src/repositories/cron.repository.ts",
+    "src/repositories/database.repository.ts",
+    "src/repositories/job.repository.ts",
+    "src/services/queue.service.ts"
+  ],
+  "gt_path": [
+    "src/services/queue.service.ts::QueueService.onConfigInit",
+    "src/repositories/database.repository.ts::DatabaseRepository.tryLock",
+    "src/repositories/cron.repository.ts::CronRepository.create",
+    "src/services/queue.service.ts::QueueService.handleNightlyJobs",
+    "src/repositories/job.repository.ts::JobRepository.queueAll"
+  ],
+  "alternatives": [],
+  "distractor_symbols": [
+    "src/services/library.service.ts::LibraryService.onConfigInit",
+    "src/services/version.service.ts::VersionService.onBootstrap",
+    "src/services/database-backup.service.ts::DatabaseBackupService.onConfigInit",
+    "src/services/integrity.service.ts::IntegrityService.onConfigInit"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd"
+  },
+  "source": {
+    "drafted_by": "mining agent (immich)",
+    "draft_id": "IM-T9",
+    "verification": "server/src/services/queue.service.spec.ts, describe 'handleNightlyJobs', test 'should run the scheduled jobs' (line 35) for the job list. The advisory-lock single-scheduler claim has no test found - UNVERIFIED.",
+    "notes": "Microservices worker returns early in onConfigInit (queue.service.ts:46-49), so only API-side processes compete for the lock; the lock holder is not necessarily the process that executes the jobs."
+  },
+  "evidence": [
+    "server/src/services/queue.service.ts:44-64 onConfigInit (lock :51, cron :58-63); :66-80 onConfigUpdate; :267-301 handleNightlyJobs",
+    "server/src/repositories/database.repository.ts:477 tryLock",
+    "server/src/repositories/cron.repository.ts:29,52",
+    "test server/src/services/queue.service.spec.ts:35 handleNightlyJobs -> should run the scheduled jobs",
+    "src/services/queue.service.ts:44-64,267-301"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 4,
+    "communities_spanned": 2,
+    "gt_path_length": 5,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "Verified: QueueService.onConfigInit returns early for Microservices worker (queue.service.ts:44-49), others take DatabaseRepository.tryLock(DatabaseLock.NightlyJobs) (:51, database.repository.ts:477) and create the cron via CronRepository.create (:58-63); onTick runs handleNightlyJobs (:267-301) in the lock-holding API process, which only enqueues jobs via JobRepository.queueAll; execution happens in Microservices workers. The five listed task groups match nightlyTasks flags (:271-298). Distractors (library/version/backup/integrity onConfigInit) are not on this path."
+    ]
+  }
+}

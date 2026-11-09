@@ -1,0 +1,69 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr29035",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "Wrong album association (and fav flag added not wanted) after using deduplication tool\n\nHi!\nI was using the dedup tool which presented 5 (very) different videos files from 5 different albums (another issue about this case is opened here #27688 \nI chose to keep all of them.\n\nAfter that, all those videos were added to the whole 5 albums from each came from, and were marked as favorites (only one of them were favorite marked).\n\nI tested the bug with 2 identical pictures, putted in 2 different albums (each one only in one album).\nI opened the dedup tool, chose to keep all of them, and they were added, both of them, to each album.\nThank you for considering my issue ;-)",
+  "root_cause_symbols": [
+    "src/services/duplicate.service.ts::DuplicateService.resolveGroup"
+  ],
+  "relevant_symbols": [
+    "src/services/duplicate.service.ts::DuplicateService.resolveGroup"
+  ],
+  "relevant_files": [
+    "src/services/duplicate.service.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr29035.patch",
+    "patch_sha256": "57b56fbdb7f133d53b9115fedfff73491d7116709fa8a8d0e038bc2cf6a5c491",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/29035",
+    "issue": "#27687",
+    "merge_commit": "cc8d3b4107de07178d99ecaa7e43120d0c450051",
+    "parent_commit": "622a330d82f37a7737c4d4717cdd682b5f0940f2",
+    "merged_at": "2026-06-15T20:05:04Z",
+    "report_source": "issue",
+    "tests_added": [
+      "duplicate.service.spec.ts: should not merge metadata when multiple assets are kept"
+    ],
+    "test_files_changed": [
+      "server/src/services/duplicate.service.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "low",
+    "indirect_boundary": "none",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix cc8d3b4107de07178d99ecaa7e43120d0c450051 (https://github.com/immich-app/immich/pull/29035)",
+    "test: duplicate.service.spec.ts: should not merge metadata when multiple assets are kept",
+    "targets/exp3/dataset-patches/immich/immich_pr29035.patch",
+    "src/services/duplicate.service.ts:156-206 (hunk)"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "Symptom-only issue (dedup tool keep-all adds assets to other albums / favourites). Fix wraps the metadata merge in DuplicateService.resolveGroup with `idsToKeep.length === 1 && idsToTrash.length > 0`; RC exact; description does not state the change."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "verified",
+    "tests": [
+      "duplicate.service.spec.ts: DuplicateService resolveGroup (via resolve) should not merge metadata when multiple assets are kept"
+    ]
+  }
+}

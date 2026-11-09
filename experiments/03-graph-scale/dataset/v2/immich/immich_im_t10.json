@@ -1,0 +1,114 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_im_t10",
+  "split": "dev",
+  "repo": "immich",
+  "task_type": "change_impact",
+  "category": "C",
+  "description": "If every machine-learning server became unreachable, which background stages and user-visible features fail, which keep working, and how does a failure surface?",
+  "root_cause_symbols": [
+    "src/repositories/machine-learning.repository.ts::MachineLearningRepository.detectFaces"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/services/smart-info.service.ts::SmartInfoService.handleEncodeClip",
+    "src/repositories/machine-learning.repository.ts::MachineLearningRepository.encodeImage",
+    "src/repositories/machine-learning.repository.ts::MachineLearningRepository.predict",
+    "src/services/job.service.ts::JobService.onJobRun",
+    "src/services/person.service.ts::PersonService.handleDetectFaces",
+    "src/services/ocr.service.ts::OcrService.handleOcr",
+    "src/services/search.service.ts::SearchService.resolveEmbedding",
+    "src/repositories/machine-learning.repository.ts::MachineLearningRepository.detectFaces",
+    "src/repositories/machine-learning.repository.ts::MachineLearningRepository.encodeText",
+    "src/repositories/machine-learning.repository.ts::MachineLearningRepository.ocr",
+    "src/services/notification.service.ts::NotificationService.onJobError",
+    "src/services/search.service.ts::SearchService.searchSmart"
+  ],
+  "relevant_files": [
+    "src/repositories/machine-learning.repository.ts",
+    "src/services/job.service.ts",
+    "src/services/notification.service.ts",
+    "src/services/ocr.service.ts",
+    "src/services/person.service.ts",
+    "src/services/search.service.ts",
+    "src/services/smart-info.service.ts"
+  ],
+  "gt_path": [
+    "src/services/smart-info.service.ts::SmartInfoService.handleEncodeClip",
+    "src/repositories/machine-learning.repository.ts::MachineLearningRepository.encodeImage",
+    "src/repositories/machine-learning.repository.ts::MachineLearningRepository.predict",
+    "src/services/job.service.ts::JobService.onJobRun"
+  ],
+  "impact": {
+    "direct": [
+      "src/repositories/machine-learning.repository.ts::MachineLearningRepository.detectFaces",
+      "src/repositories/machine-learning.repository.ts::MachineLearningRepository.encodeImage",
+      "src/repositories/machine-learning.repository.ts::MachineLearningRepository.encodeText",
+      "src/repositories/machine-learning.repository.ts::MachineLearningRepository.ocr"
+    ],
+    "indirect": [
+      "src/services/person.service.ts::PersonService.handleDetectFaces",
+      "src/services/smart-info.service.ts::SmartInfoService.handleEncodeClip",
+      "src/services/ocr.service.ts::OcrService.handleOcr",
+      "src/services/search.service.ts::SearchService.resolveEmbedding"
+    ],
+    "tests": [
+      "src/services/ocr.service.spec.ts",
+      "src/services/person.service.spec.ts",
+      "src/services/search.service.spec.ts",
+      "src/services/smart-info.service.spec.ts"
+    ],
+    "source": "type-checker oracle (direct, tests_with_errors) + annotated (indirect, tests)"
+  },
+  "oracle_edit": {
+    "file": "src/repositories/machine-learning.repository.ts",
+    "old": "private async predict<T>(payload: ModelPayload, config: MachineLearningRequest): Promise<T> {",
+    "new": "private async predict<T>(payload: ModelPayload, config: MachineLearningRequest, timeoutMs: number): Promise<T> {",
+    "note": "Simulates adding a mandatory per-request timeout parameter to the single HTTP choke point. tsc flags only the four public wrappers inside the repository (direct set). The service callers (indirect set) are found by tracing those four public methods, not by tsc; this is a partial oracle."
+  },
+  "alternatives": [],
+  "distractor_symbols": [
+    "src/repositories/machine-learning.repository.ts::MachineLearningRepository.check",
+    "src/services/system-config.service.ts::SystemConfigService.onConfigInit"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd"
+  },
+  "source": {
+    "drafted_by": "mining agent (immich)",
+    "draft_id": "IM-T10",
+    "verification": "Type-check oracle on a COPY: apply oracle_edit, tsc --noEmit must list exactly the 4 wrapper methods. Behavioural claims verified by reading only; skip-when-disabled tests in the four spec files - names not enumerated (UNVERIFIED).",
+    "notes": "Partial oracle (see note). Answer must separate 'jobs fail and are logged/marked failed (attempts: 1, config.repository.ts:322)' from 'features unaffected'; whether failed jobs are retried: attempts=1 so no automatic retry (config.repository.ts:322) - read, not tested."
+  },
+  "evidence": [
+    "server/src/repositories/machine-learning.repository.ts:162-188 predict (throws at :186 after all URLs fail), :190 detectFaces, :205 encodeImage, :211 encodeText, :217 ocr",
+    "server/src/services/person.service.ts:386-389 early skip when facial recognition disabled, :401 detectFaces call",
+    "server/src/services/smart-info.service.ts:88-91 skip when disabled, :103 encodeImage",
+    "server/src/services/ocr.service.ts:46",
+    "server/src/services/search.service.ts:332-338 cache then encodeText",
+    "server/src/services/job.service.ts:94-96 catch -> JobError",
+    "src/repositories/machine-learning.repository.ts:162-188",
+    "src/services/job.service.ts:84-98"
+  ],
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "medium",
+    "indirect_boundary": "see-path",
+    "gt_files": 7,
+    "communities_spanned": 4,
+    "gt_path_length": 4,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "Verified: predict loops all URLs and throws \"failed for all URLs\" (machine-learning.repository.ts:162-188); the four wrappers are the only predict callers; service callers: ocr.service.ts:46, smart-info.service.ts:103, search.service.ts:334, person.service.ts:401. Oracle old string occurs once (:162); tsc errors at the four wrappers (lines 197,207,213,224). impact sets right.",
+      "\"How a failure surfaces\" part is missing: JobService.onJobRun emits JobError (job.service.ts:95); NotificationService.onJobError only logs and creates an admin notification for DatabaseBackup jobs (notification.service.ts:81-107), so ML failures surface as failed BullMQ jobs + error log only; and the search path surfaces as an HTTP 500 from SearchService.searchSmart.",
+      "tests incomplete: test/medium/specs/services/ocr.service.spec.ts:45-46 and test/medium/specs/services/person.service.spec.ts:504 also mock the ML repository.",
+      "gt_path covers only the CLIP stage; acceptable but partial."
+    ]
+  }
+}

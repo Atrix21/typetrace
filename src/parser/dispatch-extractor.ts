@@ -197,7 +197,7 @@ export class DispatchExtractor {
     for (const o of env.owners) {
       if (o.type !== 'method' || !ts.isMethodDeclaration(o.decl)) continue;
       for (const d of this.decos(o.decl)) {
-        if (d.pkg && GRAPHQL_PACKAGES.has(d.pkg) && GRAPHQL_OPS[d.name]) { this.graphqlRoute(o, d); continue; }
+        if (GRAPHQL_OPS[d.name] && GRAPHQL_PACKAGES.has(d.pkg ?? this.importPackageOf(d) ?? '')) { this.graphqlRoute(o, { ...d, pkg: d.pkg ?? this.importPackageOf(d) }); continue; }
         const exprs: ts.Expression[] = [];
         for (const a of d.args) this.keyExprs(a, 2, exprs);
         const keys: DispatchKey[] = [];
@@ -208,6 +208,26 @@ export class DispatchExtractor {
       }
     }
     for (const r of this.registrations) for (const k of r.keys) { this.domains.add(k.domain); if (k.kind === 'literal') this.literalDomains.add(k.domain); }
+  }
+
+  /**
+   * Package named by the import declaration that binds a decorator, for decorators whose declaration does not resolve
+   * (e.g. the package is loaded as an untyped stub). Used only by the GraphQL rule.
+   */
+  private importPackageOf(d: DecoratorInfo): string | null {
+    const e = d.node.expression;
+    const callee = ts.isCallExpression(e) ? stripParens(e.expression) : e;
+    const id = ts.isIdentifier(callee) ? callee : ts.isPropertyAccessExpression(callee) && ts.isIdentifier(callee.expression) ? callee.expression : null;
+    if (!id) return null;
+    let sym: ts.Symbol | undefined;
+    try { sym = this.env.project.checker.getSymbolAtLocation(id); } catch { return null; }
+    for (let n: ts.Node | undefined = sym?.declarations?.[0]; n; n = n.parent) {
+      if (ts.isImportDeclaration(n) && ts.isStringLiteral(n.moduleSpecifier)) {
+        const parts = n.moduleSpecifier.text.split('/');
+        return parts[0].startsWith('@') ? parts.slice(0, 2).join('/') : parts[0];
+      }
+    }
+    return null;
   }
 
   private graphqlRoute(o: Owner, d: DecoratorInfo) {

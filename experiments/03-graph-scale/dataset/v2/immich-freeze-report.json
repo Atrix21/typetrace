@@ -1,0 +1,803 @@
+{
+  "repo": "immich",
+  "kept": 37,
+  "excluded": 34,
+  "dataset_sha256": "8c7bff1dbe18f3cd1825feb71929f3aac9d57f2967e3e18182f3014670f8a234",
+  "report": [
+    {
+      "task_id": "immich_pr28884",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "medium",
+        "indirect_boundary": "none",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr28923",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Draft description is the follow-up PR text: \"here we need the a conditional to still show correct favorite status for the requesting users\" - names the code change (conditional on owner) and has no user-visible symptom; it only references PR #28035 (external context).",
+        "RC set matches the patch (AlbumAssetSync.getBackfill/getCreates/getUpdates + SyncService.syncAlbumAssetsV2); new columns.syncAlbumAsset in src/database.ts is module-level (correctly in module_level_changes)."
+      ]
+    },
+    {
+      "task_id": "immich_pr28950",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description is the PR title only (\"fix: remove partner assets from existing memories\"); body only says Fixes #22772, not retrievable. No user symptom.",
+        "RC matches patch (addAssets in utils/asset.util.ts, AlbumService.addAssets, MemoryService.create/addAssets, TagService.addAssets). The new migration src/schema/migrations/1787148183730-DeleteMismatchedMemoryAssets.ts is a new file (not a symbol) - the title describes that data migration, i.e. the title names the change."
+      ]
+    },
+    {
+      "task_id": "immich_pr29028",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "db",
+        "gt_files": 2,
+        "communities_spanned": 2,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr29035",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "low",
+        "indirect_boundary": "none",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr29186",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description is the PR text \"restores non-UTC offset support. Keeps timezone-less strings rejected\": no user symptom and it states the behaviour of the fix (offset support). Fix is one option (offset: true) in the isoDatetimeToDate codec."
+      ]
+    },
+    {
+      "task_id": "immich_pr29240",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "event",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr29267",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Report/fix mismatch: issue #22522 (iOS, v1.144.1) is a client-side UNIQUE(owner_id, checksum) failure in remote_asset_entity; the fix (BaseSync.backfillQuery >= -> > afterUpdateId) stops re-sending an already-acked row. A resent row with the same id would upsert, not violate the (owner_id, checksum) constraint, so the link is speculative. PR title is only \"fix: sync backfill\" (no description)."
+      ]
+    },
+    {
+      "task_id": "immich_pr29354",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "job",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr29485",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description (PR text) states the fix: \"It can also be fixed by passing the correct flag for channel layout `-channel_layout 5.1`\" - names the ffmpeg-flag change to the output options; no stable symptom text beyond that. (Actual fix used -ac 2, but the mechanism class and location are given.)"
+      ]
+    },
+    {
+      "task_id": "immich_pr29516",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "medium",
+        "indirect_boundary": "job",
+        "gt_files": 2,
+        "communities_spanned": 2,
+        "gt_path_length": 0,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "immich_pr29737",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "medium",
+        "indirect_boundary": "job",
+        "gt_files": 2,
+        "communities_spanned": 2,
+        "gt_path_length": 0,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "immich_pr29908",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "job",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr30120",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description is title only (\"fix: album update event emitting\"; PR has no body).",
+        "Fix (AssetMediaService.addToSharedLink: single AlbumUpdate emit with userIds/recipientIds) is a payload-shape change with no stated symptom. RC correct; boundary event correct."
+      ]
+    },
+    {
+      "task_id": "immich_pr30431",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "easy",
+        "lexical_overlap": "high",
+        "indirect_boundary": "none",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr30512",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "job",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr30759",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "medium",
+        "indirect_boundary": "job",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr30837",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Title and body state the mechanism and the fix site: \"(empty insert array not guarded)\", \"That empty array is passed straight to AssetRepository.createAll()\". The fix is exactly the empty-array guard in createAll."
+      ]
+    },
+    {
+      "task_id": "immich_pr30900",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description (PR text) states the mechanism and fix in detail: self-assignment ref('asset_audio.bitrate') in doUpdateSet; should use `excluded` (shows code)."
+      ]
+    },
+    {
+      "task_id": "immich_pr30908",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Ground truth cannot be reproduced from the source patch: the linked PR (#30908, \"fix: thumbnail generation for specific SVGs\", Fixes #26605/#30889) mainly changes server/Dockerfile base-image digests and removes the LD_LIBRARY_PATH export in server/bin/start.sh (native library conflict). The mechanical patch only contains a refactor of OAuthRepository.getProfilePicture return shape and its caller (dropping contentType), which does not plausibly address a worker crash on a data: URI. RC is a side effect of the PR, not the root cause."
+      ]
+    },
+    {
+      "task_id": "immich_pr31074",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "medium",
+        "indirect_boundary": "job",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr31098",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Report/fix mismatch + root cause stated: issue #31050 has a \"Root cause\" section about expiresAt:\"\" and albumId:null being rejected, while the fix only allows an empty assetIds array in SharedLinkCreateSchema (PR 31098 says \"Fixes #31050 (partially)\"). The issue does not mention assetIds, so the reported symptoms are not what the fix cures."
+      ]
+    },
+    {
+      "task_id": "immich_pr31102",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description states the mechanism and the fix: \"Root cause: the path stored in the database is NFC-normalized, while the on-disk filename is NFD ... compares paths byte-by-byte without Unicode normalization\" - the fix adds NFC/NFD normalisation in handleUntrackedFiles."
+      ]
+    },
+    {
+      "task_id": "immich_pr31319",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "job",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr31425",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "easy",
+        "lexical_overlap": "high",
+        "indirect_boundary": "job",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr31473",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "job",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr31479",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Report/fix mismatch: the (truncated) issue reports Live Photo HEVC MOV thumbnail generation failures (ffmpeg/thumbnail jobs); the fix (PR \"exclude hidden assets from large files search\", Fixes #31475) adds a visibility != Hidden predicate to SearchRepository.searchLargeAssets, which cannot cause or cure thumbnail generation failure. The stored text never mentions the large files utility."
+      ]
+    },
+    {
+      "task_id": "immich_pr31533",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "medium",
+        "indirect_boundary": "db",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr31777",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description is feature-PR text listing the change (\"For updateAsset, emit a websocket event if no SidecarWrite job is queued ...\") with a rationale; not a bug report with a symptom, and it states the fix."
+      ]
+    },
+    {
+      "task_id": "immich_pr31901",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "low",
+        "indirect_boundary": "other",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr31927",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description (PR text) states the mechanism exactly: \"`null !== undefined` incorrectly marked the sidecar as changed\" - this IS the one-line fix location in MetadataService.handleSidecarCheck. Also an efficiency (extra DB call) change, not a user-visible bug."
+      ]
+    },
+    {
+      "task_id": "immich_pr32077",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description includes a \"## Fix\" section: \"Never try to delete files for offline assets\" - states the change."
+      ]
+    },
+    {
+      "task_id": "immich_pr32079",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description includes a \"## Fix\" section: old motion deleted from disk \"only if Immich extracted it itself (StorageCore.isAndroidMotionPath)\" - names the exact condition added."
+      ]
+    },
+    {
+      "task_id": "immich_pr32080",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description includes a \"## Fix\" section: \"`findLivePhotoMatch` filters by `libraryId` again\" - names function and change."
+      ]
+    },
+    {
+      "task_id": "immich_pr32219",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "none",
+        "gt_files": 2,
+        "communities_spanned": 2,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr32240",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "medium",
+        "indirect_boundary": "job",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr32300",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "job",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr32474",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description states mechanism: \"passes the yuv420p pixel format directly to the h264_vaapi encoder ... requires nv12\" and title \"missing format=nv12 filter\" - this is the fix.",
+        "RC lists only BaseConfig.getToneMapping; patch also adds new overrides QsvSwDecodeConfig.getToneMapping and VaapiSwDecodeConfig.getToneMapping (non-existent in bug snapshot, module/class-level)."
+      ]
+    },
+    {
+      "task_id": "immich_pr32486",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description (PR text) names the bug and the fix: \"the scale factor is inverted (it should be face.imageWidth / imageWidth ...) and only uses asset.faces[0]\" in handleDetectFaces."
+      ]
+    },
+    {
+      "task_id": "immich_pr32559",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "PR text states the fix: \"Add the same `requireUploadAccess` call the other upload paths already make\"; security hardening with no user symptom."
+      ]
+    },
+    {
+      "task_id": "immich_pr32563",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description (PR text) states the fix: \"Escape substituted values, leaving the template itself untouched. The preheader text now uses a plain-text rendering\" and the vulnerability mechanism; security hardening, no user-visible symptom."
+      ]
+    },
+    {
+      "task_id": "immich_pr32565",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "PR text states the fix: \"Replace the three with one check: ... only timeline visibility is allowed (defaulting to it when omitted)\"."
+      ]
+    },
+    {
+      "task_id": "immich_pr32566",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description (PR text) states the fix: \"Sanitize the three EXIF variables and compare paths with path.relative instead of a prefix check.\""
+      ]
+    },
+    {
+      "task_id": "immich_pr32567",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Issue proposes the exact change: \"there should be some permission gate in notification-admin.controller.ts ... there's already notification.create permission\" (the fix adds Permission.NotificationCreate to three @Authenticated decorators). The error message alone would be fine (policy 2) but file and permission are named."
+      ]
+    },
+    {
+      "task_id": "immich_pr32577",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "job",
+        "gt_files": 2,
+        "communities_spanned": 2,
+        "gt_path_length": 0,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "immich_pr32600",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description (PR text) states the fix: \"Only set the cookies for values the server generated itself, and never serialize a null cookie value.\""
+      ]
+    },
+    {
+      "task_id": "immich_pr32603",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "PR text states the fix: \"load the group scoped to the caller, as delete and deleteAll already do\"."
+      ]
+    },
+    {
+      "task_id": "immich_pr32604",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "PR text states the fix: \"Add the same predicate the V3 builder uses to the legacy builder\"."
+      ]
+    },
+    {
+      "task_id": "immich_pr32606",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "PR text states the fix: \"Replace the comparison with a requireAccess for asset.update on the motion video in both places\"."
+      ]
+    },
+    {
+      "task_id": "immich_pr32607",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "PR text states the fix: \"Return an empty member list and no contributor counts when the request is authenticated by a shared link\"."
+      ]
+    },
+    {
+      "task_id": "immich_pr32609",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Report/fix mismatch: issue #27545 reports PARTNER-shared timeline assets being dropped by the add-to-album request, but pre-fix checkOtherAccess already allows partner assets for AssetShare (isOwner union checkPartnerAccess, access.repository.ts:206-229 covers Timeline/Hidden partner assets). The fix adds checkAlbumAccess (album-shared assets), which only matches a later comment in the issue thread, not the reported scenario.",
+        "Draft boundary \"di\" is unjustified: AlbumService.addAssets -> utils addAssets -> checkAccess -> checkOtherAccess is a direct call chain; correct to \"none\"."
+      ]
+    },
+    {
+      "task_id": "immich_pr32612",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "low",
+        "indirect_boundary": "db",
+        "gt_files": 1,
+        "communities_spanned": 1,
+        "gt_path_length": 0,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_pr32614",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description (PR text) is a statement of the change, not a symptom: \"Stops symlinks from being read in both crawl and watch in the storage repository layer\"; it names the functions crawl/watch. RC (crawl, walk, watch) matches the patch."
+      ]
+    },
+    {
+      "task_id": "immich_pr32931",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description is the PR title only (\"validate motion photo video range before extraction\"), which also states the fix (validate range). No symptom."
+      ]
+    },
+    {
+      "task_id": "immich_pr32934",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description is the PR title only (\"fix: oauth regressions\"). Patch spans zod schemas in auth.dto.ts (module-level) and AuthService.syncOAuthClaims; no symptom."
+      ]
+    },
+    {
+      "task_id": "immich_pr32938",
+      "status": "excluded",
+      "verdict": "reject",
+      "reasons": [
+        "Description (truncated at ~900 chars) already diagnoses the mechanism: \"Since #32182, `RecommendedExposureIndex` or `StandardOutputSensitivity` is used when they exist; immich doesn't check if the values are...\" - this names the exact ?? chain that the fix changes to ||."
+      ]
+    },
+    {
+      "task_id": "immich_im_t1",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 11,
+        "communities_spanned": 6,
+        "gt_path_length": 11,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "immich_im_t10",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "medium",
+        "indirect_boundary": "see-path",
+        "gt_files": 7,
+        "communities_spanned": 4,
+        "gt_path_length": 4,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "immich_im_t11",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 9,
+        "communities_spanned": 3,
+        "gt_path_length": 10,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "immich_im_t12",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 3,
+        "communities_spanned": 1,
+        "gt_path_length": 6,
+        "locality": "local"
+      }
+    },
+    {
+      "task_id": "immich_im_t13",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "medium",
+        "indirect_boundary": "see-path",
+        "gt_files": 8,
+        "communities_spanned": 4,
+        "gt_path_length": 6,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "immich_im_t14",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 7,
+        "communities_spanned": 2,
+        "gt_path_length": 7,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "immich_im_t15",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 2,
+        "communities_spanned": 2,
+        "gt_path_length": 3,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "immich_im_t2",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "medium",
+        "indirect_boundary": "see-path",
+        "gt_files": 5,
+        "communities_spanned": 3,
+        "gt_path_length": 4,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "immich_im_t3",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "medium",
+        "indirect_boundary": "see-path",
+        "gt_files": 4,
+        "communities_spanned": 3,
+        "gt_path_length": 7,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "immich_im_t4",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 8,
+        "communities_spanned": 3,
+        "gt_path_length": 9,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "immich_im_t5",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "medium",
+        "indirect_boundary": "see-path",
+        "gt_files": 5,
+        "communities_spanned": 3,
+        "gt_path_length": 8,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "immich_im_t6",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 9,
+        "communities_spanned": 5,
+        "gt_path_length": 6,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "immich_im_t7",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "medium",
+        "indirect_boundary": "see-path",
+        "gt_files": 5,
+        "communities_spanned": 4,
+        "gt_path_length": 8,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "immich_im_t8",
+      "status": "kept",
+      "verdict": "accept_with_fixes",
+      "strata": {
+        "difficulty": "medium",
+        "lexical_overlap": "medium",
+        "indirect_boundary": "see-path",
+        "gt_files": 9,
+        "communities_spanned": 6,
+        "gt_path_length": 10,
+        "locality": "cross_module"
+      }
+    },
+    {
+      "task_id": "immich_im_t9",
+      "status": "kept",
+      "verdict": "accept",
+      "strata": {
+        "difficulty": "hard",
+        "lexical_overlap": "low",
+        "indirect_boundary": "see-path",
+        "gt_files": 4,
+        "communities_spanned": 2,
+        "gt_path_length": 5,
+        "locality": "cross_module"
+      }
+    }
+  ]
+}

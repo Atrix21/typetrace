@@ -1,0 +1,79 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr32577",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "OCR lost from search when image is rotated\n\nAfter rotating an image that has ocr text in it, it can't be found via ocr search anymore. The text is still shown visually.",
+  "root_cause_symbols": [
+    "src/repositories/ocr.repository.ts::OcrRepository.updateOcrVisibilities",
+    "src/services/media.service.ts::MediaService.generateEditedThumbnails"
+  ],
+  "relevant_symbols": [
+    "src/repositories/ocr.repository.ts::OcrRepository.updateOcrVisibilities",
+    "src/services/media.service.ts::MediaService.generateEditedThumbnails"
+  ],
+  "relevant_files": [
+    "src/repositories/ocr.repository.ts",
+    "src/services/media.service.ts"
+  ],
+  "module_level_changes": [
+    "src/services/media.service.ts::<module>"
+  ],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr32577.patch",
+    "patch_sha256": "809168ec6dd22bdd6995434f674e4e15757b62bc53cbf25632e69ce9ea083c94",
+    "apply": "fuzz-C1"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/32577",
+    "issue": "#32484",
+    "merge_commit": "3184b1532fd74a0b777207f8a86e9efe7dafce65",
+    "parent_commit": "ca25e8becc4bfb18d63ca7920d26a984eae0e16f",
+    "merged_at": "2026-10-30T19:33:26Z",
+    "report_source": "issue",
+    "tests_added": [
+      "media.service.spec.ts: should keep the ocr search text if the edits have no crop",
+      "media.service.spec.ts: should tokenize the ocr search text inside the crop"
+    ],
+    "test_files_changed": [
+      "server/src/services/media.service.spec.ts",
+      "server/test/medium/specs/sync/sync-asset-ocr.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "job",
+    "gt_files": 2,
+    "communities_spanned": 2,
+    "gt_path_length": 0,
+    "locality": "cross_module"
+  },
+  "evidence": [
+    "fix 3184b1532fd74a0b777207f8a86e9efe7dafce65 (https://github.com/immich-app/immich/pull/32577)",
+    "test: media.service.spec.ts: should keep the ocr search text if the edits have no crop",
+    "test: media.service.spec.ts: should tokenize the ocr search text inside the crop",
+    "targets/exp3/dataset-patches/immich/immich_pr32577.patch",
+    "src/services/media.service.ts:856-862",
+    "src/repositories/ocr.repository.ts:77-110"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "Symptom-only report (OCR text lost from search after rotating). Fix computes searchText in MediaService.generateEditedThumbnails and passes it to OcrRepository.updateOcrVisibilities; RC exact; module-level import tokenizeForSearch. Boundary job ok (edit thumbnail generation job)."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "verified",
+    "tests": [
+      "media.service.spec.ts: MediaService handleAssetEditThumbnailGeneration should keep the ocr search text if the edits have no crop",
+      "media.service.spec.ts: MediaService handleAssetEditThumbnailGeneration should tokenize the ocr search text inside the crop"
+    ]
+  }
+}

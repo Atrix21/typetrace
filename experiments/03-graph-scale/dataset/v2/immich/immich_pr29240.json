@@ -1,0 +1,69 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr29240",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "Real Time Transcoding buffers outside LAN with QSV\n\nI'm very excited for HLS support in Immich but I think there's something up with how it handles streaming with lower bandwidth or higher latency. On my LAN I probably have ~600 mbit connection from my laptop here to my server and the playback is pretty flawless, but if I change my DNS to test streaming over my 40 megabit WAN link there is a stutter every couple of seconds where it buffers. I'm using qsv with an Intel Arc A770 and I can see in the logs `Session _ lead is _ segments`, and that lead number rises so it's able to transcode quicker than I'm watching. The `encoded-video` directory is over a nfs share on HDDs but since playback works over LAN, I don't think that is the issue either. Jellyfin and Frigate are 2 other \"video\" apps I expose and I am able to playback just fine through…",
+  "root_cause_symbols": [
+    "src/utils/media.ts::QsvSwDecodeConfig.getBitrateOptions"
+  ],
+  "relevant_symbols": [
+    "src/utils/media.ts::QsvSwDecodeConfig.getBitrateOptions"
+  ],
+  "relevant_files": [
+    "src/utils/media.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr29240.patch",
+    "patch_sha256": "642b4a752abdfbc463e5d33cf30286dba91c69a333be7cc36b2e0f7176f6804e",
+    "apply": "fuzz-C1"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/29240",
+    "issue": "#29220",
+    "merge_commit": "c0bf5a4c563daea8ace3924cf45518236a42c31a",
+    "parent_commit": "d9d50d2848a4617535a074060b717f47d5328cda",
+    "merged_at": "2026-06-22T13:56:20Z",
+    "report_source": "issue",
+    "tests_added": [],
+    "test_files_changed": [
+      "server/src/services/media.service.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "event",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix c0bf5a4c563daea8ace3924cf45518236a42c31a (https://github.com/immich-app/immich/pull/29240)",
+    "targets/exp3/dataset-patches/immich/immich_pr29240.patch",
+    "src/services/hls.service.ts:64,117,200 serverSend",
+    "src/services/transcoding.service.ts:65,133 (OnEvent), :219 BaseConfig.create, :258 spawn ffmpeg",
+    "src/utils/media.ts:839 QsvSwDecodeConfig.getBitrateOptions"
+  ],
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "Symptom-only user report (QSV real-time HLS buffering outside LAN); fix adds -b:v for non-CQP QSV in QsvSwDecodeConfig.getBitrateOptions; RC exact. Symptom-to-fix distance is large (needs FFmpeg knowledge) but the patch comment cites issue #29220, so mapping is right.",
+      "indirect_boundary label \"job\" is wrong: the reported path is the real-time HLS route (VideoStreamController -> HlsService.serverSend HlsSegmentRequest/HlsSessionRequest -> TranscodingService @OnEvent handler -> BaseConfig.create/getCommand -> ffmpeg), i.e. cross-worker server events, not a BullMQ job. Correct to \"event\"."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "verified",
+    "tests": [
+      "media.service.spec.ts: MediaService handleVideoConversion should set options for qsv with sw decode"
+    ]
+  }
+}

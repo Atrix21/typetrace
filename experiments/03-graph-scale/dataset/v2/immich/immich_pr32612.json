@@ -1,0 +1,70 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr32612",
+  "split": "dev",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "Folder view on mobile shows assets from other folders\n\nHi, \n\nI have 3 external libaries mounted in Immich. \nIn one of those libraries I mounted 16 single folders for each year instead the root folder like \"/Fotos/2025\", \"/Fotos/2026\" etc. \nNow I added another library with my iPhone Photos. In that case only one root folder is mounted like \"/iPhone_Fotos_und_Videos\" which contains subfolders on the file system like \"2025\", \"2026\" etc.\n\nBy doing this, I recognized by browsing through immich folder view within the iOS App, that all pictures from the subfolders of \"/iPhone_Fotos_und_Videos\" are also shown in a flat structure (without folders) on root level of \"/Fotos\". On disc they are definetely not in this folder and also in the folder view of the immich browser version they are not shown. So it seems to be an UI issue within the folder view of…",
+  "root_cause_symbols": [
+    "src/repositories/view-repository.ts::ViewRepository.getAssetsByOriginalPath"
+  ],
+  "relevant_symbols": [
+    "src/repositories/view-repository.ts::ViewRepository.getAssetsByOriginalPath"
+  ],
+  "relevant_files": [
+    "src/repositories/view-repository.ts"
+  ],
+  "module_level_changes": [
+    "src/repositories/view-repository.ts::<module>"
+  ],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr32612.patch",
+    "patch_sha256": "16975355e48d9c32659989089d26a8b00e243b021426df0ce98bc406365d972f",
+    "apply": "fuzz-C1"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/32612",
+    "issue": "#29835",
+    "merge_commit": "c76e1517321df98df6e9b2f856493ac49ec05877",
+    "parent_commit": "73603bcafe5d1e52434f736476d07c9578f3b888",
+    "merged_at": "2026-10-28T11:45:58Z",
+    "report_source": "issue",
+    "tests_added": [
+      "view.repository.spec.ts: should only return assets directly in the folder"
+    ],
+    "test_files_changed": [
+      "server/test/medium.factory.ts",
+      "server/test/medium/specs/repositories/view.repository.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "low",
+    "indirect_boundary": "db",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix c76e1517321df98df6e9b2f856493ac49ec05877 (https://github.com/immich-app/immich/pull/32612)",
+    "test: view.repository.spec.ts: should only return assets directly in the folder",
+    "targets/exp3/dataset-patches/immich/immich_pr32612.patch",
+    "src/repositories/view-repository.ts:32-50"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "Clear symptom (folder view shows assets from other folders). Fix replaces the substring LIKE %path/% with a prefix match in ViewRepository.getAssetsByOriginalPath; RC exact; module-level escapeLikePattern helper. Report does not state the change."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "not_runnable",
+    "tests": []
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_im_t11",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "data_flow",
+  "category": "D",
+  "description": "A visitor opens a public share link and requests the original file of a photo in the shared album. Walk through every check, in order, that decides whether the file is served.",
+  "root_cause_symbols": [
+    "src/middleware/auth.guard.ts::AuthGuard.canActivate"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/middleware/auth.guard.ts::AuthGuard.canActivate",
+    "src/services/auth.service.ts::AuthService.authenticate",
+    "src/services/auth.service.ts::AuthService.validate",
+    "src/controllers/asset-media.controller.ts::AssetMediaController.downloadAsset",
+    "src/services/asset-media.service.ts::AssetMediaService.downloadOriginal",
+    "src/services/base.service.ts::BaseService.requireAccess",
+    "src/utils/access.ts::requireAccess",
+    "src/utils/access.ts::checkAccess",
+    "src/utils/access.ts::checkSharedLinkAccess",
+    "src/repositories/access.repository.ts::AssetAccess.checkSharedLinkAccess",
+    "src/dtos/auth.dto.ts::isEditedOnly",
+    "src/services/auth.service.ts::AuthService.validateSharedLinkKey",
+    "src/services/auth.service.ts::AuthService.validateSharedLinkSlug",
+    "src/services/auth.service.ts::AuthService.isValidSharedLink",
+    "src/repositories/asset.repository.ts::AssetRepository.getForOriginal"
+  ],
+  "relevant_files": [
+    "src/controllers/asset-media.controller.ts",
+    "src/dtos/auth.dto.ts",
+    "src/middleware/auth.guard.ts",
+    "src/repositories/access.repository.ts",
+    "src/repositories/asset.repository.ts",
+    "src/services/asset-media.service.ts",
+    "src/services/auth.service.ts",
+    "src/services/base.service.ts",
+    "src/utils/access.ts"
+  ],
+  "gt_path": [
+    "src/middleware/auth.guard.ts::AuthGuard.canActivate",
+    "src/services/auth.service.ts::AuthService.authenticate",
+    "src/services/auth.service.ts::AuthService.validate",
+    "src/controllers/asset-media.controller.ts::AssetMediaController.downloadAsset",
+    "src/services/asset-media.service.ts::AssetMediaService.downloadOriginal",
+    "src/services/base.service.ts::BaseService.requireAccess",
+    "src/utils/access.ts::requireAccess",
+    "src/utils/access.ts::checkAccess",
+    "src/utils/access.ts::checkSharedLinkAccess",
+    "src/repositories/access.repository.ts::AssetAccess.checkSharedLinkAccess"
+  ],
+  "alternatives": [],
+  "distractor_symbols": [
+    "src/utils/access.ts::requireUploadAccess",
+    "src/services/download.service.ts::DownloadService.downloadArchive"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd"
+  },
+  "source": {
+    "drafted_by": "mining agent (immich)",
+    "draft_id": "IM-T11",
+    "verification": "server/src/services/asset-media.service.spec.ts and download.service.spec.ts (tests added by cd47ee306; names in tests_added of PR #32562 in immich-bug-candidates.jsonl); controller-level guard coverage in server/src/controllers/asset-media.controller.spec.ts (names not read - UNVERIFIED).",
+    "notes": "Whether the route is a shared-link-allowed route is declared by @Authenticated on the controller method (sharedLink option), read by the guard through reflection (auth.guard.ts:28-34); the distractor list intentionally has no entry for AuthService.validate (it is on the path)."
+  },
+  "evidence": [
+    "server/src/middleware/auth.guard.ts:99-124",
+    "server/src/services/auth.service.ts:215-239 (sharedLinkRoute check :225), :241 validate",
+    "server/src/controllers/asset-media.controller.ts:92-107",
+    "server/src/services/asset-media.service.ts:244-245",
+    "server/src/services/base.service.ts:309-311",
+    "server/src/utils/access.ts:48 requireAccess, :98 checkAccess, :107-108 sharedLink branch, :116 checkSharedLinkAccess, :129 allowDownload",
+    "server/src/repositories/access.repository.ts:233",
+    "commits cd47ee306 (PR #32562) and 9982bee7b (PR #32561) changed shared-link edited-only/metadata rules with tests",
+    "src/services/auth.service.ts:503-530",
+    "src/utils/access.ts:106-130"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 9,
+    "communities_spanned": 3,
+    "gt_path_length": 10,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "Verified order: AuthGuard.canActivate (auth.guard.ts:99-124) -> AuthService.authenticate (auth.service.ts:215-239: sharedLink key present only on shared routes) -> validate (:241-268) -> downloadAsset (asset-media.controller.ts:92-107, @Authenticated permission AssetDownload, sharedLink:true) -> downloadOriginal (asset-media.service.ts:244-245) -> BaseService.requireAccess -> utils requireAccess/checkAccess -> checkSharedLinkAccess (access.ts:112-130: allowDownload gate) -> AssetAccess.checkSharedLinkAccess (access.repository.ts:233) -> getForOriginal with isEditedOnly.",
+      "Important omission: the shared-link validity checks themselves - AuthService.validateSharedLinkKey/Slug and isValidSharedLink (expiry, owner exists; auth.service.ts:503-530) - are missing from gt_path although \"every check, in order\" is asked. Also AssetRepository.getForOriginal (edited-only for shared links)."
+    ]
+  }
+}

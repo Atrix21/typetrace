@@ -114,9 +114,11 @@ export function createProject(opts: ProjectOptions): Project {
     const limit = opts.maxPackageDeclarationBytes;
     const sizeOf = new Map<string, number>();
     const getSourceFile = host.getSourceFile.bind(host);
+    const libDir = path.dirname(ts.getDefaultLibFilePath(options)).replace(/\\/g, '/');
     host.getSourceFile = (fileName, lang, onError, shouldCreate) => {
       const pk = packageRootOf(fileName);
-      if (pk && /\.d\.(c|m)?ts$/.test(fileName)) {
+      // Never stubbed: the TypeScript default library and @types/* (ambient globals such as node/jest).
+      if (pk && /\.d\.(c|m)?ts$/.test(fileName) && !fileName.replace(/\\/g, '/').startsWith(libDir + '/') && !pk.name.startsWith('@types/')) {
         let size = sizeOf.get(pk.root);
         if (size === undefined) sizeOf.set(pk.root, (size = declarationBytes(pk.root)));
         if (size > limit) {

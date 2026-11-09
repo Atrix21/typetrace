@@ -42,7 +42,9 @@ const METHODS = (arg('methods') ?? STAGE1_METHODS.join(',')).split(',');
 const NESTED = arg('nested');
 const ONLY = arg('only')?.split(',');
 const BUDGET: RetrievalBudget = { maxResults: 50, maxContextTokens: 8000 }; // experiment-1 frozen budget
-const MAX_DECL_BYTES = 50e6; // E3-D13: declaration-heavy packages stubbed (M, L)
+// E3-D13/D15: M stubs declaration-heavy packages (> 50 MB; none in Immich); L stubs all third-party declarations
+// (workspace packages, @types and the TS lib stay typed) because a fully typed Twenty walk needs > 6.5 GB and > 15 min.
+const MAX_DECL_BYTES = REPO === 'L' ? 0 : 50e6;
 const repoName: RepoName | null = REPO === 'M' ? 'immich' : REPO === 'L' ? 'twenty' : null;
 const sha = (s: string) => crypto.createHash('sha256').update(s).digest('hex');
 const rss = () => Math.round(process.memoryUsage().rss / 1e6);
@@ -85,10 +87,10 @@ function inducedSubgraph(nodes: GraphNode[], edges: GraphEdge[], files: Set<stri
 
 interface CorpusSpec { name: string; files: string[]; strategy: string; target_lines: number | null; lines: number | null }
 
-async function evalCorpus(task: GroundTruthTask, spec: CorpusSpec, root: string, commit: string, full: { nodes: GraphNode[]; edges: GraphEdge[] } | null) {
+async function evalCorpus(task: GroundTruthTask, spec: CorpusSpec, root: string, commit: string, full: { nodes: GraphNode[]; edges: GraphEdge[] } | null, cacheDirOverride?: string) {
   const pending = METHODS.filter((m) => !done.has(`${task.task_id}|${spec.name}|${m}`));
   if (!pending.length) return;
-  const cacheDir = abs(`.cache/exp3/stage1/${REPO}/${task.task_id}/${spec.name}`);
+  const cacheDir = cacheDirOverride ?? abs(`.cache/exp3/stage1/${REPO}/${task.task_id}/${spec.name}`);
   const corpus: Corpus = { repoRoot: root, commit, files: spec.files, cacheDir };
   clearGraphCache();
   if (full) {
@@ -112,15 +114,28 @@ async function evalCorpus(task: GroundTruthTask, spec: CorpusSpec, root: string,
     const row = { ...base, ...v2, repo: REPO, corpus: spec.name, strategy: spec.strategy, target_lines: spec.target_lines, corpus_lines: spec.lines, corpus_files: spec.files.length, method: name, split: (task as { split?: string }).split, task_type: (task as { task_type?: string }).task_type ?? 'bug_localisation', strata: (task as { strata?: unknown }).strata ?? null };
     append('metrics.jsonl', row);
     fs.appendFileSync(path.join(OUT, 'raw', `${name}.jsonl`), JSON.stringify({ task_id: task.task_id, corpus: spec.name, method: name, results: out.results, context: out.context, latency_ms: out.latency_ms, metadata: out.metadata }) + '\n');
-    append('infra.jsonl', { task_id: task.task_id, corpus: spec.name, method: name, prepare_ms: Math.round(prepMs), index_ms: Math.round(st.index_ms), query_ms: Math.round(out.latency_ms), rss_mb_after: rss(), details: { chunks: (st.details as Record<string, any>)?.chunks ?? (st.details as Record<string, any>)?.bm25?.chunks ?? null } });
+    const det = (st.details ?? {}) as Record<string, any>;
+    append('infra.jsonl', { task_id: task.task_id, corpus: spec.name, method: name, prepare_ms: Math.round(prepMs), index_ms: Math.round(st.index_ms), query_ms: Math.round(out.latency_ms), rss_mb_after: rss(), details: { chunks: det.chunks ?? det.bm25?.chunks ?? det.base?.bm25?.chunks ?? null, newly_embedded: det.newly_embedded ?? det.embeddings?.newly_embedded ?? det.base?.embeddings?.newly_embedded ?? null, embedding_tokens: st.embedding_tokens ?? null } });
     done.add(`${task.task_id}|${spec.name}|${name}`);
   }
+}
+
+let pinnedCache: { nodes: Set<string>; edges: Set<string> } | null = null;
+function pinnedIds(): { nodes: Set<string>; edges: Set<string> } {
+  if (pinnedCache) return pinnedCache;
+  const R = REPOS[repoName!];
+  const commit = sha(`${R.pinned}|pinned`).slice(0, 16);
+  const gdir = abs(`.cache/exp3/stage1/${REPO}/graphs/${commit}`);
+  if (!fs.existsSync(path.join(gdir, 'graph.sqlite'))) { const b = buildGraphChild(abs(R.corpusRoot), gdir); fs.writeFileSync(path.join(gdir, 'build.json'), JSON.stringify(b)); append('graph-builds.jsonl', { task_id: '(pinned)', snapshot: 'pinned', ...b }); }
+  const g = loadGraph(path.join(gdir, 'graph.sqlite'));
+  pinnedCache = { nodes: new Set(g.nodes.map((n) => n.id)), edges: new Set(g.edges.map((e) => e.id)) };
+  return pinnedCache;
 }
 
 async function main() {
   const cfg = loadConfig();
   EmbeddingRetriever.embeddingCacheDir = abs(`.cache/exp3/embeddings-${REPO}`);
-  if (REPO === 'S') EmbeddingRetriever.embeddingCacheDir = null; // experiment-1 cache layout, for reproducibility
+  if (REPO === 'S') EmbeddingRetriever.embeddingCacheDir = abs('.cache/embeddings'); // experiment-1 content-hash cache
   const tasks = (REPO === 'S' ? selectTasks(cfg, SPLIT) : loadV2Tasks()).filter((t) => !ONLY || ONLY.includes(t.task_id));
   const nested = NESTED ? JSON.parse(fs.readFileSync(abs(NESTED), 'utf8')) : null;
   fs.writeFileSync(path.join(OUT, 'meta.json'), JSON.stringify({ repo: REPO, split: SPLIT, methods: METHODS, budget: BUDGET, tasks: tasks.map((t) => t.task_id), nested: NESTED ?? null, max_package_declaration_bytes: REPO === 'S' ? null : MAX_DECL_BYTES, started: new Date().toISOString() }, null, 2) + '\n');
@@ -130,7 +145,8 @@ async function main() {
     const t0 = performance.now();
     if (REPO === 'S') {
       const corpus = checkoutSnapshot(cfg, t.task_id);
-      await evalCorpus(t, { name: 'full', files: corpus.files, strategy: 'full', target_lines: null, lines: null }, corpus.repoRoot, corpus.commit, null);
+      // experiment-1 snapshot cache dir: the frozen per-commit graph is reused (identical hashes, see regression-s.ts)
+      await evalCorpus(t, { name: 'full', files: corpus.files, strategy: 'full', target_lines: null, lines: null }, corpus.repoRoot, corpus.commit, null, corpus.cacheDir);
       console.error(`[S] ${t.task_id} ${Math.round((performance.now() - t0) / 1000)}s`);
       continue;
     }
@@ -141,11 +157,23 @@ async function main() {
       const root = abs(R.corpusRoot);
       const files = listCorpusFiles(root, ['src']);
       const commit = sha(`${R.pinned}|${snap?.patch_sha256 ?? 'pinned'}`).slice(0, 16);
-      const gdir = abs(`.cache/exp3/stage1/${REPO}/${t.task_id}/graph-build`);
+      const gdir = abs(`.cache/exp3/stage1/${REPO}/graphs/${commit}`); // one build per snapshot (pinned shared by B–E tasks)
       const build = fs.existsSync(path.join(gdir, 'graph.sqlite')) ? JSON.parse(fs.readFileSync(path.join(gdir, 'build.json'), 'utf8')) : buildGraphChild(root, gdir);
       fs.writeFileSync(path.join(gdir, 'build.json'), JSON.stringify(build));
       const g = loadGraph(path.join(gdir, 'graph.sqlite'));
-      append('graph-builds.jsonl', { task_id: t.task_id, ...build, nodes: g.nodes.length, edges: g.edges.length });
+      // Freshness: how much of the graph a bug-snapshot change touches (vs the pinned graph), i.e. what would be stale
+      // without a rebuild, and how many files the change spans.
+      let fresh: Record<string, unknown> = {};
+      if (snap?.kind === 'revert_fix') {
+        const P = pinnedIds();
+        const ids = new Set(g.edges.map((e) => e.id));
+        const added = g.edges.filter((e) => !P.edges.has(e.id));
+        const removed = [...P.edges].filter((id) => !ids.has(id)).length;
+        const nodeIds = new Set(g.nodes.map((n) => n.id));
+        const changedFiles = new Set([...added.map((e) => e.file), ...g.nodes.filter((n) => !P.nodes.has(n.id)).map((n) => n.file)].filter(Boolean));
+        fresh = { edges_added: added.length, edges_removed: removed, nodes_added: [...nodeIds].filter((x) => !P.nodes.has(x)).length, nodes_removed: [...P.nodes].filter((x) => !nodeIds.has(x)).length, files_with_graph_changes: changedFiles.size, stale_edge_share: +((added.length + removed) / Math.max(1, P.edges.size)).toFixed(6) };
+      }
+      append('graph-builds.jsonl', { task_id: t.task_id, snapshot: snap?.kind ?? 'pinned', ...build, nodes: g.nodes.length, edges: g.edges.length, freshness: fresh });
       await evalCorpus(t, { name: 'full', files, strategy: 'full', target_lines: null, lines: null }, root, commit, g);
       for (const c of nested?.tasks?.[t.task_id]?.corpora ?? []) {
         const want = new Set<number>(c.communities);
@@ -154,7 +182,7 @@ async function main() {
         if (sha(cf.join('\n')) !== c.files_sha256) throw new Error(`corpus hash mismatch ${t.task_id} ${c.strategy}-${c.target_lines}`);
         await evalCorpus(t, { name: `${c.strategy}-${c.target_lines}`, files: cf, strategy: c.strategy, target_lines: c.target_lines, lines: c.lines }, root, commit, g);
       }
-      fs.rmSync(path.join(gdir, 'graph.sqlite'), { force: true }); // 0.1–1.2 GB each; stats kept in graph-builds.jsonl
+      if (snap?.kind === 'revert_fix') fs.rmSync(path.join(gdir, 'graph.sqlite'), { force: true }); // per-task bug graphs: 0.1–1.2 GB each; stats kept in graph-builds.jsonl
     } finally { restore(); }
     console.error(`[${REPO}] ${t.task_id} ${Math.round((performance.now() - t0) / 1000)}s rss ${rss()} MB`);
   }

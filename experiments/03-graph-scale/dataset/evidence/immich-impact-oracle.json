@@ -1,0 +1,202 @@
+{
+  "generated_by": "scripts/exp3/oracle-impact.ts",
+  "repo": "immich",
+  "results": [
+    {
+      "task_id": "immich_im_t10",
+      "status": "ok",
+      "edit": {
+        "file": "src/repositories/machine-learning.repository.ts",
+        "note": "Simulates adding a mandatory per-request timeout parameter to the single HTTP choke point. tsc flags only the four public wrappers inside the repository (direct set). The service callers (indirect set) are found by tracing those four public methods, not by tsc; this is a partial oracle."
+      },
+      "scope_files": 226,
+      "new_errors": 4,
+      "direct_impact": [
+        "src/repositories/machine-learning.repository.ts::MachineLearningRepository.detectFaces",
+        "src/repositories/machine-learning.repository.ts::MachineLearningRepository.encodeImage",
+        "src/repositories/machine-learning.repository.ts::MachineLearningRepository.encodeText",
+        "src/repositories/machine-learning.repository.ts::MachineLearningRepository.ocr"
+      ],
+      "tests_with_errors": [],
+      "errors_sample": [
+        {
+          "file": "src/repositories/machine-learning.repository.ts",
+          "line": 197,
+          "key": "2554|Expected 3 arguments, but got 2."
+        },
+        {
+          "file": "src/repositories/machine-learning.repository.ts",
+          "line": 207,
+          "key": "2554|Expected 3 arguments, but got 2."
+        },
+        {
+          "file": "src/repositories/machine-learning.repository.ts",
+          "line": 213,
+          "key": "2554|Expected 3 arguments, but got 2."
+        },
+        {
+          "file": "src/repositories/machine-learning.repository.ts",
+          "line": 224,
+          "key": "2554|Expected 3 arguments, but got 2."
+        }
+      ],
+      "ms": 39609
+    },
+    {
+      "task_id": "immich_im_t15",
+      "status": "ok",
+      "edit": {
+        "file": "src/repositories/asset.repository.ts",
+        "note": "createAll now returns number | never[] (the early return [] is kept). tsc flags the consumer in LibraryService.handleSyncFiles (assetIds.length / .map / queuePostSyncJobs(assetIds)). Only one production caller of AssetRepository.createAll exists (person/metadata createAll calls belong to other repositories)."
+      },
+      "scope_files": 465,
+      "new_errors": 5,
+      "direct_impact": [
+        "src/services/library.service.ts::LibraryService.handleSyncFiles"
+      ],
+      "tests_with_errors": [
+        "src/services/library.service.spec.ts"
+      ],
+      "errors_sample": [
+        {
+          "file": "src/services/library.service.spec.ts",
+          "line": 570,
+          "key": "2322|Type 'string' is not assignable to type 'never'."
+        },
+        {
+          "file": "src/services/library.service.ts",
+          "line": 287,
+          "key": "2339|Property 'length' does not exist on type 'number | never[]'.   Property 'length' does not exist on type 'number'."
+        },
+        {
+          "file": "src/services/library.service.ts",
+          "line": 290,
+          "key": "2339|Property 'map' does not exist on type 'number | never[]'.   Property 'map' does not exist on type 'number'."
+        },
+        {
+          "file": "src/services/library.service.ts",
+          "line": 290,
+          "key": "7006|Parameter 'assetId' implicitly has an 'any' type."
+        },
+        {
+          "file": "src/services/library.service.ts",
+          "line": 295,
+          "key": "2345|Argument of type 'number | never[]' is not assignable to parameter of type 'string[]'.   Type 'number' is not assignable to type 'string[]'."
+        }
+      ],
+      "ms": 69612
+    },
+    {
+      "task_id": "immich_im_t2",
+      "status": "ok",
+      "edit": {
+        "file": "src/repositories/event.repository.ts",
+        "note": "Drops the optional source field from the typed event payload. Expected tsc errors: excess property at the emit in MetadataService.handleMetadataExtraction; missing property 'source' in the destructured parameter of the three listeners. JobSource import stays (still used elsewhere) and noUnusedLocals is off."
+      },
+      "scope_files": 465,
+      "new_errors": 4,
+      "direct_impact": [
+        "src/services/metadata.service.ts::MetadataService.handleMetadataExtraction",
+        "src/services/notification.service.ts::NotificationService.onAssetMetadataExtracted",
+        "src/services/storage-template.service.ts::StorageTemplateService.onAssetMetadataExtracted",
+        "src/services/workflow-execution.service.ts::WorkflowExecutionService.onAssetMetadataExtracted"
+      ],
+      "tests_with_errors": [],
+      "errors_sample": [
+        {
+          "file": "src/services/notification.service.ts",
+          "line": 182,
+          "key": "2339|Property 'source' does not exist on type '{ assetId: string; userId: string; }'."
+        },
+        {
+          "file": "src/services/storage-template.service.ts",
+          "line": 139,
+          "key": "2339|Property 'source' does not exist on type '{ assetId: string; userId: string; }'."
+        },
+        {
+          "file": "src/services/metadata.service.ts",
+          "line": 416,
+          "key": "2353|Object literal may only specify known properties, and 'source' does not exist in type '{ assetId: string; userId: string; }'."
+        },
+        {
+          "file": "src/services/workflow-execution.service.ts",
+          "line": 309,
+          "key": "2339|Property 'source' does not exist on type '{ assetId: string; userId: string; }'."
+        }
+      ],
+      "ms": 46190
+    },
+    {
+      "task_id": "immich_im_t6",
+      "status": "ok",
+      "edit": {
+        "file": "src/types.ts",
+        "note": "Removes the typed-payload entry of one existing job from the JobItem union. tsc then flags every producer that queues that job and the handler typed with its payload (JobOf<JobName.AssetDelete>); it demonstrates the compile-time link (union entry) only. It cannot reveal the runtime requirement of a decorated handler (JobRepository.setup throws at startup), nor the enum/queue assignment."
+      },
+      "scope_files": 465,
+      "new_errors": 10,
+      "direct_impact": [
+        "src/services/asset.service.ts::AssetService.handleAssetDeletion",
+        "src/services/asset.service.ts::AssetService.handleAssetDeletionCheck",
+        "src/services/library.service.ts::LibraryService.handleDeleteLibrary",
+        "src/services/metadata.service.ts::MetadataService.applyMotionPhotos",
+        "src/services/trash.service.ts::TrashService.handleEmptyTrash",
+        "src/types.ts::JobOf"
+      ],
+      "tests_with_errors": [],
+      "errors_sample": [
+        {
+          "file": "src/types.ts",
+          "line": 212,
+          "key": "2536|Type 'T' cannot be used to index type 'Jobs'."
+        },
+        {
+          "file": "src/services/asset.service.ts",
+          "line": 290,
+          "key": "2345|Argument of type '{ name: JobName.AssetDelete; data: { id: string; deleteOnDisk: boolean; }; }[]' is not assignable to parameter of type 'JobItem[]'.   Type '{ name: JobName.AssetDelete; data: { id: s"
+        },
+        {
+          "file": "src/services/asset.service.ts",
+          "line": 303,
+          "key": "2339|Property 'id' does not exist on type 'unknown'."
+        },
+        {
+          "file": "src/services/asset.service.ts",
+          "line": 303,
+          "key": "2339|Property 'deleteOnDisk' does not exist on type 'unknown'."
+        },
+        {
+          "file": "src/services/asset.service.ts",
+          "line": 348,
+          "key": "2322|Type 'JobName.AssetDelete' is not assignable to type 'JobName.AssetDeleteCheck | JobName.AssetDetectFacesQueueAll | JobName.AssetDetectFaces | JobName.AssetDetectDuplicatesQueueAll | JobName.AssetDete"
+        },
+        {
+          "file": "src/services/asset.service.ts",
+          "line": 349,
+          "key": "2353|Object literal may only specify known properties, and 'deleteOnDisk' does not exist in type 'IBaseJob | IPersonJob | IEntityJob | ILibraryFileJob | ILibraryBulkIdsJob | IDeleteFilesJob | IDeferrableJo"
+        },
+        {
+          "file": "src/services/library.service.ts",
+          "line": 394,
+          "key": "2345|Argument of type '{ name: JobName.AssetDelete; data: { id: string; deleteOnDisk: boolean; }; }[]' is not assignable to parameter of type 'JobItem[]'.   Type '{ name: JobName.AssetDelete; data: { id: s"
+        },
+        {
+          "file": "src/services/metadata.service.ts",
+          "line": 803,
+          "key": "2322|Type 'JobName.AssetDelete' is not assignable to type 'JobName.AssetDeleteCheck | JobName.AssetDetectFacesQueueAll | JobName.AssetDetectFaces | JobName.AssetDetectDuplicatesQueueAll | JobName.AssetDete"
+        },
+        {
+          "file": "src/services/metadata.service.ts",
+          "line": 804,
+          "key": "2353|Object literal may only specify known properties, and 'deleteOnDisk' does not exist in type 'IBaseJob | IPersonJob | IEntityJob | ILibraryFileJob | ILibraryBulkIdsJob | IDeleteFilesJob | IDeferrableJo"
+        },
+        {
+          "file": "src/services/trash.service.ts",
+          "line": 53,
+          "key": "2345|Argument of type '{ name: JobName.AssetDelete; data: { id: string; deleteOnDisk: boolean; }; }[]' is not assignable to parameter of type 'JobItem[]'.   Type '{ name: JobName.AssetDelete; data: { id: s"
+        }
+      ],
+      "ms": 46272
+    }
+  ]
+}

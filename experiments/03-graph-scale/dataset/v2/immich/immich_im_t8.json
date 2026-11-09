@@ -1,0 +1,100 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_im_t8",
+  "split": "dev",
+  "repo": "immich",
+  "task_type": "feature_understanding",
+  "category": "B",
+  "description": "An admin clicks 'scan' on an external photo library. Describe what happens until the discovered files show up as searchable photos, how excluded paths are decided, and which later stages are shared with normal uploads.",
+  "root_cause_symbols": [
+    "src/controllers/library.controller.ts::LibraryController.scanLibrary"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/controllers/library.controller.ts::LibraryController.scanLibrary",
+    "src/services/library.service.ts::LibraryService.queueScan",
+    "src/services/library.service.ts::LibraryService.handleQueueSyncFiles",
+    "src/repositories/storage.repository.ts::StorageRepository.walk",
+    "src/services/library.service.ts::LibraryService.handleSyncFiles",
+    "src/repositories/asset.repository.ts::AssetRepository.createAll",
+    "src/services/library.service.ts::LibraryService.queuePostSyncJobs",
+    "src/services/metadata.service.ts::MetadataService.handleSidecarCheck",
+    "src/services/job.service.ts::JobService.onDone",
+    "src/services/metadata.service.ts::MetadataService.handleMetadataExtraction",
+    "src/services/library.service.ts::LibraryService.handleQueueSyncAssets",
+    "src/services/library.service.ts::LibraryService.handleSyncAssets",
+    "src/repositories/asset.repository.ts::AssetRepository.detectOfflineExternalAssets",
+    "src/services/storage-template.service.ts::StorageTemplateService.onAssetMetadataExtracted",
+    "src/services/storage-template.service.ts::StorageTemplateService.handleMigrationSingle",
+    "src/services/media.service.ts::MediaService.handleGenerateThumbnails",
+    "src/services/smart-info.service.ts::SmartInfoService.handleEncodeClip",
+    "src/repositories/asset.repository.ts::AssetRepository.filterNewExternalAssetPaths"
+  ],
+  "relevant_files": [
+    "src/controllers/library.controller.ts",
+    "src/repositories/asset.repository.ts",
+    "src/repositories/storage.repository.ts",
+    "src/services/job.service.ts",
+    "src/services/library.service.ts",
+    "src/services/media.service.ts",
+    "src/services/metadata.service.ts",
+    "src/services/smart-info.service.ts",
+    "src/services/storage-template.service.ts"
+  ],
+  "gt_path": [
+    "src/controllers/library.controller.ts::LibraryController.scanLibrary",
+    "src/services/library.service.ts::LibraryService.queueScan",
+    "src/services/library.service.ts::LibraryService.handleQueueSyncFiles",
+    "src/repositories/storage.repository.ts::StorageRepository.walk",
+    "src/services/library.service.ts::LibraryService.handleSyncFiles",
+    "src/repositories/asset.repository.ts::AssetRepository.createAll",
+    "src/services/library.service.ts::LibraryService.queuePostSyncJobs",
+    "src/services/metadata.service.ts::MetadataService.handleSidecarCheck",
+    "src/services/job.service.ts::JobService.onDone",
+    "src/services/metadata.service.ts::MetadataService.handleMetadataExtraction"
+  ],
+  "alternatives": [
+    "Exclusion handling for already-imported files is a separate branch: LibrarySyncAssetsQueueAll -> handleQueueSyncAssets -> LibrarySyncAssets -> handleSyncAssets (picomatch) + AssetRepository.detectOfflineExternalAssets (SQL)."
+  ],
+  "distractor_symbols": [
+    "src/services/library.service.ts::LibraryService.watch",
+    "src/services/library.service.ts::LibraryService.handleQueueScanAll",
+    "src/services/library.service.ts::LibraryService.handleDeleteLibrary"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd"
+  },
+  "source": {
+    "drafted_by": "mining agent (immich)",
+    "draft_id": "IM-T8",
+    "verification": "server/src/services/library.service.spec.ts (handleSyncFiles tests around lines 570-613 use asset.createAll) and server/test/medium/specs/services/library.service.spec.ts; chain after SidecarCheck covered by job.service.spec.ts 'should queue metadata extraction when sidecar discovery is skipped' (line 23). Exact test names for the earlier steps not read.",
+    "notes": "Naming confounder: handleQueueSyncFiles is decorated with LibrarySyncFilesQueueAll while handleQueueScanAll serves LibraryScanQueueAll. The shared tail with uploads is the SidecarCheck -> AssetExtractMetadata -> upload chain of IM-T1 (steps 2-10)."
+  },
+  "evidence": [
+    "server/src/controllers/library.controller.ts:110-119",
+    "server/src/services/library.service.ts:440-453 queueScan; :610-611 handleQueueSyncFiles; :637 storageRepository.walk; :657 queue LibrarySyncFiles; :255-297 handleSyncFiles (createAll :280, emit AssetCreate :291, queuePostSyncJobs :295); :428-438 queuePostSyncJobs",
+    "server/src/services/job.service.ts:104-107 SidecarCheck -> AssetExtractMetadata",
+    "history: PR #32081 (c3dee6f98), PR #31970 (de6dcf669), PR #30850 (8ce6b1856) changed exclusion matching",
+    "src/services/library.service.ts:255-297,428-453,610-665"
+  ],
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "medium",
+    "indirect_boundary": "see-path",
+    "gt_files": 9,
+    "communities_spanned": 6,
+    "gt_path_length": 10,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "Verified: LibraryController.scanLibrary (library.controller.ts:116-119) -> queueScan (library.service.ts:440-453) -> handleQueueSyncFiles (:610; exclusionPatterns passed to StorageRepository.walk :637-642) -> LibrarySyncFiles -> handleSyncFiles (:255-297; createAll :280, emit AssetCreate :291) -> queuePostSyncJobs (:428-437, queues SidecarCheck with source \"upload\") -> handleSidecarCheck -> JobService.onDone (SidecarCheck -> AssetExtractMetadata, job.service.ts:104-107) -> handleMetadataExtraction.",
+      "The gt_path stops at metadata extraction but the question asks until files are \"searchable\" and which later stages are shared with uploads. Because source is \"upload\", the shared tail is StorageTemplateService.onAssetMetadataExtracted -> handleMigrationSingle (external assets skipped :228 but onDone still fires on Skipped, job.service.ts:90) -> onDone -> MediaService.handleGenerateThumbnails -> SmartInfoService.handleEncodeClip (+faces/ocr/duplicates).",
+      "Also missing: LibraryService.processEntity and AssetRepository.filterNewExternalAssetPaths (library.service.ts:632-640)."
+    ]
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_im_t1",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "feature_understanding",
+  "category": "B",
+  "description": "A user uploads a photo from the phone app. In order, which background stages run for that photo until it can be found by natural-language search, has been grouped under people, and has been compared with near-duplicates, and what causes each stage to start? Give the function that starts each next stage.",
+  "root_cause_symbols": [
+    "src/services/asset-media.service.ts::AssetMediaService.uploadAsset"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/services/asset-media.service.ts::AssetMediaService.uploadAsset",
+    "src/services/metadata.service.ts::MetadataService.handleMetadataExtraction",
+    "src/services/storage-template.service.ts::StorageTemplateService.onAssetMetadataExtracted",
+    "src/services/storage-template.service.ts::StorageTemplateService.handleMigrationSingle",
+    "src/services/job.service.ts::JobService.onDone",
+    "src/services/media.service.ts::MediaService.handleGenerateThumbnails",
+    "src/services/smart-info.service.ts::SmartInfoService.handleEncodeClip",
+    "src/services/duplicate.service.ts::DuplicateService.handleSearchDuplicates",
+    "src/services/person.service.ts::PersonService.handleDetectFaces",
+    "src/services/person.service.ts::PersonService.handleRecognizeFaces",
+    "src/repositories/job.repository.ts::JobRepository.queueAll",
+    "src/repositories/job.repository.ts::JobRepository.run",
+    "src/repositories/job.repository.ts::JobRepository.setup",
+    "src/services/job.service.ts::JobService.onJobRun",
+    "src/repositories/event.repository.ts::EventRepository.setup",
+    "src/repositories/event.repository.ts::EventRepository.emit",
+    "src/services/ocr.service.ts::OcrService.handleOcr"
+  ],
+  "relevant_files": [
+    "src/repositories/event.repository.ts",
+    "src/repositories/job.repository.ts",
+    "src/services/asset-media.service.ts",
+    "src/services/duplicate.service.ts",
+    "src/services/job.service.ts",
+    "src/services/media.service.ts",
+    "src/services/metadata.service.ts",
+    "src/services/ocr.service.ts",
+    "src/services/person.service.ts",
+    "src/services/smart-info.service.ts",
+    "src/services/storage-template.service.ts"
+  ],
+  "gt_path": [
+    "src/services/asset-media.service.ts::AssetMediaService.uploadAsset",
+    "src/services/metadata.service.ts::MetadataService.handleMetadataExtraction",
+    "src/services/storage-template.service.ts::StorageTemplateService.onAssetMetadataExtracted",
+    "src/services/storage-template.service.ts::StorageTemplateService.handleMigrationSingle",
+    "src/services/job.service.ts::JobService.onDone",
+    "src/services/media.service.ts::MediaService.handleGenerateThumbnails",
+    "src/services/smart-info.service.ts::SmartInfoService.handleEncodeClip",
+    "src/services/duplicate.service.ts::DuplicateService.handleSearchDuplicates",
+    "src/services/person.service.ts::PersonService.handleDetectFaces",
+    "src/services/person.service.ts::PersonService.handleRecognizeFaces",
+    "src/services/ocr.service.ts::OcrService.handleOcr"
+  ],
+  "alternatives": [
+    "External-library assets enter the same chain via LibraryService.queuePostSyncJobs -> SidecarCheck -> JobService.onDone -> AssetExtractMetadata (library.service.ts, job.service.ts); an acceptable answer may mention it but the upload path is the asked one.",
+    "Video assets additionally get AssetEncodeVideo queued at step 7 (MediaService.handleVideoConversion)."
+  ],
+  "distractor_symbols": [
+    "src/services/metadata.service.ts::MetadataService.handleQueueMetadataExtraction",
+    "src/services/notification.service.ts::NotificationService.onAssetShow",
+    "src/services/media.service.ts::MediaService.handleQueueGenerateThumbnails",
+    "src/services/job.service.ts::JobService.create"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd"
+  },
+  "source": {
+    "drafted_by": "mining agent (immich)",
+    "draft_id": "IM-T1",
+    "verification": "Vitest (not run here): server/src/services/job.service.spec.ts, tests 'should queue 3 jobs when a AssetGenerateThumbnails job finishes successfully' and 'should queue 4 jobs when a AssetGenerateThumbnails job finishes successfully'. Those cover step 5/7 only. The SmartSearch->AssetDetectDuplicates link (job.service.ts:249-253) and the storage-template step are NOT covered by a test (spec case for SmartSearch at job.service.spec.ts:~108 passes no source). Remaining links verified by reading only.",
+    "notes": "Edge semantics in gt_path: edge = how this step is reached from the previous one. Steps 11-13 are parallel branches, not sequential. Stage order inside step 7 is not guaranteed (three different queues). Confounder: facial recognition is enqueued by the face-detection handler, not by JobService.onDone."
+  },
+  "evidence": [
+    "server/src/services/asset-media.service.ts:202 queue AssetExtractMetadata source upload; :208 emit AssetCreate",
+    "server/src/services/metadata.service.ts:413 emit AssetMetadataExtracted",
+    "server/src/services/storage-template.service.ts:138-141 listener queues StorageTemplateMigrationSingle",
+    "server/src/services/job.service.ts:117-121 StorageTemplateMigrationSingle -> AssetGenerateThumbnails; :165-186 -> SmartSearch, AssetDetectFaces, Ocr (+AssetEncodeVideo); :249-253 SmartSearch -> AssetDetectDuplicates",
+    "server/src/services/person.service.ts:451 queueAll FacialRecognitionQueueAll + FacialRecognition",
+    "test server/src/services/job.service.spec.ts:120 (cases :76-117)",
+    "src/services/job.service.ts:102-258",
+    "src/services/asset-media.service.ts:127,202"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 11,
+    "communities_spanned": 6,
+    "gt_path_length": 11,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "Every step verified: uploadAsset queues AssetExtractMetadata (asset-media.service.ts:202) -> handleMetadataExtraction emits AssetMetadataExtracted (metadata.service.ts:413) -> StorageTemplateService.onAssetMetadataExtracted queues StorageTemplateMigrationSingle (storage-template.service.ts:138-141) -> JobService.onDone queues AssetGenerateThumbnails (job.service.ts:117-121) -> onDone queues SmartSearch/AssetDetectFaces/Ocr (:176-186) -> onDone after SmartSearch queues AssetDetectDuplicates (:249-253); handleDetectFaces queues FacialRecognition (person.service.ts:451-452).",
+      "OCR (OcrService.handleOcr) is on the chain but the question asks only for search, people and near-duplicates; treat as optional/extra in gt_path.",
+      "Face detection and smart search run in parallel after thumbnails; the draft gt_path lists them sequentially - scorers should not require this order between them."
+    ]
+  }
+}

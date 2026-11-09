@@ -1,0 +1,92 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_im_t4",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "architecture",
+  "category": "E",
+  "description": "An admin changes the background-job concurrency setting in the web UI. The request is handled by one server process but jobs run in a different one. Explain how the job-running process learns about the change and applies it.",
+  "root_cause_symbols": [
+    "src/services/system-config.service.ts::SystemConfigService.updateAdminConfig"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/services/system-config.service.ts::SystemConfigService.updateAdminConfig",
+    "src/services/notification.service.ts::NotificationService.onConfigUpdate",
+    "src/repositories/websocket.repository.ts::WebsocketRepository.serverSend",
+    "src/middleware/websocket.adapter.ts::WebSocketAdapter.createIOServer",
+    "src/repositories/websocket.repository.ts::WebsocketRepository.afterInit",
+    "src/repositories/event.repository.ts::EventRepository.onEvent",
+    "src/services/queue.service.ts::QueueService.onConfigUpdate",
+    "src/services/queue.service.ts::QueueService.updateConcurrency",
+    "src/repositories/job.repository.ts::JobRepository.setConcurrency",
+    "src/repositories/event.repository.ts::EventRepository.setup",
+    "src/workers/microservices.ts::bootstrap"
+  ],
+  "relevant_files": [
+    "src/middleware/websocket.adapter.ts",
+    "src/repositories/event.repository.ts",
+    "src/repositories/job.repository.ts",
+    "src/repositories/websocket.repository.ts",
+    "src/services/notification.service.ts",
+    "src/services/queue.service.ts",
+    "src/services/system-config.service.ts",
+    "src/workers/microservices.ts"
+  ],
+  "gt_path": [
+    "src/services/system-config.service.ts::SystemConfigService.updateAdminConfig",
+    "src/services/notification.service.ts::NotificationService.onConfigUpdate",
+    "src/repositories/websocket.repository.ts::WebsocketRepository.serverSend",
+    "src/middleware/websocket.adapter.ts::WebSocketAdapter.createIOServer",
+    "src/repositories/websocket.repository.ts::WebsocketRepository.afterInit",
+    "src/repositories/event.repository.ts::EventRepository.onEvent",
+    "src/services/queue.service.ts::QueueService.onConfigUpdate",
+    "src/services/queue.service.ts::QueueService.updateConcurrency",
+    "src/repositories/job.repository.ts::JobRepository.setConcurrency"
+  ],
+  "alternatives": [],
+  "distractor_symbols": [
+    "src/services/system-config.service.ts::SystemConfigService.onConfigValidate",
+    "src/repositories/app.repository.ts::AppRepository.sendOneShotAppRestart",
+    "src/services/queue.service.ts::QueueService.onConfigInit"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd"
+  },
+  "source": {
+    "drafted_by": "mining agent (immich)",
+    "draft_id": "IM-T4",
+    "verification": "server/src/services/queue.service.spec.ts describe 'onConfigUpdate' test 'should update concurrency' (lines 22-23) covers only the last hops. The relay (serverSend/afterInit) has no test found - UNVERIFIED. The claim that no code other than NotificationService.onConfigUpdate sends ConfigUpdate was checked by grep of serverSend in server/src (only hls/transcoding and maintenance otherwise).",
+    "notes": "Two processes in one docker container share Redis; the relay is implicit (nothing in SystemConfigService mentions it). Note an earlier draft in immich-analysis.md named app.repository.ts as the adapter site; that was wrong, the adapter is middleware/websocket.adapter.ts (corrected)."
+  },
+  "evidence": [
+    "server/src/services/system-config.service.ts:93 emit ConfigValidate, :101 emit ConfigUpdate",
+    "server/src/services/notification.service.ts:111-115 clientBroadcast + serverSend",
+    "server/src/repositories/websocket.repository.ts:19-31 serverEvents list includes ConfigUpdate; :80-84 re-emit; :117-120 serverSend",
+    "server/src/middleware/websocket.adapter.ts:21-24 createAdapter(pubClient, subClient); installed at server/src/app.common.ts:64 and server/src/workers/microservices.ts:27",
+    "server/src/repositories/event.repository.ts:235-245 skips non-server handlers for server events",
+    "server/src/services/queue.service.ts:66-71 and :97-103",
+    "server/src/repositories/job.repository.ts:147-155",
+    "src/services/queue.service.ts:66-71,97-103"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 8,
+    "communities_spanned": 3,
+    "gt_path_length": 9,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "Path verified: updateAdminConfig emits ConfigUpdate (system-config.service.ts:101) -> NotificationService.onConfigUpdate -> websocketRepository.serverSend (notification.service.ts:111-115) -> redis socket.io adapter (websocket.adapter.ts:13-25) -> afterInit server.on handler -> EventRepository.onEvent (websocket.repository.ts:79-86) -> QueueService.onConfigUpdate (server:true, Microservices branch, queue.service.ts:66-71) -> updateConcurrency -> JobRepository.setConcurrency (job.repository.ts:147-155).",
+      "Missing important step: the microservices process creates its own socket.io server with the Redis adapter (src/workers/microservices.ts:12-30, app.listen(0)); without it the receive side does not exist.",
+      "SystemConfigService.onConfigUpdate (system-config.service.ts:70-74) is also a server:true listener (clears config cache in every process) - borderline relevant, should not be an explicit distractor."
+    ]
+  }
+}

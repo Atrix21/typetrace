@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr30431",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "`CreatePartner` Restful API accepts soft-deleted users\n\n### Summary\nA normal authenticated user can create a partner relationship where `sharedWithId` points to a soft-deleted user. Immich returns `201 Created` and persists the relationship in the `partner` table.\n\nThis is inconsistent with other user relationship APIs, such as album sharing, which reject soft-deleted users with `400 {\"message\":\"Invalid user\"}`.",
+  "root_cause_symbols": [
+    "src/services/partner.service.ts::PartnerService.create"
+  ],
+  "relevant_symbols": [
+    "src/services/partner.service.ts::PartnerService.create"
+  ],
+  "relevant_files": [
+    "src/services/partner.service.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr30431.patch",
+    "patch_sha256": "8e13b77ad4141427515b3cd68dd0517b7eb31a17db8c59fac6a4bf64b741a6bc",
+    "apply": "fuzz-C1"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/30431",
+    "issue": "#30413",
+    "merge_commit": "04453b72060bdcd0659d784a5c0c5eaf21be984b",
+    "parent_commit": "da7d8c2e1291f9853efafd52a40484d696096cd5",
+    "merged_at": "2026-08-03T10:56:00Z",
+    "report_source": "issue",
+    "tests_added": [
+      "partner.service.spec.ts: should throw an error when sharedWithId does not resolve to an existing (non-deleted) user"
+    ],
+    "test_files_changed": [
+      "server/src/services/partner.service.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "easy",
+    "lexical_overlap": "high",
+    "indirect_boundary": "none",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix 04453b72060bdcd0659d784a5c0c5eaf21be984b (https://github.com/immich-app/immich/pull/30431)",
+    "test: partner.service.spec.ts: should throw an error when sharedWithId does not resolve to an existing (non-deleted) user",
+    "targets/exp3/dataset-patches/immich/immich_pr30431.patch",
+    "src/services/partner.service.ts:19-23",
+    "src/repositories/user.repository.ts:48-58"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "medium",
+    "adjudicated": true,
+    "notes": [
+      "Symptom report (CreatePartner accepts soft-deleted users). Fix adds userRepository.get(sharedWithId, {}) null check in PartnerService.create; get() excludes deleted users (user.repository.ts:56). RC exact.",
+      "Mild leak: the report quotes the sibling behaviour {\"message\":\"Invalid user\"}, the exact message the fix throws; states expected behaviour only, not the code. Easy/high-lexical stratum is consistent.",
+      "Low-severity leak flagged by the auditor: kept (auditor verdict stands)."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "verified",
+    "tests": [
+      "partner.service.spec.ts: PartnerService create should throw an error when sharedWithId does not resolve to an existing (non-deleted) user"
+    ]
+  }
+}

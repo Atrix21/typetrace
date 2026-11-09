@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr31319",
+  "split": "dev",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "Job Transcode Videos doesn't transcode Live Photos\n\nI am running the server on a weak machine and I wanted to perform the upload and the transcoding of videos at a separate time. So before I upload my photos, I turned off transcoding completely. After the uploading had finished, I checked the photos that I had uploaded and the live feature wasn't working. Only the sound was available and the first frame.\n\nI activated transcoding for \"Videos higher than target resolution or not in an accepted format\". I run the job to transcode videos, but it only detected the actual videos that I had uploaded and therefore didn't fix the live photos that I had already uploaded. \n\nIf I upload a new live photo with the exact same settings now, the web playback of that photo works perfectly fine.",
+  "root_cause_symbols": [
+    "src/repositories/asset-job.repository.ts::AssetJobRepository.streamForVideoConversion"
+  ],
+  "relevant_symbols": [
+    "src/repositories/asset-job.repository.ts::AssetJobRepository.streamForVideoConversion"
+  ],
+  "relevant_files": [
+    "src/repositories/asset-job.repository.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr31319.patch",
+    "patch_sha256": "225e49b9e71029d8abec62ecf68b4881ff0225d92b5ea1313a1a29331cb06f03",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/31319",
+    "issue": "#22985",
+    "merge_commit": "58fb1ed4a9d2dce5f3d1db479c91a863ae61a537",
+    "parent_commit": "bbd1e6d381aa7f6bd90b1974a9831fd5c0c9ba14",
+    "merged_at": "2026-09-07T19:32:43Z",
+    "report_source": "issue",
+    "tests_added": [
+      "media.service.spec.ts: should queue hidden assets when force is not set"
+    ],
+    "test_files_changed": [
+      "server/src/services/media.service.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "job",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix 58fb1ed4a9d2dce5f3d1db479c91a863ae61a537 (https://github.com/immich-app/immich/pull/31319)",
+    "test: media.service.spec.ts: should queue hidden assets when force is not set",
+    "targets/exp3/dataset-patches/immich/immich_pr31319.patch",
+    "src/repositories/asset-job.repository.ts:329-345"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "Symptom-only report (transcode job skips live-photo motion videos). Fix drops asset.visibility != Hidden filter from AssetJobRepository.streamForVideoConversion (RC exact). Boundary job (queue-all job streams assets) correct."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "no_failing_test",
+    "tests": []
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_im_t14",
+  "split": "dev",
+  "repo": "immich",
+  "task_type": "architecture",
+  "category": "E",
+  "description": "Which server process answers HTTP requests, which one executes background jobs, how are they started, how do they relate through shared infrastructure, and what is observable if the job-executing process is absent?",
+  "root_cause_symbols": [
+    "src/main.ts::Workers.bootstrap"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/main.ts::Workers.bootstrap",
+    "src/main.ts::Workers.startWorker",
+    "src/app.module.ts::BaseModule.onModuleInit",
+    "src/services/queue.service.ts::QueueService.onBootstrap",
+    "src/repositories/job.repository.ts::JobRepository.startWorkers",
+    "src/repositories/job.repository.ts::JobRepository.watchWorkers",
+    "src/repositories/job.repository.ts::JobRepository.checkWorkers",
+    "src/repositories/config.repository.ts::ConfigRepository.getEnv",
+    "src/workers/api.ts::bootstrap",
+    "src/workers/microservices.ts::bootstrap",
+    "src/repositories/job.repository.ts::JobRepository.queueAll"
+  ],
+  "relevant_files": [
+    "src/app.module.ts",
+    "src/main.ts",
+    "src/repositories/config.repository.ts",
+    "src/repositories/job.repository.ts",
+    "src/services/queue.service.ts",
+    "src/workers/api.ts",
+    "src/workers/microservices.ts"
+  ],
+  "gt_path": [
+    "src/main.ts::Workers.bootstrap",
+    "src/main.ts::Workers.startWorker",
+    "src/app.module.ts::BaseModule.onModuleInit",
+    "src/services/queue.service.ts::QueueService.onBootstrap",
+    "src/repositories/job.repository.ts::JobRepository.startWorkers",
+    "src/repositories/job.repository.ts::JobRepository.watchWorkers",
+    "src/repositories/job.repository.ts::JobRepository.checkWorkers"
+  ],
+  "alternatives": [],
+  "distractor_symbols": [
+    "src/workers/maintenance.ts::bootstrap",
+    "src/repositories/job.repository.ts::JobRepository.setup"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd"
+  },
+  "source": {
+    "drafted_by": "mining agent (immich)",
+    "draft_id": "IM-T14",
+    "verification": "Static reading; queue.service.spec.ts does not cover onBootstrap (UNVERIFIED). No test found for checkWorkers.",
+    "notes": "Workers.bootstrap/startWorker are class members of a non-exported class in main.ts (lines 14-). 'bootstrap' in workers/maintenance.ts is a module-level function, not a class member. Redis (BullMQ) and Postgres are the only shared media."
+  },
+  "evidence": [
+    "server/src/main.ts:22-35 Workers.bootstrap, :90-110 startWorker (fork for API :100, worker thread :108)",
+    "server/src/app.module.ts:95-110 onModuleInit; :146 ApiModule, :207 MicroservicesModule",
+    "server/src/services/queue.service.ts:82-90",
+    "server/src/repositories/job.repository.ts:90-99 startWorkers (worker name microservices :97), :102-104 watchWorkers, :115-135 checkWorkers (30 s, warning text)",
+    "server/src/repositories/config.repository.ts:219-226 IMMICH_WORKERS_INCLUDE/EXCLUDE (default api + microservices)",
+    "src/main.ts:22-110",
+    "src/repositories/job.repository.ts:90-145"
+  ],
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "see-path",
+    "gt_files": 7,
+    "communities_spanned": 2,
+    "gt_path_length": 7,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "Verified: Workers.bootstrap (main.ts:22-35) starts each enabled worker; startWorker forks API (child process) and runs others as worker threads (:90-110); AppBootstrap -> QueueService.onBootstrap starts BullMQ Workers in Microservices (job.repository.ts:90-99) and the API runs watchWorkers/checkWorkers every interval, which warns \"No microservices worker is connected. Background jobs will not be processed\" (job.repository.ts:121-145).",
+      "Missing the per-process entry points that answer HTTP vs run jobs: src/workers/api.ts::bootstrap (:9, listens HTTP) and src/workers/microservices.ts::bootstrap (:12, app.listen(0) for socket.io only), and JobRepository.queueAll (shared Redis/BullMQ queue written by the API)."
+    ]
+  }
+}

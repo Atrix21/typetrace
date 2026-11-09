@@ -1,0 +1,74 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr30512",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "JPEG failed thumbnail generation and wrong aspect ratio\n\nI'm getting failed thumbnail generation when importing old pictures. Opening the picture works but with bad aspect ratio:\n\nAlbum view:\n\nOpening the picture (notice the bad aspect ratio and lack of EXIF):\n\nFor comparison, the same picture in the Gnome image viewer:\n\n`magick original.jpg copy.jpg` doesn't report any errors and importing the copy has the same issues.\n\nThe Immich logs indicate the error might be linked to the lens EXIF info:\n\n```\n[Nest] 7  - 08/02/2026, 8:34:03 AM   ERROR [Microservices:{\"id\":\"f907818d-5118-4d96-9499-127f6ada073d\",\"source\":\"upload\"}] Unable to run job handler (AssetExtractMetadata): TypeError: (exifTags.LensID ?? exifTags.LensType ?? exifTags.LensSpec ?? exifTags.LensModel ?? \"\").trim is not a function\nTypeError: (exifTags.LensID ?? exifTags.LensType ?? exifT…",
+  "root_cause_symbols": [
+    "src/services/metadata.service.ts::getLensModel"
+  ],
+  "relevant_symbols": [
+    "src/services/metadata.service.ts::getLensModel"
+  ],
+  "relevant_files": [
+    "src/repositories/metadata.repository.ts",
+    "src/services/metadata.service.ts"
+  ],
+  "module_level_changes": [
+    "src/repositories/metadata.repository.ts::ImmichTags",
+    "src/repositories/metadata.repository.ts::TagsWithWrongTypes"
+  ],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr30512.patch",
+    "patch_sha256": "3d017d1802507ee6fb843c2bbd69662e50fa89050bbe7cc3620c161cc8f73fea",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/30512",
+    "issue": "#30492",
+    "merge_commit": "0d7147dceca9290c5f8b4fe8b3e3b138aac2afc2",
+    "parent_commit": "46c42e0935bb5eab65e395478623eb65f097df2b",
+    "merged_at": "2026-08-03T16:18:24Z",
+    "report_source": "issue",
+    "tests_added": [
+      "metadata.service.spec.ts: should handle float lens models (#30492)"
+    ],
+    "test_files_changed": [
+      "server/test/medium/specs/services/metadata.service.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "job",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix 0d7147dceca9290c5f8b4fe8b3e3b138aac2afc2 (https://github.com/immich-app/immich/pull/30512)",
+    "test: metadata.service.spec.ts: should handle float lens models (#30492)",
+    "targets/exp3/dataset-patches/immich/immich_pr30512.patch",
+    "src/services/metadata.service.ts:119-122 getLensModel",
+    "src/repositories/metadata.repository.ts:20-26,44-48"
+  ],
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": true,
+    "notes": [
+      "Issue symptom + stack trace; RC getLensModel is exact (fix wraps in String()). Module-level: ImmichTags.LensModel / TagsWithWrongTypes in metadata.repository.ts (correctly in module_level_changes).",
+      "Leak: the quoted log contains the verbatim failing expression \"(exifTags.LensID ?? exifTags.LensType ?? exifTags.LensSpec ?? exifTags.LensModel ?? \\\"\\\").trim is not a function\" - this pinpoints the function body and the cause (non-string). Draft lexical_overlap \"low\" is understated; should be high. Not a statement of the fix, so not rejected; lead may reject for localisation-by-stacktrace if policy requires.",
+      "Auditor flagged a stack trace quoting the failing expression: kept under the stack-trace policy (counted as symptom evidence; lexical overlap computed mechanically)."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "not_runnable",
+    "tests": []
+  }
+}

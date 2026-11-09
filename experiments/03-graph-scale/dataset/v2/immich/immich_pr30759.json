@@ -1,0 +1,69 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr30759",
+  "split": "dev",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "DB backup job cannot start if PostgreSQL is connected via DB_URL for Unix domain socket usage\n\nhttps://github.com/immich-app/immich/blob/4609adbb6d8c25650e75df8e6759986ec26f7d3b/server/src/services/database-backup.service.ts#L217 throws a `TypeError` exception if URL \"hostname\" is path\n\n1. Share PostgreSQL with Immich via UDS using DB_URL environment variable in the format like `socket://user:password@/path/to/postgres/socket?db=immich`\n2. Wait for backup job to fire.",
+  "root_cause_symbols": [
+    "src/services/database-backup.service.ts::DatabaseBackupService.buildPostgresLaunchArguments"
+  ],
+  "relevant_symbols": [
+    "src/services/database-backup.service.ts::DatabaseBackupService.buildPostgresLaunchArguments"
+  ],
+  "relevant_files": [
+    "src/services/database-backup.service.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr30759.patch",
+    "patch_sha256": "1543f4cec58a212ac37bb82b8a7d68978f95507c8bcc1e249aee62656744338e",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/30759",
+    "issue": "#30331",
+    "merge_commit": "17d4e39af3d932d9ab3b93e7b0c01c7b8604605c",
+    "parent_commit": "5274f8fcb748b39de87b42fac1ff1e4bf8a53469",
+    "merged_at": "2026-08-18T21:17:47Z",
+    "report_source": "issue",
+    "tests_added": [
+      "database-backup.service.spec.ts: should fallback to reasonable defaults"
+    ],
+    "test_files_changed": [
+      "server/src/services/database-backup.service.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "medium",
+    "indirect_boundary": "job",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix 17d4e39af3d932d9ab3b93e7b0c01c7b8604605c (https://github.com/immich-app/immich/pull/30759)",
+    "test: database-backup.service.spec.ts: should fallback to reasonable defaults",
+    "targets/exp3/dataset-patches/immich/immich_pr30759.patch",
+    "src/services/database-backup.service.ts:108-225"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "Issue with TypeError location and UDS DB_URL repro; per policy 2 this is symptom evidence, not mechanism (the issue links the line but does not state the fix). Fix computes databasePassword in the parsed-URL branch of buildPostgresLaunchArguments; RC exact; boundary job (backup job, database-backup.service.ts:231)."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "verified",
+    "tests": [
+      "database-backup.service.spec.ts: DatabaseBackupService buildPostgresLaunchArguments using an unparsable URL should fallback to reasonable defaults"
+    ]
+  }
+}

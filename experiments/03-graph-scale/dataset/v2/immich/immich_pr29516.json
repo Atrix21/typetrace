@@ -1,0 +1,71 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr29516",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "checksum integrity job doesn't actually resume from checkpoint (processes 0 files, claims covered all assets)\n\n**What happened**\n\nRan the new integrity checks on my library (~33k assets / 750GB). The checksum job hit the 1 hour time limit at about 66% and logged `Finished checksum job, will continue from 2026-06-18T18:35:26.293Z.` which is expected.\n\nBut when the job runs again it finishes instantly:\n\n```\nChecking file checksums... (will run for up to 3.00 hours or until 100.00% of assets are processed)\nProcessing assets in range [2026-06-18T18:35:26.293Z, end]\nProcessing assets in range [beginning, 2026-06-18T18:35:26.293Z]\nProcessed 0 files so far... (avg. Infinity ms/asset, 0.00% of all assets)\nFinished checksum job, covered all assets.\n```\n\n0 files processed but it claims everything is covered. So the last third of my library never actually gets checksummed and there's no error or anything, it…",
+  "root_cause_symbols": [
+    "src/repositories/integrity.repository.ts::IntegrityRepository.streamAssetChecksums",
+    "src/services/integrity.service.ts::IntegrityService.handleChecksumFiles"
+  ],
+  "relevant_symbols": [
+    "src/repositories/integrity.repository.ts::IntegrityRepository.streamAssetChecksums",
+    "src/services/integrity.service.ts::IntegrityService.handleChecksumFiles"
+  ],
+  "relevant_files": [
+    "src/repositories/integrity.repository.ts",
+    "src/services/integrity.service.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr29516.patch",
+    "patch_sha256": "3e3d625c05d73502ecf7d5b6a8026d3d0fef0f9fe1061269c2bf3bb0f6590f6f",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/29516",
+    "issue": "#29487",
+    "merge_commit": "704b287bbac241e7b9ef37a7a2c891255e446cdc",
+    "parent_commit": "c7b4a798cba4142c0643bb72beb6787be8e2f1e8",
+    "merged_at": "2026-07-07T16:42:14Z",
+    "report_source": "issue",
+    "tests_added": [
+      "integrity.service.spec.ts: should continue from checkpoint"
+    ],
+    "test_files_changed": [
+      "server/test/medium/specs/services/integrity.service.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "medium",
+    "indirect_boundary": "job",
+    "gt_files": 2,
+    "communities_spanned": 2,
+    "gt_path_length": 0,
+    "locality": "cross_module"
+  },
+  "evidence": [
+    "fix 704b287bbac241e7b9ef37a7a2c891255e446cdc (https://github.com/immich-app/immich/pull/29516)",
+    "test: integrity.service.spec.ts: should continue from checkpoint",
+    "targets/exp3/dataset-patches/immich/immich_pr29516.patch",
+    "src/repositories/integrity.repository.ts:163-183",
+    "src/services/integrity.service.ts:532-590"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "Issue with job log; checkpoint resume processes 0 files. Fix: streamAssetChecksums filters/orders by asset.createdAt (was integrity_report.createdAt) and handleChecksumFiles drops the endMarker loop; RC exact. Log lines are symptom evidence (policy 2). Boundary job: checksum integrity job (OnJob IntegrityChecksumFiles, integrity.service.ts:533)."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "not_runnable",
+    "tests": []
+  }
+}

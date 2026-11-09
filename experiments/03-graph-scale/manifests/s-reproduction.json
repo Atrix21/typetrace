@@ -1,0 +1,34 @@
+{
+ "checks": {
+  "ripgrep -> ripgrep": {
+   "identical_tasks": 14,
+   "different_tasks": 0,
+   "mismatches": []
+  },
+  "bm25 -> bm25": {
+   "identical_tasks": 14,
+   "different_tasks": 0,
+   "mismatches": []
+  },
+  "embeddings -> embeddings": {
+   "identical_tasks": 14,
+   "different_tasks": 0,
+   "mismatches": []
+  },
+  "custom_graph -> custom_graph": {
+   "identical_tasks": 14,
+   "different_tasks": 0,
+   "mismatches": []
+  },
+  "hybrid -> hybrid": {
+   "identical_tasks": 14,
+   "different_tasks": 0,
+   "mismatches": []
+  },
+  "no_graph_at_all -> hybrid_nograph": {
+   "identical_tasks": 14,
+   "different_tasks": 0,
+   "mismatches": []
+  }
+ }
+}

@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr29354",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "[BUG] Stacks not removed on Library deletion\n\n**Problem Description**\nWhen deleting an External Library, a Stack that contains photos from this External Library will not be unstacked.\nThe Stack stays with the cover photo in the library. \nManual unstacking is needed, so that the stack will be removed from the Timeline.\n\n**Expected Behavior**\nIf a Stack contains _only_ photos from one External Library AND this External Library will be deleted, also unstack/delete the stack.\nIf a Stack contains photos from various External Library but only one External Library will be deleted, keep the stack with remaining photos",
+  "root_cause_symbols": [
+    "src/services/asset.service.ts::AssetService.handleAssetDeletion"
+  ],
+  "relevant_symbols": [
+    "src/services/asset.service.ts::AssetService.handleAssetDeletion"
+  ],
+  "relevant_files": [
+    "src/services/asset.service.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr29354.patch",
+    "patch_sha256": "4269efde1233126502981fbaafed5477eb4aad0dceb153c7f271a79a2ba5ab75",
+    "apply": "fuzz-C1"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/29354",
+    "issue": "#16151",
+    "merge_commit": "a0c7b811422921285364850cd72347c4ab853105",
+    "parent_commit": "20997823d8c234ce514aaaead72bdf85126627fb",
+    "merged_at": "2026-07-22T11:00:53Z",
+    "report_source": "issue",
+    "tests_added": [
+      "asset.service.spec.ts: should delete the stack when a non-primary asset is deleted and only the primary would remain",
+      "asset.service.spec.ts: should keep the stack when a non-primary asset is deleted and the primary plus another asset remain"
+    ],
+    "test_files_changed": [
+      "server/src/services/asset.service.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "job",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix a0c7b811422921285364850cd72347c4ab853105 (https://github.com/immich-app/immich/pull/29354)",
+    "test: asset.service.spec.ts: should delete the stack when a non-primary asset is deleted and only the primary would remain",
+    "test: asset.service.spec.ts: should keep the stack when a non-primary asset is deleted and the primary plus another asset remain",
+    "targets/exp3/dataset-patches/immich/immich_pr29354.patch",
+    "src/services/asset.service.ts:319-337 (fixed), hunk @@ -316"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "Issue symptom (stack lingers after library deletion). Fix rewrites stack handling in AssetService.handleAssetDeletion (delete stack if <2 remain, promote primary otherwise); RC exact. Boundary \"job\" correct: LibraryService.handleDeleteLibrary queues JobName.AssetDelete (library.service.ts:394) -> asset.service.ts:301 @OnJob.",
+      "Note: understanding task immich_im_t13 uses the same function (fixed form) as relevant; keep in mind for any cross-task contamination."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "verified",
+    "tests": [
+      "asset.service.spec.ts: AssetService handleAssetDeletion should delete the stack when a non-primary asset is deleted and only the primary would remain"
+    ]
+  }
+}

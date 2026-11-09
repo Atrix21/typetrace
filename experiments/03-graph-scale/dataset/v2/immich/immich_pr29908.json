@@ -1,0 +1,71 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr29908",
+  "split": "dev",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "[v.3.0.x] Transcoded hevc with wrong codec tag [hev1], breaks playback on apple devices\n\nSince upgrading to `v.3.0.x` transcoded videos that are configured to encode as `hevc` do not playback correctly on apple devices, both in app and in safari browser. Audio plays with a black screen.\n\nFound that codec tag is set incorrectly to `hev1` which will not playback on apple devices.\n\nThis PR from a couple of years ago remediated the very same issue: \nhttps://github.com/immich-app/immich/pull/6712\n\nWith 3.x it appears the issue has returned. I can prove that in the log outputs further below.\n\nIf I review my timeline, the last known working transcoded asset was 1 day prior to updating to 3.0.0. Every asset transcoded with 3.0.x presents failed playback of transcoded hevc assets.\n\nAlthough I have reported this regression for apple devices, it is unknown if this also impacts over devi…",
+  "root_cause_symbols": [
+    "src/utils/media.ts::BaseConfig.getBaseOutputOptions"
+  ],
+  "relevant_symbols": [
+    "src/utils/media.ts::BaseConfig.getBaseOutputOptions"
+  ],
+  "relevant_files": [
+    "src/utils/media.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr29908.patch",
+    "patch_sha256": "625b43e85cbc7fd1d7383d29eafe615b83a4657a6f6b3df168e583d6268621ee",
+    "apply": "fuzz-C1"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/29908",
+    "issue": "#29817",
+    "merge_commit": "89b0d906e8f61f97cea759cdf1a47533cac507ca",
+    "parent_commit": "3c43e8d6c19fee55f2273582a3682efd56839b86",
+    "merged_at": "2026-07-14T15:03:30Z",
+    "report_source": "issue",
+    "tests_added": [
+      "media.service.spec.ts: should include hevc tag when target is hevc and using hwa"
+    ],
+    "test_files_changed": [
+      "server/src/services/media.service.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "job",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix 89b0d906e8f61f97cea759cdf1a47533cac507ca (https://github.com/immich-app/immich/pull/29908)",
+    "test: media.service.spec.ts: should include hevc tag when target is hevc and using hwa",
+    "targets/exp3/dataset-patches/immich/immich_pr29908.patch",
+    "src/utils/media.ts:241-246"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "medium",
+    "adjudicated": true,
+    "notes": [
+      "Bug report with symptom (hev1 tag, black screen on Apple devices). Fix changes isHvc condition in BaseConfig.getBaseOutputOptions (RC exact).",
+      "Minor leak: report points to PR #6712 that \"remediated the very same issue\" (the -tag:v hvc1 logic) - gives the location class but not the change. Boundary job ok (VideoConversion job; realtime path also uses getBaseOutputOptions).",
+      "Low-severity leak flagged by the auditor: kept (auditor verdict stands)."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "verified",
+    "tests": [
+      "media.service.spec.ts: MediaService handleVideoConversion should include hevc tag when target is hevc and using hwa"
+    ]
+  }
+}

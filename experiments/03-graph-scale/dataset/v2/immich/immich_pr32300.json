@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr32300",
+  "split": "dev",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "Edited assets are skipped by a full Smart Search re-index and never get an embedding\n\nAssets that have been edited in the built-in image editor are skipped by a\nfull Smart Search re-index. After running \"Smart Search → All\", these assets\nend up with no row in the `smart_search` table, and a subsequent\n\"Smart Search → Missing\" run does not pick them up either — the job completes\nimmediately and reports nothing to do.\n\nEditing by itself does not break anything: an already-indexed asset keeps its\nembedding after being edited. The embedding is lost only once a full re-index\nis performed.\n\nRequesting similar photos for an affected asset returns:\n\n{\"message\":\"Asset <id> has no embedding\",\"error\":\"Bad Request\",\"statusCode\":400}\n\nIn my library this affects 145 of 34475 assets — every one of them edited, and\nevery unedited asset indexed correctly. Reverting the edit puts the asset…",
+  "root_cause_symbols": [
+    "src/services/smart-info.service.ts::SmartInfoService.handleEncodeClip"
+  ],
+  "relevant_symbols": [
+    "src/services/smart-info.service.ts::SmartInfoService.handleEncodeClip"
+  ],
+  "relevant_files": [
+    "src/services/smart-info.service.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr32300.patch",
+    "patch_sha256": "b58542a9a0d598a5973f22d96c0832d58ddc5266be7e86cd779515612126742e",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/32300",
+    "issue": "#31332",
+    "merge_commit": "adca900fe277bd6dff93b96b6a7841a8632ce62b",
+    "parent_commit": "7cae55ec4ee7ab53d610cdf82b04a817e4ad8e8e",
+    "merged_at": "2026-10-27T14:04:54Z",
+    "report_source": "issue",
+    "tests_added": [
+      "smart-info.service.spec.ts: should use the edited preview when both preview variants exist",
+      "smart-info.service.spec.ts: should select the edited preview regardless of file order"
+    ],
+    "test_files_changed": [
+      "server/src/services/smart-info.service.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "job",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix adca900fe277bd6dff93b96b6a7841a8632ce62b (https://github.com/immich-app/immich/pull/32300)",
+    "test: smart-info.service.spec.ts: should use the edited preview when both preview variants exist",
+    "test: smart-info.service.spec.ts: should select the edited preview regardless of file order",
+    "targets/exp3/dataset-patches/immich/immich_pr32300.patch",
+    "src/services/smart-info.service.ts:92-104"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "Clear symptom (edited assets get no embedding after Smart Search All). Fix selects edited preview (file.isEdited) instead of requiring files.length===1 in SmartInfoService.handleEncodeClip; RC exact. Report does not state the code change; boundary job correct."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "verified",
+    "tests": [
+      "smart-info.service.spec.ts: SmartInfoService handleEncodeClip should use the edited preview when both preview variants exist",
+      "smart-info.service.spec.ts: SmartInfoService handleEncodeClip should select the edited preview regardless of file order"
+    ]
+  }
+}

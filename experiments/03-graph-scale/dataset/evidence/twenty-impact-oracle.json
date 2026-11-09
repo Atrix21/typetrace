@@ -1,0 +1,138 @@
+{
+  "generated_by": "scripts/exp3/oracle-impact.ts",
+  "repo": "twenty",
+  "results": [
+    {
+      "task_id": "twenty_tw_t10",
+      "status": "ok",
+      "edit": {
+        "file": "src/engine/workspace-event-emitter/workspace-event-emitter.ts",
+        "note": "Adds a required property to DatabaseBatchEventInput; object literals of that type without it become compile errors (the util's return, the three agent-chat thread literals)."
+      },
+      "scope_files": 2749,
+      "new_errors": 4,
+      "direct_impact": [
+        "src/engine/metadata-modules/ai/ai-chat/services/agent-chat-thread-record-event.service.ts::AgentChatThreadRecordEventService.emitThreadCreated",
+        "src/engine/metadata-modules/ai/ai-chat/services/agent-chat-thread-record-event.service.ts::AgentChatThreadRecordEventService.emitThreadUpdated",
+        "src/engine/metadata-modules/ai/ai-chat/services/agent-chat-thread-record-event.service.ts::AgentChatThreadRecordEventService.emitThreadsUpdated",
+        "src/engine/twenty-orm/utils/format-twenty-orm-event-to-database-batch-event.util.ts::formatTwentyOrmEventToDatabaseBatchEvent"
+      ],
+      "tests_with_errors": [],
+      "errors_sample": [
+        {
+          "file": "src/engine/twenty-orm/utils/format-twenty-orm-event-to-database-batch-event.util.ts",
+          "line": 263,
+          "key": "2741|Property 'emittedBy' is missing in type '{ objectMetadataNameSingular: any; action: DatabaseEventAction; events: (ObjectRecordDeleteEvent<T> | ObjectRecordRestoreEvent<T> | ObjectRecordUpdateEvent<..."
+        },
+        {
+          "file": "src/engine/metadata-modules/ai/ai-chat/services/agent-chat-thread-record-event.service.ts",
+          "line": 45,
+          "key": "2345|Argument of type '{ objectMetadataNameSingular: any; action: DatabaseEventAction.CREATED; events: (ObjectRecordCreateEvent<AgentChatThreadWorkspaceEntity> & { ...; })[]; objectMetadata: FlatObjectMeta"
+        },
+        {
+          "file": "src/engine/metadata-modules/ai/ai-chat/services/agent-chat-thread-record-event.service.ts",
+          "line": 91,
+          "key": "2345|Argument of type '{ objectMetadataNameSingular: any; action: DatabaseEventAction.UPDATED | DatabaseEventAction.RESTORED; events: ObjectRecordUpdateEvent<AgentChatThreadWorkspaceEntity>[]; objectMetada"
+        },
+        {
+          "file": "src/engine/metadata-modules/ai/ai-chat/services/agent-chat-thread-record-event.service.ts",
+          "line": 140,
+          "key": "2345|Argument of type '{ objectMetadataNameSingular: any; action: DatabaseEventAction.UPDATED; events: ObjectRecordUpdateEvent<AgentChatThreadWorkspaceEntity>[]; objectMetadata: FlatObjectMetadata; workspa"
+        }
+      ],
+      "ms": 425467
+    },
+    {
+      "task_id": "twenty_tw_t11",
+      "status": "ok",
+      "edit": {
+        "file": "src/modules/workflow/workflow-executor/types/workflow-executor-input.type.ts",
+        "note": "Adds a required property to WorkflowExecutorInput; all 6 object-literal call sites of executeFromSteps then fail to compile."
+      },
+      "scope_files": 107,
+      "new_errors": 6,
+      "direct_impact": [
+        "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts::WorkflowExecutorWorkspaceService.executeFromStep",
+        "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts::WorkflowExecutorWorkspaceService.skipAndFailSafelyStepsThenContinue",
+        "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts::RunWorkflowJob.completeAwaitedStep",
+        "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts::RunWorkflowJob.resumeWorkflowExecution",
+        "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts::RunWorkflowJob.retryWorkflowExecution",
+        "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts::RunWorkflowJob.startWorkflowExecution"
+      ],
+      "tests_with_errors": [],
+      "errors_sample": [
+        {
+          "file": "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts",
+          "line": 301,
+          "key": "2345|Argument of type '{ stepIds: string[]; workflowRunId: string; workspaceId: string; shouldComputeWorkflowRunStatus: false; executedStepsCount: number; }' is not assignable to parameter of type 'Workflo"
+        },
+        {
+          "file": "src/modules/workflow/workflow-executor/workspace-services/workflow-executor.workspace-service.ts",
+          "line": 749,
+          "key": "2345|Argument of type '{ stepIds: string[]; workflowRunId: string; workspaceId: string; shouldComputeWorkflowRunStatus: false; executedStepsCount: number; }' is not assignable to parameter of type 'Workflo"
+        },
+        {
+          "file": "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts",
+          "line": 169,
+          "key": "2345|Argument of type '{ stepIds: string[]; workflowRunId: string; workspaceId: string; }' is not assignable to parameter of type 'WorkflowExecutorInput'.   Property 'executionOrigin' is missing in type '{"
+        },
+        {
+          "file": "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts",
+          "line": 223,
+          "key": "2345|Argument of type '{ stepIds: string[]; workflowRunId: string; workspaceId: string; }' is not assignable to parameter of type 'WorkflowExecutorInput'.   Property 'executionOrigin' is missing in type '{"
+        },
+        {
+          "file": "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts",
+          "line": 252,
+          "key": "2345|Argument of type '{ stepIds: string[]; workflowRunId: string; workspaceId: string; awaitedActionOutput: Pick<WorkflowActionOutput, \"error\" | \"result\">; }' is not assignable to parameter of type 'Workf"
+        },
+        {
+          "file": "src/modules/workflow/workflow-runner/jobs/run-workflow.job.ts",
+          "line": 344,
+          "key": "2345|Argument of type '{ stepIds: string[]; workflowRunId: string; workspaceId: string; }' is not assignable to parameter of type 'WorkflowExecutorInput'.   Property 'executionOrigin' is missing in type '{"
+        }
+      ],
+      "ms": 23480
+    },
+    {
+      "task_id": "twenty_tw_t9",
+      "status": "ok",
+      "edit": {
+        "file": "src/engine/permissions/record-event-permissions.service.ts",
+        "note": "Adds a required property to the argument type; tsc then reports a missing-property error at every direct call site. Run: npx tsc --noEmit -p packages/twenty-server/tsconfig.json (not run by the miner: build tooling forbidden)."
+      },
+      "scope_files": 260,
+      "new_errors": 4,
+      "direct_impact": [
+        "src/engine/core-modules/logic-function/logic-function-trigger/triggers/database-event/call-database-event-trigger-jobs.job.ts::CallDatabaseEventTriggerJobsJob.handle",
+        "src/engine/metadata-modules/ai/ai-agent-trigger/jobs/call-agent-database-event-triggers.job.ts::CallAgentDatabaseEventTriggersJob.handle",
+        "src/engine/subscriptions/object-record-event/object-record-event-publisher.ts::ObjectRecordEventPublisher.processObjectRecordStreamEvents",
+        "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts::WorkflowDatabaseEventTriggerListener.resolveReadableEvents"
+      ],
+      "tests_with_errors": [],
+      "errors_sample": [
+        {
+          "file": "src/engine/core-modules/logic-function/logic-function-trigger/triggers/database-event/call-database-event-trigger-jobs.job.ts",
+          "line": 96,
+          "key": "2345|Argument of type '{ authContext: { type: \"application\"; workspace: { id: string; }; application: FlatApplication; }; eventBatch: WorkspaceEventBatch<ObjectRecordEvent>; }' is not assignable to paramet"
+        },
+        {
+          "file": "src/engine/metadata-modules/ai/ai-agent-trigger/jobs/call-agent-database-event-triggers.job.ts",
+          "line": 75,
+          "key": "2345|Argument of type '{ authContext: PermissionsApplicationAuthContext; eventBatch: WorkspaceEventBatch<ObjectRecordEvent>; events: ObjectRecordEvent[]; }' is not assignable to parameter of type '{ authCo"
+        },
+        {
+          "file": "src/engine/subscriptions/object-record-event/object-record-event-publisher.ts",
+          "line": 188,
+          "key": "2345|Argument of type '{ authContext: PermissionsUserAuthContext; eventBatch: WorkspaceEventBatch<ObjectRecordEvent>; }' is not assignable to parameter of type '{ authContext: PermissionsAuthContext; event"
+        },
+        {
+          "file": "src/modules/workflow/workflow-trigger/automated-trigger/listeners/workflow-database-event-trigger.listener.ts",
+          "line": 516,
+          "key": "2345|Argument of type '{ authContext: { type: \"application\"; workspace: { id: string; }; application: FlatApplication; }; eventBatch: WorkspaceEventBatch<ObjectRecordEvent>; }' is not assignable to paramet"
+        }
+      ],
+      "ms": 22464
+    }
+  ]
+}

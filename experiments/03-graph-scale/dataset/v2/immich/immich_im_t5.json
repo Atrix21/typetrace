@@ -1,0 +1,85 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_im_t5",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "feature_understanding",
+  "category": "B",
+  "description": "When a newly detected face has several look-alikes, when is it attached to an existing person right away, when is a new person created, and when is the decision postponed? Why can two such decisions running at once not corrupt each other?",
+  "root_cause_symbols": [
+    "src/services/person.service.ts::PersonService.handleDetectFaces"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/services/person.service.ts::PersonService.handleDetectFaces",
+    "src/services/person.service.ts::PersonService.handleRecognizeFaces",
+    "src/repositories/database.repository.ts::DatabaseRepository.withLock",
+    "src/repositories/search.repository.ts::SearchRepository.searchFaces",
+    "src/repositories/job.repository.ts::JobRepository.queue",
+    "src/repositories/person.repository.ts::PersonRepository.createGroup",
+    "src/repositories/person.repository.ts::PersonRepository.create",
+    "src/repositories/person.repository.ts::PersonRepository.reassignFaces",
+    "src/repositories/person.repository.ts::PersonRepository.getByGroupId"
+  ],
+  "relevant_files": [
+    "src/repositories/database.repository.ts",
+    "src/repositories/job.repository.ts",
+    "src/repositories/person.repository.ts",
+    "src/repositories/search.repository.ts",
+    "src/services/person.service.ts"
+  ],
+  "gt_path": [
+    "src/services/person.service.ts::PersonService.handleDetectFaces",
+    "src/services/person.service.ts::PersonService.handleRecognizeFaces",
+    "src/repositories/database.repository.ts::DatabaseRepository.withLock",
+    "src/repositories/search.repository.ts::SearchRepository.searchFaces",
+    "src/repositories/job.repository.ts::JobRepository.queue",
+    "src/repositories/person.repository.ts::PersonRepository.createGroup",
+    "src/repositories/person.repository.ts::PersonRepository.create",
+    "src/repositories/person.repository.ts::PersonRepository.reassignFaces"
+  ],
+  "alternatives": [],
+  "distractor_symbols": [
+    "src/services/person.service.ts::PersonService.reassignFaces",
+    "src/services/person.service.ts::PersonService.mergePeople"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd"
+  },
+  "source": {
+    "drafted_by": "mining agent (immich)",
+    "draft_id": "IM-T5",
+    "verification": "Read the 'handleRecognizeFaces' tests in server/src/services/person.service.spec.ts (describe at line 1300; individual test names not enumerated by me - UNVERIFIED). Independent evidence of the lock location: commit 477452b5c diff.",
+    "notes": "The lock is a Postgres advisory lock shared across processes (needed for multi-replica deployments), not a queue concurrency setting."
+  },
+  "evidence": [
+    "server/src/services/person.service.ts:561-563 handler + withLock(DatabaseLock.FacialRecognition)",
+    "server/src/services/person.service.ts:~602-613 isCore / deferral (queue at :612)",
+    "server/src/services/person.service.ts:~616-651 group/person creation and reassign",
+    "server/src/repositories/database.repository.ts:461",
+    "commit 477452b5c (PR #28410, issue #28051) \"locking around concurrency-1 jobs\"",
+    "test server/src/services/person.service.spec.ts describe handleRecognizeFaces (line 1300)",
+    "src/services/person.service.ts:562-651"
+  ],
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "medium",
+    "indirect_boundary": "see-path",
+    "gt_files": 5,
+    "communities_spanned": 3,
+    "gt_path_length": 8,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "Logic verified entirely in PersonService.handleRecognizeFaces (person.service.ts:562-651): attach if match has a personGroupId (core or deferred), create group+person only when isCore, else defer once via JobRepository.queue deferred:true (:603-607), serialised by DatabaseRepository.withLock (database.repository.ts:461-475: in-process AsyncLock + postgres advisory lock).",
+      "Anchor/root should be handleRecognizeFaces, not handleDetectFaces (the latter only queues FacialRecognition via queueAll, :451-452, not JobRepository.queue).",
+      "handleQueueRecognizeFaces (person.service.ts:501-505) also takes the same DatabaseLock.FacialRecognition lock - relevant to \"why not corrupt\", so it is a weak distractor.",
+      "Missing: PersonRepository.getByGroupId (existing person vs create)."
+    ]
+  }
+}

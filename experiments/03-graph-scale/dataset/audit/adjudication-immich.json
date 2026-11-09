@@ -1,0 +1,14 @@
+{
+  "adjudicated_by": "lead (Claude Opus 5.5), before any retrieval run on Immich; no retrieval output was consulted",
+  "policies": [
+    "Description = the mined report text exactly as stored in the draft (issue title + body, truncated by the miner at about 800 characters). Leakage was judged by the auditor on this exact text.",
+    "A quoted stack trace or error message is realistic symptom evidence, not a mechanism statement: it can make a task easier (higher lexical overlap) but does not make it invalid.",
+    "indirect_boundary = the first non-call link on the path from the user-visible entry point to the root cause (job | event | di | db | graphql | other | none); the auditor's corrections are applied.",
+    "Auditor verdicts and fixes are applied as recorded unless overridden below; rejected tasks are excluded, never repaired by rewriting the report."
+  ],
+  "decisions": {
+    "immich_pr30512": { "reasons": ["Auditor flagged a stack trace quoting the failing expression: kept under the stack-trace policy (counted as symptom evidence; lexical overlap computed mechanically)."] },
+    "immich_pr30431": { "reasons": ["Low-severity leak flagged by the auditor: kept (auditor verdict stands)."] },
+    "immich_pr29908": { "reasons": ["Low-severity leak flagged by the auditor: kept (auditor verdict stands)."] }
+  }
+}

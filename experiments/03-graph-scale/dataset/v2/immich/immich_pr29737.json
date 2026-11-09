@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr29737",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "Scanning Missing Files Does Not Clear Outdated Reports After Asset Path Changes\n\n### Description\n\nI ran into a case where the missing files integrity report kept showing entries for old asset paths even after the assets had been moved, and a new missing files scan reported no missing files but does not clear outdated reports.\nThis seems related to asset path changes caused by metadata extraction/storage template moves, and possibly to how outdated missing file reports are refreshed.",
+  "root_cause_symbols": [
+    "src/repositories/integrity.repository.ts::IntegrityRepository.streamAssetPaths",
+    "src/services/integrity.service.ts::IntegrityService.handleMissingFilesQueueAll"
+  ],
+  "relevant_symbols": [
+    "src/repositories/integrity.repository.ts::IntegrityRepository.streamAssetPaths",
+    "src/services/integrity.service.ts::IntegrityService.handleMissingFilesQueueAll"
+  ],
+  "relevant_files": [
+    "src/repositories/integrity.repository.ts",
+    "src/services/integrity.service.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr29737.patch",
+    "patch_sha256": "e13379c93ecc90b18c8f832760c7bd7c05e1c4301080002ae033b222fcd02f58",
+    "apply": "fuzz-C1"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/29737",
+    "issue": "#29728",
+    "merge_commit": "66e30d5fa16148243f4c1833f90d7bc175e4f888",
+    "parent_commit": "053a52aec857fe6576fdbc52e47c429a1d8f02d6",
+    "merged_at": "2026-07-08T19:53:47Z",
+    "report_source": "issue",
+    "tests_added": [],
+    "test_files_changed": [
+      "server/test/medium/specs/services/integrity.service.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "medium",
+    "indirect_boundary": "job",
+    "gt_files": 2,
+    "communities_spanned": 2,
+    "gt_path_length": 0,
+    "locality": "cross_module"
+  },
+  "evidence": [
+    "fix 66e30d5fa16148243f4c1833f90d7bc175e4f888 (https://github.com/immich-app/immich/pull/29737)",
+    "targets/exp3/dataset-patches/immich/immich_pr29737.patch",
+    "src/repositories/integrity.repository.ts:119-146",
+    "src/services/integrity.service.ts:373-381"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "Issue symptom (stale missing-file reports survive rescan); description is vague and only speculates. Fix joins integrity_report on MissingFile instead of UntrackedFile in the asset-paths stream and renames it. RC key streamAssetPaths resolves in the bug snapshot only (renamed to streamAssetPathsForMissingFiles by the fix); handleMissingFilesQueueAll is the changed caller. Boundary job ok (integrity job)."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "not_runnable",
+    "tests": []
+  }
+}

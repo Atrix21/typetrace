@@ -1,0 +1,70 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr29028",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "Partner can see a 'map marker' on their own map showing the location of my archived photos\n\nThis issue only occurs on the web.\nIf my partner goes to the map, and from the gear icon enables the options 'include archived' and 'include shared partner assets', they can see a map marker showing the location of my archived photos.\n\nThey cannot see my archived photos in the partner timeline, as expected. However the map marker is visible on the map with the text 'map marker for images taken in <location>'.\n\nThis should not happen; as archived partner images are not meant to be visible by the partner, the map should not show their locations either.\n\nBelow is a screenshot:",
+  "root_cause_symbols": [
+    "src/repositories/map.repository.ts::MapRepository.getMapMarkers",
+    "src/services/map.service.ts::MapService.getMapMarkers"
+  ],
+  "relevant_symbols": [
+    "src/repositories/map.repository.ts::MapRepository.getMapMarkers",
+    "src/services/map.service.ts::MapService.getMapMarkers"
+  ],
+  "relevant_files": [
+    "src/repositories/map.repository.ts",
+    "src/services/map.service.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr29028.patch",
+    "patch_sha256": "cb8693e5662402e3d3800a059cbf6df6b1350878d98d5ab0acc4ab8ec032fe0a",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/29028",
+    "issue": "#22261",
+    "merge_commit": "b633cc4f046f198bc11648c486e1e6e3f19d26d5",
+    "parent_commit": "a9ee6a7ce9e3620f99f4bd936950a44b83d1f246",
+    "merged_at": "2026-06-15T14:30:52Z",
+    "report_source": "issue",
+    "tests_added": [],
+    "test_files_changed": [
+      "server/src/services/map.service.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "db",
+    "gt_files": 2,
+    "communities_spanned": 2,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix b633cc4f046f198bc11648c486e1e6e3f19d26d5 (https://github.com/immich-app/immich/pull/29028)",
+    "targets/exp3/dataset-patches/immich/immich_pr29028.patch",
+    "src/repositories/map.repository.ts:81-95 (hunk)",
+    "src/services/map.service.ts:18"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "Clear user-visible symptom (partner sees map markers for archived assets). Fix adds owner check for Archive visibility in MapRepository.getMapMarkers and passes auth.user.id from MapService.getMapMarkers; RC exactly matches. Description does not name the fix."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "verified",
+    "tests": [
+      "map.service.spec.ts: MapService getMapMarkers should include partner assets"
+    ]
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_im_t7",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "data_flow",
+  "category": "D",
+  "description": "Several photos are added to a shared album over ten minutes. Why does each member receive at most one 'new media' email, how is the delay implemented, and which components are involved from the moment a photo is added to the SMTP send?",
+  "root_cause_symbols": [
+    "src/services/asset-media.service.ts::AssetMediaService.addToSharedLink"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/services/asset-media.service.ts::AssetMediaService.addToSharedLink",
+    "src/services/notification.service.ts::NotificationService.onAlbumUpdate",
+    "src/repositories/job.repository.ts::JobRepository.removeJob",
+    "src/repositories/job.repository.ts::JobRepository.getJobOptions",
+    "src/services/notification.service.ts::NotificationService.handleAlbumUpdate",
+    "src/services/notification.service.ts::NotificationService.sendAlbumLocalNotification",
+    "src/services/notification.service.ts::NotificationService.handleSendEmail",
+    "src/repositories/email.repository.ts::EmailRepository.sendEmail",
+    "src/services/album.service.ts::AlbumService.addAssets"
+  ],
+  "relevant_files": [
+    "src/repositories/email.repository.ts",
+    "src/repositories/job.repository.ts",
+    "src/services/album.service.ts",
+    "src/services/asset-media.service.ts",
+    "src/services/notification.service.ts"
+  ],
+  "gt_path": [
+    "src/services/album.service.ts::AlbumService.addAssets",
+    "src/services/notification.service.ts::NotificationService.onAlbumUpdate",
+    "src/repositories/job.repository.ts::JobRepository.removeJob",
+    "src/repositories/job.repository.ts::JobRepository.getJobOptions",
+    "src/services/notification.service.ts::NotificationService.handleAlbumUpdate",
+    "src/services/notification.service.ts::NotificationService.sendAlbumLocalNotification",
+    "src/services/notification.service.ts::NotificationService.handleSendEmail",
+    "src/repositories/email.repository.ts::EmailRepository.sendEmail"
+  ],
+  "alternatives": [
+    "Adding assets via the album endpoint emits the same event from AlbumService.addAssets (album.service.ts:197) instead of AssetMediaService.addToSharedLink."
+  ],
+  "distractor_symbols": [
+    "src/services/notification.service.ts::NotificationService.onAlbumInvite",
+    "src/services/notification.service.ts::NotificationService.handleAlbumInvite",
+    "src/services/album.service.ts::AlbumService.addUsers"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd"
+  },
+  "source": {
+    "drafted_by": "mining agent (immich)",
+    "draft_id": "IM-T7",
+    "verification": "server/src/services/notification.service.spec.ts describe 'onAlbumUpdateEvent' (line 178; assertions not read - UNVERIFIED); regression tests added by commits fea0db02f and 5d7283e44 in server/src/services/asset-media.service.spec.ts.",
+    "notes": "The delay is BullMQ job delay + deterministic jobId; debouncing = remove-then-requeue. Confounder: the job payload carries delay so the delay value is read in getJobOptions, not in the handler."
+  },
+  "evidence": [
+    "server/src/services/notification.service.ts:35 albumUpdateEmailDelayMs = 300_000; :234-247 onAlbumUpdate; :390 handleAlbumUpdate; :403 / :496 sendAlbumLocalNotification; :433 queue SendMail; :446-454 handleSendEmail",
+    "server/src/repositories/job.repository.ts:258-263 jobId `${id}/${recipientId}` + delay; :291-296 removeJob",
+    "server/src/services/asset-media.service.ts:364 emit AlbumUpdate",
+    "server/src/services/album.service.ts:197 emit AlbumUpdate",
+    "server/src/repositories/email.repository.ts:123",
+    "commits fea0db02f (PR #29757), 5d7283e44 (PR #30120) fixed missing emits on this chain",
+    "src/services/album.service.ts:190-197"
+  ],
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "medium",
+    "indirect_boundary": "see-path",
+    "gt_files": 5,
+    "communities_spanned": 4,
+    "gt_path_length": 8,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "Chain verified: AlbumUpdate emit -> NotificationService.onAlbumUpdate (notification.service.ts:234-247: removeJob then queue NotifyAlbumUpdate with delay 300000 ms, jobId `${id}/${recipientId}` via JobRepository.getJobOptions :256-263, removeJob :291-296) -> handleAlbumUpdate (:390) -> sendAlbumLocalNotification -> queue SendMail (:433) -> handleSendEmail (:446) -> EmailRepository.sendEmail.",
+      "Entry point choice is poor: AssetMediaService.addToSharedLink (asset-media.service.ts:354-366) is the anonymous upload-through-shared-link path; \"photos are added to a shared album\" normally goes through AlbumService.addAssets (album.service.ts:190-197), which the draft only lists as relevant/alt. Use AlbumService.addAssets as the first step (accept addToSharedLink as alternative)."
+    ]
+  }
+}

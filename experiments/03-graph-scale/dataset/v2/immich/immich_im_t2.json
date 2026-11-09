@@ -1,0 +1,99 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_im_t2",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "change_impact",
+  "category": "C",
+  "description": "The event announcing that a photo's metadata has been extracted currently carries an optional marker telling which action originally triggered the job. If that marker were removed from the event's payload shape, which functions must change, and which tests exercise the area?",
+  "root_cause_symbols": [
+    "src/services/metadata.service.ts::MetadataService.handleMetadataExtraction"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/services/metadata.service.ts::MetadataService.handleMetadataExtraction",
+    "src/services/storage-template.service.ts::StorageTemplateService.onAssetMetadataExtracted",
+    "src/services/notification.service.ts::NotificationService.onAssetMetadataExtracted",
+    "src/services/workflow-execution.service.ts::WorkflowExecutionService.onAssetMetadataExtracted",
+    "src/repositories/event.repository.ts::EventRepository.emit",
+    "src/repositories/event.repository.ts::EventRepository.onEvent"
+  ],
+  "relevant_files": [
+    "src/repositories/event.repository.ts",
+    "src/services/metadata.service.ts",
+    "src/services/notification.service.ts",
+    "src/services/storage-template.service.ts",
+    "src/services/workflow-execution.service.ts"
+  ],
+  "gt_path": [
+    "src/services/metadata.service.ts::MetadataService.handleMetadataExtraction",
+    "src/services/storage-template.service.ts::StorageTemplateService.onAssetMetadataExtracted",
+    "src/services/notification.service.ts::NotificationService.onAssetMetadataExtracted",
+    "src/services/workflow-execution.service.ts::WorkflowExecutionService.onAssetMetadataExtracted"
+  ],
+  "impact": {
+    "direct": [
+      "src/services/metadata.service.ts::MetadataService.handleMetadataExtraction",
+      "src/services/notification.service.ts::NotificationService.onAssetMetadataExtracted",
+      "src/services/storage-template.service.ts::StorageTemplateService.onAssetMetadataExtracted",
+      "src/services/workflow-execution.service.ts::WorkflowExecutionService.onAssetMetadataExtracted"
+    ],
+    "indirect": [
+      "src/services/job.service.ts::JobService.onDone"
+    ],
+    "tests": [
+      "src/services/metadata.service.spec.ts"
+    ],
+    "source": "type-checker oracle (direct, tests_with_errors) + annotated (indirect, tests)"
+  },
+  "oracle_edit": {
+    "file": "src/repositories/event.repository.ts",
+    "old": "AssetMetadataExtracted: [{ assetId: string; userId: string; source?: JobSource }];",
+    "new": "AssetMetadataExtracted: [{ assetId: string; userId: string }];",
+    "note": "Drops the optional source field from the typed event payload. Expected tsc errors: excess property at the emit in MetadataService.handleMetadataExtraction; missing property 'source' in the destructured parameter of the three listeners. JobSource import stays (still used elsewhere) and noUnusedLocals is off."
+  },
+  "alternatives": [],
+  "distractor_symbols": [
+    "src/services/library.service.ts::LibraryService.queuePostSyncJobs",
+    "src/services/job.service.ts::JobService.onJobRun"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd"
+  },
+  "source": {
+    "drafted_by": "mining agent (immich)",
+    "draft_id": "IM-T2",
+    "verification": "Type-check oracle: apply oracle_edit to a COPY of server/ and run tsc --noEmit; the set of reported functions must equal impact.direct. Test: server/src/services/metadata.service.spec.ts asserts the emitted payload (line ~1826); no unit test for the three listeners was found (grep of onAssetMetadataExtracted in specs: none) - UNVERIFIED that other tests cover them.",
+    "notes": "Compile errors reveal only direct sites; the behavioural coupling through JobService.onDone is invisible to tsc. If the agent must name tests, only one spec was found."
+  },
+  "evidence": [
+    "server/src/repositories/event.repository.ts:55 event type",
+    "server/src/services/metadata.service.ts:413-417 emitter",
+    "server/src/services/storage-template.service.ts:138-141",
+    "server/src/services/notification.service.ts:181-186",
+    "server/src/services/workflow-execution.service.ts:308-314",
+    "server/src/services/job.service.ts:117-121",
+    "src/repositories/event.repository.ts:12,55"
+  ],
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "medium",
+    "indirect_boundary": "see-path",
+    "gt_files": 5,
+    "communities_spanned": 3,
+    "gt_path_length": 4,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "Oracle old string occurs exactly once (src/repositories/event.repository.ts:55). tsc effect verified: emit literal in MetadataService.handleMetadataExtraction (metadata.service.ts:413-417) gets excess property; the three listeners destructure source (storage-template.service.ts:139, notification.service.ts:182, workflow-execution.service.ts:309) -> TS2339. direct set correct.",
+      "JobService.onDone (indirect/relevant) is not affected: it uses job-data source (JobSource of job items), not the event payload. Remove from impact.indirect/relevant.",
+      "Oracle note is wrong that JobSource import \"stays (still used elsewhere)\": in event.repository.ts the only other use is the import at line 12; after the edit it becomes unused (harmless, noUnusedLocals is not set in server/tsconfig.json).",
+      "tests: only metadata.service.spec.ts:1826 references the event; list is right."
+    ]
+  }
+}

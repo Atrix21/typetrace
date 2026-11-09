@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr32240",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "Workflow actions still run after a filter step halts the run (workflow_log result=halted, asset archived/added to album anyway)\n\nA workflow's action steps still run after an earlier filter step has stopped the run. The workflow log records the run as `halted` on the filter step (step 0), but the asset is still archived and/or added to the album configured in the following steps.\n\nThis has happened on two separate occasions with two different filter types (`assetFileFilter` and `assetTagFilter`), so the problem looks like it sits in how the run stops or how actions are dispatched, not in any one filter.\n\nThis is **not** #31953: we use `matching: \"all\"`, and the filter returns the correct result, because the run is logged as `halted`. It is also not #30625, which is a hard error. Here nothing errors; the action just runs anyway.\n\n**Occurrence 1: controlled reproduction (20 Sep 2026)**\n\nWorkflow, trigger `AssetCreate`…",
+  "root_cause_symbols": [
+    "src/repositories/workflow.repository.ts::WorkflowRepository.getForWorkflowRun"
+  ],
+  "relevant_symbols": [
+    "src/repositories/workflow.repository.ts::WorkflowRepository.getForWorkflowRun"
+  ],
+  "relevant_files": [
+    "src/repositories/workflow.repository.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr32240.patch",
+    "patch_sha256": "38fc9206ed71852e7dbebbcf2dbd7234dcd062981adbc38946b6c9504de4db92",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/32240",
+    "issue": "#32083",
+    "merge_commit": "56319b76fc60d7e3bd57a2275ac908da42665e5f",
+    "parent_commit": "9971dade1b2db76a5a79d287eb2d725152cb0323",
+    "merged_at": "2026-10-08T19:39:39Z",
+    "report_source": "issue",
+    "tests_added": [
+      "workflow-core-plugin.spec.ts: should run steps by their order, not by the order the rows come back"
+    ],
+    "test_files_changed": [
+      "server/test/medium/specs/workflow/workflow-core-plugin.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "medium",
+    "indirect_boundary": "job",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix 56319b76fc60d7e3bd57a2275ac908da42665e5f (https://github.com/immich-app/immich/pull/32240)",
+    "test: workflow-core-plugin.spec.ts: should run steps by their order, not by the order the rows come back",
+    "targets/exp3/dataset-patches/immich/immich_pr32240.patch",
+    "src/repositories/workflow.repository.ts:69-80",
+    "src/services/workflow-execution.service.ts:339,395"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "Symptom report; the reporter explicitly says they could not pin the mechanism. Fix adds orderBy(workflow_step.order) in WorkflowRepository.getForWorkflowRun; plausible cause for actions running out of order; RC exact. Boundary job ok (AssetCreate event -> WorkflowAssetTrigger job -> workflow-execution.service.ts:395)."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "not_runnable",
+    "tests": []
+  }
+}

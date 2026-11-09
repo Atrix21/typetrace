@@ -1,0 +1,89 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_im_t13",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "feature_understanding",
+  "category": "B",
+  "description": "A photo has been in the trash longer than the retention period. Describe everything that happens to it, its stack, its live-photo partner and its files on disk, and what schedules this.",
+  "root_cause_symbols": [
+    "src/services/queue.service.ts::QueueService.handleNightlyJobs"
+  ],
+  "anchor_note": "non-bug task: root_cause_symbols holds the anchor (entry point / changed symbol); RC metrics are reported for category A only",
+  "relevant_symbols": [
+    "src/services/queue.service.ts::QueueService.handleNightlyJobs",
+    "src/services/asset.service.ts::AssetService.handleAssetDeletionCheck",
+    "src/services/asset.service.ts::AssetService.handleAssetDeletion",
+    "src/repositories/asset.repository.ts::AssetRepository.remove",
+    "src/repositories/user.repository.ts::UserRepository.updateUsage",
+    "src/services/storage.service.ts::StorageService.handleDeleteFiles",
+    "src/repositories/asset-job.repository.ts::AssetJobRepository.streamForDeletedJob",
+    "src/repositories/asset-job.repository.ts::AssetJobRepository.getForAssetDeletion",
+    "src/repositories/stack.repository.ts::StackRepository.delete",
+    "src/repositories/stack.repository.ts::StackRepository.update",
+    "src/services/queue.service.ts::QueueService.onConfigInit",
+    "src/repositories/cron.repository.ts::CronRepository.create"
+  ],
+  "relevant_files": [
+    "src/repositories/asset-job.repository.ts",
+    "src/repositories/asset.repository.ts",
+    "src/repositories/cron.repository.ts",
+    "src/repositories/stack.repository.ts",
+    "src/repositories/user.repository.ts",
+    "src/services/asset.service.ts",
+    "src/services/queue.service.ts",
+    "src/services/storage.service.ts"
+  ],
+  "gt_path": [
+    "src/services/queue.service.ts::QueueService.handleNightlyJobs",
+    "src/services/asset.service.ts::AssetService.handleAssetDeletionCheck",
+    "src/services/asset.service.ts::AssetService.handleAssetDeletion",
+    "src/repositories/asset.repository.ts::AssetRepository.remove",
+    "src/repositories/user.repository.ts::UserRepository.updateUsage",
+    "src/services/storage.service.ts::StorageService.handleDeleteFiles"
+  ],
+  "alternatives": [
+    "The same handleAssetDeletion path is entered by TrashService.handleEmptyTrash (user empties trash) and LibraryService offline-asset deletion with deleteOnDisk false."
+  ],
+  "distractor_symbols": [
+    "src/services/trash.service.ts::TrashService.handleEmptyTrash",
+    "src/services/user.service.ts::UserService.handleUserDelete",
+    "src/services/asset.service.ts::AssetService.deleteAll"
+  ],
+  "snapshot": {
+    "kind": "pinned",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd"
+  },
+  "source": {
+    "drafted_by": "mining agent (immich)",
+    "draft_id": "IM-T13",
+    "verification": "server/src/services/asset.service.spec.ts describe 'handleAssetDeletion' (line 574): tests 'should clean up files', 'should delete the stack when a non-primary asset is deleted and only the primary would remain', 'should keep the stack when a non-primary asset is deleted and the primary plus another asset remain', 'should not delete a live motion part if it is being used by another asset', 'should update usage'. Medium test: server/test/medium/specs/services/asset.service.spec.ts.",
+    "notes": "handleAssetDeletion enqueues FileDelete rather than unlinking directly; the actual file removal happens in a different job/handler (StorageService.handleDeleteFiles). Trash retention is config.trash.days (asset.service.ts:282)."
+  },
+  "evidence": [
+    "server/src/services/queue.service.ts:271-282 databaseCleanup jobs incl. AssetDeleteCheck",
+    "server/src/services/asset.service.ts:280-297 handleAssetDeletionCheck; :302-371 handleAssetDeletion (stack :314-334, remove :336, usage :~337-339, emit AssetDelete :341, motion :344-352, FileDelete :369)",
+    "server/src/services/storage.service.ts:121 handleDeleteFiles",
+    "commit a0c7b8114 (PR #29354) fixed stack dissolution for non-primary assets; 464400f82 (PR #32077) offline live-photo motion deletion",
+    "src/services/asset.service.ts:279-371"
+  ],
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "medium",
+    "indirect_boundary": "see-path",
+    "gt_files": 8,
+    "communities_spanned": 4,
+    "gt_path_length": 6,
+    "locality": "cross_module"
+  },
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "Verified: handleNightlyJobs queues AssetDeleteCheck only when nightlyTasks.databaseCleanup (queue.service.ts:268-276) -> handleAssetDeletionCheck (asset.service.ts:279-297: trash days, 0 if trash disabled) -> AssetDelete -> handleAssetDeletion (:301-371: stack dissolve/promote, AssetRepository.remove, UserRepository.updateUsage only without libraryId, AssetDelete emit, motion asset re-queued if unused, FileDelete) -> StorageService.handleDeleteFiles (storage.service.ts:120-133).",
+      "\"What schedules this\" is only partly covered: the cron that fires handleNightlyJobs is QueueService.onConfigInit + CronRepository.create (queue.service.ts:44-64), missing from relevant.",
+      "handleAssetDeletion (stack logic) is the same function mined as bug task immich_pr29354; understanding snapshot is the fixed version."
+    ]
+  }
+}

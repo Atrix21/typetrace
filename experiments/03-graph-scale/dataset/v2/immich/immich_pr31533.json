@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr31533",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "Person thumbnail can't be updated after deleting and redrawing a face\n\nRemoving a face from an asset and drawing a new one leaves `person.faceAssetId` pointing at the removed (soft-deleted) asset_face row. The person thumbnail job then fails with missing data on every subsequent run, and no UI action or job seems able to repair it.\n\nThe person is left permanently displaying the old thumbnail, with a failing job on every retry.\n\nLooking at the code paths, I do not think this is fixed by #30952. The functions for face selection, thumbnail generation, and retrieval do not seem updated since v3.1.0.",
+  "root_cause_symbols": [
+    "src/repositories/person.repository.ts::PersonRepository.getForFeatureFaceUpdate"
+  ],
+  "relevant_symbols": [
+    "src/repositories/person.repository.ts::PersonRepository.getForFeatureFaceUpdate"
+  ],
+  "relevant_files": [
+    "src/repositories/person.repository.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr31533.patch",
+    "patch_sha256": "30ccc2bef58ea4f614917f1daf6fadb747009b8d953d25ce60c1ceb0babe4836",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/31533",
+    "issue": "#31321",
+    "merge_commit": "ef9718e93d926f1a8ccae3270d839c9294884050",
+    "parent_commit": "53395d0664aeabc755e1f3a4dd7c2b57bceffae6",
+    "merged_at": "2026-09-14T13:47:03Z",
+    "report_source": "issue",
+    "tests_added": [
+      "person.repository.spec.ts: should ignore soft deleted faces"
+    ],
+    "test_files_changed": [
+      "server/test/medium/specs/repositories/person.repository.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "medium",
+    "indirect_boundary": "db",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix ef9718e93d926f1a8ccae3270d839c9294884050 (https://github.com/immich-app/immich/pull/31533)",
+    "test: person.repository.spec.ts: should ignore soft deleted faces",
+    "targets/exp3/dataset-patches/immich/immich_pr31533.patch",
+    "src/repositories/person.repository.ts:767-771 (patch hunk)",
+    "src/services/person.service.ts:266"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "Issue symptom with a data-level diagnosis (person.faceAssetId pointing to a soft-deleted face); treated as symptom, it does not name the fix (adding deletedAt IS NULL in PersonRepository.getForFeatureFaceUpdate, called from person.service.ts:266). RC exact. Boundary db is right: defect is a SQL predicate reached by a plain call."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "not_runnable",
+    "tests": []
+  }
+}

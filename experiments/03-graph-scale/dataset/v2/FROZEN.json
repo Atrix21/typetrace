@@ -1,0 +1,51 @@
+{
+  "note": "dataset v2 (experiment 3); per-repository hashes over sorted \"task_id sha256(file)\" lines",
+  "repos": {
+    "immich": {
+      "tasks": 37,
+      "dev": 11,
+      "test": 26,
+      "dataset_sha256": "8c7bff1dbe18f3cd1825feb71929f3aac9d57f2967e3e18182f3014670f8a234",
+      "files": {
+        "immich_im_t1": "43783b36f8eac4969ed96c72072d8ba39db369f32c5ea749a8615e219fdf7a79",
+        "immich_im_t10": "0dc6ff6df38413f241160a18f249957495193598e347d16015c1d1a0a7f524b8",
+        "immich_im_t11": "55c38124a74432f617ab286635ad11f17d97dc6b6dff8ec254cbfa6a981cb41e",
+        "immich_im_t12": "dc80a503212b455692798b96433c60db493176ae9fc6a1bf50ecb58f79985abe",
+        "immich_im_t13": "aaefcde58538d34a4aeb2b124645f36cbab23faa6b3d5017d81cd289b4417c77",
+        "immich_im_t14": "cd3aa2d05a6ae92dcdc9a1f8d67ebd2560f6d1447c3ff341a1ac9e34368066c5",
+        "immich_im_t15": "7ddd4d08fde11dcfc49e0a92a7a1485c5ec33a381807dab37627e5592edb36fd",
+        "immich_im_t2": "0cb1300efb156897b52472c522ee5a1118c021496d50e8d35f9299ca1463b60a",
+        "immich_im_t3": "8eeb991f47496f3e12c44c48e81c4bb6e90f4f6951e9b481d6a1f5b63584c05a",
+        "immich_im_t4": "db69bda8c2262faaf3a6b0f653380aa0733565009c8b5ec4e03c60458a38f7be",
+        "immich_im_t5": "9a5a774005f50fe534fa893b024be9b2d9db4e9fc145f2a18fc37cccbbfec08f",
+        "immich_im_t6": "4409d8a7a384b509396e89e422db48276cd8a946023f93f1a12c4fbc476ea3a9",
+        "immich_im_t7": "46c0d1caf2644e1ade7a65812fb62dea6b210f94069466edb59b741ab8a5084d",
+        "immich_im_t8": "453f5877be084160de4c21a37138b7769f57c17ea1d2ee7fffbd3559ba773ec4",
+        "immich_im_t9": "dfa130cf45f9df3e92fd4f4462476e28cf8e78a08cd26b72adcd3b12a3313f7f",
+        "immich_pr28884": "9a8d8697cd6153bd15ccb4e2571ddbc13e88dcc18ee59b5594ac9a8b5ade6db3",
+        "immich_pr29028": "231321e6699ca933371ec9adde24b308020f21b02e9dc5442a96d2e6c160839a",
+        "immich_pr29035": "414df6b2d76766fbee8f2d745dd5e9bfe90c404592fcac9125940a03991bcc9f",
+        "immich_pr29240": "144ff4b95ae29d5c9be877a95b446ce0d9d5578be709e9b3a4337385e7e0a273",
+        "immich_pr29354": "a180703803da6a89e6ff84a816adb5755bb09b1967c4ae572ae8ac981e1d4015",
+        "immich_pr29516": "0c89c85847e4a3fa07491af1c9e25034a5d7cdaf880eb78bb43c1f76eb867755",
+        "immich_pr29737": "f0b26ca77705fc591811aa1132ca932078173d4baba8f290525c030278c5b261",
+        "immich_pr29908": "b47dcdf1049e7815a7c91d9cb200dd9a69edc9770f42aa0bd4b95ac4a0457b0f",
+        "immich_pr30431": "66871db9daa434bc51d53dfd4a383cab3f0a9d4627d99813c476027ef7b419a9",
+        "immich_pr30512": "b009ce7b7fe99d40ae29d41978eb7ce0f62903297fc2edc8959b556f90a45b42",
+        "immich_pr30759": "dd99f9287910b383745091b0892529e0c2aa3e94ff4c61fa8375835299642441",
+        "immich_pr31074": "84bf7fb83e63bf6ddd44d22fa7e9780b921327ff16cf655f866d92b9c19ec8f0",
+        "immich_pr31319": "892b8daa7811493579f1178fb8f614ccd1bcdde8bdb0874d51f9f15d5e8921a5",
+        "immich_pr31425": "c886caf2873f66596b14170cc30b5a7c3d8ff9568646deec7ff556b4be9ec986",
+        "immich_pr31473": "681c2ad16d584c8876355a80a1efe0d55cd658f24d27fc8f59224e0f5e02ec9f",
+        "immich_pr31533": "21a41e127b566666ab052443339024b93a63dab4f7ca042858cd6785cd5b9fab",
+        "immich_pr31901": "7c6ddce7184492ecf73e20b17cf4e934f6f043aa59350720ca40f85dbde2e0ac",
+        "immich_pr32219": "68c46db45374b515f1f5a7d894b5a5a89f5d5b36f4b2ac2730252760a826066c",
+        "immich_pr32240": "08f7cc98358e9548ffb66cdaba6611a0017af0b62e2255617c6a2cb350cc0df5",
+        "immich_pr32300": "24caa19ffede520c0f0803e966d4345979321f1891012cfddda5bd2c441b4da1",
+        "immich_pr32577": "5fb479bcca82384117b0e9386f75471f64e2d3ba4aa1d6e065bb29cb8368b433",
+        "immich_pr32612": "4b091eee5483f6926749b948a01b9bc8e24a940b391e37f7cabe497ba02ed1ee"
+      },
+      "frozen_at": "2026-11-09T15:16:43.037Z"
+    }
+  }
+}

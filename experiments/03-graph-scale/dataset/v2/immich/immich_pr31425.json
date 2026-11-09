@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr31425",
+  "split": "dev",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "Bulk removal of tags does not update the XMP sidecar files.\n\nI use tags and XMP sidecar files, but the sidecar files are not updated on all cases.\n\n1) When I add or remove a tag from an single image via the info panel, the XMP sidecar files update properly.\n\n2) When I add a tag to some images via bulk, i.e., by selecting the images and using the three-dot menu, the XMP sidecar files update properly as well.\n\n3) When I delete a tag from multiple images via the tags explorer, the tags are deleted from the images, but the XMP sidecar files are NOT updated. The sidecar files are only updated if I make a change according to 1) or 2) afterwards. Then, the tag is also removed from the sidecar files.\n\nThis will lead to reappearing tags if I run the synchronize sidecar metadata job because the deleted tags are imported again from the sidecar files.",
+  "root_cause_symbols": [
+    "src/services/tag.service.ts::TagService.remove",
+    "src/services/tag.service.ts::TagService.update"
+  ],
+  "relevant_symbols": [
+    "src/services/tag.service.ts::TagService.remove",
+    "src/services/tag.service.ts::TagService.update"
+  ],
+  "relevant_files": [
+    "src/repositories/tag.repository.ts",
+    "src/services/tag.service.ts"
+  ],
+  "module_level_changes": [
+    "src/repositories/tag.repository.ts::TagRepository"
+  ],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr31425.patch",
+    "patch_sha256": "165a716dde822d4ba07c3c72c96e792fe486c2caae8156df0644a3f659f10cc5",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/31425",
+    "issue": "#23792",
+    "merge_commit": "54987c764a393d5aabace1ccfb2faeea0492f812",
+    "parent_commit": "aa023378477fb1a65d24f4614de0940f6a769794",
+    "merged_at": "2026-09-28T15:52:26Z",
+    "report_source": "issue",
+    "tests_added": [
+      "tag.service.spec.ts: should not sync assets when only the tag color changes",
+      "tag.service.spec.ts: should sync renamed tags and descendants to the exif table"
+    ],
+    "test_files_changed": [
+      "server/src/services/tag.service.spec.ts",
+      "server/test/medium/specs/services/tag.service.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "easy",
+    "lexical_overlap": "high",
+    "indirect_boundary": "job",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix 54987c764a393d5aabace1ccfb2faeea0492f812 (https://github.com/immich-app/immich/pull/31425)",
+    "test: tag.service.spec.ts: should not sync assets when only the tag color changes",
+    "test: tag.service.spec.ts: should sync renamed tags and descendants to the exif table",
+    "targets/exp3/dataset-patches/immich/immich_pr31425.patch",
+    "src/services/tag.service.ts:71-90,171-185"
+  ],
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "Issue symptom (bulk tag removal does not update XMP sidecars); fix fetches affected asset ids and calls new syncAssetTags (re-run updateTags + queue SidecarWrite) in TagService.remove and TagService.update (rename case). Boundary job (SidecarWrite job queue hop) correct.",
+      "RC extra: TagService.updateTags is NOT modified; the mechanical derivation picked it up because the hunk adding the new private syncAssetTags is adjacent to its end. Drop it. New members (TagService.syncAssetTags, TagRepository.getAssetIdsByTagId) do not exist in the bug snapshot (class-level only). update() change (rename sync) goes beyond the reported delete symptom."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "verified",
+    "tests": [
+      "tag.service.spec.ts: TagService update should update a tag",
+      "tag.service.spec.ts: TagService update should not sync assets when only the tag color changes",
+      "tag.service.spec.ts: TagService remove should remove a tag"
+    ]
+  }
+}

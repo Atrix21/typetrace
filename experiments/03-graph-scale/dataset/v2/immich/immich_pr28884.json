@@ -1,0 +1,75 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr28884",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "`addUsersToAlbum` fails if any user is already a member\n\nIf you call addUsersToAlbum with multiple users and one of them is already a member of the album, the entire request fails rather than adding the remaining users.\n\nExpected: Skip already-existing members, add the rest, return partial results or a clear per-user status.\n\nActual: Request fails with an error for the duplicate user; no users are added.",
+  "root_cause_symbols": [
+    "src/services/album.service.ts::AlbumService.addUsers"
+  ],
+  "relevant_symbols": [
+    "src/services/album.service.ts::AlbumService.addUsers"
+  ],
+  "relevant_files": [
+    "src/services/album.service.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr28884.patch",
+    "patch_sha256": "511fb9dbd7395bcda2752c85b3efbb2a9f53bbe56a093908bff4ba07cb251d7c",
+    "apply": "fuzz-C1"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/28884",
+    "issue": "#28880",
+    "merge_commit": "a364b56b1c296a1ef747441f5533373b3aabb294",
+    "parent_commit": "f9db76433e82e8822a3e01c1aced61a2e7672432",
+    "merged_at": "2026-06-17T13:54:21Z",
+    "report_source": "issue",
+    "tests_added": [
+      "album.service.spec.ts: should skip if the userId is already added",
+      "album.service.spec.ts: should skip if the userId is the ownerId",
+      "album.service.spec.ts: should add new users when already-added users are included"
+    ],
+    "test_files_changed": [
+      "server/src/services/album.service.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "medium",
+    "indirect_boundary": "none",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix a364b56b1c296a1ef747441f5533373b3aabb294 (https://github.com/immich-app/immich/pull/28884)",
+    "test: album.service.spec.ts: should skip if the userId is already added",
+    "test: album.service.spec.ts: should skip if the userId is the ownerId",
+    "test: album.service.spec.ts: should add new users when already-added users are included",
+    "targets/exp3/dataset-patches/immich/immich_pr28884.patch",
+    "src/services/album.service.ts:290-296"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "high",
+    "adjudicated": false,
+    "notes": [
+      "Report states symptom and expected behaviour (skip existing members) but not the code change; fix replaces throw BadRequestException with continue in AlbumService.addUsers; RC exact. Mild lexical overlap (API name addUsersToAlbum)."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "verified",
+    "tests": [
+      "album.service.spec.ts: AlbumService addUsers should skip if the userId is already added",
+      "album.service.spec.ts: AlbumService addUsers should skip if the userId is the ownerId",
+      "album.service.spec.ts: AlbumService addUsers should add new users when already-added users are included"
+    ]
+  }
+}

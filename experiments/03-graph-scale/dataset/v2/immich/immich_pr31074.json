@@ -1,0 +1,90 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr31074",
+  "split": "dev",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "Stale untracked integrity report can delete a now-tracked original file\n\nAn `untracked_file` report can apparently become stale if the same path becomes referenced by an asset after the report row was created. Both **Refresh** and a full **Check** leave that report visible. Deleting it then unlinks a file that is now the asset's original, causing real data loss.\n\nObserved with two large MOV files (approximately 9.5 GB and 2.9 GB):\n\n1. System Integrity reported both files under **Untracked files**. Their paths were under `/data/upload/<owner-id>/<prefix>/<asset-uuid>.MOV`.\n2. The corresponding videos were already visible in the timeline and played normally.\n3. I ran both **Refresh** and **Check**. The two untracked reports did not disappear.\n4. I downloaded each file from its untracked report and uploaded it through the Immich web uploader. Immich showed `Proce…",
+  "root_cause_symbols": [
+    "src/services/integrity.service.ts::IntegrityService.deleteIntegrityReport",
+    "src/services/integrity.service.ts::IntegrityService.handleDeleteIntegrityReports",
+    "src/services/integrity.service.ts::IntegrityService.handleUntrackedRefresh"
+  ],
+  "relevant_symbols": [
+    "src/services/integrity.service.ts::IntegrityService.deleteIntegrityReport",
+    "src/services/integrity.service.ts::IntegrityService.handleDeleteIntegrityReports",
+    "src/services/integrity.service.ts::IntegrityService.handleUntrackedRefresh"
+  ],
+  "relevant_files": [
+    "src/repositories/integrity.repository.ts",
+    "src/services/integrity.service.ts"
+  ],
+  "module_level_changes": [
+    "src/repositories/integrity.repository.ts::IntegrityRepository"
+  ],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr31074.patch",
+    "patch_sha256": "f4235e37d3a56799466f17f4999822b838946909063ddb928b0580cb6dc5221e",
+    "apply": "exact"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/31074",
+    "issue": "#30933",
+    "merge_commit": "c1f2756f62af333c302ef797772e5c4563662f52",
+    "parent_commit": "9e1e59593949bff29a220847871894da323f9610",
+    "merged_at": "2026-09-01T13:50:08Z",
+    "report_source": "issue",
+    "tests_added": [
+      "integrity.service.spec.ts: should delete a report whose path is now referenced by an asset",
+      "integrity.service.spec.ts: should keep a report whose path is still untracked and present on disk",
+      "integrity.service.spec.ts: should not query for references when the batch is empty",
+      "integrity.service.spec.ts: should not unlink a path that is now tracked",
+      "integrity.service.spec.ts: should unlink only paths that are still untracked"
+    ],
+    "test_files_changed": [
+      "server/src/services/integrity.service.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "medium",
+    "lexical_overlap": "medium",
+    "indirect_boundary": "job",
+    "gt_files": 1,
+    "communities_spanned": 1,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix c1f2756f62af333c302ef797772e5c4563662f52 (https://github.com/immich-app/immich/pull/31074)",
+    "test: integrity.service.spec.ts: should delete a report whose path is now referenced by an asset",
+    "test: integrity.service.spec.ts: should keep a report whose path is still untracked and present on disk",
+    "test: integrity.service.spec.ts: should not query for references when the batch is empty",
+    "test: integrity.service.spec.ts: should not unlink a path that is now tracked",
+    "test: integrity.service.spec.ts: should unlink only paths that are still untracked",
+    "targets/exp3/dataset-patches/immich/immich_pr31074.patch",
+    "src/services/integrity.service.ts:175,318,691",
+    "commit-level: PR for issue #30933"
+  ],
+  "audit": {
+    "status": "accepted_with_fixes",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "Symptom report (stale untracked report can delete a now-tracked original); RC matches all three modified service methods (deleteIntegrityReport, handleUntrackedRefresh, handleDeleteIntegrityReports); new IntegrityRepository.getTrackedPaths is a new method (module/class-level).",
+      "Use ONLY the draft (truncated, ~900 char) description: the full issue #30933 body links the exact functions handleUntrackedFiles/handleUntrackedRefresh/deleteIntegrityReport and states the missing reference check, which would leak the fix."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "verified",
+    "tests": [
+      "integrity.service.spec.ts: IntegrityService handleUntrackedRefresh should delete a report whose path is now referenced by an asset",
+      "integrity.service.spec.ts: IntegrityService handleUntrackedRefresh should keep a report whose path is still untracked and present on disk",
+      "integrity.service.spec.ts: IntegrityService handleUntrackedRefresh should not query for references when the batch is empty",
+      "integrity.service.spec.ts: IntegrityService deleteIntegrityReport should not unlink a path that is now tracked",
+      "integrity.service.spec.ts: IntegrityService handleDeleteIntegrityReports should unlink only paths that are still untracked"
+    ]
+  }
+}

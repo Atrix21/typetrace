@@ -1,0 +1,76 @@
+{
+  "schema_version": 2,
+  "task_id": "immich_pr32219",
+  "split": "test",
+  "repo": "immich",
+  "task_type": "bug_localisation",
+  "description": "People Sharing: \"No people\"\n\nThank you for your great work. So, if I understand correctly, with 3.3 I should be able to see shared faces without resetting/rerunning everything, but being able to manually merge. However, this does not seem to work for me.\n\nRelated: #31620  #32196\n\nWhat I did:\n\n0) Run all face recognition tasks and name people BEFORE creating/joining any cluster groups.  No resetting/rerunning after joining the cluster group.\n\n1) Both accounts in the same cluster group (confirmed from both accounts).\n\n2) Both accounts \"share everyone\" with one another\n\n3) People -> Filters -> \"Shared by\" other user\n\nIn Philipp Account:\n\nIn Familie Account:\n\nWhat I'd except: See the other user's faces\nWhat happens: \"No people\"  in Philipp Account; No change to the interface in Familie Account (just keep showing its own…",
+  "root_cause_symbols": [
+    "src/services/person.service.ts::PersonService.getAll",
+    "src/services/person.service.ts::PersonService.getStatistics",
+    "src/services/timeline.service.ts::TimelineService.buildTimeBucketOptions"
+  ],
+  "relevant_symbols": [
+    "src/services/person.service.ts::PersonService.getAll",
+    "src/services/person.service.ts::PersonService.getStatistics",
+    "src/services/timeline.service.ts::TimelineService.buildTimeBucketOptions"
+  ],
+  "relevant_files": [
+    "src/services/person.service.ts",
+    "src/services/timeline.service.ts"
+  ],
+  "module_level_changes": [],
+  "snapshot": {
+    "kind": "revert_fix",
+    "base_commit": "a203e288c212f1bd89fc81256dddb792ad3247cd",
+    "patch": "targets/exp3/dataset-patches/immich/immich_pr32219.patch",
+    "patch_sha256": "2866aefe219f181e7790a01cd45aa433cd8b968008a8b1802cf3b15b9cda41be",
+    "apply": "fuzz-C1"
+  },
+  "source": {
+    "pr": "https://github.com/immich-app/immich/pull/32219",
+    "issue": "#32214",
+    "merge_commit": "5fa7789e2672350c76b9b026f2b8c2bc3ffdf7c4",
+    "parent_commit": "02481deb145416ed1600bf2928c3562577a39600",
+    "merged_at": "2026-10-08T14:13:17Z",
+    "report_source": "issue",
+    "tests_added": [
+      "person.service.spec.ts: should include all partners that are shown in the timeline"
+    ],
+    "test_files_changed": [
+      "server/src/services/person.service.spec.ts"
+    ]
+  },
+  "strata": {
+    "difficulty": "hard",
+    "lexical_overlap": "low",
+    "indirect_boundary": "none",
+    "gt_files": 2,
+    "communities_spanned": 2,
+    "gt_path_length": 0,
+    "locality": "local"
+  },
+  "evidence": [
+    "fix 5fa7789e2672350c76b9b026f2b8c2bc3ffdf7c4 (https://github.com/immich-app/immich/pull/32219)",
+    "test: person.service.spec.ts: should include all partners that are shown in the timeline",
+    "targets/exp3/dataset-patches/immich/immich_pr32219.patch",
+    "src/services/person.service.ts:63-80,194-205",
+    "src/services/timeline.service.ts:35-40"
+  ],
+  "audit": {
+    "status": "accepted",
+    "auditor_confidence": "medium",
+    "adjudicated": false,
+    "notes": [
+      "User report (People -> Shared by shows \"No people\"). Fix removes timelineEnabled:true from getMyPartnerIds in PersonService.getAll/getStatistics and makes TimelineService.buildTimeBucketOptions conditional on personId; RC matches all three hunks. PR says \"if we agree we want this change\" (behavioural), so symptom/fix correspondence is plausible but moderately subjective.",
+      "Boundary none ok (controller -> service -> repository)."
+    ]
+  },
+  "distractor_symbols": [],
+  "executable_evidence": {
+    "fail_to_pass": "verified",
+    "tests": [
+      "person.service.spec.ts: PersonService getStatistics should include all partners that are shown in the timeline"
+    ]
+  }
+}
