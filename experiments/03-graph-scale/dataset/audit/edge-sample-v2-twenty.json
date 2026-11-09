@@ -1,0 +1,517 @@
+{
+ "repo": "twenty",
+ "graph": ".cache/exp3/graph-twenty-stub",
+ "population": {
+  "dispatch_pairs": 177,
+  "graphql_routes": 716,
+  "query_builder_edges": 0
+ },
+ "seed": 20261110,
+ "sample": [
+  {
+   "kind": "dispatch_pair",
+   "key": "CalendarEventListFetchJob.name",
+   "producer": "src/modules/connected-account/channel-sync/services/channel-sync.service.ts:134 ChannelSyncService.startCalendarChannelSync",
+   "producer_site": "src/modules/connected-account/channel-sync/services/channel-sync.service.ts:160",
+   "producer_evidence": "this.calendarQueueService.add<CalendarEventListFetchJobData>( CalendarEventListFetchJob.name, { workspaceId, calendarChannelId: calendarCha\u2026",
+   "handler": "src/modules/calendar/calendar-event-import-manager/jobs/calendar-event-list-fetch.job.ts:32 CalendarEventListFetchJob.handle",
+   "handler_registration": "src/modules/calendar/calendar-event-import-manager/jobs/calendar-event-list-fetch.job.ts:32",
+   "handler_evidence": "@Process(CalendarEventListFetchJob.name)",
+   "id": "twenty-01"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "CalendarOngoingStaleCronJob.name",
+   "producer": "src/modules/calendar/calendar-event-import-manager/crons/commands/calendar-ongoing-stale.cron.command.ts:24 CalendarOngoingStaleCronCommand.run",
+   "producer_site": "src/modules/calendar/calendar-event-import-manager/crons/commands/calendar-ongoing-stale.cron.command.ts:26",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: CalendarOngoingStaleCronJob.name, data: undefined, options: { repeat: { pattern: CAL\u2026",
+   "handler": "src/modules/calendar/calendar-event-import-manager/crons/jobs/calendar-ongoing-stale.cron.job.ts:33 CalendarOngoingStaleCronJob.handle",
+   "handler_registration": "src/modules/calendar/calendar-event-import-manager/crons/jobs/calendar-ongoing-stale.cron.job.ts:34",
+   "handler_evidence": "@SentryCronMonitor( CalendarOngoingStaleCronJob.name, CALENDAR_ONGOING_STALE_CRON_PATTERN, )",
+   "id": "twenty-02"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "PendingFileCleanupCronJob.name",
+   "producer": "src/engine/core-modules/file/file-upload/crons/commands/pending-file-cleanup.cron.command.ts:22 PendingFileCleanupCronCommand.run",
+   "producer_site": "src/engine/core-modules/file/file-upload/crons/commands/pending-file-cleanup.cron.command.ts:24",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: PendingFileCleanupCronJob.name, data: undefined, options: { repeat: { pattern: PENDI\u2026",
+   "handler": "src/engine/core-modules/file/file-upload/crons/jobs/pending-file-cleanup.cron.job.ts:21 PendingFileCleanupCronJob.handle",
+   "handler_registration": "src/engine/core-modules/file/file-upload/crons/jobs/pending-file-cleanup.cron.job.ts:21",
+   "handler_evidence": "@Process(PendingFileCleanupCronJob.name)",
+   "id": "twenty-03"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "MessagingOngoingStaleCronJob.name",
+   "producer": "src/modules/messaging/message-import-manager/crons/commands/messaging-ongoing-stale.cron.command.ts:24 MessagingOngoingStaleCronCommand.run",
+   "producer_site": "src/modules/messaging/message-import-manager/crons/commands/messaging-ongoing-stale.cron.command.ts:26",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: MessagingOngoingStaleCronJob.name, data: undefined, options: { repeat: { pattern: ME\u2026",
+   "handler": "src/modules/messaging/message-import-manager/crons/jobs/messaging-ongoing-stale.cron.job.ts:33 MessagingOngoingStaleCronJob.handle",
+   "handler_registration": "src/modules/messaging/message-import-manager/crons/jobs/messaging-ongoing-stale.cron.job.ts:33",
+   "handler_evidence": "@Process(MessagingOngoingStaleCronJob.name)",
+   "id": "twenty-04"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "RenewWebhookSubscriptionJob.name",
+   "producer": "src/modules/connected-account/webhook-subscription-manager/crons/jobs/webhook-subscription-renewal.cron.job.ts:263 WebhookSubscriptionRenewalCronJob.enqueueRenewals",
+   "producer_site": "src/modules/connected-account/webhook-subscription-manager/crons/jobs/webhook-subscription-renewal.cron.job.ts:273",
+   "producer_evidence": "this.webhookQueueService.add<RenewWebhookSubscriptionJobData>( RenewWebhookSubscriptionJob.name, { channelType, channelId: channel.id, work\u2026",
+   "handler": "src/modules/connected-account/webhook-subscription-manager/jobs/renew-webhook-subscription.job.ts:22 RenewWebhookSubscriptionJob.handle",
+   "handler_registration": "src/modules/connected-account/webhook-subscription-manager/jobs/renew-webhook-subscription.job.ts:22",
+   "handler_evidence": "@Process(RenewWebhookSubscriptionJob.name)",
+   "id": "twenty-05"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "ApplicationRecurringChargeCronJob.name",
+   "producer": "src/engine/core-modules/billing/app-billing/crons/commands/application-recurring-charge.cron.command.ts:25 ApplicationRecurringChargeCronCommand.run",
+   "producer_site": "src/engine/core-modules/billing/app-billing/crons/commands/application-recurring-charge.cron.command.ts:27",
+   "producer_evidence": "this.messageQueueService.addCron({ jobName: ApplicationRecurringChargeCronJob.name, data: undefined, options: { repeat: { pattern: APPLICAT\u2026",
+   "handler": "src/engine/core-modules/billing/app-billing/crons/jobs/application-recurring-charge.cron.job.ts:33 ApplicationRecurringChargeCronJob.handle",
+   "handler_registration": "src/engine/core-modules/billing/app-billing/crons/jobs/application-recurring-charge.cron.job.ts:33",
+   "handler_evidence": "@Process(ApplicationRecurringChargeCronJob.name)",
+   "id": "twenty-06"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "CalendarEventsImportCronJob.name",
+   "producer": "src/modules/calendar/calendar-event-import-manager/crons/commands/calendar-import.cron.command.ts:23 CalendarEventsImportCronCommand.run",
+   "producer_site": "src/modules/calendar/calendar-event-import-manager/crons/commands/calendar-import.cron.command.ts:25",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: CalendarEventsImportCronJob.name, data: undefined, options: { repeat: { pattern: CAL\u2026",
+   "handler": "src/modules/calendar/calendar-event-import-manager/crons/jobs/calendar-events-import.cron.job.ts:40 CalendarEventsImportCronJob.handle",
+   "handler_registration": "src/modules/calendar/calendar-event-import-manager/crons/jobs/calendar-events-import.cron.job.ts:41",
+   "handler_evidence": "@SentryCronMonitor( CalendarEventsImportCronJob.name, CALENDAR_EVENTS_IMPORT_CRON_PATTERN, )",
+   "id": "twenty-07"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "UpdateSubscriptionQuantityJob.name",
+   "producer": "src/engine/core-modules/billing/listeners/billing-workspace-member.listener.ts:29 BillingWorkspaceMemberListener.handleCreateOrDeleteEvent",
+   "producer_site": "src/engine/core-modules/billing/listeners/billing-workspace-member.listener.ts:44",
+   "producer_evidence": "this.messageQueueService.add<UpdateSubscriptionQuantityJobData>( UpdateSubscriptionQuantityJob.name, { workspaceId: payload.workspaceId }, \u2026",
+   "handler": "src/engine/core-modules/billing/jobs/update-subscription-quantity.job.ts:26 UpdateSubscriptionQuantityJob.handle",
+   "handler_registration": "src/engine/core-modules/billing/jobs/update-subscription-quantity.job.ts:26",
+   "handler_evidence": "@Process(UpdateSubscriptionQuantityJob.name)",
+   "id": "twenty-08"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "WorkspaceDataExportCleanupCronJob.name",
+   "producer": "src/engine/core-modules/workspace-data-export/crons/commands/workspace-data-export-cleanup.cron.command.ts:22 WorkspaceDataExportCleanupCronCommand.run",
+   "producer_site": "src/engine/core-modules/workspace-data-export/crons/commands/workspace-data-export-cleanup.cron.command.ts:24",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: WorkspaceDataExportCleanupCronJob.name, data: undefined, options: { repeat: { patter\u2026",
+   "handler": "src/engine/core-modules/workspace-data-export/crons/jobs/workspace-data-export-cleanup.cron.job.ts:21 WorkspaceDataExportCleanupCronJob.handle",
+   "handler_registration": "src/engine/core-modules/workspace-data-export/crons/jobs/workspace-data-export-cleanup.cron.job.ts:22",
+   "handler_evidence": "@SentryCronMonitor( WorkspaceDataExportCleanupCronJob.name, WORKSPACE_DATA_EXPORT_CLEANUP_CRON_PATTERN, )",
+   "id": "twenty-09"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "AgentCronTriggerCronJob.name",
+   "producer": "src/engine/metadata-modules/ai/ai-agent-trigger/crons/agent-cron-trigger.cron.command.ts:23 AgentCronTriggerCronCommand.run",
+   "producer_site": "src/engine/metadata-modules/ai/ai-agent-trigger/crons/agent-cron-trigger.cron.command.ts:25",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: AgentCronTriggerCronJob.name, data: undefined, options: { repeat: { pattern: AGENT_C\u2026",
+   "handler": "src/engine/metadata-modules/ai/ai-agent-trigger/crons/agent-cron-trigger.cron.job.ts:39 AgentCronTriggerCronJob.handle",
+   "handler_registration": "src/engine/metadata-modules/ai/ai-agent-trigger/crons/agent-cron-trigger.cron.job.ts:39",
+   "handler_evidence": "@Process(AgentCronTriggerCronJob.name)",
+   "id": "twenty-10"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "EnterpriseKeyValidationCronJob.name",
+   "producer": "src/engine/core-modules/enterprise/cron/command/organization-key-validation.cron.command.ts:27 EnterpriseKeyValidationCronCommand.run",
+   "producer_site": "src/engine/core-modules/enterprise/cron/command/organization-key-validation.cron.command.ts:32",
+   "producer_evidence": "this.messageQueueService.addCron<EnterpriseKeyValidationCronJobData>({ jobName: EnterpriseKeyValidationCronJob.name, data: { cronPattern },\u2026",
+   "handler": "src/engine/core-modules/enterprise/cron/jobs/organization-key-validation.cron.job.ts:21 EnterpriseKeyValidationCronJob.handle",
+   "handler_registration": "src/engine/core-modules/enterprise/cron/jobs/organization-key-validation.cron.job.ts:21",
+   "handler_evidence": "@Process(EnterpriseKeyValidationCronJob.name)",
+   "id": "twenty-11"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "BillingReminderCronJob.name",
+   "producer": "src/engine/core-modules/billing/reminders/crons/commands/billing-reminder.cron.command.ts:22 BillingReminderCronCommand.run",
+   "producer_site": "src/engine/core-modules/billing/reminders/crons/commands/billing-reminder.cron.command.ts:24",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: BillingReminderCronJob.name, data: undefined, options: { repeat: { pattern: BILLING_\u2026",
+   "handler": "src/engine/core-modules/billing/reminders/crons/billing-reminder.cron.job.ts:14 BillingReminderCronJob.handle",
+   "handler_registration": "src/engine/core-modules/billing/reminders/crons/billing-reminder.cron.job.ts:14",
+   "handler_evidence": "@Process(BillingReminderCronJob.name)",
+   "id": "twenty-12"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "EventLogCleanupCronJob.name",
+   "producer": "src/engine/core-modules/event-logs/cleanup/commands/event-log-cleanup.cron.command.ts:24 EventLogCleanupCronCommand.run",
+   "producer_site": "src/engine/core-modules/event-logs/cleanup/commands/event-log-cleanup.cron.command.ts:26",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: EventLogCleanupCronJob.name, data: undefined, options: { repeat: { pattern: EVENT_LO\u2026",
+   "handler": "src/engine/core-modules/event-logs/cleanup/crons/event-log-cleanup.cron.job.ts:31 EventLogCleanupCronJob.handle",
+   "handler_registration": "src/engine/core-modules/event-logs/cleanup/crons/event-log-cleanup.cron.job.ts:31",
+   "handler_evidence": "@Process(EventLogCleanupCronJob.name)",
+   "id": "twenty-13"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "WorkflowTriggerJob.name",
+   "producer": "src/modules/workflow/workflow-trigger/automated-trigger/crons/jobs/workflow-cron-trigger-cron.job.ts:87 WorkflowCronTriggerCronJob.getAndRunTriggersFromCache",
+   "producer_site": "src/modules/workflow/workflow-trigger/automated-trigger/crons/jobs/workflow-cron-trigger-cron.job.ts:114",
+   "producer_evidence": "this.messageQueueService.add<WorkflowTriggerJobData>( WorkflowTriggerJob.name, { workspaceId: trigger.workspaceId, workflowId: trigger.lega\u2026",
+   "handler": "src/modules/workflow/workflow-trigger/jobs/workflow-trigger.job.ts:35 WorkflowTriggerJob.handle",
+   "handler_registration": "src/modules/workflow/workflow-trigger/jobs/workflow-trigger.job.ts:35",
+   "handler_evidence": "@Process(WorkflowTriggerJob.name)",
+   "id": "twenty-14"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "MarketplaceCatalogSyncCronJob.name",
+   "producer": "src/engine/core-modules/admin-panel/admin-panel.resolver.ts:579 AdminPanelResolver.syncMarketplaceCatalog",
+   "producer_site": "src/engine/core-modules/admin-panel/admin-panel.resolver.ts:583",
+   "producer_evidence": "this.cronQueueService.add( MarketplaceCatalogSyncCronJob.name, {}, { id: 'marketplace-catalog-sync', isSystemJob: true }, // Avoids trigger\u2026",
+   "handler": "src/engine/core-modules/application/application-marketplace/crons/marketplace-catalog-sync.cron.job.ts:19 MarketplaceCatalogSyncCronJob.handle",
+   "handler_registration": "src/engine/core-modules/application/application-marketplace/crons/marketplace-catalog-sync.cron.job.ts:20",
+   "handler_evidence": "@SentryCronMonitor( MarketplaceCatalogSyncCronJob.name, MARKETPLACE_CATALOG_SYNC_CRON_PATTERN, )",
+   "id": "twenty-15"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "MessagingMessageListFetchJob.name",
+   "producer": "src/engine/core-modules/auth/services/microsoft-apis.service.ts:90 MicrosoftAPIsService.refreshMicrosoftRefreshToken",
+   "producer_site": "src/engine/core-modules/auth/services/microsoft-apis.service.ts:308",
+   "producer_evidence": "this.messageQueueService.add<MessagingMessageListFetchJobData>( MessagingMessageListFetchJob.name, { workspaceId, messageChannelId: message\u2026",
+   "handler": "src/modules/messaging/message-import-manager/jobs/messaging-message-list-fetch.job.ts:39 MessagingMessageListFetchJob.handle",
+   "handler_registration": "src/modules/messaging/message-import-manager/jobs/messaging-message-list-fetch.job.ts:39",
+   "handler_evidence": "@Process(MessagingMessageListFetchJob.name)",
+   "id": "twenty-16"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "CalendarEventParticipantMatchParticipantJob.name",
+   "producer": "src/modules/calendar/calendar-event-participant-manager/listeners/calendar-event-participant-workspace-member.listener.ts:28 CalendarEventParticipantWorkspaceMemberListener.handleCreatedEvent",
+   "producer_site": "src/modules/calendar/calendar-event-participant-manager/listeners/calendar-event-participant-workspace-member.listener.ts:40",
+   "producer_evidence": "this.messageQueueService.add<CalendarEventParticipantMatchParticipantJobData>( CalendarEventParticipantMatchParticipantJob.name, { workspac\u2026",
+   "handler": "src/modules/calendar/calendar-event-participant-manager/jobs/calendar-event-participant-match-participant.job.ts:32 CalendarEventParticipantMatchParticipantJob.handle",
+   "handler_registration": "src/modules/calendar/calendar-event-participant-manager/jobs/calendar-event-participant-match-participant.job.ts:32",
+   "handler_evidence": "@Process(CalendarEventParticipantMatchParticipantJob.name)",
+   "id": "twenty-17"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "CheckEmailingDomainVerificationCronJob.name",
+   "producer": "src/engine/core-modules/emailing-domain/crons/commands/check-emailing-domain-verification.cron.command.ts:22 CheckEmailingDomainVerificationCronCommand.run",
+   "producer_site": "src/engine/core-modules/emailing-domain/crons/commands/check-emailing-domain-verification.cron.command.ts:24",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: CheckEmailingDomainVerificationCronJob.name, data: undefined, options: { repeat: { p\u2026",
+   "handler": "src/engine/core-modules/emailing-domain/crons/jobs/check-emailing-domain-verification.cron.job.ts:35 CheckEmailingDomainVerificationCronJob.handle",
+   "handler_registration": "src/engine/core-modules/emailing-domain/crons/jobs/check-emailing-domain-verification.cron.job.ts:35",
+   "handler_evidence": "@Process(CheckEmailingDomainVerificationCronJob.name)",
+   "id": "twenty-18"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "WorkspaceDeletionApplicationUninstallJob.name",
+   "producer": "src/engine/core-modules/workspace/services/workspace.service.ts:1036 WorkspaceService.enqueueWorkspaceDeletionApplicationUninstall",
+   "producer_site": "src/engine/core-modules/workspace/services/workspace.service.ts:1040",
+   "producer_evidence": "this.applicationLifecycleHookMessageQueueService.add<WorkspaceDeletionApplicationUninstallJobData>( WorkspaceDeletionApplicationUninstallJo\u2026",
+   "handler": "src/engine/core-modules/workspace/jobs/workspace-deletion-application-uninstall.job.ts:31 WorkspaceDeletionApplicationUninstallJob.handle",
+   "handler_registration": "src/engine/core-modules/workspace/jobs/workspace-deletion-application-uninstall.job.ts:31",
+   "handler_evidence": "@Process(WorkspaceDeletionApplicationUninstallJob.name)",
+   "id": "twenty-19"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "MarketplaceCatalogSyncCronJob.name",
+   "producer": "src/engine/core-modules/application/application-marketplace/crons/commands/marketplace-catalog-sync.cron.command.ts:22 MarketplaceCatalogSyncCronCommand.run",
+   "producer_site": "src/engine/core-modules/application/application-marketplace/crons/commands/marketplace-catalog-sync.cron.command.ts:30",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: MarketplaceCatalogSyncCronJob.name, data: undefined, options: { repeat: { pattern: M\u2026",
+   "handler": "src/engine/core-modules/application/application-marketplace/crons/marketplace-catalog-sync.cron.job.ts:19 MarketplaceCatalogSyncCronJob.handle",
+   "handler_registration": "src/engine/core-modules/application/application-marketplace/crons/marketplace-catalog-sync.cron.job.ts:19",
+   "handler_evidence": "@Process(MarketplaceCatalogSyncCronJob.name)",
+   "id": "twenty-20"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "TrashCleanupJob.name",
+   "producer": "src/engine/trash-cleanup/crons/trash-cleanup.cron.job.ts:34 TrashCleanupCronJob.handle",
+   "producer_site": "src/engine/trash-cleanup/crons/trash-cleanup.cron.job.ts:52",
+   "producer_evidence": "this.messageQueueService.add<TrashCleanupJobData>( TrashCleanupJob.name, { workspaceId: workspace.id, trashRetentionDays: workspace.trashRe\u2026",
+   "handler": "src/engine/trash-cleanup/jobs/trash-cleanup.job.ts:20 TrashCleanupJob.handle",
+   "handler_registration": "src/engine/trash-cleanup/jobs/trash-cleanup.job.ts:20",
+   "handler_evidence": "@Process(TrashCleanupJob.name)",
+   "id": "twenty-21"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "BlocklistReimportMessagesJob.name",
+   "producer": "src/modules/messaging/blocklist-manager/listeners/messaging-blocklist.listener.ts:48 MessagingBlocklistListener.handleDeletedEvent",
+   "producer_site": "src/modules/messaging/blocklist-manager/listeners/messaging-blocklist.listener.ts:55",
+   "producer_evidence": "this.messageQueueService.add<BlocklistReimportMessagesJobData>( BlocklistReimportMessagesJob.name, payload, { workspaceId: payload.workspac\u2026",
+   "handler": "src/modules/messaging/blocklist-manager/jobs/messaging-blocklist-reimport-messages.job.ts:43 BlocklistReimportMessagesJob.handle",
+   "handler_registration": "src/modules/messaging/blocklist-manager/jobs/messaging-blocklist-reimport-messages.job.ts:43",
+   "handler_evidence": "@Process(BlocklistReimportMessagesJob.name)",
+   "id": "twenty-22"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "LinkedTimelineActivityDeletionJob.name",
+   "producer": "src/modules/calendar/calendar-event-cleaner/listeners/calendar-event-cleaner-calendar-event.listener.ts:21 CalendarEventCleanerCalendarEventListener.handleDestroyedEvent",
+   "producer_site": "src/modules/calendar/calendar-event-cleaner/listeners/calendar-event-cleaner-calendar-event.listener.ts:32",
+   "producer_evidence": "this.messageQueueService.add<LinkedTimelineActivityDeletion>( LinkedTimelineActivityDeletionJob.name, { workspaceId: payload.workspaceId, l\u2026",
+   "handler": "src/modules/timeline/jobs/linked-timeline-activity-deletion.job.ts:18 LinkedTimelineActivityDeletionJob.handle",
+   "handler_registration": "src/modules/timeline/jobs/linked-timeline-activity-deletion.job.ts:18",
+   "handler_evidence": "@Process(LinkedTimelineActivityDeletionJob.name)",
+   "id": "twenty-23"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "RotateSigningKeysCronJob.name",
+   "producer": "src/engine/core-modules/jwt/crons/commands/rotate-signing-keys.cron.command.ts:24 RotateSigningKeysCronCommand.run",
+   "producer_site": "src/engine/core-modules/jwt/crons/commands/rotate-signing-keys.cron.command.ts:26",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: RotateSigningKeysCronJob.name, data: undefined, options: { repeat: { pattern: ROTATE\u2026",
+   "handler": "src/engine/core-modules/jwt/crons/jobs/rotate-signing-keys.cron.job.ts:23 RotateSigningKeysCronJob.handle",
+   "handler_registration": "src/engine/core-modules/jwt/crons/jobs/rotate-signing-keys.cron.job.ts:24",
+   "handler_evidence": "@SentryCronMonitor( RotateSigningKeysCronJob.name, ROTATE_SIGNING_KEYS_CRON_PATTERN, )",
+   "id": "twenty-24"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "EnterpriseKeyValidationCronJob.name",
+   "producer": "src/engine/core-modules/enterprise/cron/command/organization-key-validation.cron.command.ts:27 EnterpriseKeyValidationCronCommand.run",
+   "producer_site": "src/engine/core-modules/enterprise/cron/command/organization-key-validation.cron.command.ts:32",
+   "producer_evidence": "this.messageQueueService.addCron<EnterpriseKeyValidationCronJobData>({ jobName: EnterpriseKeyValidationCronJob.name, data: { cronPattern },\u2026",
+   "handler": "src/engine/core-modules/enterprise/cron/jobs/organization-key-validation.cron.job.ts:21 EnterpriseKeyValidationCronJob.handle",
+   "handler_registration": "src/engine/core-modules/enterprise/cron/jobs/organization-key-validation.cron.job.ts:24",
+   "handler_evidence": "@SentryCronMonitor( EnterpriseKeyValidationCronJob.name, (data?: EnterpriseKeyValidationCronJobData) => toMinuteLevelCr\u2026",
+   "id": "twenty-25"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "CalendarEventParticipantMatchParticipantJob.name",
+   "producer": "src/modules/calendar/calendar-event-participant-manager/listeners/calendar-event-participant-person.listener.ts:103 CalendarEventParticipantPersonListener.handleDestroyedEvent",
+   "producer_site": "src/modules/calendar/calendar-event-participant-manager/listeners/calendar-event-participant-person.listener.ts:118",
+   "producer_evidence": "this.messageQueueService.add<CalendarEventParticipantMatchParticipantJobData>( CalendarEventParticipantMatchParticipantJob.name, { workspac\u2026",
+   "handler": "src/modules/calendar/calendar-event-participant-manager/jobs/calendar-event-participant-match-participant.job.ts:32 CalendarEventParticipantMatchParticipantJob.handle",
+   "handler_registration": "src/modules/calendar/calendar-event-participant-manager/jobs/calendar-event-participant-match-participant.job.ts:32",
+   "handler_evidence": "@Process(CalendarEventParticipantMatchParticipantJob.name)",
+   "id": "twenty-26"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "CalendarEventListFetchCronJob.name",
+   "producer": "src/modules/calendar/calendar-event-import-manager/crons/commands/calendar-event-list-fetch.cron.command.ts:22 CalendarEventListFetchCronCommand.run",
+   "producer_site": "src/modules/calendar/calendar-event-import-manager/crons/commands/calendar-event-list-fetch.cron.command.ts:24",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: CalendarEventListFetchCronJob.name, data: undefined, options: { repeat: { pattern: C\u2026",
+   "handler": "src/modules/calendar/calendar-event-import-manager/crons/jobs/calendar-event-list-fetch.cron.job.ts:44 CalendarEventListFetchCronJob.handle",
+   "handler_registration": "src/modules/calendar/calendar-event-import-manager/crons/jobs/calendar-event-list-fetch.cron.job.ts:44",
+   "handler_evidence": "@Process(CalendarEventListFetchCronJob.name)",
+   "id": "twenty-27"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "DeferredWorkspaceMigrationActionRecoveryCronJob.name",
+   "producer": "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/crons/commands/deferred-workspace-migration-action-recovery.cron.command.ts:22 DeferredWorkspaceMigrationActionRecoveryCronCommand.run",
+   "producer_site": "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/crons/commands/deferred-workspace-migration-action-recovery.cron.command.ts:24",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: DeferredWorkspaceMigrationActionRecoveryCronJob.name, data: undefined, options: { re\u2026",
+   "handler": "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/crons/jobs/deferred-workspace-migration-action-recovery.cron.job.ts:23 DeferredWorkspaceMigrationActionRecoveryCronJob.handle",
+   "handler_registration": "src/engine/workspace-manager/workspace-migration/workspace-migration-runner/crons/jobs/deferred-workspace-migration-action-recovery.cron.job.ts:24",
+   "handler_evidence": "@SentryCronMonitor( DeferredWorkspaceMigrationActionRecoveryCronJob.name, DEFERRED_WORKSPACE_MIGRATION_ACTION_RECOVERY_\u2026",
+   "id": "twenty-28"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "WebhookSubscriptionRenewalCronJob.name",
+   "producer": "src/modules/connected-account/webhook-subscription-manager/crons/commands/webhook-subscription-renewal.cron.command.ts:22 WebhookSubscriptionRenewalCronCommand.run",
+   "producer_site": "src/modules/connected-account/webhook-subscription-manager/crons/commands/webhook-subscription-renewal.cron.command.ts:24",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: WebhookSubscriptionRenewalCronJob.name, data: undefined, options: { repeat: { patter\u2026",
+   "handler": "src/modules/connected-account/webhook-subscription-manager/crons/jobs/webhook-subscription-renewal.cron.job.ts:70 WebhookSubscriptionRenewalCronJob.handle",
+   "handler_registration": "src/modules/connected-account/webhook-subscription-manager/crons/jobs/webhook-subscription-renewal.cron.job.ts:70",
+   "handler_evidence": "@Process(WebhookSubscriptionRenewalCronJob.name)",
+   "id": "twenty-29"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "CallWebhookJob.name",
+   "producer": "src/engine/metadata-modules/webhook/jobs/call-webhook-jobs.job.ts:37 CallWebhookJobsJob.handle",
+   "producer_site": "src/engine/metadata-modules/webhook/jobs/call-webhook-jobs.job.ts:133",
+   "producer_evidence": "this.messageQueueService.add<CallWebhookJobData[]>( CallWebhookJob.name, webhookEventsChunk, { retryLimit: 3, workspaceId: workspaceEventBa\u2026",
+   "handler": "src/engine/metadata-modules/webhook/jobs/call-webhook.job.ts:49 CallWebhookJob.handle",
+   "handler_registration": "src/engine/metadata-modules/webhook/jobs/call-webhook.job.ts:49",
+   "handler_evidence": "@Process(CallWebhookJob.name)",
+   "id": "twenty-30"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "MessagingMessageChannelDeletionCleanupJob.name",
+   "producer": "src/modules/messaging/message-cleaner/listeners/messaging-message-cleaner-message-channel.listener.ts:24 MessagingMessageCleanerMessageChannelListener.handleDeletedEvent",
+   "producer_site": "src/modules/messaging/message-cleaner/listeners/messaging-message-cleaner-message-channel.listener.ts:37",
+   "producer_evidence": "Promise.all( batchEvent.events.map((event) => this.messageQueueService.add<MessagingMessageChannelDeletionCleanupJobData>( MessagingMessage\u2026",
+   "handler": "src/modules/messaging/message-cleaner/jobs/messaging-message-channel-deletion-cleanup.job.ts:26 MessagingMessageChannelDeletionCleanupJob.handle",
+   "handler_registration": "src/modules/messaging/message-cleaner/jobs/messaging-message-channel-deletion-cleanup.job.ts:26",
+   "handler_evidence": "@Process(MessagingMessageChannelDeletionCleanupJob.name)",
+   "id": "twenty-31"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "BlocklistReimportCalendarEventsJob.name",
+   "producer": "src/modules/calendar/blocklist-manager/listeners/calendar-blocklist.listener.ts:48 CalendarBlocklistListener.handleDeletedEvent",
+   "producer_site": "src/modules/calendar/blocklist-manager/listeners/calendar-blocklist.listener.ts:55",
+   "producer_evidence": "this.messageQueueService.add<BlocklistReimportCalendarEventsJobData>( BlocklistReimportCalendarEventsJob.name, payload, { workspaceId: payl\u2026",
+   "handler": "src/modules/calendar/blocklist-manager/jobs/blocklist-reimport-calendar-events.job.ts:40 BlocklistReimportCalendarEventsJob.handle",
+   "handler_registration": "src/modules/calendar/blocklist-manager/jobs/blocklist-reimport-calendar-events.job.ts:40",
+   "handler_evidence": "@Process(BlocklistReimportCalendarEventsJob.name)",
+   "id": "twenty-32"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "ApplicationLifecycleHookJob.name",
+   "producer": "src/engine/core-modules/application/application-install/application-install.service.ts:760 ApplicationInstallService.runPostInstallHook",
+   "producer_site": "src/engine/core-modules/application/application-install/application-install.service.ts:821",
+   "producer_evidence": "this.messageQueueService.add<ApplicationLifecycleHookJobData>( ApplicationLifecycleHookJob.name, { logicFunctionId: flatLogicFunction.id, w\u2026",
+   "handler": "src/engine/core-modules/logic-function/logic-function-trigger/jobs/application-lifecycle-hook.job.ts:23 ApplicationLifecycleHookJob.handle",
+   "handler_registration": "src/engine/core-modules/logic-function/logic-function-trigger/jobs/application-lifecycle-hook.job.ts:23",
+   "handler_evidence": "@Process(ApplicationLifecycleHookJob.name)",
+   "id": "twenty-33"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "MessagingRelaunchFailedMessageChannelsCronJob.name",
+   "producer": "src/modules/messaging/message-import-manager/crons/commands/messaging-relaunch-failed-message-channels.cron.command.ts:24 MessagingRelaunchFailedMessageChannelsCronCommand.run",
+   "producer_site": "src/modules/messaging/message-import-manager/crons/commands/messaging-relaunch-failed-message-channels.cron.command.ts:26",
+   "producer_evidence": "this.messageQueueService.addCron<undefined>({ jobName: MessagingRelaunchFailedMessageChannelsCronJob.name, data: undefined, options: { repe\u2026",
+   "handler": "src/modules/messaging/message-import-manager/crons/jobs/messaging-relaunch-failed-message-channels.cron.job.ts:40 MessagingRelaunchFailedMessageChannelsCronJob.handle",
+   "handler_registration": "src/modules/messaging/message-import-manager/crons/jobs/messaging-relaunch-failed-message-channels.cron.job.ts:41",
+   "handler_evidence": "@SentryCronMonitor( MessagingRelaunchFailedMessageChannelsCronJob.name, MESSAGING_RELAUNCH_FAILED_MESSAGE_CHANNELS_CRON\u2026",
+   "id": "twenty-34"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "CalendarOngoingStaleJob.name",
+   "producer": "src/modules/calendar/calendar-event-import-manager/crons/jobs/calendar-ongoing-stale.cron.job.ts:33 CalendarOngoingStaleCronJob.handle",
+   "producer_site": "src/modules/calendar/calendar-event-import-manager/crons/jobs/calendar-ongoing-stale.cron.job.ts:44",
+   "producer_evidence": "this.messageQueueService.add<CalendarOngoingStaleJobData>( CalendarOngoingStaleJob.name, { workspaceId, }, { workspaceId, isWorkspaceJob: t\u2026",
+   "handler": "src/modules/calendar/calendar-event-import-manager/jobs/calendar-ongoing-stale.job.ts:34 CalendarOngoingStaleJob.handle",
+   "handler_registration": "src/modules/calendar/calendar-event-import-manager/jobs/calendar-ongoing-stale.job.ts:34",
+   "handler_evidence": "@Process(CalendarOngoingStaleJob.name)",
+   "id": "twenty-35"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL query lineChartData",
+   "target": "src/modules/dashboard/chart-data/resolvers/line-chart-data.resolver.ts:36 LineChartDataResolver.lineChartData",
+   "site": "src/modules/dashboard/chart-data/resolvers/line-chart-data.resolver.ts:36",
+   "evidence": "@Query(() => LineChartDataDTO)",
+   "id": "twenty-36"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL mutation updateNavigationMenuItem",
+   "target": "src/engine/metadata-modules/navigation-menu-item/navigation-menu-item.resolver.ts:150 NavigationMenuItemResolver.updateNavigationMenuItem",
+   "site": "src/engine/metadata-modules/navigation-menu-item/navigation-menu-item.resolver.ts:150",
+   "evidence": "@Mutation(() => NavigationMenuItemDTO)",
+   "id": "twenty-37"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL mutation getAuthorizationUrlForSSO",
+   "target": "src/engine/core-modules/auth/auth.resolver.ts:213 AuthResolver.getAuthorizationUrlForSSO",
+   "site": "src/engine/core-modules/auth/auth.resolver.ts:213",
+   "evidence": "@Mutation(() => GetAuthorizationUrlForSsoDTO)",
+   "id": "twenty-38"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL mutation completeWorkspaceMemberProfilePictureUpload",
+   "target": "src/engine/core-modules/file/file-core-picture/resolvers/file-core-picture.resolver.ts:133 FileCorePictureResolver.completeWorkspaceMemberProfilePictureUpload",
+   "site": "src/engine/core-modules/file/file-core-picture/resolvers/file-core-picture.resolver.ts:133",
+   "evidence": "@Mutation(() => FileWithSignedUrlDTO)",
+   "id": "twenty-39"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL field billingSubscriptions",
+   "target": "src/engine/core-modules/workspace/workspace.resolver.ts:311 WorkspaceResolver.billingSubscriptions",
+   "site": "src/engine/core-modules/workspace/workspace.resolver.ts:311",
+   "evidence": "@ResolveField(() => [BillingSubscriptionEntity])",
+   "id": "twenty-40"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL mutation updateWebhook",
+   "target": "src/engine/metadata-modules/webhook/webhook.resolver.ts:60 WebhookResolver.updateWebhook",
+   "site": "src/engine/metadata-modules/webhook/webhook.resolver.ts:60",
+   "evidence": "@Mutation(() => WebhookDTO)",
+   "id": "twenty-41"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL field isMicrosoftAuthEnabled",
+   "target": "src/engine/core-modules/workspace/workspace.resolver.ts:483 WorkspaceResolver.isMicrosoftAuthEnabled",
+   "site": "src/engine/core-modules/workspace/workspace.resolver.ts:483",
+   "evidence": "@ResolveField(() => Boolean)",
+   "id": "twenty-42"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL query usageLimits",
+   "target": "src/engine/core-modules/usage-limit/usage-limit.resolver.ts:57 UsageLimitResolver.usageLimits",
+   "site": "src/engine/core-modules/usage-limit/usage-limit.resolver.ts:57",
+   "evidence": "@Query(() => [UsageLimitDTO])",
+   "id": "twenty-43"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL mutation updateApiKey",
+   "target": "src/engine/core-modules/api-key/api-key.resolver.ts:90 ApiKeyResolver.updateApiKey",
+   "site": "src/engine/core-modules/api-key/api-key.resolver.ts:91",
+   "evidence": "@Mutation(() => ApiKeyEntity, { nullable: true })",
+   "id": "twenty-44"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL mutation reportAppConnectionAuthFailure",
+   "target": "src/engine/core-modules/application/connection-provider/connections/application-connections.resolver.ts:69 ApplicationConnectionsResolver.reportAppConnectionAuthFailure",
+   "site": "src/engine/core-modules/application/connection-provider/connections/application-connections.resolver.ts:69",
+   "evidence": "@Mutation(() => Boolean)",
+   "id": "twenty-45"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL mutation setAdminAiModelEnabled",
+   "target": "src/engine/core-modules/admin-panel/admin-panel.resolver.ts:422 AdminPanelResolver.setAdminAiModelEnabled",
+   "site": "src/engine/core-modules/admin-panel/admin-panel.resolver.ts:423",
+   "evidence": "@Mutation(() => Boolean)",
+   "id": "twenty-46"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL query getTimelineThreadsFromObjectRecord",
+   "target": "src/engine/core-modules/messaging/timeline-messaging.resolver.ts:129 TimelineMessagingResolver.getTimelineThreadsFromObjectRecord",
+   "site": "src/engine/core-modules/messaging/timeline-messaging.resolver.ts:129",
+   "evidence": "@Query(() => TimelineThreadsWithTotalDTO)",
+   "id": "twenty-47"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL query searchTimelineThreads",
+   "target": "src/engine/core-modules/messaging/timeline-messaging.resolver.ts:172 TimelineMessagingResolver.searchTimelineThreads",
+   "site": "src/engine/core-modules/messaging/timeline-messaging.resolver.ts:172",
+   "evidence": "@Query(() => TimelineThreadSearchResultDTO)",
+   "id": "twenty-48"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL query getViewSorts",
+   "target": "src/engine/metadata-modules/view-sort/resolvers/view-sort.resolver.ts:28 ViewSortResolver.getViewSorts",
+   "site": "src/engine/metadata-modules/view-sort/resolvers/view-sort.resolver.ts:28",
+   "evidence": "@Query(() => [ViewSortDTO])",
+   "id": "twenty-49"
+  },
+  {
+   "kind": "graphql_route",
+   "source": "GRAPHQL query findAdminApplicationRegistrationMonitoring",
+   "target": "src/engine/core-modules/application/application-monitoring/admin-application-monitoring.resolver.ts:42 AdminApplicationMonitoringResolver.findAdminApplicationRegistrationMonitoring",
+   "site": "src/engine/core-modules/application/application-monitoring/admin-application-monitoring.resolver.ts:43",
+   "evidence": "@Query(() => AdminApplicationMonitoringDTO)",
+   "id": "twenty-50"
+  }
+ ]
+}

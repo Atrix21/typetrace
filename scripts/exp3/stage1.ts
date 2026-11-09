@@ -175,11 +175,13 @@ async function main() {
       }
       append('graph-builds.jsonl', { task_id: t.task_id, snapshot: snap?.kind ?? 'pinned', ...build, nodes: g.nodes.length, edges: g.edges.length, freshness: fresh });
       await evalCorpus(t, { name: 'full', files, strategy: 'full', target_lines: null, lines: null }, root, commit, g);
+      const fileSet = new Set(files);
+      const comm = nested ? JSON.parse(fs.readFileSync(abs(nested.communities), 'utf8')) : null;
       for (const c of nested?.tasks?.[t.task_id]?.corpora ?? []) {
         const want = new Set<number>(c.communities);
-        const comm = JSON.parse(fs.readFileSync(abs(nested.communities), 'utf8'));
-        const cf = comm.communities.filter((x: any) => want.has(x.id)).flatMap((x: any) => x.files).filter((f: string) => files.includes(f)).sort();
-        if (sha(cf.join('\n')) !== c.files_sha256) throw new Error(`corpus hash mismatch ${t.task_id} ${c.strategy}-${c.target_lines}`);
+        const manifestFiles = comm.communities.filter((x: any) => want.has(x.id)).flatMap((x: any) => x.files).sort();
+        if (sha(manifestFiles.join('\n')) !== c.files_sha256) throw new Error(`corpus hash mismatch ${t.task_id} ${c.strategy}-${c.target_lines}`);
+        const cf = manifestFiles.filter((f: string) => fileSet.has(f)); // a reverted fix may remove a file it had added
         await evalCorpus(t, { name: `${c.strategy}-${c.target_lines}`, files: cf, strategy: c.strategy, target_lines: c.target_lines, lines: c.lines }, root, commit, g);
       }
       if (snap?.kind === 'revert_fix') fs.rmSync(path.join(gdir, 'graph.sqlite'), { force: true }); // per-task bug graphs: 0.1–1.2 GB each; stats kept in graph-builds.jsonl

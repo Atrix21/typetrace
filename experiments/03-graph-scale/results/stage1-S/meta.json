@@ -1,0 +1,43 @@
+{
+  "repo": "S",
+  "split": "all",
+  "methods": [
+    "ripgrep",
+    "bm25",
+    "embeddings",
+    "hybrid_nograph",
+    "hybrid",
+    "custom_graph",
+    "compact_nograph",
+    "compact_graph"
+  ],
+  "budget": {
+    "maxResults": 50,
+    "maxContextTokens": 8000
+  },
+  "tasks": [
+    "auth_jwt_secret_01",
+    "auth_refresh_expiry_01",
+    "auth_reset_link_reuse_01",
+    "auth_reset_sessions_01",
+    "auth_social_link_01",
+    "auth_uniform_login_01",
+    "auth_update_email_dup_01",
+    "files_local_path_01",
+    "files_photo_url_01",
+    "files_presigned_size_01",
+    "mail_new_email_link_01",
+    "roles_admin_guard_01",
+    "session_password_change_01",
+    "session_refresh_replay_01",
+    "users_create_provider_01",
+    "users_list_page_01",
+    "users_mapper_lastname_01",
+    "users_photo_cleared_01",
+    "users_update_noop_01",
+    "utils_has_next_page_01"
+  ],
+  "nested": null,
+  "max_package_declaration_bytes": null,
+  "started": "2026-11-09T15:15:02.709Z"
+}

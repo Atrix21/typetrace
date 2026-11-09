@@ -1,0 +1,517 @@
+{
+ "repo": "immich",
+ "graph": ".cache/exp3/graph-immich-m2",
+ "population": {
+  "dispatch_pairs": 206,
+  "graphql_routes": 0,
+  "query_builder_edges": 774
+ },
+ "seed": 20261110,
+ "sample": [
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.PersonFileMigration",
+   "producer": "src/services/media.service.ts:113 MediaService.handleQueueMigration",
+   "producer_site": "src/services/media.service.ts:130",
+   "producer_evidence": "this.jobRepository.queueAll( people.map(({ ownerId, personGroupId }) => ({ name: JobName.PersonFileMigration, data: { ownerId, personGroupI\u2026",
+   "handler": "src/services/person.service.ts:657 PersonService.handlePersonMigration",
+   "handler_registration": "src/services/person.service.ts:657",
+   "handler_evidence": "@OnJob({ name: JobName.PersonFileMigration, queue: QueueName.Migration })",
+   "id": "immich-01"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.NotifyUserSignup",
+   "producer": "src/services/notification.service.ts:222 NotificationService.onUserSignup",
+   "producer_site": "src/services/notification.service.ts:225",
+   "producer_evidence": "this.jobRepository.queue({ name: JobName.NotifyUserSignup, data: { id, password } })",
+   "handler": "src/services/notification.service.ts:308 NotificationService.handleUserSignup",
+   "handler_registration": "src/services/notification.service.ts:308",
+   "handler_evidence": "@OnJob({ name: JobName.NotifyUserSignup, queue: QueueName.Notification })",
+   "id": "immich-02"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"UserTrash\"",
+   "producer": "src/services/user-admin.service.ts:99 UserAdminService.delete",
+   "producer_site": "src/services/user-admin.service.ts:111",
+   "producer_evidence": "this.eventRepository.emit('UserTrash', user)",
+   "handler": "src/services/telemetry.service.ts:19 TelemetryService.onUserTrash",
+   "handler_registration": "src/services/telemetry.service.ts:19",
+   "handler_evidence": "@OnEvent({ name: 'UserTrash' })",
+   "id": "immich-03"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"AssetDelete\"",
+   "producer": "src/services/asset.service.ts:301 AssetService.handleAssetDeletion",
+   "producer_site": "src/services/asset.service.ts:334",
+   "producer_evidence": "this.eventRepository.emit('AssetDelete', { assetId: id, userId: asset.ownerId })",
+   "handler": "src/services/storage-template.service.ts:221 StorageTemplateService.handleMoveHistoryCleanup",
+   "handler_registration": "src/services/storage-template.service.ts:221",
+   "handler_evidence": "@OnEvent({ name: 'AssetDelete' })",
+   "id": "immich-04"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"AppBootstrap\"",
+   "producer": "src/app.module.ts:95 BaseModule.onModuleInit",
+   "producer_site": "src/app.module.ts:109",
+   "producer_evidence": "this.eventRepository.emit('AppBootstrap')",
+   "handler": "src/services/server.service.ts:31 ServerService.onBootstrap",
+   "handler_registration": "src/services/server.service.ts:31",
+   "handler_evidence": "@OnEvent({ name: 'AppBootstrap' })",
+   "id": "immich-05"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"AppShutdown\"",
+   "producer": "src/app.module.ts:112 BaseModule.onModuleDestroy",
+   "producer_site": "src/app.module.ts:113",
+   "producer_evidence": "this.eventRepository.emit('AppShutdown')",
+   "handler": "src/services/system-config.service.ts:27 SystemConfigService.onShutdown",
+   "handler_registration": "src/services/system-config.service.ts:27",
+   "handler_evidence": "@OnEvent({ name: 'AppShutdown' })",
+   "id": "immich-06"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"ConfigUpdate\"",
+   "producer": "src/services/system-config.service.ts:84 SystemConfigService.updateAdminConfig",
+   "producer_site": "src/services/system-config.service.ts:101",
+   "producer_evidence": "this.eventRepository.emit('ConfigUpdate', { newConfig, oldConfig })",
+   "handler": "src/services/storage-template.service.ts:103 StorageTemplateService.onConfigUpdate",
+   "handler_registration": "src/services/storage-template.service.ts:103",
+   "handler_evidence": "@OnEvent({ name: 'ConfigUpdate', server: true })",
+   "id": "immich-07"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.WorkflowAssetTrigger",
+   "producer": "src/services/workflow-execution.service.ts:329 WorkflowExecutionService.onAssetTrigger",
+   "producer_site": "src/services/workflow-execution.service.ts:333",
+   "producer_evidence": "this.jobRepository.queueAll( items.map((workflow) => ({ name: JobName.WorkflowAssetTrigger, data: { workflowId: workflow.id, assetId, trigg\u2026",
+   "handler": "src/services/workflow-execution.service.ts:339 WorkflowExecutionService.handleAssetTrigger",
+   "handler_registration": "src/services/workflow-execution.service.ts:339",
+   "handler_evidence": "@OnJob({ name: JobName.WorkflowAssetTrigger, queue: QueueName.Workflow })",
+   "id": "immich-08"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.PersonGenerateThumbnail",
+   "producer": "src/services/media.service.ts:69 MediaService.handleQueueGenerateThumbnails",
+   "producer_site": "src/services/media.service.ts:104",
+   "producer_evidence": "jobs.push({ name: JobName.PersonGenerateThumbnail, data: { ownerId, personGroupId } })",
+   "handler": "src/services/media.service.ts:397 MediaService.handleGeneratePersonThumbnail",
+   "handler_registration": "src/services/media.service.ts:397",
+   "handler_evidence": "@OnJob({ name: JobName.PersonGenerateThumbnail, queue: QueueName.ThumbnailGeneration })",
+   "id": "immich-09"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"AppRestart\"",
+   "producer": "src/services/maintenance.service.ts:42 MaintenanceService.startMaintenance",
+   "producer_site": "src/services/maintenance.service.ts:50",
+   "producer_evidence": "this.eventRepository.emit('AppRestart', { isMaintenanceMode: true })",
+   "handler": "src/services/maintenance.service.ts:68 MaintenanceService.onRestart",
+   "handler_registration": "src/services/maintenance.service.ts:68",
+   "handler_evidence": "@OnEvent({ name: 'AppRestart', server: true })",
+   "id": "immich-10"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.LibraryRemoveAsset",
+   "producer": "src/services/library.service.ts:91 LibraryService.watch",
+   "producer_site": "src/services/library.service.ts:128",
+   "producer_evidence": "this.jobRepository.queue({ name: JobName.LibraryRemoveAsset, data: { libraryId: library.id, paths: [path] }, })",
+   "handler": "src/services/library.service.ts:680 LibraryService.handleAssetRemoval",
+   "handler_registration": "src/services/library.service.ts:680",
+   "handler_evidence": "@OnJob({ name: JobName.LibraryRemoveAsset, queue: QueueName.Library })",
+   "id": "immich-11"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"LibraryCreate\"",
+   "producer": "src/services/library.service.ts:236 LibraryService.create",
+   "producer_site": "src/services/library.service.ts:251",
+   "producer_evidence": "this.eventRepository.emit('LibraryCreate')",
+   "handler": "src/services/notification.service.ts:126 NotificationService.onLibraryCreate",
+   "handler_registration": "src/services/notification.service.ts:126",
+   "handler_evidence": "@OnEvent({ name: 'LibraryCreate' })",
+   "id": "immich-12"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.FacialRecognitionQueueAll",
+   "producer": "src/services/cluster-group.service.ts:75 ClusterGroupService.regeneratePeople",
+   "producer_site": "src/services/cluster-group.service.ts:79",
+   "producer_evidence": "this.jobRepository.queue({ name: JobName.FacialRecognitionQueueAll, data: { clusterGroupId: id, force: true }, })",
+   "handler": "src/services/person.service.ts:501 PersonService.handleQueueRecognizeFaces",
+   "handler_registration": "src/services/person.service.ts:501",
+   "handler_evidence": "@OnJob({ name: JobName.FacialRecognitionQueueAll, queue: QueueName.FacialRecognition })",
+   "id": "immich-13"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"AppBootstrap\"",
+   "producer": "src/app.module.ts:95 BaseModule.onModuleInit",
+   "producer_site": "src/app.module.ts:109",
+   "producer_evidence": "this.eventRepository.emit('AppBootstrap')",
+   "handler": "src/services/queue.service.ts:82 QueueService.onBootstrap",
+   "handler_registration": "src/services/queue.service.ts:82",
+   "handler_evidence": "@OnEvent({ name: 'AppBootstrap', priority: BootstrapEventPriority.JobService })",
+   "id": "immich-14"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.Ocr",
+   "producer": "src/services/ocr.service.ts:12 OcrService.handleQueueOcr",
+   "producer_site": "src/services/ocr.service.ts:24",
+   "producer_evidence": "this.jobRepository.queueAll(assets.map((asset) => ({ name: JobName.Ocr, data: { id: asset.id } })))",
+   "handler": "src/services/ocr.service.ts:30 OcrService.handleOcr",
+   "handler_registration": "src/services/ocr.service.ts:30",
+   "handler_evidence": "@OnJob({ name: JobName.Ocr, queue: QueueName.Ocr })",
+   "id": "immich-15"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.AssetExtractMetadataQueueAll",
+   "producer": "src/services/queue.service.ts:191 QueueService.start",
+   "producer_site": "src/services/queue.service.ts:221",
+   "producer_evidence": "this.jobRepository.queue({ name: JobName.AssetExtractMetadataQueueAll, data: { force } })",
+   "handler": "src/services/metadata.service.ts:215 MetadataService.handleQueueMetadataExtraction",
+   "handler_registration": "src/services/metadata.service.ts:215",
+   "handler_evidence": "@OnJob({ name: JobName.AssetExtractMetadataQueueAll, queue: QueueName.MetadataExtraction })",
+   "id": "immich-16"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.HlsSessionCleanup",
+   "producer": "src/services/queue.service.ts:267 QueueService.handleNightlyJobs",
+   "producer_site": "src/services/queue.service.ts:279",
+   "producer_evidence": "jobs.push( { name: JobName.AssetDeleteCheck }, { name: JobName.UserDeleteCheck }, { name: JobName.PersonCleanup }, { name: JobName.MemoryCl\u2026",
+   "handler": "src/services/transcoding.service.ts:60 TranscodingService.onHlsSessionCleanup",
+   "handler_registration": "src/services/transcoding.service.ts:60",
+   "handler_evidence": "@OnJob({ name: JobName.HlsSessionCleanup, queue: QueueName.BackgroundTask })",
+   "id": "immich-17"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"AppBootstrap\"",
+   "producer": "src/app.module.ts:95 BaseModule.onModuleInit",
+   "producer_site": "src/app.module.ts:109",
+   "producer_evidence": "this.eventRepository.emit('AppBootstrap')",
+   "handler": "src/services/system-config.service.ts:21 SystemConfigService.onBootstrap",
+   "handler_registration": "src/services/system-config.service.ts:21",
+   "handler_evidence": "@OnEvent({ name: 'AppBootstrap', priority: BootstrapEventPriority.SystemConfig })",
+   "id": "immich-18"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"AssetCreate\"",
+   "producer": "src/services/library.service.ts:255 LibraryService.handleSyncFiles",
+   "producer_site": "src/services/library.service.ts:291",
+   "producer_evidence": "Promise.all( assetIds.map((assetId) => this.eventRepository.emit('AssetCreate', { asset: { id: assetId, ownerId: library.ownerId } }), ), )",
+   "handler": "src/services/user.service.ts:234 UserService.onAssetCreate",
+   "handler_registration": "src/services/user.service.ts:234",
+   "handler_evidence": "@OnEvent({ name: 'AssetCreate' })",
+   "id": "immich-19"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"LibraryUpdate\"",
+   "producer": "src/services/library.service.ts:348 LibraryService.update",
+   "producer_site": "src/services/library.service.ts:363",
+   "producer_evidence": "this.eventRepository.emit('LibraryUpdate')",
+   "handler": "src/services/notification.service.ts:131 NotificationService.onLibraryUpdate",
+   "handler_registration": "src/services/notification.service.ts:131",
+   "handler_evidence": "@OnEvent({ name: 'LibraryUpdate' })",
+   "id": "immich-20"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.FileMigrationQueueAll",
+   "producer": "src/services/queue.service.ts:191 QueueService.start",
+   "producer_site": "src/services/queue.service.ts:209",
+   "producer_evidence": "this.jobRepository.queue({ name: JobName.FileMigrationQueueAll })",
+   "handler": "src/services/media.service.ts:113 MediaService.handleQueueMigration",
+   "handler_registration": "src/services/media.service.ts:113",
+   "handler_evidence": "@OnJob({ name: JobName.FileMigrationQueueAll, queue: QueueName.Migration })",
+   "id": "immich-21"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"ConfigInit\"",
+   "producer": "src/services/system-config.service.ts:21 SystemConfigService.onBootstrap",
+   "producer_site": "src/services/system-config.service.ts:24",
+   "producer_evidence": "this.eventRepository.emit('ConfigInit', { newConfig: config })",
+   "handler": "src/services/futo-backups.service.ts:70 FutoBackupsService.onConfigInit",
+   "handler_registration": "src/services/futo-backups.service.ts:70",
+   "handler_evidence": "@OnEvent({ name: 'ConfigInit', workers: [ImmichWorker.Api] })",
+   "id": "immich-22"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"AssetMetadataExtracted\"",
+   "producer": "src/services/metadata.service.ts:228 MetadataService.handleMetadataExtraction",
+   "producer_site": "src/services/metadata.service.ts:413",
+   "producer_evidence": "this.eventRepository.emit('AssetMetadataExtracted', { assetId: asset.id, userId: asset.ownerId, source: data.source, })",
+   "handler": "src/services/workflow-execution.service.ts:308 WorkflowExecutionService.onAssetMetadataExtracted",
+   "handler_registration": "src/services/workflow-execution.service.ts:308",
+   "handler_evidence": "@OnEvent({ name: 'AssetMetadataExtracted' })",
+   "id": "immich-23"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"ConfigUpdate\"",
+   "producer": "src/services/system-config.service.ts:84 SystemConfigService.updateAdminConfig",
+   "producer_site": "src/services/system-config.service.ts:101",
+   "producer_evidence": "this.eventRepository.emit('ConfigUpdate', { newConfig, oldConfig })",
+   "handler": "src/services/metadata.service.ts:155 MetadataService.onConfigUpdate",
+   "handler_registration": "src/services/metadata.service.ts:155",
+   "handler_evidence": "@OnEvent({ name: 'ConfigUpdate', workers: [ImmichWorker.Microservices], server: true })",
+   "id": "immich-24"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.AssetEditThumbnailGeneration",
+   "producer": "src/services/asset.service.ts:602 AssetService.removeAssetEdits",
+   "producer_site": "src/services/asset.service.ts:611",
+   "producer_evidence": "this.jobRepository.queue({ name: JobName.AssetEditThumbnailGeneration, data: { id } })",
+   "handler": "src/services/media.service.ts:155 MediaService.handleAssetEditThumbnailGeneration",
+   "handler_registration": "src/services/media.service.ts:155",
+   "handler_evidence": "@OnJob({ name: JobName.AssetEditThumbnailGeneration, queue: QueueName.Editor })",
+   "id": "immich-25"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"JobRun\"",
+   "producer": "src/repositories/job.repository.ts:90 JobRepository.startWorkers",
+   "producer_site": "src/repositories/job.repository.ts:96",
+   "producer_evidence": "this.eventRepository.emit('JobRun', queueName, job as JobItem)",
+   "handler": "src/services/job.service.ts:85 JobService.onJobRun",
+   "handler_registration": "src/services/job.service.ts:85",
+   "handler_evidence": "@OnEvent({ name: 'JobRun' })",
+   "id": "immich-26"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"AppBootstrap\"",
+   "producer": "src/app.module.ts:95 BaseModule.onModuleInit",
+   "producer_site": "src/app.module.ts:109",
+   "producer_evidence": "this.eventRepository.emit('AppBootstrap')",
+   "handler": "src/services/transcoding.service.ts:45 TranscodingService.onBootstrap",
+   "handler_registration": "src/services/transcoding.service.ts:45",
+   "handler_evidence": "@OnEvent({ name: 'AppBootstrap', workers: [ImmichWorker.Microservices] })",
+   "id": "immich-27"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"UserCreate\"",
+   "producer": "src/services/base.service.ts:336 BaseService.createUser",
+   "producer_site": "src/services/base.service.ts:361",
+   "producer_evidence": "this.eventRepository.emit('UserCreate', user)",
+   "handler": "src/services/telemetry.service.ts:14 TelemetryService.onUserCreate",
+   "handler_registration": "src/services/telemetry.service.ts:14",
+   "handler_evidence": "@OnEvent({ name: 'UserCreate' })",
+   "id": "immich-28"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"StackDeleteAll\"",
+   "producer": "src/services/stack.service.ts:57 StackService.deleteAll",
+   "producer_site": "src/services/stack.service.ts:60",
+   "producer_evidence": "this.eventRepository.emit('StackDeleteAll', { stackIds: dto.ids, userId: auth.user.id })",
+   "handler": "src/services/notification.service.ts:217 NotificationService.onStacksDelete",
+   "handler_registration": "src/services/notification.service.ts:217",
+   "handler_evidence": "@OnEvent({ name: 'StackDeleteAll' })",
+   "id": "immich-29"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"ConfigInit\"",
+   "producer": "src/services/system-config.service.ts:21 SystemConfigService.onBootstrap",
+   "producer_site": "src/services/system-config.service.ts:24",
+   "producer_evidence": "this.eventRepository.emit('ConfigInit', { newConfig: config })",
+   "handler": "src/services/metadata.service.ts:150 MetadataService.onConfigInit",
+   "handler_registration": "src/services/metadata.service.ts:150",
+   "handler_evidence": "@OnEvent({ name: 'ConfigInit', workers: [ImmichWorker.Microservices] })",
+   "id": "immich-30"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.AssetGenerateThumbnails",
+   "producer": "src/services/media.service.ts:69 MediaService.handleQueueGenerateThumbnails",
+   "producer_site": "src/services/media.service.ts:80",
+   "producer_evidence": "jobs.push({ name: JobName.AssetGenerateThumbnails, data: { id: asset.id } })",
+   "handler": "src/services/media.service.ts:191 MediaService.handleGenerateThumbnails",
+   "handler_registration": "src/services/media.service.ts:191",
+   "handler_evidence": "@OnJob({ name: JobName.AssetGenerateThumbnails, queue: QueueName.ThumbnailGeneration })",
+   "id": "immich-31"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"AssetTrashAll\"",
+   "producer": "src/services/integrity.service.ts:175 IntegrityService.deleteIntegrityReport",
+   "producer_site": "src/services/integrity.service.ts:184",
+   "producer_evidence": "this.eventRepository.emit('AssetTrashAll', { assetIds: [assetId], userId, })",
+   "handler": "src/services/notification.service.ts:176 NotificationService.onAssetsTrash",
+   "handler_registration": "src/services/notification.service.ts:176",
+   "handler_evidence": "@OnEvent({ name: 'AssetTrashAll' })",
+   "id": "immich-32"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "JobName.LibrarySyncFiles",
+   "producer": "src/services/library.service.ts:610 LibraryService.handleQueueSyncFiles",
+   "producer_site": "src/services/library.service.ts:657",
+   "producer_evidence": "this.jobRepository.queue({ name: JobName.LibrarySyncFiles, data: { libraryId: library.id, paths, progressCounter: crawlCount, }, })",
+   "handler": "src/services/library.service.ts:255 LibraryService.handleSyncFiles",
+   "handler_registration": "src/services/library.service.ts:255",
+   "handler_evidence": "@OnJob({ name: JobName.LibrarySyncFiles, queue: QueueName.Library })",
+   "id": "immich-33"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"ConfigUpdate\"",
+   "producer": "src/services/system-config.service.ts:84 SystemConfigService.updateAdminConfig",
+   "producer_site": "src/services/system-config.service.ts:101",
+   "producer_evidence": "this.eventRepository.emit('ConfigUpdate', { newConfig, oldConfig })",
+   "handler": "src/services/smart-info.service.ts:17 SmartInfoService.onConfigUpdate",
+   "handler_registration": "src/services/smart-info.service.ts:17",
+   "handler_evidence": "@OnEvent({ name: 'ConfigUpdate', workers: [ImmichWorker.Microservices], server: true })",
+   "id": "immich-34"
+  },
+  {
+   "kind": "dispatch_pair",
+   "key": "\"AssetRestoreAll\"",
+   "producer": "src/services/trash.service.ts:12 TrashService.restoreAssets",
+   "producer_site": "src/services/trash.service.ts:20",
+   "producer_evidence": "this.eventRepository.emit('AssetRestoreAll', { assetIds: ids, userId: auth.user.id })",
+   "handler": "src/services/notification.service.ts:197 NotificationService.onAssetsRestore",
+   "handler_registration": "src/services/notification.service.ts:197",
+   "handler_evidence": "@OnEvent({ name: 'AssetRestoreAll' })",
+   "id": "immich-35"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/access.repository.ts:231 AssetAccess.checkSharedLinkAccess",
+   "target": "None:None shared_link_asset",
+   "site": "src/repositories/access.repository.ts:252",
+   "evidence": "eb .selectFrom('link') .innerJoin('shared_link_asset', 'shared_link_asset.sharedLinkId', 'link.id')",
+   "id": "immich-36"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/asset.repository.ts:1163 AssetRepository.buildGetForOriginal",
+   "target": "None:None asset_file",
+   "site": "src/repositories/asset.repository.ts:1171",
+   "evidence": "qb .leftJoin('asset_file', (join) => join .onRef('asset.id', '=', 'asset_file.assetId') .on('asset_file.isEdited', '=', true) .on('asset_fi\u2026",
+   "id": "immich-37"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/person.repository.ts:496 PersonRepository.getAllWithoutFaces",
+   "target": "None:None person",
+   "site": "src/repositories/person.repository.ts:499",
+   "evidence": "this.db .selectFrom('person')",
+   "id": "immich-38"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/utils/database.ts:282 hasPeople",
+   "target": "None:None asset_face",
+   "site": "src/utils/database.ts:286",
+   "evidence": "eb .selectFrom('asset_face')",
+   "id": "immich-39"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/shared-link.repository.ts:72 SharedLinkRepository.get",
+   "target": "None:None shared_link",
+   "site": "src/repositories/shared-link.repository.ts:75",
+   "evidence": "this.db .selectFrom('shared_link')",
+   "id": "immich-40"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/sync.repository.ts:275 AlbumAssetExifSync.getUpdates",
+   "target": "None:None album_user",
+   "site": "src/repositories/sync.repository.ts:283",
+   "evidence": "this.upsertQuery('asset_exif', options) .innerJoin('album_asset', 'album_asset.assetId', 'asset_exif.assetId') .select(columns.syncAssetExi\u2026",
+   "id": "immich-41"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/tag.repository.ts:156 TagRepository.addAssetIds",
+   "target": "None:None tag_asset",
+   "site": "src/repositories/tag.repository.ts:164",
+   "evidence": "this.db .insertInto('tag_asset')",
+   "id": "immich-42"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/person.repository.ts:496 PersonRepository.getAllWithoutFaces",
+   "target": "None:None asset_face",
+   "site": "src/repositories/person.repository.ts:501",
+   "evidence": "this.db .selectFrom('person') .selectAll('person') .leftJoin('asset_face', 'asset_face.personGroupId', 'person.personGroupId')",
+   "id": "immich-43"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/integrity.repository.ts:41 IntegrityRepository.getIntegrityReportSummary",
+   "target": "None:None integrity_report",
+   "site": "src/repositories/integrity.repository.ts:44",
+   "evidence": "this.db .selectFrom('integrity_report')",
+   "id": "immich-44"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/schema/migrations/1764483051488-OCRBigramsForCJK.ts:4 up",
+   "target": "None:None asset_ocr",
+   "site": "src/schema/migrations/1764483051488-OCRBigramsForCJK.ts:10",
+   "evidence": "db .selectFrom('asset_ocr')",
+   "id": "immich-45"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/person.repository.ts:206 PersonRepository.updateGroupId",
+   "target": "None:None asset_face",
+   "site": "src/repositories/person.repository.ts:210",
+   "evidence": "trx .updateTable('asset_face')",
+   "id": "immich-46"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/integrity.repository.ts:139 IntegrityRepository.streamAssetPathsForMissingFiles",
+   "target": "None:None integrity_report",
+   "site": "src/repositories/integrity.repository.ts:162",
+   "evidence": "this.db .selectFrom((eb) => eb .selectFrom('asset') .where('asset.deletedAt', 'is', null) .select('asset.originalPath as path') .select((eb\u2026",
+   "id": "immich-47"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/album.repository.ts:41 isAlbumOwned",
+   "target": "None:None album_user",
+   "site": "src/repositories/album.repository.ts:44",
+   "evidence": "eb .selectFrom('album_user')",
+   "id": "immich-48"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/ocr.repository.ts:37 OcrRepository.upsert",
+   "target": "None:None ocr_search",
+   "site": "src/repositories/ocr.repository.ts:66",
+   "evidence": "db .insertInto('ocr_search')",
+   "id": "immich-49"
+  },
+  {
+   "kind": "query_builder",
+   "source": "src/repositories/asset.repository.ts:418 AssetRepository.getMetadataByKey",
+   "target": "None:None asset_metadata",
+   "site": "src/repositories/asset.repository.ts:421",
+   "evidence": "this.db .selectFrom('asset_metadata')",
+   "id": "immich-50"
+  }
+ ]
+}

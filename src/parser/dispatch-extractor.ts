@@ -15,9 +15,12 @@
  *  - `SomeClass.name` (the class's own name used as the key), matched by class identity.
  * A method only counts as a handler if it is not an HTTP/GraphQL route handler and is not called directly from
  * non-test project code (handlers are invoked by the framework). Each handler links through its primary key: the
- * key value shared by the fewest handlers (a job name, not the queue it runs on). Producer sites are collected
- * during the body walk and emitted in finish(), once the handler set is known. All edges are framework_inferred and
- * carry the evidence location; the underlying calls remain static_verified CALLS edges.
+ * key DOMAIN with the highest specificity (distinct key values / registrations: a job name, not the queue it runs on or a
+ * worker filter); domains below MIN_SPECIFICITY are broadcast/filter keys and never link (R2). Producer sites in test
+ * files (R1) and inside a handler of the same key (forwarding, R3) are ignored. R1–R3 were added after the independent
+ * edge-precision audit (E3-D21). Producer sites are collected during the body walk and emitted in finish(), once the
+ * handler set is known. All edges are framework_inferred and carry the evidence location; the underlying calls remain
+ * static_verified CALLS edges.
  */
 import ts from 'typescript';
 import type { Env, WalkState, Owner } from './graph-context.js';
@@ -48,7 +51,9 @@ export class DispatchExtractor {
   /** Key domains registered by at least one handler decorator (filled at the end of prepare()). */
   private domains = new Set<string>();
   private literalDomains = new Set<string>();
-  readonly stats = { handlers: 0, handler_candidates: 0, excluded_route: 0, excluded_called: 0, producer_sites: 0, dispatch_edges_out: 0, graphql_ops: 0, query_builder_edges: 0 };
+  readonly stats = { handlers: 0, handler_candidates: 0, excluded_route: 0, excluded_called: 0, handlers_broadcast_only: 0, producer_sites: 0, producers_forwarding: 0, dispatch_edges_out: 0, graphql_ops: 0, query_builder_edges: 0 };
+  /** R2 threshold (E3-D21): set after the independent edge-precision audit, before any M/L retrieval result was read. */
+  static MIN_SPECIFICITY = 0.25;
 
   constructor(private env: Env, private decos: (n: ts.Node) => DecoratorInfo[]) {}
 
@@ -119,8 +124,46 @@ export class DispatchExtractor {
     } catch { return undefined; }
   }
 
-  /** Named literal domain: the contextual type is (a constituent of) a type alias whose members are literals. */
+  /**
+   * The type alias NAMED by the declaration that types this position: the property signature's type annotation for a
+   * literal inside an object literal, or the parameter's annotation (type parameter -> its constraint) for a direct call
+   * argument. Needed because unions are interned: `type E = keyof Map` often reaches the checker without aliasSymbol.
+   */
+  private declaredAlias(e: ts.Expression): { alias: ts.Symbol; type: ts.Type } | null {
+    const c = this.env.project.checker;
+    let tn: ts.TypeNode | undefined;
+    try {
+      const p = e.parent;
+      if (p && ts.isPropertyAssignment(p) && p.initializer === e && ts.isObjectLiteralExpression(p.parent)) {
+        const ot = c.getContextualType(p.parent);
+        const name = ts.isIdentifier(p.name) || ts.isStringLiteral(p.name) ? p.name.text : null;
+        const prop = ot && name ? (ot.isUnion() ? ot.types.map((t) => t.getProperty(name)).find(Boolean) : ot.getProperty(name)) : undefined;
+        const d = prop?.valueDeclaration ?? prop?.declarations?.[0];
+        if (d && (ts.isPropertySignature(d) || ts.isPropertyDeclaration(d))) tn = d.type;
+      } else if (p && (ts.isCallExpression(p) || ts.isNewExpression(p)) && p.arguments) {
+        const idx = p.arguments.indexOf(e);
+        const decl = idx >= 0 ? c.getResolvedSignature(p)?.getDeclaration() : undefined;
+        const prm = decl && 'parameters' in decl ? decl.parameters[Math.min(idx, decl.parameters.length - 1)] : undefined;
+        tn = prm?.type;
+      }
+      if (tn && ts.isTypeReferenceNode(tn)) {
+        const tp = c.getSymbolAtLocation(tn.typeName)?.declarations?.find(ts.isTypeParameterDeclaration);
+        if (tp?.constraint) tn = tp.constraint;
+      }
+      if (!tn || !ts.isTypeReferenceNode(tn)) return null;
+      const sym = aliasTarget(c, c.getSymbolAtLocation(tn.typeName));
+      if (!sym || !(sym.flags & ts.SymbolFlags.TypeAlias)) return null;
+      return { alias: sym, type: c.getTypeFromTypeNode(tn) };
+    } catch { return null; }
+  }
+
+  /** Named literal domain: the position is typed by a type alias whose members are literals including this value. */
   private literalDomain(e: ts.Expression, value: string): string | null {
+    const named = this.declaredAlias(e);
+    if (named) {
+      const parts = this.constituents(named.type);
+      if (parts.length && parts.every((p) => p.isStringLiteral() || p.isNumberLiteral()) && parts.some((p) => String((p as ts.LiteralType).value) === value)) return this.domainIdOf(named.alias);
+    }
     let ct = this.contextualType(e);
     if (!ct?.aliasSymbol) ct = this.declaredParamType(e) ?? ct;
     if (!ct) return null;
@@ -257,7 +300,7 @@ export class DispatchExtractor {
 
   // ------------------------------------------------------------ per call: dispatch producers, query-builder tables
   onCall(res: CallResolution, st: WalkState): void {
-    if (res.kind === 'call' && this.registrations.length) {
+    if (res.kind === 'call' && this.registrations.length && !TEST_FILE_RE.test(st.owner.file)) { // R1: tests do not dispatch
       const exprs: ts.Expression[] = [];
       for (const a of res.node.arguments ?? []) this.keyExprs(a, 3, exprs);
       for (const e of exprs) {
@@ -306,25 +349,37 @@ export class DispatchExtractor {
       if (calledByProd.has(r.owner.id)) { this.stats.excluded_called++; continue; }
       let l = handlers.get(r.owner.id); if (!l) handlers.set(r.owner.id, (l = [])); l.push(r);
     }
-    const share = new Map<string, number>(); // key value -> number of handlers registering it
-    for (const regs of handlers.values()) for (const v of new Set(regs.flatMap((r) => r.keys.map((k) => k.value)))) share.set(v, (share.get(v) ?? 0) + 1);
+    // R2: domain specificity = distinct key values registered in the domain / registrations in the domain. A handler is
+    // linked only through the key(s) of its most specific domain; domains below MIN_SPECIFICITY are broadcast/filter keys
+    // (few values shared by many handlers, e.g. a worker filter or a CRUD action) and never link.
+    const regsOfDomain = new Map<string, number>(); const valuesOfDomain = new Map<string, Set<string>>();
+    for (const regs of handlers.values()) for (const k of new Map(regs.flatMap((r) => r.keys.map((x) => [x.value, x] as const))).values()) {
+      regsOfDomain.set(k.domain, (regsOfDomain.get(k.domain) ?? 0) + 1);
+      let vs = valuesOfDomain.get(k.domain); if (!vs) valuesOfDomain.set(k.domain, (vs = new Set())); vs.add(k.value);
+    }
+    const specificity = (d: string) => valuesOfDomain.get(d)!.size / regsOfDomain.get(d)!;
     const consumersOf = new Map<string, number>();
     const keyText = new Map<string, DispatchKey>();
-    for (const [, regs] of [...handlers].sort((a, b) => (a[0] < b[0] ? -1 : 1))) {
+    const handlerKeys = new Map<string, Set<string>>(); // handler owner id -> linked key values (for R3)
+    for (const [ownerId, regs] of [...handlers].sort((a, b) => (a[0] < b[0] ? -1 : 1))) {
       const keys = regs.flatMap((r) => r.keys.map((k) => ({ k, r })));
-      const min = Math.min(...keys.map(({ k }) => share.get(k.value)!));
+      const best = Math.max(...keys.map(({ k }) => specificity(k.domain)));
+      if (best < DispatchExtractor.MIN_SPECIFICITY) { this.stats.handlers_broadcast_only++; continue; }
       for (const { k, r } of keys) {
-        if (share.get(k.value) !== min) continue; // link through the primary (most specific) key only
+        if (specificity(k.domain) !== best) continue; // link through the most specific domain only
+        let hk = handlerKeys.get(ownerId); if (!hk) handlerKeys.set(ownerId, (hk = new Set())); hk.add(k.value);
         keyText.set(k.value, k);
         const nid = this.keyNode(k);
-        ctx.edge({ type: 'CONSUMES_EVENT', src: r.owner.id, dst: nid, file: r.owner.file, line: r.line, col: r.col, extraction: 'keyed-dispatch', confidence: k.kind === 'literal' ? 0.7 : 0.8, verification: 'framework_inferred', evidence: r.decorator, meta: { key: k.text, key_kind: k.kind, domain: k.domain, handlers_sharing_key: min } });
+        ctx.edge({ type: 'CONSUMES_EVENT', src: r.owner.id, dst: nid, file: r.owner.file, line: r.line, col: r.col, extraction: 'keyed-dispatch', confidence: k.kind === 'literal' ? 0.7 : 0.8, verification: 'framework_inferred', evidence: r.decorator, meta: { key: k.text, key_kind: k.kind, domain: k.domain, domain_specificity: +specificity(k.domain).toFixed(3) } });
         consumersOf.set(k.value, (consumersOf.get(k.value) ?? 0) + 1);
       }
     }
-    this.stats.handlers = handlers.size;
+    this.stats.handlers = handlers.size - this.stats.handlers_broadcast_only;
     const producersOf = new Map<string, number>();
     for (const p of this.producers) {
       if (!consumersOf.has(p.key.value)) continue;
+      const producerOwner = p.edges[0]?.src;
+      if (producerOwner && handlerKeys.get(producerOwner)?.has(p.key.value)) { this.stats.producers_forwarding++; continue; } // R3: forwarding inside a handler of the same key
       const nid = this.keyNode(p.key);
       for (const e of p.edges) { ctx.edge({ ...e, dst: nid }); this.stats.dispatch_edges_out++; }
       producersOf.set(p.key.value, (producersOf.get(p.key.value) ?? 0) + 1);
@@ -333,7 +388,7 @@ export class DispatchExtractor {
       const n = ctx.nodes.get(this.keyNodeId(keyText.get(v)!));
       if (n) { n.meta.handlers = consumersOf.get(v); n.meta.producer_sites = producersOf.get(v) ?? 0; }
     }
-    this.env.diag.notes.push(`keyed dispatch: ${this.stats.handlers} handlers (${this.stats.excluded_route} route and ${this.stats.excluded_called} directly-called candidates excluded), ${consumersOf.size} keys, ${this.stats.dispatch_edges_out} producer edges from ${this.stats.producer_sites} typed key sites; ${this.stats.graphql_ops} GraphQL operations; ${this.stats.query_builder_edges} query-builder table edges`);
+    this.env.diag.notes.push(`keyed dispatch: ${this.stats.handlers} handlers (${this.stats.excluded_route} route, ${this.stats.excluded_called} directly-called and ${this.stats.handlers_broadcast_only} broadcast-key-only candidates excluded), ${consumersOf.size} keys, ${this.stats.dispatch_edges_out} producer edges from ${this.stats.producer_sites} typed key sites (${this.stats.producers_forwarding} forwarding sites ignored); ${this.stats.graphql_ops} GraphQL operations; ${this.stats.query_builder_edges} query-builder table edges`);
   }
 
   private keyNodeId(k: DispatchKey): string { return `event:keyed:${k.value}`; }

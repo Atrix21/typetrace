@@ -31,14 +31,18 @@ describe('keyed dispatch', () => {
       `${M('MediaWorker', 'handleFaces')} -> ${K('src/keys.ts::JobName.FaceDetect')}`,
       `${M('MediaWorker', 'handleThumbnail')} -> ${K('src/keys.ts::JobName.ThumbnailGenerate')}`, // primary key: job name, not the shared queue
       `${M('MediaWorker', 'onUserCreated')} -> ${K('src/keys.ts::EmitEvent:UserCreated')}`, // generic emit<T extends EmitEvent>
+      ...['a', 'b'].map((m) => `${M('Listeners', m, 'src/listeners.ts')} -> ${K('src/keys.ts::EmitEvent:UserCreated')}`),
+      ...['c', 'forward', 'e'].map((m) => `${M('Listeners', m, 'src/listeners.ts')} -> ${K('src/keys.ts::EmitEvent:UserDeleted')}`),
     ].sort());
   });
 
   it('never links comparisons, other enums, untyped literals, number-typed enum positions, routes or directly-called methods', () => {
     const all = graph().edges.filter((e) => e.type === 'PUBLISHES_EVENT' || e.type === 'CONSUMES_EVENT');
-    for (const neg of ['isThumb', 'other', 'plainString', 'authorise', 'seedRole', 'runDirect']) expect(all.filter((e) => e.src === S(neg))).toEqual([]);
+    for (const neg of ['isThumb', 'other', 'plainString', 'authorise', 'seedRole', 'runDirect', 'workerCheck']) expect(all.filter((e) => e.src === S(neg))).toEqual([]);
+    // R1: a producer in a spec file; R3: a handler re-emitting its own key
+    expect(all.filter((e) => e.type === 'PUBLISHES_EVENT' && (e.file?.endsWith('.spec.ts') || e.src.endsWith('Listeners.forward')))).toEqual([]);
     expect(all.filter((e) => e.src === M('AssetController', 'list') || e.src === M('AssetController', 'admin') || e.src === M('DirectlyCalled', 'run'))).toEqual([]);
-    expect(graph().nodes.filter((n) => n.id.startsWith('event:keyed:') && /OtherJob|Permission|RoleEnum|QueueName|JobName\.Cleanup/.test(n.id)).map((n) => n.id)).toEqual([]);
+    expect(graph().nodes.filter((n) => n.id.startsWith('event:keyed:') && /OtherJob|Permission|RoleEnum|QueueName|Worker|JobName\.Cleanup/.test(n.id)).map((n) => n.id)).toEqual([]);
   });
 
   it('keeps provenance: evidence location, extraction, framework_inferred verification, confidence by key kind', () => {
@@ -48,6 +52,7 @@ describe('keyed dispatch', () => {
     const ev = graph().edges.find((e) => e.type === 'CONSUMES_EVENT' && e.src === M('MediaWorker', 'onUserCreated'))!;
     expect(ev).toMatchObject({ confidence: 0.7, line: 12, meta: expect.objectContaining({ key_kind: 'literal' }) });
     expect(graph().nodes.find((n) => n.id === K('src/keys.ts::JobName.FaceDetect'))!.meta).toMatchObject({ handlers: 1, producer_sites: 1 });
+    expect(graph().nodes.find((n) => n.id === K('src/keys.ts::EmitEvent:UserDeleted'))!.meta).toMatchObject({ handlers: 3, producer_sites: 0 });
   });
 });
 

@@ -1,53 +1,83 @@
-# Experiment 3: cost estimate
+# Experiment 3: cost estimate for the agent stage (planning only, NOT approved, NOT run)
 
-Nothing billable has been run for experiment 3. These are estimates for the approval decision. Each figure states its basis.
+**Status (milestone 2).** This replaces the milestone-1 estimate, which was inconsistent: it quoted a 120-run pilot in `cost-estimate.md` and a "30-run pilot plus 270 runs" alternative in the README.
+- **One source.** There is now a single model, `scripts/exp3/cost-model.py`. Its output is in `results/agent-cost-model.md` and `.json`.
+- **Task counts.** The model reads the task counts from the frozen dataset (`dataset/v2/FROZEN.json`): M 11 dev / 26 test, L 6 dev / 18 test.
+- **Nothing was run.** Milestone 2 made no model calls.
 
-## 1. Prices and observed baselines
+## 1. What a run is
 
-| Item | Value | Source |
+A run is one Claude Code headless session on one task snapshot, with experiment 2's harness, isolation profile, account binding and limit handling. The agent returns a structured answer, which is scored automatically.
+
+| Parameter | Value | Basis |
 |---|---|---|
-| Sonnet 5.5 | $2 input / $10 output per MTok, cache read $0.20 (Claude Code itself reports $0.10), 1-hour cache write 2× input | Claude API reference (models.md); E2-D18 |
-| Haiku 5.5 | $0.10 / $0.50 per MTok for prompts ≤ 100K tokens, $0.50 / $2.50 above; its tokenizer counts about 30% more tokens | Claude API reference (models.md) |
-| Experiment 2 agentic run (Sonnet, 6k-line repository, easy tasks) | ~5 turns, ~19.5k tokens, $0.022 per run | `../02-agent-diagnosis/results/final-report.md` |
-| Experiment 2 throughput on the owner's Pro plan | $33.99 list over 1,349 calls used three 5-hour windows (≈ $11 list per window) | E2-D21 |
+| Arms | A0 baseline (Read, Grep, Glob)<br>A1 + `find_relevant_code`, compact_nograph<br>A2 + `find_relevant_code`, compact_graph<br>A3/A4 = A2/A1 without Grep | protocol §5. A1 and A2 have byte-identical tool schemas and an 800-token cap |
+| Models, effort | Haiku 5.5 at effort high; Sonnet 5.5 at effort high | experiment 2 used Sonnet at effort high |
+| Repeats | Haiku 3 per task × arm; Sonnet 2 | single-run noise is 2–6 points (`notes/external-research.md` §4) |
+| Caps | 40 turns per run; 800-token tool output | protocol §5 |
 
-ESTIMATE, the key assumption: tasks on M and L will take **15–30 turns** and read **10–30 file ranges**. The context then grows to 40–80k tokens, and a run processes about 0.5–1.5M tokens, mostly as cache reads. That is 20–60× experiment 2's runs. Stage 2 exists to replace this assumption with measurements before the main run.
+## 2. Per-run token and price assumptions (ASSUMPTIONS until a pilot measures them)
 
-Per-run estimate (list prices):
+Experiment 2 measured about 5 turns, about 19.5k tokens and $0.022 per Sonnet run on easy tasks in a 6k-line repository. Tasks on M and L are expected to take 15–30 turns.
 
-| Model | Low | Central | High |
+| Level | Input-side tokens processed per run (mostly cache reads) | 1-hour cache writes | Uncached input | Output |
+|---|---:|---:|---:|---:|
+| low | 300k | 30k | 5k | 4k |
+| central | 600k | 50k | 8k | 8k |
+| high | 1.5M | 80k | 12k | 15k |
+
+Prices are list prices from the Claude API reference:
+- **Sonnet 5.5:** $2 input / $10 output per MTok; cache read $0.20; 1-hour cache write 2× input.
+- **Haiku 5.5:** $0.10 / $0.50, with prompts over 100K tokens billed at 5×; cache read $0.01; 1-hour write $0.20. The high level assumes 40% of Haiku's processed tokens fall in prompts over 100K tokens.
+
+| Per run (list price) | low | central | high |
 |---|---:|---:|---:|
-| Sonnet 5.5 | $0.25 | $0.60 | $1.20 |
-| Haiku 5.5 | $0.015 | $0.03 | $0.10 (contexts above 100K tokens are billed at 5×; runs are capped at 40 turns) |
+| Sonnet 5.5 | $0.22 | $0.40 | $0.78 |
+| Haiku 5.5 | $0.011 | $0.027 | $0.089 |
 
-## 2. Per stage
+## 3. Plans
 
-| Stage | Runs | List-price estimate | Sequential wall time | Pro 5-hour windows (ESTIMATE) |
-|---|---|---:|---|---:|
-| 0–1 implementation and retrieval-only evaluation | 0 model calls | $0 | local compute: ≈ 2 h of graph builds, ≈ 1 h of embeddings | 0 |
-| 2 pilot (dev; 10 M + 10 L tasks) | Haiku: 5 arms × 20 tasks × 1 = 100. Sonnet sanity: 2 arms × 10 L tasks × 1 = 20 | $8–32 | 4–8 h | 1–3 |
-| 3 main (test; 30 M + 30 L tasks) | Haiku: A0–A2 × 60 tasks × 3 repeats = 540, plus A3–A4 × 30 L × 3 = 180. Sonnet: A0, A2 × 30 L × 2 = 120 | Haiku $22–58 + Sonnet $30–144 = **$52–202** | 28–56 h | 5–18 |
-| 4 single-shot (no tools) | Haiku: 60 tasks × 9 contexts × 2 budgets × 2 = 2,160 small calls. Sonnet subset (L): 300 | Haiku ≈ $2 + Sonnet ≈ $9 | 3–6 h | ≈ 1 |
-| *Minimal alternative to stages 2–3* (L only, Haiku, A0/A1/A2) | 30-run dev pilot + 30 test tasks × 3 arms × 3 repeats = 300 | $9–30 | 10–20 h | 1–3 |
-| **Total if every stage runs** | ≈ 3,300 calls | **≈ $70–245** | **≈ 35–70 h** | **≈ 7–22** |
+**Minimum viable** (tests H3/H4 where the effect should be largest): L only, Haiku 5.5, arms A0/A1/A2.
 
-## 3. Subscription implications (not free)
+| Stage | Tasks | Arms | Repeats | Runs | List price (low / central / high) |
+|---|---:|---:|---:|---:|---|
+| pilot (dev) | 6 | 3 | 1 | 18 | $0.2 / $0.5 / $1.6 |
+| main (test) | 18 | 3 | 3 | 162 | $1.8 / $4.4 / $14 |
+| **total** | | | | **180** | **$2 / $5 / $16** |
 
-- **How windows were estimated.** The window counts assume plan usage is roughly proportional to list-price cost across models. That is an ASSUMPTION: Anthropic does not publish the exact accounting, and Haiku may weigh differently.
-- **Practical effect on Pro.** The Sonnet part of stage 3 alone would occupy the owner's personal Pro plan for roughly 3–13 five-hour windows, which is 1–4 days of gated running. The weekly limit may stop it earlier, and the owner's own Claude Code use shares the same limits.
-- **Recommendation.**
-  - Approve stage 2 alone first.
-  - Run the Haiku part of stage 3 before deciding on the Sonnet part.
-  - Consider API-key billing for the Sonnet part if the personal plan should stay usable. The harness supports this (E2-D11).
-- **Authoring and audit also use plan usage.** Mining, curating and auditing ~80 tasks with Sonnet sub-agents is not separately billed but consumes the plan running this session. ESTIMATE: 2–5M tokens over 10–20 agent sessions. For scale, the two research agents so far used about 0.15M tokens each.
+About 108M input-side tokens (central, mostly cache reads) and 1.4M output tokens. Sequential wall clock 4–15 h.
 
-## 4. Cost controls (reused from experiment 2, all tested)
+**Full scale:** M + L; Haiku A0–A2 × 3; no-Grep A3/A4 on L × 3; Sonnet 5.5 A0/A2 on L × 2.
 
-- **Approval file.** `APPROVAL.json` names the stage, account, billing mode, model, maximum runs, per-run cap and total cap.
-- **Per-run and total spend caps,** recorded in an append-only spend ledger.
-- **Sequential execution** on the named account, one `claude` process at a time.
-- **Halts and resume.** The run halts at once on a usage limit and resumes without counting it as an attempt. It also halts on repeated infrastructure errors or an init-fingerprint mismatch.
-- **Mock-API dry runs.** Each new arm is first run against a mock Messages API at zero cost to verify prompts, tools and isolation.
-- **New for experiment 3:**
-  - a per-run turn cap (40) and a tool-output cap (800 tokens), both frozen;
-  - the per-run cap set from stage-2 measurements, not from these estimates.
+| Stage | Repo | Model | Tasks | Arms | Repeats | Runs | List price (low / central / high) |
+|---|---|---|---:|---:|---:|---:|---|
+| pilot (dev) | M+L | Haiku | 17 | 5 | 1 | 85 | $1 / $2 / $8 |
+| pilot (dev) | L | Sonnet | 6 | 2 | 1 | 12 | $3 / $5 / $9 |
+| main (test) | M+L | Haiku | 44 | 3 | 3 | 396 | $4 / $11 / $35 |
+| main (test) | L | Haiku | 18 | 2 | 3 | 108 | $1 / $3 / $10 |
+| main (test) | L | Sonnet | 18 | 2 | 2 | 72 | $16 / $29 / $56 |
+| **total** | | | | | | **673** | **$25 / $50 / $117** |
+
+About 404M input-side tokens and 5.4M output tokens (central). Sequential wall clock 17–56 h.
+
+## 4. Subscription usage versus direct API expenditure
+
+| | Subscription (Claude Code login, e.g. the personal Pro plan) | API key |
+|---|---|---|
+| Direct charge | none per call | the list price above is the actual bill |
+| What is consumed | plan usage limits (5-hour windows, weekly cap), shared with the owner's own use | money only; plan limits untouched |
+| Estimated usage | **Minimum viable: about 0.2–1.5 Pro windows. Full scale: about 2.3–10.7 windows** (ASSUMPTION: usage tracks list price, calibrated on experiment 2: $33.99 list ≈ three 5-hour windows) | $2–16 (minimum) / $25–117 (full) |
+| Risk | the Sonnet portion of the full plan (about $16–56) dominates; the weekly cap may stop a run before it finishes | none beyond spend; caps enforced by the harness |
+
+Supporting work also uses plan usage, even though it is not billed per call:
+- **Sessions and sub-agents already used.** This session and its sub-agents consume the plan they run on. Milestone 2's sub-agents used about 1.6M Sonnet tokens in total: mining 0.26M, audits 0.23M + 0.04M + 0.34M, understanding-task conversion 0.05M, plus the edge audit.
+- **Before an agent stage.** A further independent audit of agent prompts and arms would cost about 0.1–0.2M.
+
+## 5. Controls (unchanged from experiment 2; all tested)
+
+- **Approval:** `APPROVAL.json` names stage, account, billing mode, model, maximum runs, per-run cap and total cap.
+- **Spend tracking:** an append-only spend ledger.
+- **Execution:** strictly sequential runs on the named account.
+- **Halts:** the run halts on a usage limit, and the limit is never counted as an attempt.
+- **Zero-cost rehearsal:** every new arm is dry-run against a mock Messages API before any real call.
+- **Calibration:** the per-run cap is set from the pilot's measured cost, not from these estimates. If the pilot's central cost per run exceeds this model's high estimate, the stage stops for re-approval.

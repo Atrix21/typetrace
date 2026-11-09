@@ -13,3 +13,4 @@ export class MessageQueue {
 export function log(message: string): void { void message; }
 export function check(opts: { permission: import('./keys').Permission }): void { void opts; }
 export function createRole(row: { id: number }): void { void row; }
+export function isWorker(w: import('./keys').Worker): boolean { return !!w; }

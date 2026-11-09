@@ -1,6 +1,6 @@
-import { EventRepository, JobRepository, MessageQueue, check, createRole, log } from './bus';
+import { EventRepository, JobRepository, MessageQueue, check, createRole, isWorker, log } from './bus';
 import { CleanupJob, DirectlyCalled } from './handlers';
-import { JobName, OtherJob, Permission, RoleEnum } from './keys';
+import { JobName, OtherJob, Permission, RoleEnum, Worker } from './keys';
 
 export class AssetService {
   constructor(private jobs: JobRepository, private events: EventRepository, private mq: MessageQueue, private direct: DirectlyCalled) {}
@@ -36,6 +36,9 @@ export class AssetService {
   }
   seedRole(): void {
     createRole({ id: RoleEnum.admin }); // enum in a number-typed position
+  }
+  workerCheck(): boolean {
+    return isWorker(Worker.Api); // a worker-filter key in a call: broadcast domain, never a dispatch (R2)
   }
   runDirect(): void {
     this.direct.run();

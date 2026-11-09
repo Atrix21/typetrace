@@ -257,6 +257,52 @@ def main():
         md.append(f"| H1 slope (community corpora) | {h1['mean_slope']:+.3f} per 10× | {ci_s(h1['ci'], 3)} | {fmt(h1['p_one_sided'], 3)} | {fmt(hp.get('H1'), 3)} | +0.05 per 10× (falsified if CI upper < +0.03) |")
     if h2:
         md.append(f"| H2 cross-module − local | {h2['estimate']:+.3f} | {ci_s(h2['ci'], 3)} | {fmt(h2['p_one_sided'], 3)} | {fmt(hp.get('H2'), 3)} | +0.05 (falsified if CI upper < +0.05) |")
+    # ---- infrastructure (all tasks of the run, both splits)
+    md.append('\n## Infrastructure and scaling costs\n')
+    md.append('| Repo | Graph builds | build wall s (median / max) | peak RSS GB (max) | graph nodes / edges (median) | SQLite MB (median) |')
+    md.append('|---|---:|---|---:|---|---:|')
+    infra = {}
+    for repo in ['M', 'L']:
+        gp = f'{EXP}/results/stage1-{repo}/graph-builds.jsonl'
+        if not os.path.exists(gp):
+            continue
+        gb = [json.loads(l) for l in open(gp) if l.strip()]
+        gb = [g for g in gb if g.get('wall_ms') is not None]
+        if not gb:
+            continue
+        w = sorted(g['wall_ms'] / 1000 for g in gb); rssm = max((g.get('peak_rss_mb') or 0) for g in gb) / 1000
+        nn = sorted(g.get('nodes') or 0 for g in gb); ne = sorted(g.get('edges') or 0 for g in gb); sq = sorted((g.get('sqlite_bytes') or 0) / 1e6 for g in gb)
+        infra[repo] = {'builds': len(gb), 'wall_s_median': w[len(w) // 2], 'wall_s_max': w[-1], 'peak_rss_gb': rssm}
+        md.append(f'| {repo} | {len(gb)} | {w[len(w) // 2]:.0f} / {w[-1]:.0f} | {rssm:.1f} | {nn[len(nn) // 2]:,} / {ne[len(ne) // 2]:,} | {sq[len(sq) // 2]:.0f} |')
+        fr = [g['freshness'] for g in gb if g.get('freshness')]
+        if fr:
+            infra[repo]['freshness'] = {k: statistics.median(f[k] for f in fr) for k in fr[0]}
+    if any('freshness' in v for v in infra.values()):
+        md.append('\nFreshness: graph difference between each bug snapshot and the pinned snapshot (median over category-A tasks) — what a stale index would get wrong without an update:\n')
+        md.append('| Repo | edges added | edges removed | nodes added | nodes removed | files with graph changes | stale edge share |')
+        md.append('|---|---:|---:|---:|---:|---:|---:|')
+        for repo, v in infra.items():
+            f = v.get('freshness')
+            if f:
+                md.append(f"| {repo} | {f['edges_added']:.0f} | {f['edges_removed']:.0f} | {f['nodes_added']:.0f} | {f['nodes_removed']:.0f} | {f['files_with_graph_changes']:.0f} | {f['stale_edge_share']:.5f} |")
+    md.append('\nPer-method index preparation and query latency (full corpus; median over tasks; preparation includes loading cached vectors and building the graph engine from the pre-built graph):\n')
+    md.append('| Repo | Method | prepare ms | query ms | RSS after (MB, max) | chunks | newly embedded (median) |')
+    md.append('|---|---|---:|---:|---:|---:|---:|')
+    for repo in ['S', 'M', 'L']:
+        ip = f'{EXP}/results/stage1-{repo}/infra.jsonl'
+        if not os.path.exists(ip):
+            continue
+        rows = [json.loads(l) for l in open(ip) if l.strip()]
+        rows = [r for r in rows if r['corpus'] == 'full']
+        for m in methods:
+            mr = [r for r in rows if r['method'] == m]
+            if not mr:
+                continue
+            pm = statistics.median(r['prepare_ms'] for r in mr); qm = statistics.median(r['query_ms'] for r in mr)
+            ch = [r['details'].get('chunks') for r in mr if r['details'].get('chunks')]
+            ne = [r['details'].get('newly_embedded') for r in mr if r['details'].get('newly_embedded') is not None]
+            md.append(f"| {repo} | {m} | {pm:,.0f} | {qm:,.0f} | {max(r['rss_mb_after'] for r in mr):,} | {fmt(ch[0] if ch else None)} | {fmt(statistics.median(ne) if ne else None)} |")
+    res['infra'] = infra
     os.makedirs(f'{EXP}/results', exist_ok=True)
     json.dump(res, open(f'{EXP}/results/stage1-analysis-{a.split}.json', 'w'), indent=1, default=str)
     open(f'{EXP}/results/stage1-report-{a.split}.md', 'w').write('\n'.join(md) + '\n')
