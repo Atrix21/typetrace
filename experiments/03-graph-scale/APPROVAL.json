@@ -1,0 +1,47 @@
+{
+ "approved_by": "repository owner (chat approval; quote withheld)",
+ "approved_at": "2026-11-14T02:07:00+05:30",
+ "_scope": "Experiment 3 milestone 3: agent stage on the owner's personal Claude Code login (subscription). Runs strictly sequential. Dollar caps are list-price runaway guards over experiments/03-graph-scale/spend-ledger.jsonl; the real limit is the plan's usage windows (halt on limit, resume after reset).",
+ "approvals": [
+  {
+   "_stage": "agent pilot + main (Haiku)",
+   "protocol": "agentic",
+   "conditions": "*",
+   "model": "claude-haiku-5-5",
+   "split": "dev",
+   "billing": "subscription",
+   "account": "personal",
+   "max_total_usd": 150
+  },
+  {
+   "_stage": "agent pilot + main (Haiku)",
+   "protocol": "agentic",
+   "conditions": "*",
+   "model": "claude-haiku-5-5",
+   "split": "test",
+   "billing": "subscription",
+   "account": "personal",
+   "max_total_usd": 150
+  },
+  {
+   "_stage": "exploratory Sonnet arm",
+   "protocol": "agentic",
+   "conditions": "*",
+   "model": "claude-sonnet-5-5",
+   "split": "dev",
+   "billing": "subscription",
+   "account": "personal",
+   "max_total_usd": 150
+  },
+  {
+   "_stage": "exploratory Sonnet arm",
+   "protocol": "agentic",
+   "conditions": "*",
+   "model": "claude-sonnet-5-5",
+   "split": "test",
+   "billing": "subscription",
+   "account": "personal",
+   "max_total_usd": 150
+  }
+ ]
+}

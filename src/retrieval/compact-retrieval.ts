@@ -39,6 +39,9 @@ export class CompactRetriever implements RetrievalMethod {
     return { method: this.name, index_ms: performance.now() - t0, index_llm_tokens: 0, embedding_tokens: b.embedding_tokens, details: { base: b.details, relations: this.relations, options: { ...COMPACT_OPTIONS, relations: this.relations }, graph: g } };
   }
 
+  /** Query-embedding warm-up of the underlying hybrid (persistent embedder), as the experiment-2 MCP server does. */
+  async prewarmQuery(query: string): Promise<void> { await this.base.prewarmQuery(query); }
+
   private sig = (file: string, start: number, end: number) => {
     let l = this.lines.get(file);
     if (!l) { l = fs.readFileSync(path.join(this.repoRoot, file), 'utf8').split('\n'); this.lines.set(file, l); }

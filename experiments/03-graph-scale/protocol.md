@@ -169,3 +169,34 @@ Made after preliminary M results had been seen; mechanical fixes that changed no
 - dropping distractors outside a subset corpus before validation (E3-D24).
 
 The confirmatory analysis (H1, H2, Holm) in `scripts/exp3/analyse.py` is as committed with Amendment B (370230b); only descriptive infrastructure and freshness tables were added later.
+
+---
+
+## Amendment C (2026-11-14; agent stage; written and committed before any real agent run)
+
+Owner approval: agent experimentation on the personal Claude Code login (`APPROVAL.json`), sequential.
+
+**C1. Harness.** `scripts/exp3/agent.ts`. Claude Code headless with experiment 2's `restricted-oauth` isolation. The workspace is a copy of the task snapshot's corpus files only (no `.git`, no node_modules, no ground truth). Runs are capped at 40 turns, with effort high. Answers use a structured schema (`src/agent-eval/exp3/score.ts`): an ordered list of code locations plus a summary. Scoring is automatic against dataset v2 on the task's own snapshot; there is no LLM judge.
+
+**C2. Arms.**
+- **A0:** Read/Grep/Glob.
+- **A1:** + `find_relevant_code` backed by `compact_nograph`.
+- **A2:** + the same tool backed by `compact_graph`.
+
+The tool name, description and schema are byte-identical in A1 and A2 (verified from mock request bodies), with an 800-token cap. All arms get the same system prompt with the experiment-2 "directed" sentence. Each task's snapshot is served by one retrieval daemon. The (arm, repeat) order within a task is seeded.
+
+**C3. Outcomes.**
+- **Primary per run:** `task_score`. For category A, root cause among the first 3 locations (0/1). For B–E, recall of the ground-truth relevant symbols (0–1).
+- **Secondary:**
+  - per category: rc@1 and precision for A; path recall for B/D; impact recall for C;
+  - effort: total tokens (input + cache read + cache write + output), list-price cost, turns, tool calls, files read and wall time.
+- **Unit of analysis:** the task, averaging repeats within it.
+
+**C4. Primary model and data.** Haiku 5.5 on L (Twenty) test, 18 tasks × A0/A1/A2 × 3 repeats, after a dev pilot (6 tasks × 3 arms × 1).
+
+**C5. Confirmatory family (Holm, one-sided).**
+- **H4:** task_score(A2) − task_score(A1) > 0 on L test.
+- **H4u:** the same on L test understanding tasks (B–E). This stratum is pre-specified because stage 1 found the retrieval effect there.
+- **H3:** total tokens A2 < A0, with task_score non-inferiority (one-sided 95% lower bound of A2 − A0 > −0.05) reported alongside.
+
+**C6. Exploratory.** Everything else: M (Immich), Sonnet 5.5, A1 vs A0, A2 vs A0 accuracy, tool adoption.
