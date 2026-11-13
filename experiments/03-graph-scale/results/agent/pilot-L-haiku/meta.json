@@ -1,0 +1,37 @@
+{
+ "run": "pilot-L-haiku",
+ "status": "completed",
+ "repo": "L",
+ "split": "dev",
+ "arms": [
+  "A0",
+  "A1",
+  "A2"
+ ],
+ "model": "claude-haiku-5-5",
+ "effort": "high",
+ "repeats": 1,
+ "max_turns": 40,
+ "tasks": [
+  "twenty_pr25207",
+  "twenty_pr26271",
+  "twenty_pr26693",
+  "twenty_tw_t1",
+  "twenty_tw_t3",
+  "twenty_tw_t7"
+ ],
+ "claude_version": "2.1.325",
+ "mock": false,
+ "account": {
+  "name": "owner",
+  "subscription_type": "pro"
+ },
+ "system_prompt_sha": "ee0afe16891ef591",
+ "schema_sha": "53ca3a9507c3b138",
+ "run_usd": 1,
+ "updated": "2026-11-13T21:35:53.655Z",
+ "halted": null,
+ "n_plan": 18,
+ "n_scored": 18,
+ "ledger_usd": 0.6941589900000001
+}

@@ -1,0 +1,141 @@
+{
+ "config": {
+  "repo": "L",
+  "split": "dev",
+  "arms": [
+   "A0",
+   "A1",
+   "A2"
+  ],
+  "model": "claude-haiku-5-5",
+  "effort": "high",
+  "repeats": 1,
+  "max_turns": 40,
+  "tasks": [
+   "twenty_pr25207",
+   "twenty_pr26271",
+   "twenty_pr26693",
+   "twenty_tw_t1",
+   "twenty_tw_t3",
+   "twenty_tw_t7"
+  ],
+  "claude_version": "2.1.325",
+  "mock": false,
+  "account": {
+   "name": "owner",
+   "subscription_type": "pro"
+  },
+  "system_prompt_sha": "ee0afe16891ef591",
+  "schema_sha": "53ca3a9507c3b138"
+ },
+ "items": [
+  {
+   "run_id": "twenty_pr25207|A0|r1",
+   "task_id": "twenty_pr25207",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "twenty_pr25207|A2|r1",
+   "task_id": "twenty_pr25207",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "twenty_pr25207|A1|r1",
+   "task_id": "twenty_pr25207",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "twenty_pr26271|A2|r1",
+   "task_id": "twenty_pr26271",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "twenty_pr26271|A0|r1",
+   "task_id": "twenty_pr26271",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "twenty_pr26271|A1|r1",
+   "task_id": "twenty_pr26271",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "twenty_pr26693|A1|r1",
+   "task_id": "twenty_pr26693",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "twenty_pr26693|A2|r1",
+   "task_id": "twenty_pr26693",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "twenty_pr26693|A0|r1",
+   "task_id": "twenty_pr26693",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "twenty_tw_t1|A1|r1",
+   "task_id": "twenty_tw_t1",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "twenty_tw_t1|A0|r1",
+   "task_id": "twenty_tw_t1",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "twenty_tw_t1|A2|r1",
+   "task_id": "twenty_tw_t1",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "twenty_tw_t3|A0|r1",
+   "task_id": "twenty_tw_t3",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "twenty_tw_t3|A1|r1",
+   "task_id": "twenty_tw_t3",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "twenty_tw_t3|A2|r1",
+   "task_id": "twenty_tw_t3",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "twenty_tw_t7|A1|r1",
+   "task_id": "twenty_tw_t7",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "twenty_tw_t7|A2|r1",
+   "task_id": "twenty_tw_t7",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "twenty_tw_t7|A0|r1",
+   "task_id": "twenty_tw_t7",
+   "arm": "A0",
+   "repeat": 1
+  }
+ ]
+}
