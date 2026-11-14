@@ -11,6 +11,7 @@
  * Writes experiments/02-agent-diagnosis/results/mcp-inspection.json.
  */
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
@@ -48,7 +49,9 @@ export interface ProbeResult {
 }
 
 /** Fragments that would disclose the experiment / host layout to the agent. */
-export const LEAK_PATTERN = /code-graphs|experiments|user|\.cache\b|evaluation\/|\/home\//gi;
+const esc = (x: string) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/** Words that would reveal the host project or user to an agent: project dir name, OS user name, cache/eval dirs, home paths. */
+export const LEAK_PATTERN = new RegExp(`${esc(path.basename(PROJECT_ROOT))}|experiments|${esc(os.userInfo().username)}|\\.cache\\b|evaluation\\/|\\/home\\/`, 'gi');
 
 function toolTokens(tools: any[]) {
   const model = tools.map((t) => ({ name: t.name, description: t.description ?? '', input_schema: t.inputSchema }));

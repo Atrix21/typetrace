@@ -9,7 +9,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { afterAll, describe, expect, it } from 'vitest';
-import { abs, loadConfig } from '../../src/config.js';
+import { abs, loadConfig, PROJECT_ROOT } from '../../src/config.js';
 import { conditionServer } from '../../src/agent-eval/agentic.js';
 import { BillableGuard, buildClaudeCommand, parseStreamJson, runClaude } from '../../src/agent-eval/backends/claude-code.js';
 import { FIXED_DIAGNOSIS, startMockServer } from '../../src/agent-eval/mock-anthropic/server.js';
@@ -85,7 +85,7 @@ describe.skipIf(!hasClaude)('AUDIT leakage: restricted-oauth profile, mock API, 
       // (first agent request only: later requests echo the probes' own paths)
       const first = mock.requests().find((q) => q.path === '/v1/messages' && q.body?.tools?.length)!;
       const sent = JSON.stringify({ system: first.body.system, tools: first.body.tools, messages: first.body.messages });
-      for (const needle of ['user', 'any input to knowledge graph', "user's private global instructions", 'code-graphs']) expect(sent.includes(needle), needle).toBe(false);
+      for (const needle of [os.userInfo().username, 'any input to knowledge graph', "user's private global instructions", path.basename(PROJECT_ROOT)]) expect(sent.includes(needle), needle).toBe(false);
     } finally { await mock.close(); }
   }, 180_000);
 });
