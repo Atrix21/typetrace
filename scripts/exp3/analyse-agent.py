@@ -87,6 +87,7 @@ def main():
         'rc_at_1': lambda r: r['score']['rc_at_1'],
         'path_recall': lambda r: r['score']['path_recall'],
         'adopted': lambda r: 1.0 if r['retrieval_calls'] else 0.0,
+        'mcp_result_chars': lambda r: r.get('mcp_result_chars'),
     }
     md = [f'# Experiment 3 agent stage: {label}\n', f'Runs: {len(runs)} from `{a.runs}`; tasks {len(by)}; arms {arms}; models {sorted({r["model"] for r in runs})}. Unit = task (repeats averaged). No LLM judge.\n']
     res = {'label': label, 'n_runs': len(runs), 'tasks': len(by), 'arms': {}, 'contrasts': {}}
@@ -105,7 +106,7 @@ def main():
             md.append(f"| {arm} | {fmt(mean['task_score'], 3)} | {fmt(mean['total_tokens'], 0)} | {fmt(mean['cost_usd'], 4)} | {fmt(mean['turns'], 1)} | {fmt(mean['tool_calls'], 1)} | {fmt(mean['retrieval_calls'], 1)} | {fmt(mean['adopted'], 2)} | {fmt(mean['files_read'], 1)} | {fmt(mean['wall_s'], 0)} | {fmt(mean['precision'], 2)} |")
         md.append('\n| Contrast | metric | n | mean Δ | 95% CI | W/L/T | p (one-sided, Δ>0) |')
         md.append('|---|---|---:|---:|---|---|---:|')
-        for x, y in [('A2', 'A1'), ('A2', 'A0'), ('A1', 'A0')]:
+        for x, y in [('A2', 'A1'), ('A2', 'A0'), ('A1', 'A0'), ('A2', 'A5'), ('A2', 'A6'), ('A5', 'A0'), ('A6', 'A0')]:
             if x not in arms or y not in arms:
                 continue
             for metric in ['task_score', 'total_tokens', 'cost_usd']:
@@ -133,6 +134,17 @@ def main():
         e = c.get(key)
         if e:
             md.append(f"| {k} | {desc} | {e['mean']:+.3f} | [{e['ci'][0]:+.3f}, {e['ci'][1]:+.3f}] | {fmt(e['p'])} | {fmt(hp.get(k))} |")
+    if {'A5', 'A6'} & set(arms):
+        famD = {k: c.get(key, {}).get('p') for k, key in [('D-acc-G', 'all tasks|A2-A5|task_score'), ('D-acc-C', 'all tasks|A2-A6|task_score'), ('D-tok-G', 'all tasks|A2-A5|total_tokens'), ('D-tok-C', 'all tasks|A2-A6|total_tokens')]}
+        hD = holm(famD)
+        res['confirmatory_D'] = {'p': famD, 'holm': hD}
+        md.append('\n## Head-to-head family (Amendment D4; Holm over four, one-sided, ours = A2)\n')
+        md.append('| ID | Contrast | mean | 95% CI | W/L/T | p | Holm |')
+        md.append('|---|---|---:|---|---|---:|---:|')
+        for k, key, desc in [('D-acc-G', 'all tasks|A2-A5|task_score', 'task score ours − graphify'), ('D-acc-C', 'all tasks|A2-A6|task_score', 'task score ours − code-review-graph'), ('D-tok-G', 'all tasks|A2-A5|total_tokens', 'log(tokens graphify / ours)'), ('D-tok-C', 'all tasks|A2-A6|total_tokens', 'log(tokens code-review-graph / ours)')]:
+            e = c.get(key)
+            if e:
+                md.append(f"| {k} | {desc} | {e['mean']:+.3f} | [{e['ci'][0]:+.3f}, {e['ci'][1]:+.3f}] | {e['w']}/{e['l']}/{e['n'] - e['w'] - e['l']} | {fmt(e['p'])} | {fmt(hD.get(k))} |")
     ni = c.get('all tasks|A2-A0|task_score')
     if ni:
         md.append(f"\nNon-inferiority (H3 companion): task score A2 − A0 one-sided 95% lower bound = {ni['lower95_one_sided']:+.3f} (margin −0.05: {'met' if ni['lower95_one_sided'] > -0.05 else 'NOT met'}).")
