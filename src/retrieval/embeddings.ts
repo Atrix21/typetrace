@@ -15,6 +15,19 @@ import { abs, loadConfig } from '../config.js';
 
 export interface EmbedItem { id: string; text: string; kind: 'query' | 'doc' }
 
+/**
+ * Embedding backend. 'python': sentence-transformers (scripts/embeddings/embed.py; all published benchmark numbers).
+ * 'onnx': the same model's ONNX export in Node via transformers.js (scripts/embeddings/embed-onnx.mjs; no Python;
+ * parity checked: query cosine 1.000, code chunks >= 0.996, identical token counts). Selected by
+ * TYPETRACE_EMBED_BACKEND or config embeddings.backend; vectors of the two backends never share a cache key.
+ */
+export const ONNX_EMBEDDING = { model: 'onnx-community/Qwen3-Embedding-0.6B-ONNX', revision: 'c25a394dd583836952667c12f008335071b3f43d', script: 'scripts/embeddings/embed-onnx.mjs' };
+export function embeddingBackend(): 'python' | 'onnx' {
+  const b = process.env.TYPETRACE_EMBED_BACKEND ?? (loadConfig().embeddings as { backend?: string }).backend ?? 'python';
+  if (b !== 'python' && b !== 'onnx') throw new Error(`unknown embedding backend ${b}`);
+  return b;
+}
+
 export class Embedder {
   readonly model: string;
   readonly revision: string;
@@ -24,10 +37,11 @@ export class Embedder {
   private maxSeq: number;
   constructor(private cacheDir: string) {
     const cfg = loadConfig();
-    this.model = cfg.embeddings.model;
-    this.revision = cfg.embeddings.revision;
-    this.python = abs(cfg.embeddings.python);
-    this.script = abs(cfg.embeddings.script);
+    const onnx = embeddingBackend() === 'onnx';
+    this.model = onnx ? ONNX_EMBEDDING.model : cfg.embeddings.model;
+    this.revision = onnx ? ONNX_EMBEDDING.revision : cfg.embeddings.revision;
+    this.python = onnx ? process.execPath : abs(cfg.embeddings.python);
+    this.script = abs(onnx ? ONNX_EMBEDDING.script : cfg.embeddings.script);
     this.batch = cfg.embeddings.batch;
     this.maxSeq = cfg.embeddings.max_seq;
     fs.mkdirSync(this.cacheDir, { recursive: true });

@@ -28,7 +28,7 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprot
 import { abs, listCorpusFiles, loadConfig } from '../../config.js';
 import { countTokens } from '../../evaluation/token-accounting.js';
 import { REGISTRY } from '../../evaluation/methods.js';
-import { EmbeddingRetriever, type QueryEmbedder } from '../../retrieval/embeddings.js';
+import { EmbeddingRetriever, embeddingBackend, ONNX_EMBEDDING, type QueryEmbedder } from '../../retrieval/embeddings.js';
 import type { Corpus, RetrievalMethod } from '../../types.js';
 import { workspaceHash } from '../workspace.js';
 
@@ -52,7 +52,10 @@ export class PersistentQueryEmbedder implements QueryEmbedder {
   private dead = false;
   constructor(private timeoutMs = 120_000) {
     const cfg = loadConfig();
-    this.child = spawn(abs(cfg.embeddings.python), [abs('scripts/embeddings/embed_server.py'), '--model', cfg.embeddings.model, '--revision', cfg.embeddings.revision, '--max-seq', String(cfg.embeddings.max_seq)], {
+    const onnx = embeddingBackend() === 'onnx';
+    this.child = spawn(onnx ? process.execPath : abs(cfg.embeddings.python), onnx
+      ? [abs(ONNX_EMBEDDING.script), '--server', '--max-seq', String(cfg.embeddings.max_seq)]
+      : [abs('scripts/embeddings/embed_server.py'), '--model', cfg.embeddings.model, '--revision', cfg.embeddings.revision, '--max-seq', String(cfg.embeddings.max_seq)], {
       stdio: ['pipe', 'pipe', 'pipe'], env: { ...process.env, HF_HUB_OFFLINE: '1', TOKENIZERS_PARALLELISM: 'false' },
     });
     this.child.stderr.on('data', (d) => process.stderr.write(`[embed_server] ${d}`));

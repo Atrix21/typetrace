@@ -16,3 +16,4 @@ experiments/03-graph-scale/results/stage1-*/raw/
 # Experiment 3 agent transcripts contain AGPL code read by the agent — local only
 experiments/03-graph-scale/results/agent/*/transcripts/
 experiments/03-graph-scale/results/h2h-*/raw/
+experiments/05-swebench-python/results/raw/

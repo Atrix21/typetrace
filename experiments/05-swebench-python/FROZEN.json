@@ -1,0 +1,8 @@
+{
+ "dataset": "princeton-nlp/SWE-bench_Lite",
+ "split": "test",
+ "instances": 300,
+ "sha256_of_fetched_rows_json": "a1d8b49a4118716578646889417ad860535567a19298e61fc146fc7fa217cd9a",
+ "fetched_via": "datasets-server.huggingface.co/rows (3 pages of 100)",
+ "frozen_at": "2026-11-15"
+}

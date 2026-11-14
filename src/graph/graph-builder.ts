@@ -12,6 +12,7 @@ import { extractHasType, extractHeritage, extractImportsExports } from '../parse
 import { FrameworkExtractor } from '../parser/framework-extractor.js';
 import { walkOwners } from '../parser/body-walker.js';
 import { computeCoverage } from './graph-validator.js';
+import { buildPythonGraph } from '../languages/python.js';
 
 export interface BuildOptions { repoRoot: string; files: string[]; tsconfigPath?: string; maxPackageDeclarationBytes?: number }
 export interface BuiltGraph {
@@ -35,6 +36,13 @@ export function computeStats(nodes: GraphNode[], edges: GraphEdge[]): GraphStats
 }
 
 export function buildGraph(opts: BuildOptions): BuiltGraph {
+  if (opts.files.length && opts.files.every((f) => f.endsWith('.py'))) {
+    const g = buildPythonGraph(opts.repoRoot, opts.files);
+    const stats = computeStats(g.nodes, g.edges);
+    const diag = newDiagnostics(); diag.notes.push(...g.notes);
+    const coverage = { eligible_files: opts.files.length, parsed_files: opts.files.length, notes: g.notes } as unknown as CoverageReport;
+    return { nodes: g.nodes, edges: g.edges, coverage, stats, build_ms: g.build_ms, diagnostics: diag };
+  }
   const t0 = performance.now();
   const project = createProject(opts);
   const ctx = new GraphCtx();

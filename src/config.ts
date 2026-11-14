@@ -29,17 +29,17 @@ export function abs(p: string): string {
   return path.isAbsolute(p) ? p : path.join(PROJECT_ROOT, p);
 }
 
-/** Deterministic corpus listing: every *.ts file (not .d.ts) under include dirs, sorted. */
-export function listCorpusFiles(repoRoot: string, includeDirs: string[]): string[] {
+/** Deterministic corpus listing: every source file of the given extensions (default: *.ts, not .d.ts) under include dirs, sorted. */
+export function listCorpusFiles(repoRoot: string, includeDirs: string[], exts: string[] = ['.ts']): string[] {
   const out: string[] = [];
   const walk = (rel: string) => {
     const absDir = path.join(repoRoot, rel);
     if (!fs.existsSync(absDir)) return;
     for (const ent of fs.readdirSync(absDir, { withFileTypes: true })) {
-      if (ent.name === 'node_modules' || ent.name.startsWith('.')) continue;
+      if (ent.name === 'node_modules' || ent.name === '__pycache__' || ent.name === 'site-packages' || ent.name.startsWith('.')) continue;
       const r = rel ? `${rel}/${ent.name}` : ent.name;
       if (ent.isDirectory()) walk(r);
-      else if (ent.isFile() && ent.name.endsWith('.ts') && !ent.name.endsWith('.d.ts')) out.push(r);
+      else if (ent.isFile() && exts.some((x) => ent.name.endsWith(x)) && !ent.name.endsWith('.d.ts')) out.push(r);
     }
   };
   for (const d of includeDirs) walk(d);

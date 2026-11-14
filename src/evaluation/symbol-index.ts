@@ -14,6 +14,7 @@
 import ts from 'typescript';
 import fs from 'node:fs';
 import path from 'node:path';
+import { pythonDeclarations } from '../languages/python.js';
 
 export interface CanonicalSymbol {
   key: string;
@@ -52,6 +53,7 @@ export class SymbolIndex {
     const abs = path.join(this.repoRoot, file);
     const text = fs.readFileSync(abs, 'utf8');
     this.fileLines.set(file, text.split('\n'));
+    if (file.endsWith('.py')) { for (const d of pythonDeclarations(file, text)) this.add(d); return; }
     const sf = ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true, file.endsWith('x') ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
     const lineOf = (pos: number) => sf.getLineAndCharacterOfPosition(pos).line + 1;
     const span = (n: ts.Node) => ({ start_line: lineOf(n.getStart(sf, false)), end_line: lineOf(n.getEnd()) });
