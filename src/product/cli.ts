@@ -24,7 +24,7 @@ import { REGISTRY } from '../evaluation/methods.js';
 import { countTokens } from '../evaluation/token-accounting.js';
 import { buildGraph } from '../graph/graph-builder.js';
 import { loadGraph, saveGraph } from '../graph/graph-store.js';
-import { EXP3_TOOL_DESCRIPTION, EXP3_TOOL_NAME, EXP3_TOOL_SCHEMA } from '../agent-eval/exp3/mcp-tool.js';
+import { EXP3_TOOL_DESCRIPTION, EXP3_TOOL_NAME, EXP3_TOOL_SCHEMA } from '../agent-eval/exp3/tool-def.js';
 import { EmbeddingRetriever } from '../retrieval/embeddings.js';
 import { PersistentQueryEmbedder } from '../agent-eval/mcp/retrieval-server.js';
 import { primeGraphCache } from '../retrieval/graph-retrieval.js';
@@ -49,7 +49,7 @@ function includeDirs(repo: string, dir: string): string[] {
   return fs.existsSync(path.join(repo, 'src')) ? ['src'] : ['.'];
 }
 
-async function load(repo: string, quiet = false) {
+async function load(repo: string, quiet = false, queryEmbedder = true) {
   const dir = cacheDir(repo);
   const graphPath = path.join(dir, 'graph.sqlite');
   if (!fs.existsSync(graphPath)) throw new Error(`no index for ${repo}; run: code-graphs index ${repo}`);
@@ -60,13 +60,14 @@ async function load(repo: string, quiet = false) {
   const graph = loadGraph(graphPath);
   primeGraphCache(corpus, { nodes: graph.nodes, edges: graph.edges, build_ms: 0, cached: true });
   EmbeddingRetriever.embeddingCacheDir = path.join(dir, 'embeddings');
-  const embedder = new PersistentQueryEmbedder();
+  // `index` only embeds the corpus (one model in memory); query/serve keep one persistent model for query vectors.
+  const embedder = queryEmbedder ? new PersistentQueryEmbedder() : null;
   EmbeddingRetriever.defaultQueryEmbedder = embedder;
-  for (const sig of ['SIGINT', 'SIGTERM', 'exit'] as const) process.on(sig, () => { try { embedder.close(); } catch { /* */ } if (sig !== 'exit') process.exit(0); });
+  for (const sig of ['SIGINT', 'SIGTERM', 'exit'] as const) process.on(sig, () => { try { embedder?.close(); } catch { /* */ } if (sig !== 'exit') process.exit(0); });
   const m = (await REGISTRY.compact_graph()) as RetrievalMethod & { prewarmQuery?(q: string): Promise<void> };
   if (!quiet) err(`loading indexes for ${files.length} files…`);
   await m.prepare(corpus);
-  await embedder.ready;
+  await embedder?.ready;
   return { m, files, graph };
 }
 
@@ -83,7 +84,7 @@ async function index(repo: string) {
   fs.writeFileSync(path.join(dir, 'index.json'), JSON.stringify({ repo, include, files: files.length, nodes: g.nodes.length, edges: g.edges.length, graph_build_ms: g.build_ms, at: new Date().toISOString() }, null, 2) + '\n');
   err(`graph: ${g.nodes.length} nodes, ${g.edges.length} edges in ${(g.build_ms / 1000).toFixed(1)} s`);
   const t = performance.now();
-  await load(repo, true);
+  await load(repo, true, false);
   err(`search indexes (BM25 + embeddings) ready in ${((performance.now() - t) / 1000).toFixed(1)} s\nindex: ${dir}`);
 }
 

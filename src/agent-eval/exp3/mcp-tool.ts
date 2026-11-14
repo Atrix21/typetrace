@@ -10,11 +10,9 @@ import http from 'node:http';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import { EXP3_SERVER_NAME, EXP3_TOOL_DESCRIPTION, EXP3_TOOL_NAME, EXP3_TOOL_SCHEMA } from './tool-def.js';
+export { EXP3_SERVER_NAME, EXP3_TOOL_DESCRIPTION, EXP3_TOOL_NAME, EXP3_TOOL_SCHEMA };
 
-export const EXP3_TOOL_NAME = 'find_relevant_code';
-export const EXP3_SERVER_NAME = 'code-context';
-export const EXP3_TOOL_DESCRIPTION = 'Find where something is implemented in this codebase. Returns a short list of functions/methods with file:line ranges and signatures (and, when known, their direct callers, callees and handlers). Read the ranges you need.';
-export const EXP3_TOOL_SCHEMA = { type: 'object', properties: { query: { type: 'string', description: 'What you are looking for, in natural language or identifiers' } }, required: ['query'] } as const;
 
 function post(port: number, body: unknown): Promise<any> {
   return new Promise((resolve, reject) => {

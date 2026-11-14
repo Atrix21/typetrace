@@ -39,7 +39,7 @@ import { accountRecord } from '../../src/agent-eval/account.js';
 import { startMockServer, type MockStep } from '../../src/agent-eval/mock-anthropic/server.js';
 import { opaqueId, WORK_ROOT } from '../../src/agent-eval/workspace.js';
 import { ANSWER_SCHEMA, EXP3_SYSTEM_PROMPT, exp3TaskPrompt, parseAnswer, scoreAnswer } from '../../src/agent-eval/exp3/score.js';
-import { EXP3_SERVER_NAME, EXP3_TOOL_NAME } from '../../src/agent-eval/exp3/mcp-tool.js';
+import { EXP3_SERVER_NAME, EXP3_TOOL_NAME } from '../../src/agent-eval/exp3/tool-def.js';
 import { materialise, REPOS, type RepoName } from './tasks.js';
 import { competitorServerSpec } from '../../src/agent-eval/mcp/competitor-servers.js';
 import { DENY_TOOLS } from '../../src/agent-eval/agentic.js';
