@@ -1,9 +1,9 @@
 {
-  "name": "code-graph-retrieval-benchmark",
+  "name": "typetrace",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Reproducible benchmark: does a richer code graph help agents localise bugs with fewer tokens?",
+  "description": "Typed TypeScript code graph + hybrid search for AI coding agents, over MCP, with a reproducible head-to-head benchmark.",
   "engines": {
     "node": ">=22.13"
   },
@@ -18,7 +18,8 @@
     "report": "tsx src/cli/index.ts report",
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p .",
-    "agent-eval": "tsx src/agent-eval/cli.ts"
+    "agent-eval": "tsx src/agent-eval/cli.ts",
+    "typetrace": "node bin/typetrace.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.32.2",
@@ -31,5 +32,22 @@
     "@types/node": "22.19.1",
     "tsx": "4.20.6",
     "vitest": "3.2.4"
-  }
+  },
+  "license": "MIT",
+  "bin": {
+    "typetrace": "bin/typetrace.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Atrix21/typetrace.git"
+  },
+  "keywords": [
+    "mcp",
+    "code-search",
+    "code-graph",
+    "typescript",
+    "claude-code",
+    "retrieval",
+    "benchmark"
+  ]
 }
