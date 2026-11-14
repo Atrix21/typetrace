@@ -7,12 +7,11 @@
  * CRG stores absolute paths in FTS-indexed columns, so it is run on a clone at a neutral path
  * (NEUTRAL_REPO) whose words cannot match bug-report vocabulary.
  */
-import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Corpus, IndexStats, RetrievalBudget, RetrievalMethod, RetrievalOutput, RetrievalQuery } from '../types.js';
 import { abs } from '../config.js';
-import { lastJsonLine, readOutputs, runPython, writeQueries } from './py-adapter.js';
+import { lastJsonLine, neutralCopy, readOutputs, runPython, writeQueries } from './py-adapter.js';
 
 const PY = abs('vendor/.venvs/code-review-graph/bin/python');
 const SCRIPT = abs('src/competitors/py/crg_adapter.py');
@@ -27,12 +26,8 @@ export class CodeReviewGraphRetriever implements RetrievalMethod {
     this.name = opts.name ?? 'code_review_graph';
   }
   async prepare(corpus: Corpus): Promise<IndexStats> {
-    // Fresh clone of the benchmark commit at the neutral path.
-    fs.rmSync(NEUTRAL_REPO, { recursive: true, force: true });
-    fs.mkdirSync(path.dirname(NEUTRAL_REPO), { recursive: true });
-    const c = spawnSync('git', ['clone', '-q', '--no-hardlinks', corpus.repoRoot, NEUTRAL_REPO], { encoding: 'utf8' });
-    if (c.status !== 0) throw new Error(c.stderr);
-    spawnSync('git', ['-C', NEUTRAL_REPO, 'checkout', '-q', corpus.commit]);
+    // Exactly the corpus files of this snapshot (working tree), in a fresh git repo at the neutral path.
+    neutralCopy(corpus, NEUTRAL_REPO);
     this.outDir = path.join(corpus.cacheDir, this.opts.embeddings ? 'crg-emb' : 'crg');
     fs.rmSync(this.outDir, { recursive: true, force: true });
     const args = ['build', '--repo', NEUTRAL_REPO, '--out', this.outDir];

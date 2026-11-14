@@ -7,7 +7,7 @@
 import path from 'node:path';
 import type { Corpus, IndexStats, RetrievalBudget, RetrievalMethod, RetrievalOutput, RetrievalQuery } from '../types.js';
 import { abs } from '../config.js';
-import { lastJsonLine, readOutputs, runPython, writeQueries } from './py-adapter.js';
+import { lastJsonLine, neutralCopy, readOutputs, runPython, writeQueries } from './py-adapter.js';
 
 const PY = abs('vendor/.venvs/graphify/bin/python');
 const SCRIPT = abs('src/competitors/py/graphify_adapter.py');
@@ -23,7 +23,8 @@ export class GraphifyRetriever implements RetrievalMethod {
     this.name = opts.name ?? 'graphify';
   }
   async prepare(corpus: Corpus): Promise<IndexStats> {
-    this.repo = corpus.repoRoot;
+    // Exactly the corpus files of this snapshot (working tree), as for every other method.
+    this.repo = neutralCopy(corpus, '/tmp/cgbench/g');
     this.outDir = path.join(corpus.cacheDir, 'graphify');
     const t0 = performance.now();
     const r = runPython(PY, SCRIPT, ['build', '--repo', this.repo, '--out', this.outDir], ENV);

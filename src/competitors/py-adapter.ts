@@ -6,7 +6,7 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import type { RetrievalOutput, RetrievalQuery } from '../types.js';
+import type { Corpus, RetrievalOutput, RetrievalQuery } from '../types.js';
 
 export function runPython(python: string, script: string, args: string[], env: Record<string, string> = {}): { stdout: string; stderr: string } {
   const r = spawnSync(python, ['-I', script, ...args], {
@@ -36,4 +36,22 @@ export function readOutputs(p: string, method: string): RetrievalOutput[] {
       latency_ms: o.latency_ms, llm_tokens: o.llm_tokens ?? null, metadata: o.metadata ?? {},
     } as RetrievalOutput;
   });
+}
+
+/**
+ * A fresh git repository at a neutral path holding EXACTLY the corpus files as they are on disk (the task snapshot,
+ * including an uncommitted reverted fix), plus package.json/tsconfig.json. Competitors index the same files our methods
+ * index, at a path whose words cannot match query vocabulary (CRG indexes absolute paths). Returns the path.
+ */
+export function neutralCopy(corpus: Corpus, dir: string): string {
+  fs.rmSync(dir, { recursive: true, force: true });
+  for (const f of [...corpus.files, 'package.json', 'tsconfig.json']) {
+    const src = path.join(corpus.repoRoot, f);
+    if (!fs.existsSync(src)) continue;
+    fs.mkdirSync(path.dirname(path.join(dir, f)), { recursive: true });
+    fs.copyFileSync(src, path.join(dir, f));
+  }
+  const git = (a: string[]) => { const r = spawnSync('git', ['-c', 'user.name=bench', '-c', 'user.email=bench@localhost', '-c', 'commit.gpgsign=false', ...a], { cwd: dir, encoding: 'utf8' }); if (r.status !== 0) throw new Error(`git ${a[0]}: ${r.stderr}`); };
+  git(['init', '-q']); git(['add', '-A']); git(['commit', '-q', '-m', 'snapshot']);
+  return dir;
 }
