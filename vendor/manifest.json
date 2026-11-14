@@ -2,16 +2,16 @@
   "graphify": {
     "upstream": "https://github.com/Graphify-Labs/graphify",
     "pypi": "graphifyy",
-    "tag": "v0.9.104",
-    "commit": "433a57a002908e74c9f0abd2ad93af8b302b71c4",
+    "tag": "v0.9.108",
+    "commit": "52cb28218eea0c68d80a9f4b2ae102d2fa63e267",
     "venv": "vendor/.venvs/graphify",
     "install": "uv venv --python 3.12 vendor/.venvs/graphify && uv pip install --python vendor/.venvs/graphify/bin/python -e './vendor/graphify[mcp]'"
   },
   "code-review-graph": {
     "upstream": "https://github.com/tirth8205/code-review-graph",
     "pypi": "code-review-graph",
-    "tag": "v2.3.9",
-    "commit": "343ab7cea29d47a3e805381e09f8243a43d43d88",
+    "tag": "v2.4.0",
+    "commit": "b3f1285965a1337b3821e4423da03b65d70ee423",
     "venv": "vendor/.venvs/code-review-graph",
     "install": "uv venv --python 3.12 vendor/.venvs/code-review-graph && uv pip install --python vendor/.venvs/code-review-graph/bin/python './vendor/code-review-graph[embeddings,communities]'"
   },
