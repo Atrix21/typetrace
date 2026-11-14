@@ -74,6 +74,12 @@ def _setup_env(graph_dir: Path) -> None:
     for k in ("CRG_OPENAI_API_KEY", "CRG_OPENAI_BASE_URL", "VOYAGE_API_KEY",
               "GOOGLE_API_KEY", "MINIMAX_API_KEY"):
         os.environ.pop(k, None)  # never let a stray key switch embedding provider
+    # Fairness control (Amendment D2b): CRG's documented OpenAI-compatible provider pointed at a LOCAL server that
+    # serves the same embedding model TypeTrace uses (scripts/competitors/openai_embed_server.py). Explicit opt-in only.
+    if os.environ.get("CRG_BENCH_OPENAI_URL"):
+        os.environ["CRG_OPENAI_BASE_URL"] = os.environ["CRG_BENCH_OPENAI_URL"]
+        os.environ["CRG_OPENAI_API_KEY"] = "local"
+        os.environ["CRG_OPENAI_MODEL"] = "Qwen/Qwen3-Embedding-0.6B"
     import logging
     logging.basicConfig(level=logging.WARNING, stream=sys.stderr)
 
@@ -191,7 +197,7 @@ def cmd_build(args: argparse.Namespace) -> int:
         from code_review_graph.tools.docs import embed_graph
         t1 = time.perf_counter()
         with contextlib.redirect_stdout(sys.stderr):
-            er = embed_graph(repo_root=str(repo), provider="local")
+            er = embed_graph(repo_root=str(repo), provider="openai" if os.environ.get("CRG_BENCH_OPENAI_URL") else "local")
         embed_ms = (time.perf_counter() - t1) * 1000.0
         if er.get("status") != "ok":
             print(json.dumps({"error": "embedding failed", "details": er}), file=sys.stderr)
@@ -203,7 +209,9 @@ def cmd_build(args: argparse.Namespace) -> int:
             device = str(m.device)
         except Exception:
             pass
-        embed_info = {"provider": "local", "model": os.environ.get("CRG_EMBEDDING_MODEL",
+        _oa = bool(os.environ.get("CRG_BENCH_OPENAI_URL"))
+        embed_info = {"provider": "openai-compatible (local Qwen3 server)" if _oa else "local",
+                      "model": os.environ["CRG_OPENAI_MODEL"] if _oa else os.environ.get("CRG_EMBEDDING_MODEL",
                       "all-MiniLM-L6-v2"), "device": device,
                       "newly_embedded": er.get("newly_embedded"),
                       "total_embeddings": er.get("total_embeddings"),
@@ -417,7 +425,7 @@ def cmd_query(args: argparse.Namespace) -> int:
 
     # Same as `code-review-graph serve` startup (main.main): load the local embedding model once
     # before serving, so first-query latency is not dominated by model load.
-    if build_meta.get("embeddings"):
+    if build_meta.get("embeddings") and not os.environ.get("CRG_BENCH_OPENAI_URL"):
         t0 = time.perf_counter()
         from code_review_graph.embeddings import prewarm_local_embeddings
         prewarm_local_embeddings()

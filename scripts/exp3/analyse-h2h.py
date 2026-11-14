@@ -11,10 +11,10 @@ from collections import defaultdict
 
 R = 'experiments/03-graph-scale/results'
 OURS = ['hybrid', 'compact_graph', 'custom_graph', 'hybrid_nograph', 'bm25', 'embeddings', 'ripgrep']
-COMP = ['graphify', 'code_review_graph', 'code_review_graph_emb']
+COMP = ['graphify', 'code_review_graph', 'code_review_graph_emb', 'code_review_graph_qwen']
 LABEL = {'hybrid': 'ours: hybrid (BM25 + embeddings + graph)', 'compact_graph': 'ours: compact_graph (the agent tool)', 'custom_graph': 'ours: graph only',
          'hybrid_nograph': 'ours: hybrid without graph', 'bm25': 'BM25', 'embeddings': 'embeddings (Qwen3-0.6B)', 'ripgrep': 'ripgrep',
-         'graphify': 'graphify 0.9.108', 'code_review_graph': 'code-review-graph 2.4.0 (default, FTS)', 'code_review_graph_emb': 'code-review-graph 2.4.0 + embeddings'}
+         'graphify': 'graphify 0.9.108', 'code_review_graph': 'code-review-graph 2.4.0 (default, FTS)', 'code_review_graph_emb': 'code-review-graph 2.4.0 + embeddings', 'code_review_graph_qwen': 'code-review-graph 2.4.0 + OUR embedder (Qwen3)'}
 METRICS = [('sym_recall_10', 'Recall@10'), ('sym_recall_5', 'Recall@5'), ('rc_mrr', 'RC MRR'), ('rc_hit_10', 'RC hit@10'), ('file_recall_10', 'File R@10'),
            ('natural_recall', 'Recall (own output)'), ('native_context_tokens', 'own output tokens'), ('latency_ms', 'latency ms')]
 B, SEED = 10000, 20261114
@@ -55,7 +55,7 @@ def main():
         comps = [m for m in COMP if by.get(m)]
         if not comps:
             continue
-        methods = [m for m in OURS + COMP if by.get(m)]
+        methods = [m for m in OURS + COMP if by.get(m) and (m != 'code_review_graph_qwen' or len(by[m]) >= len(by['hybrid']))]
         tasks = sorted(set.intersection(*(set(by[m]) for m in methods)))
         if not tasks:
             continue
@@ -76,7 +76,7 @@ def main():
         for o in ['hybrid', 'compact_graph']:
             if o not in by:
                 continue
-            for c in comps:
+            for c in [c for c in comps if c in methods]:
                 for k in ['sym_recall_10', 'rc_mrr']:
                     d = [(by[o][t][k] or 0) - (by[c][t][k] or 0) for t in tasks]
                     ci, p = boot(d), perm(d)

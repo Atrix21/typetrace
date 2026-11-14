@@ -1,15 +1,15 @@
 #!/usr/bin/env tsx
 /**
- * code-graphs: the retrieval tool benchmarked in experiments/03-graph-scale, packaged for use.
+ * TypeTrace: the retrieval tool benchmarked in experiments/03-graph-scale, packaged for use.
  *
- *   code-graphs index   <repo> [--include src,lib] [--max-package-decl-mb 50]   build the typed graph + search indexes
- *   code-graphs query   <repo> "<question>"                                         print what the agent would see
- *   code-graphs serve   <repo>                                                      MCP server (stdio): find_relevant_code
- *   code-graphs install <repo>                                                      add the MCP server to <repo>/.mcp.json
+ *   typetrace index   <repo> [--include src,lib] [--max-package-decl-mb 50]   build the typed graph + search indexes
+ *   typetrace query   <repo> "<question>"                                         print what the agent would see
+ *   typetrace serve   <repo>                                                      MCP server (stdio): find_relevant_code
+ *   typetrace install <repo>                                                      add the MCP server to <repo>/.mcp.json
  *
  * The served tool is exactly `compact_graph` from the benchmark: BM25 + embeddings (Qwen3-Embedding-0.6B) + typed call/
  * dispatch graph propagation, rendered as at most 800 tokens of file:line pointers with callers/callees/handlers.
- * Indexes live in ~/.cache/code-graphs/<hash of repo path>/ (override with CODE_GRAPHS_CACHE); the repository is never
+ * Indexes live in ~/.cache/typetrace/<hash of repo path>/ (override with TYPETRACE_CACHE); the repository is never
  * written except by `install` (.mcp.json).
  */
 import crypto from 'node:crypto';
@@ -30,7 +30,7 @@ import { PersistentQueryEmbedder } from '../agent-eval/mcp/retrieval-server.js';
 import { primeGraphCache } from '../retrieval/graph-retrieval.js';
 import type { Corpus, RetrievalMethod } from '../types.js';
 
-const SERVER_NAME = 'code-graphs';
+const SERVER_NAME = 'typetrace';
 const BUDGET = { maxResults: 50, maxContextTokens: 8000 };
 const argv = process.argv.slice(2);
 const opt = (k: string) => { const i = argv.indexOf(`--${k}`); return i >= 0 ? argv[i + 1] : undefined; };
@@ -38,7 +38,7 @@ const positional = argv.filter((a, i) => !a.startsWith('--') && !(i > 0 && argv[
 const err = (s: string) => process.stderr.write(s + '\n');
 
 function cacheDir(repo: string): string {
-  const base = process.env.CODE_GRAPHS_CACHE ?? path.join(os.homedir(), '.cache', 'code-graphs');
+  const base = process.env.TYPETRACE_CACHE ?? path.join(os.homedir(), '.cache', 'typetrace');
   return path.join(base, crypto.createHash('sha256').update(repo).digest('hex').slice(0, 16));
 }
 
@@ -52,7 +52,7 @@ function includeDirs(repo: string, dir: string): string[] {
 async function load(repo: string, quiet = false, queryEmbedder = true) {
   const dir = cacheDir(repo);
   const graphPath = path.join(dir, 'graph.sqlite');
-  if (!fs.existsSync(graphPath)) throw new Error(`no index for ${repo}; run: code-graphs index ${repo}`);
+  if (!fs.existsSync(graphPath)) throw new Error(`no index for ${repo}; run: typetrace index ${repo}`);
   const include = includeDirs(repo, dir);
   const files = listCorpusFiles(repo, include);
   const corpus: Corpus = { repoRoot: repo, commit: 'local', files, cacheDir: path.join(dir, 'retrieval') };
@@ -123,7 +123,7 @@ function install(repo: string) {
   const f = path.join(repo, '.mcp.json');
   const cfg = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {};
   cfg.mcpServers ??= {};
-  cfg.mcpServers[SERVER_NAME] = { command: path.join(PROJECT_ROOT, 'node_modules', '.bin', 'tsx'), args: [path.join(PROJECT_ROOT, 'src', 'product', 'cli.ts'), 'serve', repo] };
+  cfg.mcpServers[SERVER_NAME] = { command: process.execPath, args: [path.join(PROJECT_ROOT, 'bin', 'typetrace.js'), 'serve', repo] };
   fs.writeFileSync(f, JSON.stringify(cfg, null, 2) + '\n');
   err(`added "${SERVER_NAME}" to ${f}. Restart Claude Code in ${repo}; the tool is mcp__${SERVER_NAME}__${EXP3_TOOL_NAME}.`);
 }
@@ -131,7 +131,7 @@ function install(repo: string) {
 async function main() {
   const [cmd, repoArg, ...rest] = positional;
   if (!cmd || !repoArg || !['index', 'query', 'serve', 'install'].includes(cmd)) {
-    err('usage: code-graphs index|query|serve|install <repo> ["question"] [--include src] [--max-package-decl-mb N]');
+    err('usage: typetrace index|query|serve|install <repo> ["question"] [--include src] [--max-package-decl-mb N]');
     process.exit(2);
   }
   const repo = path.resolve(repoArg);

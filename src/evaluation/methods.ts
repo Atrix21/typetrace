@@ -24,6 +24,8 @@ export const REGISTRY: Record<string, Factory> = {
   code_review_graph: async () => new CodeReviewGraphRetriever(),
   code_review_graph_search_only: async () => new CodeReviewGraphRetriever({ name: 'code_review_graph_search_only', policy: 'search_only' }),
   code_review_graph_emb: async () => new CodeReviewGraphRetriever({ name: 'code_review_graph_emb', embeddings: true }),
+  // Fairness control (Amendment D2b): CRG with the SAME embedding model as ours (Qwen3-Embedding-0.6B) via its OpenAI-compatible provider.
+  code_review_graph_qwen: async () => new CodeReviewGraphRetriever({ name: 'code_review_graph_qwen', embeddings: true, sameEmbedder: true }),
   custom_graph: async () => {
     const { GraphRetriever } = await import('../retrieval/graph-retrieval.js');
     const { customGraphConfig } = await import('./configs.js');

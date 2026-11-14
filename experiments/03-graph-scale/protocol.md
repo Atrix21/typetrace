@@ -226,3 +226,5 @@ Each runs as its own native MCP server, with every read-only tool it ships; only
 - **D-tok-C:** total tokens A2 < A6, as a log ratio.
 
 Also reported: each competitor arm against A0 (accuracy and tokens), adoption, MCP calls and MCP output size. A loss is reported as a loss.
+
+**D2b. Same-embedder control (added 2026-11-15, before it was run on S, M or L).** Part of our retrieval lead could come from the embedding model alone: ours is Qwen3-Embedding-0.6B, code-review-graph's default is all-MiniLM-L6-v2. code-review-graph supports any OpenAI-compatible embedding endpoint (its documented provider). It is rerun with Qwen3-Embedding-0.6B, same revision, served locally (`scripts/competitors/openai_embed_server.py`), as `code_review_graph_qwen` on S all, M test and L test. Everything else is unchanged. Reported next to D2 as a control; there is no separate test family.
