@@ -200,3 +200,29 @@ The tool name, description and schema are byte-identical in A1 and A2 (verified 
 - **H3:** total tokens A2 < A0, with task_score non-inferiority (one-sided 95% lower bound of A2 − A0 > −0.05) reported alongside.
 
 **C6. Exploratory.** Everything else: M (Immich), Sonnet 5.5, A1 vs A0, A2 vs A0 accuracy, tool adoption.
+
+## Amendment D (2026-11-14; competitor head-to-head; written and committed before any real competitor agent run)
+
+The owner asked for a publishable head-to-head against the two public code-graph tools, graphify and code-review-graph (CRG). Amendment C's results (`results/agent/*-report.md`) were already known when this was written, so everything here is a new, separately pre-registered comparison. It is not a re-analysis of H3/H4.
+
+**D1. Competitors.** Latest releases at the time of writing, vendored at pinned commits (`vendor/manifest.json`):
+- graphify v0.9.108 (52cb2821), AST-only graph, no LLM;
+- code-review-graph v2.4.0 (b3f12859) **with its local embeddings** (all-MiniLM-L6-v2, its documented opt-in). This is CRG's strongest documented setup: on S, embeddings raised its Recall@10 from 0.11 to 0.27.
+
+Each runs as its own native MCP server, with every read-only tool it ships; only write, graph-mutating and network tools are denied (experiment 2's list). Nothing is tuned. Graphs are built once per task snapshot on a git-initialised copy of the corpus. The copy is checked to be unchanged after every run.
+
+**D2. Retrieval-only head-to-head (no model calls).** The stage-1 harness and budget (`scripts/exp3/stage1.ts`, 50 results / 8k tokens) on S (all 14), M test (26) and L test (18). Methods: `graphify`, `code_review_graph` (FTS only, the CRG default), `code_review_graph_emb`. These are compared with the stage-1 rows of our `hybrid`, `compact_graph` and `custom_graph` on the same tasks and snapshots.
+- **Primary metric:** Recall@10 (symbol level).
+- **Secondary:** RC MRR, File Recall@10, native context tokens, latency, build time.
+
+**D3. Agent head-to-head.** Same harness, prompts, schema, scoring and caps as Amendment C. Arms A0, A2, A5 (graphify) and A6 (CRG + embeddings), interleaved within each task under a fresh seed-ordered plan. Fresh A0/A2 runs are made so that all four arms share the same time window and Claude Code version.
+- **Primary:** Haiku 5.5, L test, 18 tasks × 4 arms × 3 repeats = 216 runs.
+- **Exploratory:** M test (26 × 4 × 3), and Sonnet 5.5 on L test (A0/A2/A5/A6 × 2).
+
+**D4. Confirmatory family (Holm over four tests, one-sided, task unit, sign-flip permutation as in Amendment C):**
+- **D-acc-G:** task_score(A2) − task_score(A5) > 0.
+- **D-acc-C:** task_score(A2) − task_score(A6) > 0.
+- **D-tok-G:** total tokens A2 < A5, as a log ratio.
+- **D-tok-C:** total tokens A2 < A6, as a log ratio.
+
+Also reported: each competitor arm against A0 (accuracy and tokens), adoption, MCP calls and MCP output size. A loss is reported as a loss.

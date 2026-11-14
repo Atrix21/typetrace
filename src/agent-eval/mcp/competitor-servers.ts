@@ -32,6 +32,7 @@
  */
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { abs, loadConfig } from '../../config.js';
 import { lastJsonLine, runPython } from '../../competitors/py-adapter.js';
@@ -70,8 +71,8 @@ function isolationEnv(base: string): Record<string, string> {
   return { HOME: home, XDG_CONFIG_HOME: path.join(home, '.config'), XDG_CACHE_HOME: path.join(home, '.cache'), XDG_DATA_HOME: path.join(home, '.local', 'share') };
 }
 
-export async function competitorServerSpec(kind: CompetitorKind, ws: Workspace): Promise<ServerSpec> {
-  const base = competitorCacheDir(kind, ws);
+export async function competitorServerSpec(kind: CompetitorKind, ws: Workspace, o: { embeddings?: boolean; cacheDir?: string } = {}): Promise<ServerSpec> {
+  const base = o.cacheDir ?? competitorCacheDir(kind, ws);
   fs.mkdirSync(base, { recursive: true });
   const iso = isolationEnv(base);
   const before = gitState(ws.dir);
@@ -101,8 +102,8 @@ export async function competitorServerSpec(kind: CompetitorKind, ws: Workspace):
     serverArgs = ['--graph', path.join(neutral, 'graph.json')];
   } else {
     name = 'code-review-graph';
-    env = { ...iso, CRG_DATA_DIR: base, CRG_HOME: path.join(base, 'crg_home'), HF_HUB_OFFLINE: '1', TOKENIZERS_PARALLELISM: 'false' };
-    const r = runPython(abs(CRG_PY), abs(CRG_ADAPTER), ['build', '--repo', ws.dir, '--out', base], env);
+    env = { ...iso, CRG_DATA_DIR: base, CRG_HOME: path.join(base, 'crg_home'), HF_HUB_OFFLINE: '1', TOKENIZERS_PARALLELISM: 'false', HF_HOME: path.join(os.homedir(), '.cache', 'huggingface') };
+    const r = runPython(abs(CRG_PY), abs(CRG_ADAPTER), ['build', '--repo', ws.dir, '--out', base, ...(o.embeddings ? ['--embeddings', '--device', 'cpu'] : [])], env);
     const info = lastJsonLine(r.stdout);
     build_ms = info.build_ms;
     if (!fs.existsSync(path.join(base, 'graph.db'))) throw new Error(`code-review-graph build produced no graph.db in ${base}`);

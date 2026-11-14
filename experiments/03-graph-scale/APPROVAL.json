@@ -43,5 +43,13 @@
    "account": "personal",
    "max_total_usd": 150
   }
+ ],
+ "amendments": [
+  {
+   "at": "2026-11-14T12:50:00+05:30",
+   "by": "project owner (chat)",
+   "statement": "repository owner (chat approval; quote withheld)",
+   "scope": "Amendment D competitor head-to-head on the same personal subscription account, same models, same caps; strictly sequential"
+  }
  ]
 }

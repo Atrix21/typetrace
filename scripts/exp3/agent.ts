@@ -10,6 +10,11 @@
  *   A0 baseline         Read, Grep, Glob
  *   A1 compact_nograph  + find_relevant_code backed by hybrid WITHOUT graph propagation, pointer output, 800-token cap
  *   A2 compact_graph    + find_relevant_code backed by hybrid WITH graph propagation + relationship lines, same cap
+ *   A5 graphify         + graphify's own MCP server (latest release, AST graph, its default tools minus write tools)
+ *   A6 crg              + code-review-graph's own MCP server (latest release) WITH its local embeddings (its strongest
+ *                         documented setup: semantic search = FTS5 + vectors), write tools denied
+ * Competitor arms get one git-initialised copy of the snapshot per task (CRG indexes `git ls-files`); their graph is built
+ * once per task and reused across repeats; the copy is checked unchanged after every run.
  * A1/A2 tool name, description and schema are byte-identical. Runs are executed task by task (the task's snapshot is
  * materialised once and one retrieval daemon serves both arms); the order of (arm, repeat) within a task is seeded.
  * Output under experiments/03-graph-scale/results/agent/<run>/: plan.json, runs.jsonl, excluded.jsonl, ledger.jsonl,
@@ -36,6 +41,8 @@ import { opaqueId, WORK_ROOT } from '../../src/agent-eval/workspace.js';
 import { ANSWER_SCHEMA, EXP3_SYSTEM_PROMPT, exp3TaskPrompt, parseAnswer, scoreAnswer } from '../../src/agent-eval/exp3/score.js';
 import { EXP3_SERVER_NAME, EXP3_TOOL_NAME } from '../../src/agent-eval/exp3/mcp-tool.js';
 import { materialise, REPOS, type RepoName } from './tasks.js';
+import { competitorServerSpec } from '../../src/agent-eval/mcp/competitor-servers.js';
+import { DENY_TOOLS } from '../../src/agent-eval/agentic.js';
 
 const arg = (n: string, d?: string) => { const i = process.argv.indexOf(`--${n}`); return i >= 0 ? process.argv[i + 1] : d; };
 const flag = (n: string) => process.argv.includes(`--${n}`);
@@ -51,7 +58,9 @@ const MOCK = flag('mock');
 const ONLY = arg('only')?.split(',');
 const TIMEOUT_S = Number(arg('timeout-s', '900'));
 const MAX_TURNS = 40;
-const ARM_BACKEND: Record<string, string | null> = { A0: null, A1: 'compact_nograph', A2: 'compact_graph' };
+const ARM_BACKEND: Record<string, string | null> = { A0: null, A1: 'compact_nograph', A2: 'compact_graph', A5: 'graphify', A6: 'crg' };
+const COMPETITOR: Record<string, 'graphify' | 'crg'> = { A5: 'graphify', A6: 'crg' };
+const OURS = (arm: string) => arm === 'A1' || arm === 'A2';
 const EXP = abs('experiments/03-graph-scale');
 const OUT = path.join(EXP, 'results', 'agent', RUN);
 const sha = (s: string) => crypto.createHash('sha256').update(s).digest('hex');
@@ -161,26 +170,42 @@ async function main() {
     const restore = snap.kind === 'revert_fix' ? materialise(repoName, snap.patch!, snap.apply ?? 'exact') : () => {};
     restoreCurrent = restore;
     let daemon: Awaited<ReturnType<typeof startDaemon>> | null = null;
+    const compDirs: string[] = [];
     try {
       const root = abs(R.corpusRoot);
       const files = listCorpusFiles(root, ['src']);
       const snapCommit = sha(`${R.pinned}|${snap.patch_sha256 ?? 'pinned'}`).slice(0, 16);
       const index = new SymbolIndex(root, files);
-      if (items.some((i) => ARM_BACKEND[i.arm])) {
+      if (items.some((i) => OURS(i.arm))) {
         const graph = graphFor(snapCommit, root);
         log(`${t.task_id}: starting retrieval daemon`);
         daemon = await startDaemon(root, graph, snapCommit);
         daemonChild = daemon.child;
         log(`${t.task_id}: daemon ready in ${(daemon.info.prepare_ms / 1000).toFixed(0)} s (${daemon.info.rss_mb} MB)`);
       }
+      const comp: Record<string, { ws: string; spec: McpServerSpec; state: string; build_ms: number }> = {};
+      for (const arm of [...new Set(items.map((i) => i.arm))].filter((a) => COMPETITOR[a])) {
+        const kind = COMPETITOR[arm];
+        const ws = makeWorkspace(root, files, `${t.task_id}|competitor|${kind}`);
+        compDirs.push(path.dirname(ws));
+        const g = (a: string[]) => { const r = spawnSync('git', ['-c', 'user.name=bench', '-c', 'user.email=bench@localhost', '-c', 'commit.gpgsign=false', ...a], { cwd: ws, encoding: 'utf8' }); if (r.status !== 0) throw new Error(`git ${a[0]}: ${r.stderr}`); return r.stdout; };
+        g(['init', '-q']); g(['add', '-A']); g(['commit', '-q', '-m', 'snapshot']);
+        const cacheDir = abs(`.cache/exp3/agent/competitors/${REPO}/${snapCommit}/${kind}`);
+        fs.rmSync(cacheDir, { recursive: true, force: true });
+        log(`${t.task_id}: building ${kind} graph`);
+        const s = await competitorServerSpec(kind, { taskId: t.task_id, dir: ws, hash: sha(ws), files, corpus: null as any }, { embeddings: kind === 'crg', cacheDir });
+        log(`${t.task_id}: ${kind} ready in ${(s.build_ms / 1000).toFixed(0)} s`);
+        comp[arm] = { ws, spec: { name: s.name, command: s.command, args: s.args, env: s.env, denyTools: DENY_TOOLS[kind] }, state: g(['status', '--porcelain', '--ignored', '--untracked-files=all']), build_ms: s.build_ms };
+      }
       for (const it of items) {
         if (halted) break;
         for (let attempt = attempts(it.run_id) + 1; attempt <= 2; attempt++) {
-          const ws = makeWorkspace(root, files, `${it.run_id}|${attempt}`);
+          const cp = comp[it.arm];
+          const ws = cp ? cp.ws : makeWorkspace(root, files, `${it.run_id}|${attempt}`);
           const safe = it.run_id.replace(/[^A-Za-z0-9_.-]+/g, '_') + (attempt > 1 ? `_try${attempt}` : '');
           const toolLog = path.join(OUT, 'tool-logs', `${safe}.jsonl`);
           const backend = ARM_BACKEND[it.arm];
-          const mcp: McpServerSpec | null = backend ? { name: EXP3_SERVER_NAME, command: abs('node_modules/.bin/tsx'), args: [abs('src/agent-eval/exp3/mcp-tool.ts'), '--port', String(daemon!.port), '--arm', backend, '--log', toolLog], env: {}, denyTools: [] } : null;
+          const mcp: McpServerSpec | null = cp ? cp.spec : backend ? { name: EXP3_SERVER_NAME, command: abs('node_modules/.bin/tsx'), args: [abs('src/agent-eval/exp3/mcp-tool.ts'), '--port', String(daemon!.port), '--arm', backend, '--log', toolLog], env: {}, denyTools: [] } : null;
           let mockSrv: Awaited<ReturnType<typeof startMockServer>> | null = null;
           try {
             if (MOCK) {
@@ -220,10 +245,12 @@ async function main() {
               cost_reported_usd: r.cost.reported, cost_list_usd: r.cost.list, cost_ledger_usd: r.cost.ledger, wall_ms: r.timing.wall_ms, api_ms: r.detail.duration_api_ms,
               tool_log: { calls: tl.length, result_tokens: tl.reduce((s, x) => s + (x.result_tokens ?? 0), 0), errors: tl.filter((x) => x.error).length, latency_ms: tl.reduce((s, x) => s + (x.latency_ms ?? 0), 0) },
               files_read: new Set(p.toolCalls.filter((c) => c.name === 'Read').map((c) => String(c.input?.file_path ?? ''))).size,
-              answer, score, claude_version: version, mock: MOCK,
+              answer, score, claude_version: version, mock: MOCK, index_build_ms: cp?.build_ms ?? null,
+              mcp_calls: p.toolCalls.filter((c) => c.name.startsWith('mcp__')).map((c) => c.name.split('__').pop()),
+              mcp_result_chars: (() => { const ids = new Set(p.toolCalls.filter((c) => c.name.startsWith('mcp__')).map((c) => c.id)); return p.toolResults.filter((x) => ids.has(x.tool_use_id)).reduce((a, x) => a + x.text.length, 0); })(),
             };
             append('runs.jsonl', rec); done.add(it.run_id);
-            log(`${it.run_id} ${status} turns=${rec.turns} tok=${rec.total_tokens} $${r.cost.ledger.toFixed(4)} tool_calls=${rec.tool_log.calls} score=${score.task_score.toFixed(2)}`);
+            log(`${it.run_id} ${status} turns=${rec.turns} tok=${rec.total_tokens} $${r.cost.ledger.toFixed(4)} tool_calls=${rec.retrieval_calls} score=${score.task_score.toFixed(2)}`);
             break;
           } catch (e) {
             if (e instanceof BillableRefused) { halted = e.message; break; }
@@ -233,12 +260,16 @@ async function main() {
             if (++infraStreak >= 3) { halted = '3 consecutive infrastructure errors'; break; }
           } finally {
             await mockSrv?.close();
-            fs.rmSync(path.dirname(ws), { recursive: true, force: true });
+            if (cp) {
+              const now = spawnSync('git', ['status', '--porcelain', '--ignored', '--untracked-files=all'], { cwd: ws, encoding: 'utf8' }).stdout;
+              if (now !== cp.state) { halted = `competitor workspace modified during ${it.run_id}`; log(halted); }
+            } else fs.rmSync(path.dirname(ws), { recursive: true, force: true });
           }
         }
       }
     } finally {
       if (daemon) { daemon.child.kill('SIGTERM'); daemonChild = null; await new Promise((r) => setTimeout(r, 1500)); }
+      for (const d of compDirs) fs.rmSync(d, { recursive: true, force: true });
       restore(); restoreCurrent = null;
     }
   }
