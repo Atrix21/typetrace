@@ -1,0 +1,50 @@
+{
+ "run": "h2h-L-haiku",
+ "status": "completed",
+ "repo": "L",
+ "split": "test",
+ "arms": [
+  "A0",
+  "A2",
+  "A5",
+  "A6"
+ ],
+ "model": "claude-haiku-5-5",
+ "effort": "high",
+ "repeats": 3,
+ "max_turns": 40,
+ "tasks": [
+  "twenty_pr21506",
+  "twenty_pr21846",
+  "twenty_pr22885",
+  "twenty_pr24301",
+  "twenty_pr25529",
+  "twenty_pr27248",
+  "twenty_pr29126",
+  "twenty_tw_t10",
+  "twenty_tw_t11",
+  "twenty_tw_t12",
+  "twenty_tw_t13",
+  "twenty_tw_t14",
+  "twenty_tw_t2",
+  "twenty_tw_t4",
+  "twenty_tw_t5",
+  "twenty_tw_t6",
+  "twenty_tw_t8",
+  "twenty_tw_t9"
+ ],
+ "claude_version": "2.1.325",
+ "mock": false,
+ "account": {
+  "name": "owner",
+  "subscription_type": "pro"
+ },
+ "system_prompt_sha": "ee0afe16891ef591",
+ "schema_sha": "53ca3a9507c3b138",
+ "run_usd": 1,
+ "updated": "2026-11-14T14:28:35.590Z",
+ "halted": null,
+ "n_plan": 216,
+ "n_scored": 216,
+ "ledger_usd": 5.661136090000001
+}

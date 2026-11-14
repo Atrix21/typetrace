@@ -1,0 +1,36 @@
+{
+  "repo": "L",
+  "split": "test",
+  "methods": [
+    "graphify",
+    "code_review_graph",
+    "code_review_graph_emb"
+  ],
+  "budget": {
+    "maxResults": 50,
+    "maxContextTokens": 8000
+  },
+  "tasks": [
+    "twenty_pr21506",
+    "twenty_pr21846",
+    "twenty_pr22885",
+    "twenty_pr24301",
+    "twenty_pr25529",
+    "twenty_pr27248",
+    "twenty_pr29126",
+    "twenty_tw_t10",
+    "twenty_tw_t11",
+    "twenty_tw_t12",
+    "twenty_tw_t13",
+    "twenty_tw_t14",
+    "twenty_tw_t2",
+    "twenty_tw_t4",
+    "twenty_tw_t5",
+    "twenty_tw_t6",
+    "twenty_tw_t8",
+    "twenty_tw_t9"
+  ],
+  "nested": null,
+  "max_package_declaration_bytes": 0,
+  "started": "2026-11-14T14:54:59.520Z"
+}
