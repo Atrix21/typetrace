@@ -71,7 +71,7 @@ function isolationEnv(base: string): Record<string, string> {
   return { HOME: home, XDG_CONFIG_HOME: path.join(home, '.config'), XDG_CACHE_HOME: path.join(home, '.cache'), XDG_DATA_HOME: path.join(home, '.local', 'share') };
 }
 
-export async function competitorServerSpec(kind: CompetitorKind, ws: Workspace, o: { embeddings?: boolean; cacheDir?: string } = {}): Promise<ServerSpec> {
+export async function competitorServerSpec(kind: CompetitorKind, ws: Workspace, o: { embeddings?: boolean; cacheDir?: string; graphInWorkspace?: boolean } = {}): Promise<ServerSpec> {
   const base = o.cacheDir ?? competitorCacheDir(kind, ws);
   fs.mkdirSync(base, { recursive: true });
   const iso = isolationEnv(base);
@@ -113,6 +113,18 @@ export async function competitorServerSpec(kind: CompetitorKind, ws: Workspace, 
 
   const after = gitState(ws.dir);
   if (before !== after) throw new Error(`${kind} build modified the workspace:\n--- before\n${before}\n--- after\n${after}`);
+
+  // graphify >= 0.9.105: query_graph takes a `project_path` and reads <project>/graphify-out/graph.json, which is where
+  // graphify itself writes its graph. Put the (verbatim) graph there, as a normal install has it, and keep it out of
+  // Grep/Glob with .git/info/exclude (ripgrep honours it), so the agent's searches see the same files as in other arms.
+  if (kind === 'graphify' && o.graphInWorkspace) {
+    const src = path.dirname(serverArgs[1]);
+    const dst = path.join(ws.dir, 'graphify-out');
+    fs.mkdirSync(dst, { recursive: true });
+    for (const f of fs.readdirSync(src)) if (fs.statSync(path.join(src, f)).isFile()) fs.copyFileSync(path.join(src, f), path.join(dst, f));
+    fs.appendFileSync(path.join(ws.dir, '.git', 'info', 'exclude'), '\ngraphify-out/\n');
+    serverArgs = ['--graph', path.join(dst, 'graph.json')];
+  }
 
   return {
     name,

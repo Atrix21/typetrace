@@ -193,7 +193,7 @@ async function main() {
         const cacheDir = abs(`.cache/exp3/agent/competitors/${REPO}/${snapCommit}/${kind}`);
         fs.rmSync(cacheDir, { recursive: true, force: true });
         log(`${t.task_id}: building ${kind} graph`);
-        const s = await competitorServerSpec(kind, { taskId: t.task_id, dir: ws, hash: sha(ws), files, corpus: null as any }, { embeddings: kind === 'crg', cacheDir });
+        const s = await competitorServerSpec(kind, { taskId: t.task_id, dir: ws, hash: sha(ws), files, corpus: null as any }, { embeddings: kind === 'crg', cacheDir, graphInWorkspace: true });
         log(`${t.task_id}: ${kind} ready in ${(s.build_ms / 1000).toFixed(0)} s`);
         comp[arm] = { ws, spec: { name: s.name, command: s.command, args: s.args, env: s.env, denyTools: DENY_TOOLS[kind] }, state: g(['status', '--porcelain', '--ignored', '--untracked-files=all']), build_ms: s.build_ms };
       }
