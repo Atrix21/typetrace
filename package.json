@@ -19,7 +19,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p .",
     "agent-eval": "tsx src/agent-eval/cli.ts",
-    "typetrace": "node bin/typetrace.js"
+    "typetrace": "node bin/typetrace.js",
+    "setup": "bash scripts/setup-competitors.sh && tsx src/cli/index.ts setup-target"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.32.2",

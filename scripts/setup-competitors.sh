@@ -7,8 +7,8 @@ clone() { # dir url commit
   git -C "vendor/$1" checkout -q "$3"
   test "$(git -C "vendor/$1" rev-parse HEAD)" = "$3"
 }
-clone graphify https://github.com/Graphify-Labs/graphify 433a57a002908e74c9f0abd2ad93af8b302b71c4
-clone code-review-graph https://github.com/tirth8205/code-review-graph 343ab7cea29d47a3e805381e09f8243a43d43d88
+clone graphify https://github.com/Graphify-Labs/graphify 52cb28218eea0c68d80a9f4b2ae102d2fa63e267
+clone code-review-graph https://github.com/tirth8205/code-review-graph b3f1285965a1337b3821e4423da03b65d70ee423
 mkdir -p vendor/.venvs
 [ -x vendor/.venvs/graphify/bin/python ] || uv venv -q --python 3.12 vendor/.venvs/graphify
 GRAPHIFY_NO_AUTO_REFRESH=1 uv pip install -q --python vendor/.venvs/graphify/bin/python -e './vendor/graphify[mcp]'

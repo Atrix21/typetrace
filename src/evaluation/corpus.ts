@@ -41,6 +41,7 @@ function corpusHash(bench: string, files: string[]): string {
 }
 
 function typecheck(bench: string): { exit: number | null; out: string } {
+  if (!fs.existsSync(abs('targets/node_modules/.bin/tsc'))) throw new Error('target dependencies missing: run `npm run setup` (or scripts/setup-competitors.sh) first');
   const tsc = spawnSync(abs('targets/node_modules/.bin/tsc'), ['--noEmit', '--incremental', 'false', '-p', 'tsconfig.json'], { cwd: bench, encoding: 'utf8' });
   return { exit: tsc.status, out: (tsc.stdout + tsc.stderr).slice(0, 2000) };
 }

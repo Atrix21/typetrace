@@ -137,6 +137,7 @@ Restart Claude Code in the repository; the tool is `mcp__typetrace__find_relevan
 | Every decision and fix | [`decision-log.md`](experiments/03-graph-scale/decision-log.md) |
 
 Reproducing:
+- **Setup (one command):** `npm ci && npm run setup`. This clones the competitors at their pinned commits into `vendor/` and creates their Python environments plus the embedding environment with `uv`. It also clones the S repository and builds its task snapshots. Immich and Twenty snapshots are built by `scripts/exp3/tasks.ts` from upstream commits listed in `experiments/03-graph-scale/manifests/`.
 - **Retrieval-only results** need no API access: `npx tsx scripts/exp3/stage1.ts --repo S|M|L ...`, then `python3 scripts/exp3/analyse-h2h.py`.
 - **Agent runs** need a Claude Code login. They are refused unless an approval file and a spend cap allow them.
 - **Benchmark repositories:** Immich and Twenty are AGPL-3.0 and are not redistributed here. Tasks reference upstream commits, and transcripts and raw outputs containing their code are kept out of git.
