@@ -6,6 +6,8 @@
  *   npx tsx scripts/exp3/tasks.ts sanitize --repo immich|twenty   candidates without retrieval-derived fields
  *   npx tsx scripts/exp3/tasks.ts patches  --repo immich|twenty   fix patches (non-test src) + reverse-apply check on the pinned snapshot
  *   npx tsx scripts/exp3/tasks.ts derive   --repo immich|twenty   bug snapshot -> root-cause symbols, strata -> draft v2 tasks
+ *   npx tsx scripts/exp3/tasks.ts restore-patches --repo immich|twenty   rebuild the frozen tasks' fix patches from upstream
+ *       commits (dataset/v2/<repo>-patch-sources.json; needs the full-history clone REPOS[repo].history) and verify each SHA-256
  *
  * Bug snapshot = pinned snapshot with the fix's non-test source change reverted (`git apply -R`, fuzz -C1 allowed);
  * the fix's own tests stay at the pinned version, so FAIL_TO_PASS can be checked on the same tree.
@@ -44,6 +46,21 @@ export function sanitize(repo: RepoName) {
   fs.mkdirSync(path.dirname(abs(candidatesPath(repo))), { recursive: true });
   fs.writeFileSync(abs(candidatesPath(repo)), rows.map((r) => JSON.stringify(r)).join('\n') + '\n');
   console.log(`${repo}: ${rows.length} candidates -> ${candidatesPath(repo)} (removed: ${RETRIEVAL_FIELDS.join(', ')})`);
+}
+
+/** Rebuild the frozen tasks' patches from upstream commits (the patches contain AGPL code and are not redistributed). */
+export function restorePatches(repo: RepoName) {
+  const R = REPOS[repo];
+  const src = JSON.parse(fs.readFileSync(abs(`${EXP}/dataset/v2/${repo}-patch-sources.json`), 'utf8')) as Record<string, { parent_commit: string; merge_commit: string; files: string[]; patch_sha256: string }>;
+  fs.mkdirSync(abs(patchDir(repo)), { recursive: true });
+  let ok = 0;
+  for (const [id, x] of Object.entries(src)) {
+    const d = git(R.history, ['diff', '--no-color', '--no-ext-diff', x.parent_commit, x.merge_commit, '--', ...x.files]);
+    if (!d.ok) throw new Error(`${id}: git diff failed in ${R.history} (clone the full upstream history there first): ${d.err.slice(0, 200)}`);
+    if (sha(d.out) !== x.patch_sha256) throw new Error(`${id}: patch hash mismatch`);
+    fs.writeFileSync(abs(`${patchDir(repo)}/${id}.patch`), d.out); ok++;
+  }
+  console.log(`${repo}: ${ok} patches restored and verified -> ${patchDir(repo)}`);
 }
 
 export function patches(repo: RepoName) {
@@ -176,9 +193,10 @@ export function derive(repo: RepoName) {
 const cmd = process.argv[2];
 const repo = arg('repo') as RepoName;
 if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith('tasks.ts')) {
-  if (!REPOS[repo]) { console.error('usage: tasks.ts sanitize|patches|derive --repo immich|twenty'); process.exit(2); }
+  if (!REPOS[repo]) { console.error('usage: tasks.ts sanitize|patches|derive|restore-patches --repo immich|twenty'); process.exit(2); }
   if (cmd === 'sanitize') sanitize(repo);
   else if (cmd === 'patches') patches(repo);
+  else if (cmd === 'restore-patches') restorePatches(repo);
   else if (cmd === 'derive') derive(repo);
   else { console.error(`unknown command ${cmd}`); process.exit(2); }
 }

@@ -1,0 +1,208 @@
+{
+ "immich_pr28884": {
+  "pr": 28884,
+  "parent_commit": "f9db76433e82e8822a3e01c1aced61a2e7672432",
+  "merge_commit": "a364b56b1c296a1ef747441f5533373b3aabb294",
+  "files": [
+   "server/src/services/album.service.ts"
+  ],
+  "patch_sha256": "511fb9dbd7395bcda2752c85b3efbb2a9f53bbe56a093908bff4ba07cb251d7c"
+ },
+ "immich_pr29028": {
+  "pr": 29028,
+  "parent_commit": "a9ee6a7ce9e3620f99f4bd936950a44b83d1f246",
+  "merge_commit": "b633cc4f046f198bc11648c486e1e6e3f19d26d5",
+  "files": [
+   "server/src/repositories/map.repository.ts",
+   "server/src/services/map.service.ts"
+  ],
+  "patch_sha256": "cb8693e5662402e3d3800a059cbf6df6b1350878d98d5ab0acc4ab8ec032fe0a"
+ },
+ "immich_pr29035": {
+  "pr": 29035,
+  "parent_commit": "622a330d82f37a7737c4d4717cdd682b5f0940f2",
+  "merge_commit": "cc8d3b4107de07178d99ecaa7e43120d0c450051",
+  "files": [
+   "server/src/services/duplicate.service.ts"
+  ],
+  "patch_sha256": "57b56fbdb7f133d53b9115fedfff73491d7116709fa8a8d0e038bc2cf6a5c491"
+ },
+ "immich_pr29240": {
+  "pr": 29240,
+  "parent_commit": "d9d50d2848a4617535a074060b717f47d5328cda",
+  "merge_commit": "c0bf5a4c563daea8ace3924cf45518236a42c31a",
+  "files": [
+   "server/src/utils/media.ts"
+  ],
+  "patch_sha256": "642b4a752abdfbc463e5d33cf30286dba91c69a333be7cc36b2e0f7176f6804e"
+ },
+ "immich_pr29354": {
+  "pr": 29354,
+  "parent_commit": "20997823d8c234ce514aaaead72bdf85126627fb",
+  "merge_commit": "a0c7b811422921285364850cd72347c4ab853105",
+  "files": [
+   "server/src/services/asset.service.ts"
+  ],
+  "patch_sha256": "4269efde1233126502981fbaafed5477eb4aad0dceb153c7f271a79a2ba5ab75"
+ },
+ "immich_pr29516": {
+  "pr": 29516,
+  "parent_commit": "c7b4a798cba4142c0643bb72beb6787be8e2f1e8",
+  "merge_commit": "704b287bbac241e7b9ef37a7a2c891255e446cdc",
+  "files": [
+   "server/src/repositories/integrity.repository.ts",
+   "server/src/services/integrity.service.ts"
+  ],
+  "patch_sha256": "3e3d625c05d73502ecf7d5b6a8026d3d0fef0f9fe1061269c2bf3bb0f6590f6f"
+ },
+ "immich_pr29737": {
+  "pr": 29737,
+  "parent_commit": "053a52aec857fe6576fdbc52e47c429a1d8f02d6",
+  "merge_commit": "66e30d5fa16148243f4c1833f90d7bc175e4f888",
+  "files": [
+   "server/src/repositories/integrity.repository.ts",
+   "server/src/services/integrity.service.ts"
+  ],
+  "patch_sha256": "e13379c93ecc90b18c8f832760c7bd7c05e1c4301080002ae033b222fcd02f58"
+ },
+ "immich_pr29908": {
+  "pr": 29908,
+  "parent_commit": "3c43e8d6c19fee55f2273582a3682efd56839b86",
+  "merge_commit": "89b0d906e8f61f97cea759cdf1a47533cac507ca",
+  "files": [
+   "server/src/utils/media.ts"
+  ],
+  "patch_sha256": "625b43e85cbc7fd1d7383d29eafe615b83a4657a6f6b3df168e583d6268621ee"
+ },
+ "immich_pr30431": {
+  "pr": 30431,
+  "parent_commit": "da7d8c2e1291f9853efafd52a40484d696096cd5",
+  "merge_commit": "04453b72060bdcd0659d784a5c0c5eaf21be984b",
+  "files": [
+   "server/src/services/partner.service.ts"
+  ],
+  "patch_sha256": "8e13b77ad4141427515b3cd68dd0517b7eb31a17db8c59fac6a4bf64b741a6bc"
+ },
+ "immich_pr30512": {
+  "pr": 30512,
+  "parent_commit": "46c42e0935bb5eab65e395478623eb65f097df2b",
+  "merge_commit": "0d7147dceca9290c5f8b4fe8b3e3b138aac2afc2",
+  "files": [
+   "server/src/repositories/metadata.repository.ts",
+   "server/src/services/metadata.service.ts"
+  ],
+  "patch_sha256": "3d017d1802507ee6fb843c2bbd69662e50fa89050bbe7cc3620c161cc8f73fea"
+ },
+ "immich_pr30759": {
+  "pr": 30759,
+  "parent_commit": "5274f8fcb748b39de87b42fac1ff1e4bf8a53469",
+  "merge_commit": "17d4e39af3d932d9ab3b93e7b0c01c7b8604605c",
+  "files": [
+   "server/src/services/database-backup.service.ts"
+  ],
+  "patch_sha256": "1543f4cec58a212ac37bb82b8a7d68978f95507c8bcc1e249aee62656744338e"
+ },
+ "immich_pr31074": {
+  "pr": 31074,
+  "parent_commit": "9e1e59593949bff29a220847871894da323f9610",
+  "merge_commit": "c1f2756f62af333c302ef797772e5c4563662f52",
+  "files": [
+   "server/src/repositories/integrity.repository.ts",
+   "server/src/services/integrity.service.ts"
+  ],
+  "patch_sha256": "f4235e37d3a56799466f17f4999822b838946909063ddb928b0580cb6dc5221e"
+ },
+ "immich_pr31319": {
+  "pr": 31319,
+  "parent_commit": "bbd1e6d381aa7f6bd90b1974a9831fd5c0c9ba14",
+  "merge_commit": "58fb1ed4a9d2dce5f3d1db479c91a863ae61a537",
+  "files": [
+   "server/src/repositories/asset-job.repository.ts"
+  ],
+  "patch_sha256": "225e49b9e71029d8abec62ecf68b4881ff0225d92b5ea1313a1a29331cb06f03"
+ },
+ "immich_pr31425": {
+  "pr": 31425,
+  "parent_commit": "aa023378477fb1a65d24f4614de0940f6a769794",
+  "merge_commit": "54987c764a393d5aabace1ccfb2faeea0492f812",
+  "files": [
+   "server/src/repositories/tag.repository.ts",
+   "server/src/services/tag.service.ts"
+  ],
+  "patch_sha256": "165a716dde822d4ba07c3c72c96e792fe486c2caae8156df0644a3f659f10cc5"
+ },
+ "immich_pr31473": {
+  "pr": 31473,
+  "parent_commit": "9c06df378ce2a17b9fcce4fe96088176b446812a",
+  "merge_commit": "d1faeb8199f91607b0adafacdf8430b3881ff518",
+  "files": [
+   "server/src/utils/media.ts"
+  ],
+  "patch_sha256": "5ac2b6db98cb48de337b3f6604b902c2b2a76f9dba98f1fb33637d3083bff523"
+ },
+ "immich_pr31533": {
+  "pr": 31533,
+  "parent_commit": "53395d0664aeabc755e1f3a4dd7c2b57bceffae6",
+  "merge_commit": "ef9718e93d926f1a8ccae3270d839c9294884050",
+  "files": [
+   "server/src/repositories/person.repository.ts"
+  ],
+  "patch_sha256": "30ccc2bef58ea4f614917f1daf6fadb747009b8d953d25ce60c1ceb0babe4836"
+ },
+ "immich_pr31901": {
+  "pr": 31901,
+  "parent_commit": "5dacabb935e5ecc7e15ceaf1da9526303b12d3f7",
+  "merge_commit": "4b1b1f8c2ab70db165088d857906420b967a9241",
+  "files": [
+   "server/src/validation.ts"
+  ],
+  "patch_sha256": "3c1b54d40324f9052489779a6099c8fa759e6bb4f7d2e335bd4c0d47cc75e9af"
+ },
+ "immich_pr32219": {
+  "pr": 32219,
+  "parent_commit": "02481deb145416ed1600bf2928c3562577a39600",
+  "merge_commit": "5fa7789e2672350c76b9b026f2b8c2bc3ffdf7c4",
+  "files": [
+   "server/src/services/person.service.ts",
+   "server/src/services/timeline.service.ts"
+  ],
+  "patch_sha256": "2866aefe219f181e7790a01cd45aa433cd8b968008a8b1802cf3b15b9cda41be"
+ },
+ "immich_pr32240": {
+  "pr": 32240,
+  "parent_commit": "9971dade1b2db76a5a79d287eb2d725152cb0323",
+  "merge_commit": "56319b76fc60d7e3bd57a2275ac908da42665e5f",
+  "files": [
+   "server/src/repositories/workflow.repository.ts"
+  ],
+  "patch_sha256": "38fc9206ed71852e7dbebbcf2dbd7234dcd062981adbc38946b6c9504de4db92"
+ },
+ "immich_pr32300": {
+  "pr": 32300,
+  "parent_commit": "7cae55ec4ee7ab53d610cdf82b04a817e4ad8e8e",
+  "merge_commit": "adca900fe277bd6dff93b96b6a7841a8632ce62b",
+  "files": [
+   "server/src/services/smart-info.service.ts"
+  ],
+  "patch_sha256": "b58542a9a0d598a5973f22d96c0832d58ddc5266be7e86cd779515612126742e"
+ },
+ "immich_pr32577": {
+  "pr": 32577,
+  "parent_commit": "ca25e8becc4bfb18d63ca7920d26a984eae0e16f",
+  "merge_commit": "3184b1532fd74a0b777207f8a86e9efe7dafce65",
+  "files": [
+   "server/src/repositories/ocr.repository.ts",
+   "server/src/services/media.service.ts"
+  ],
+  "patch_sha256": "809168ec6dd22bdd6995434f674e4e15757b62bc53cbf25632e69ce9ea083c94"
+ },
+ "immich_pr32612": {
+  "pr": 32612,
+  "parent_commit": "73603bcafe5d1e52434f736476d07c9578f3b888",
+  "merge_commit": "c76e1517321df98df6e9b2f856493ac49ec05877",
+  "files": [
+   "server/src/repositories/view-repository.ts"
+  ],
+  "patch_sha256": "16975355e48d9c32659989089d26a8b00e243b021426df0ce98bc406365d972f"
+ }
+}

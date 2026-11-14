@@ -1,0 +1,102 @@
+{
+ "twenty_pr21506": {
+  "pr": 21506,
+  "parent_commit": "1efa3567ef35ac43b367da00eb28c70521fa468f",
+  "merge_commit": "050f7dcf859ca628274de9587c0732ec2747b8f8",
+  "files": [
+   "packages/twenty-server/src/engine/api/common/common-args-processors/filter-arg-processor/constants/filter-operators.constant.ts"
+  ],
+  "patch_sha256": "e15438e55c9f49ab30cc8f6fb68a6fa25949b68a96fc7b6c3569d4d785e78d48"
+ },
+ "twenty_pr21846": {
+  "pr": 21846,
+  "parent_commit": "a0689d1577add657e303081c39bd1727538e6f2e",
+  "merge_commit": "334e962ab5d330610f134e2d471688ef6546e28d",
+  "files": [
+   "packages/twenty-server/src/engine/api/graphql/graphql-query-runner/helpers/object-records-to-graphql-connection.helper.ts"
+  ],
+  "patch_sha256": "3e1ba2599b86f70748e2858aac9cd08a62596b5e6d9c121424f7726a0153b05a"
+ },
+ "twenty_pr22885": {
+  "pr": 22885,
+  "parent_commit": "0a53cc745db7bfcf6e1476c9a7256cfb2119c6d9",
+  "merge_commit": "7f1e3d35416faa7ced09b5d115fb5ba6843c5d6b",
+  "files": [
+   "packages/twenty-server/src/engine/core-modules/admin-panel/dtos/version-info.dto.ts",
+   "packages/twenty-server/src/engine/core-modules/admin-panel/services/admin-panel-version.service.ts"
+  ],
+  "patch_sha256": "31cc7f0cde6c2e15323668b1acd061015d0e19c3e4b6c07d6d6cb92bf9303b28"
+ },
+ "twenty_pr24301": {
+  "pr": 24301,
+  "parent_commit": "868a63e5fe53c419fe7f42a164a8ac4fbc835e26",
+  "merge_commit": "dd2d68c8a45573e1603c1603c3357b2eb178cb79",
+  "files": [
+   "packages/twenty-server/src/engine/metadata-modules/flat-page-layout-widget/utils/from-page-layout-widget-configuration-to-universal-configuration.util.ts",
+   "packages/twenty-server/src/engine/workspace-manager/workspace-migration/workspace-migration-runner/action-handlers/page-layout-widget/services/utils/from-universal-configuration-to-flat-page-layout-widget-configuration.util.ts"
+  ],
+  "patch_sha256": "875901fa6afca49ded7a72572b8eac0658b2f3901382f48367863f4319affb51"
+ },
+ "twenty_pr25207": {
+  "pr": 25207,
+  "parent_commit": "1d5b9ac9cdbe74b84fe0552820ced1cf1e0f4e73",
+  "merge_commit": "d0f1f75d163e4ee58613c2eea94fb79ab9aaa4ce",
+  "files": [
+   "packages/twenty-server/src/engine/core-modules/file-storage/drivers/s3.driver.ts",
+   "packages/twenty-server/src/utils/propagate-destroy-to-source.util.ts"
+  ],
+  "patch_sha256": "bc33860328a59c65cf8e9f22c51a901a64260960fcfb937b5a4f726c8aefe86c"
+ },
+ "twenty_pr25529": {
+  "pr": 25529,
+  "parent_commit": "e124e981c3299d079930bc13cbcb263e5c6e8e84",
+  "merge_commit": "52542a0008170997472e59633aa192fc10da8097",
+  "files": [
+   "packages/twenty-server/src/modules/messaging/message-outbound-manager/drivers/microsoft/services/microsoft-message-outbound.service.ts"
+  ],
+  "patch_sha256": "0f71f446abe977fde84b9284479225b1e63b4edf348ddad7323be8b91b524c34"
+ },
+ "twenty_pr26271": {
+  "pr": 26271,
+  "parent_commit": "743313f41572d5ac03649582be47565f67874270",
+  "merge_commit": "4a76dd26709d8def076e66b72266c52072327a1a",
+  "files": [
+   "packages/twenty-server/src/modules/workflow/workflow-executor/utils/find-child-step-ids.util.ts",
+   "packages/twenty-server/src/modules/workflow/workflow-executor/utils/workflow-should-keep-running.util.ts"
+  ],
+  "patch_sha256": "83c5eefc6c3f5f4ec6e0d9c6a5ff2976bfcfce38e48cbdccac2b5238999322ee"
+ },
+ "twenty_pr26693": {
+  "pr": 26693,
+  "parent_commit": "ee6477422da950063a8a39f6607819107b52c49a",
+  "merge_commit": "acbef08e2100e9b604e20c670f5b4311bbc2c9bb",
+  "files": [
+   "packages/twenty-server/src/engine/core-modules/upgrade/services/upgrade-sequence-runner.service.ts"
+  ],
+  "patch_sha256": "701d5cb3ec5d93071dca0aa4b47ab4b4f8fd27bacf64dd4e93ccf7120cd6bf81"
+ },
+ "twenty_pr27248": {
+  "pr": 27248,
+  "parent_commit": "c3ee08df58bd65e5fb0db24531c300c06a7cfde9",
+  "merge_commit": "41849ba09fe082e139fdb3a7a7d1cae48edfe985",
+  "files": [
+   "packages/twenty-server/src/engine/core-modules/domain/domain-server-config/services/domain-server-config.service.ts",
+   "packages/twenty-server/src/engine/core-modules/domain/domain-server-config/utils/get-subdomain-and-custom-domain-from-hostname.util.ts",
+   "packages/twenty-server/src/engine/core-modules/domain/workspace-domains/services/workspace-domains.service.ts",
+   "packages/twenty-server/src/engine/core-modules/frontend/frontend.service.ts",
+   "packages/twenty-server/src/engine/core-modules/guard-redirect/services/guard-redirect.service.ts",
+   "packages/twenty-server/src/engine/core-modules/logic-function/logic-function-trigger/triggers/route/route-trigger.service.ts",
+   "packages/twenty-server/src/engine/metadata-modules/route-trigger/route-trigger.controller.ts"
+  ],
+  "patch_sha256": "2418e15bfcd3827de83426c6f7f3e7ef0325a644326edd698cda184314c184c4"
+ },
+ "twenty_pr29126": {
+  "pr": 29126,
+  "parent_commit": "3b62f2836e664eaafbe305bf7b4e925dcb3dfbe8",
+  "merge_commit": "7ee323e20def47390e1dba0e6c4ae729284b742f",
+  "files": [
+   "packages/twenty-server/src/engine/api/common/common-args-processors/data-arg-processor/validator-utils/validate-currency-field-or-throw.util.ts"
+  ],
+  "patch_sha256": "7a9aaa83bd04f040e0c65c61432c3b3288828df5477850ddde376164a77aeb70"
+ }
+}
