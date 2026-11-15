@@ -36,6 +36,15 @@ export function computeStats(nodes: GraphNode[], edges: GraphEdge[]): GraphStats
 }
 
 export function buildGraph(opts: BuildOptions): BuiltGraph {
+  // Mixed-language repositories: one graph per front-end, merged (node/edge ids are language-qualified by file path).
+  const py = opts.files.filter((f) => f.endsWith('.py')), rest = opts.files.filter((f) => !f.endsWith('.py'));
+  if (py.length && rest.length) {
+    const a = buildGraph({ ...opts, files: rest }), b = buildGraph({ ...opts, files: py });
+    const nodes = new Map([...a.nodes, ...b.nodes].map((n) => [n.id, n])), edges = new Map([...a.edges, ...b.edges].map((e) => [e.id, e]));
+    const ns = [...nodes.values()].sort((x, y) => cmp(x.id, y.id)), es = [...edges.values()].sort((x, y) => cmp(x.id, y.id));
+    a.diagnostics.notes.push(...b.diagnostics.notes);
+    return { nodes: ns, edges: es, coverage: a.coverage, stats: computeStats(ns, es), build_ms: a.build_ms + b.build_ms, diagnostics: a.diagnostics };
+  }
   if (opts.files.length && opts.files.every((f) => f.endsWith('.py'))) {
     const g = buildPythonGraph(opts.repoRoot, opts.files);
     const stats = computeStats(g.nodes, g.edges);

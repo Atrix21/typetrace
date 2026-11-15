@@ -1,0 +1,1926 @@
+{
+ "config": {
+  "repo": "M",
+  "split": "test",
+  "arms": [
+   "A0",
+   "A2",
+   "A5",
+   "A6"
+  ],
+  "model": "claude-haiku-5-5",
+  "effort": "high",
+  "repeats": 3,
+  "max_turns": 40,
+  "tasks": [
+   "immich_im_t1",
+   "immich_im_t11",
+   "immich_im_t13",
+   "immich_im_t15",
+   "immich_im_t2",
+   "immich_im_t3",
+   "immich_im_t4",
+   "immich_im_t5",
+   "immich_im_t6",
+   "immich_im_t7",
+   "immich_im_t9",
+   "immich_pr28884",
+   "immich_pr29028",
+   "immich_pr29035",
+   "immich_pr29240",
+   "immich_pr29354",
+   "immich_pr29516",
+   "immich_pr29737",
+   "immich_pr30431",
+   "immich_pr30512",
+   "immich_pr31473",
+   "immich_pr31533",
+   "immich_pr31901",
+   "immich_pr32219",
+   "immich_pr32240",
+   "immich_pr32577"
+  ],
+  "claude_version": "2.1.325",
+  "mock": false,
+  "account": {
+   "name": "owner",
+   "subscription_type": "pro"
+  },
+  "system_prompt_sha": "ee0afe16891ef591",
+  "schema_sha": "53ca3a9507c3b138"
+ },
+ "items": [
+  {
+   "run_id": "immich_im_t1|A2|r2",
+   "task_id": "immich_im_t1",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t1|A6|r1",
+   "task_id": "immich_im_t1",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t1|A0|r1",
+   "task_id": "immich_im_t1",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t1|A0|r3",
+   "task_id": "immich_im_t1",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t1|A2|r1",
+   "task_id": "immich_im_t1",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t1|A6|r3",
+   "task_id": "immich_im_t1",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t1|A0|r2",
+   "task_id": "immich_im_t1",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t1|A5|r1",
+   "task_id": "immich_im_t1",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t1|A5|r2",
+   "task_id": "immich_im_t1",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t1|A5|r3",
+   "task_id": "immich_im_t1",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t1|A2|r3",
+   "task_id": "immich_im_t1",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t1|A6|r2",
+   "task_id": "immich_im_t1",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t11|A6|r1",
+   "task_id": "immich_im_t11",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t11|A5|r3",
+   "task_id": "immich_im_t11",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t11|A6|r3",
+   "task_id": "immich_im_t11",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t11|A6|r2",
+   "task_id": "immich_im_t11",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t11|A2|r3",
+   "task_id": "immich_im_t11",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t11|A2|r1",
+   "task_id": "immich_im_t11",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t11|A5|r1",
+   "task_id": "immich_im_t11",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t11|A5|r2",
+   "task_id": "immich_im_t11",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t11|A2|r2",
+   "task_id": "immich_im_t11",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t11|A0|r1",
+   "task_id": "immich_im_t11",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t11|A0|r3",
+   "task_id": "immich_im_t11",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t11|A0|r2",
+   "task_id": "immich_im_t11",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t13|A2|r2",
+   "task_id": "immich_im_t13",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t13|A6|r3",
+   "task_id": "immich_im_t13",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t13|A0|r1",
+   "task_id": "immich_im_t13",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t13|A5|r1",
+   "task_id": "immich_im_t13",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t13|A0|r3",
+   "task_id": "immich_im_t13",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t13|A0|r2",
+   "task_id": "immich_im_t13",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t13|A5|r3",
+   "task_id": "immich_im_t13",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t13|A2|r1",
+   "task_id": "immich_im_t13",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t13|A6|r2",
+   "task_id": "immich_im_t13",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t13|A5|r2",
+   "task_id": "immich_im_t13",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t13|A6|r1",
+   "task_id": "immich_im_t13",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t13|A2|r3",
+   "task_id": "immich_im_t13",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t15|A0|r2",
+   "task_id": "immich_im_t15",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t15|A6|r1",
+   "task_id": "immich_im_t15",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t15|A0|r1",
+   "task_id": "immich_im_t15",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t15|A2|r3",
+   "task_id": "immich_im_t15",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t15|A5|r3",
+   "task_id": "immich_im_t15",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t15|A0|r3",
+   "task_id": "immich_im_t15",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t15|A6|r2",
+   "task_id": "immich_im_t15",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t15|A6|r3",
+   "task_id": "immich_im_t15",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t15|A2|r2",
+   "task_id": "immich_im_t15",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t15|A5|r1",
+   "task_id": "immich_im_t15",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t15|A2|r1",
+   "task_id": "immich_im_t15",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t15|A5|r2",
+   "task_id": "immich_im_t15",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t2|A5|r1",
+   "task_id": "immich_im_t2",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t2|A6|r3",
+   "task_id": "immich_im_t2",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t2|A5|r2",
+   "task_id": "immich_im_t2",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t2|A6|r2",
+   "task_id": "immich_im_t2",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t2|A0|r3",
+   "task_id": "immich_im_t2",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t2|A5|r3",
+   "task_id": "immich_im_t2",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t2|A2|r1",
+   "task_id": "immich_im_t2",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t2|A2|r2",
+   "task_id": "immich_im_t2",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t2|A0|r1",
+   "task_id": "immich_im_t2",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t2|A0|r2",
+   "task_id": "immich_im_t2",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t2|A2|r3",
+   "task_id": "immich_im_t2",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t2|A6|r1",
+   "task_id": "immich_im_t2",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t3|A5|r3",
+   "task_id": "immich_im_t3",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t3|A0|r2",
+   "task_id": "immich_im_t3",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t3|A2|r3",
+   "task_id": "immich_im_t3",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t3|A0|r3",
+   "task_id": "immich_im_t3",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t3|A5|r1",
+   "task_id": "immich_im_t3",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t3|A6|r1",
+   "task_id": "immich_im_t3",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t3|A2|r1",
+   "task_id": "immich_im_t3",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t3|A6|r3",
+   "task_id": "immich_im_t3",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t3|A0|r1",
+   "task_id": "immich_im_t3",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t3|A2|r2",
+   "task_id": "immich_im_t3",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t3|A5|r2",
+   "task_id": "immich_im_t3",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t3|A6|r2",
+   "task_id": "immich_im_t3",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t4|A6|r1",
+   "task_id": "immich_im_t4",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t4|A5|r2",
+   "task_id": "immich_im_t4",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t4|A5|r1",
+   "task_id": "immich_im_t4",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t4|A6|r3",
+   "task_id": "immich_im_t4",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t4|A2|r2",
+   "task_id": "immich_im_t4",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t4|A2|r1",
+   "task_id": "immich_im_t4",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t4|A0|r3",
+   "task_id": "immich_im_t4",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t4|A6|r2",
+   "task_id": "immich_im_t4",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t4|A0|r2",
+   "task_id": "immich_im_t4",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t4|A0|r1",
+   "task_id": "immich_im_t4",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t4|A5|r3",
+   "task_id": "immich_im_t4",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t4|A2|r3",
+   "task_id": "immich_im_t4",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t5|A6|r3",
+   "task_id": "immich_im_t5",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t5|A0|r2",
+   "task_id": "immich_im_t5",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t5|A5|r1",
+   "task_id": "immich_im_t5",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t5|A2|r2",
+   "task_id": "immich_im_t5",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t5|A0|r3",
+   "task_id": "immich_im_t5",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t5|A2|r1",
+   "task_id": "immich_im_t5",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t5|A2|r3",
+   "task_id": "immich_im_t5",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t5|A5|r2",
+   "task_id": "immich_im_t5",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t5|A6|r2",
+   "task_id": "immich_im_t5",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t5|A0|r1",
+   "task_id": "immich_im_t5",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t5|A6|r1",
+   "task_id": "immich_im_t5",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t5|A5|r3",
+   "task_id": "immich_im_t5",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t6|A6|r1",
+   "task_id": "immich_im_t6",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t6|A2|r1",
+   "task_id": "immich_im_t6",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t6|A5|r3",
+   "task_id": "immich_im_t6",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t6|A0|r3",
+   "task_id": "immich_im_t6",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t6|A5|r2",
+   "task_id": "immich_im_t6",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t6|A0|r2",
+   "task_id": "immich_im_t6",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t6|A0|r1",
+   "task_id": "immich_im_t6",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t6|A2|r3",
+   "task_id": "immich_im_t6",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t6|A5|r1",
+   "task_id": "immich_im_t6",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t6|A2|r2",
+   "task_id": "immich_im_t6",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t6|A6|r2",
+   "task_id": "immich_im_t6",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t6|A6|r3",
+   "task_id": "immich_im_t6",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t7|A5|r1",
+   "task_id": "immich_im_t7",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t7|A0|r1",
+   "task_id": "immich_im_t7",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t7|A2|r1",
+   "task_id": "immich_im_t7",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t7|A6|r2",
+   "task_id": "immich_im_t7",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t7|A5|r3",
+   "task_id": "immich_im_t7",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t7|A2|r3",
+   "task_id": "immich_im_t7",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t7|A5|r2",
+   "task_id": "immich_im_t7",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t7|A6|r3",
+   "task_id": "immich_im_t7",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t7|A2|r2",
+   "task_id": "immich_im_t7",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t7|A0|r3",
+   "task_id": "immich_im_t7",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t7|A6|r1",
+   "task_id": "immich_im_t7",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t7|A0|r2",
+   "task_id": "immich_im_t7",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t9|A5|r3",
+   "task_id": "immich_im_t9",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t9|A5|r2",
+   "task_id": "immich_im_t9",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t9|A0|r2",
+   "task_id": "immich_im_t9",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t9|A0|r3",
+   "task_id": "immich_im_t9",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t9|A0|r1",
+   "task_id": "immich_im_t9",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t9|A6|r1",
+   "task_id": "immich_im_t9",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t9|A6|r3",
+   "task_id": "immich_im_t9",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t9|A6|r2",
+   "task_id": "immich_im_t9",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t9|A2|r3",
+   "task_id": "immich_im_t9",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_im_t9|A2|r2",
+   "task_id": "immich_im_t9",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_im_t9|A5|r1",
+   "task_id": "immich_im_t9",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_im_t9|A2|r1",
+   "task_id": "immich_im_t9",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr28884|A2|r1",
+   "task_id": "immich_pr28884",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr28884|A5|r3",
+   "task_id": "immich_pr28884",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr28884|A5|r1",
+   "task_id": "immich_pr28884",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr28884|A6|r2",
+   "task_id": "immich_pr28884",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr28884|A0|r1",
+   "task_id": "immich_pr28884",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr28884|A6|r1",
+   "task_id": "immich_pr28884",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr28884|A6|r3",
+   "task_id": "immich_pr28884",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr28884|A0|r2",
+   "task_id": "immich_pr28884",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr28884|A5|r2",
+   "task_id": "immich_pr28884",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr28884|A2|r3",
+   "task_id": "immich_pr28884",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr28884|A0|r3",
+   "task_id": "immich_pr28884",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr28884|A2|r2",
+   "task_id": "immich_pr28884",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29028|A2|r3",
+   "task_id": "immich_pr29028",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29028|A5|r2",
+   "task_id": "immich_pr29028",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29028|A2|r1",
+   "task_id": "immich_pr29028",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29028|A6|r2",
+   "task_id": "immich_pr29028",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29028|A5|r3",
+   "task_id": "immich_pr29028",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29028|A0|r2",
+   "task_id": "immich_pr29028",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29028|A0|r3",
+   "task_id": "immich_pr29028",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29028|A5|r1",
+   "task_id": "immich_pr29028",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29028|A6|r3",
+   "task_id": "immich_pr29028",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29028|A2|r2",
+   "task_id": "immich_pr29028",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29028|A6|r1",
+   "task_id": "immich_pr29028",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29028|A0|r1",
+   "task_id": "immich_pr29028",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29035|A5|r3",
+   "task_id": "immich_pr29035",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29035|A5|r1",
+   "task_id": "immich_pr29035",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29035|A5|r2",
+   "task_id": "immich_pr29035",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29035|A0|r2",
+   "task_id": "immich_pr29035",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29035|A2|r3",
+   "task_id": "immich_pr29035",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29035|A2|r1",
+   "task_id": "immich_pr29035",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29035|A0|r3",
+   "task_id": "immich_pr29035",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29035|A0|r1",
+   "task_id": "immich_pr29035",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29035|A6|r2",
+   "task_id": "immich_pr29035",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29035|A6|r3",
+   "task_id": "immich_pr29035",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29035|A6|r1",
+   "task_id": "immich_pr29035",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29035|A2|r2",
+   "task_id": "immich_pr29035",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29240|A5|r2",
+   "task_id": "immich_pr29240",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29240|A2|r2",
+   "task_id": "immich_pr29240",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29240|A6|r1",
+   "task_id": "immich_pr29240",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29240|A0|r1",
+   "task_id": "immich_pr29240",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29240|A2|r1",
+   "task_id": "immich_pr29240",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29240|A2|r3",
+   "task_id": "immich_pr29240",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29240|A0|r2",
+   "task_id": "immich_pr29240",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29240|A6|r2",
+   "task_id": "immich_pr29240",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29240|A5|r1",
+   "task_id": "immich_pr29240",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29240|A6|r3",
+   "task_id": "immich_pr29240",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29240|A5|r3",
+   "task_id": "immich_pr29240",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29240|A0|r3",
+   "task_id": "immich_pr29240",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29354|A2|r1",
+   "task_id": "immich_pr29354",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29354|A0|r1",
+   "task_id": "immich_pr29354",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29354|A6|r1",
+   "task_id": "immich_pr29354",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29354|A2|r3",
+   "task_id": "immich_pr29354",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29354|A6|r3",
+   "task_id": "immich_pr29354",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29354|A5|r1",
+   "task_id": "immich_pr29354",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29354|A5|r2",
+   "task_id": "immich_pr29354",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29354|A0|r3",
+   "task_id": "immich_pr29354",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29354|A0|r2",
+   "task_id": "immich_pr29354",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29354|A5|r3",
+   "task_id": "immich_pr29354",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29354|A6|r2",
+   "task_id": "immich_pr29354",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29354|A2|r2",
+   "task_id": "immich_pr29354",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29516|A0|r2",
+   "task_id": "immich_pr29516",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29516|A2|r2",
+   "task_id": "immich_pr29516",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29516|A2|r1",
+   "task_id": "immich_pr29516",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29516|A0|r3",
+   "task_id": "immich_pr29516",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29516|A5|r2",
+   "task_id": "immich_pr29516",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29516|A5|r1",
+   "task_id": "immich_pr29516",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29516|A0|r1",
+   "task_id": "immich_pr29516",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29516|A5|r3",
+   "task_id": "immich_pr29516",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29516|A6|r2",
+   "task_id": "immich_pr29516",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29516|A2|r3",
+   "task_id": "immich_pr29516",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29516|A6|r3",
+   "task_id": "immich_pr29516",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29516|A6|r1",
+   "task_id": "immich_pr29516",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29737|A6|r1",
+   "task_id": "immich_pr29737",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29737|A5|r1",
+   "task_id": "immich_pr29737",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29737|A0|r3",
+   "task_id": "immich_pr29737",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29737|A6|r3",
+   "task_id": "immich_pr29737",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29737|A6|r2",
+   "task_id": "immich_pr29737",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29737|A2|r1",
+   "task_id": "immich_pr29737",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29737|A5|r2",
+   "task_id": "immich_pr29737",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29737|A2|r3",
+   "task_id": "immich_pr29737",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29737|A0|r1",
+   "task_id": "immich_pr29737",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr29737|A2|r2",
+   "task_id": "immich_pr29737",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr29737|A5|r3",
+   "task_id": "immich_pr29737",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr29737|A0|r2",
+   "task_id": "immich_pr29737",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr30431|A6|r3",
+   "task_id": "immich_pr30431",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr30431|A0|r1",
+   "task_id": "immich_pr30431",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr30431|A6|r1",
+   "task_id": "immich_pr30431",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr30431|A5|r3",
+   "task_id": "immich_pr30431",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr30431|A5|r2",
+   "task_id": "immich_pr30431",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr30431|A2|r1",
+   "task_id": "immich_pr30431",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr30431|A5|r1",
+   "task_id": "immich_pr30431",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr30431|A2|r2",
+   "task_id": "immich_pr30431",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr30431|A0|r3",
+   "task_id": "immich_pr30431",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr30431|A2|r3",
+   "task_id": "immich_pr30431",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr30431|A0|r2",
+   "task_id": "immich_pr30431",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr30431|A6|r2",
+   "task_id": "immich_pr30431",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr30512|A2|r2",
+   "task_id": "immich_pr30512",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr30512|A0|r3",
+   "task_id": "immich_pr30512",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr30512|A0|r2",
+   "task_id": "immich_pr30512",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr30512|A6|r3",
+   "task_id": "immich_pr30512",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr30512|A5|r3",
+   "task_id": "immich_pr30512",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr30512|A2|r1",
+   "task_id": "immich_pr30512",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr30512|A6|r1",
+   "task_id": "immich_pr30512",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr30512|A6|r2",
+   "task_id": "immich_pr30512",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr30512|A2|r3",
+   "task_id": "immich_pr30512",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr30512|A5|r1",
+   "task_id": "immich_pr30512",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr30512|A5|r2",
+   "task_id": "immich_pr30512",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr30512|A0|r1",
+   "task_id": "immich_pr30512",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr31473|A0|r3",
+   "task_id": "immich_pr31473",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr31473|A5|r2",
+   "task_id": "immich_pr31473",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr31473|A0|r2",
+   "task_id": "immich_pr31473",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr31473|A6|r1",
+   "task_id": "immich_pr31473",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr31473|A2|r2",
+   "task_id": "immich_pr31473",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr31473|A2|r3",
+   "task_id": "immich_pr31473",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr31473|A5|r3",
+   "task_id": "immich_pr31473",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr31473|A5|r1",
+   "task_id": "immich_pr31473",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr31473|A2|r1",
+   "task_id": "immich_pr31473",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr31473|A6|r2",
+   "task_id": "immich_pr31473",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr31473|A0|r1",
+   "task_id": "immich_pr31473",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr31473|A6|r3",
+   "task_id": "immich_pr31473",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr31533|A5|r2",
+   "task_id": "immich_pr31533",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr31533|A2|r2",
+   "task_id": "immich_pr31533",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr31533|A6|r2",
+   "task_id": "immich_pr31533",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr31533|A5|r1",
+   "task_id": "immich_pr31533",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr31533|A0|r1",
+   "task_id": "immich_pr31533",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr31533|A0|r3",
+   "task_id": "immich_pr31533",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr31533|A6|r3",
+   "task_id": "immich_pr31533",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr31533|A2|r3",
+   "task_id": "immich_pr31533",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr31533|A5|r3",
+   "task_id": "immich_pr31533",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr31533|A2|r1",
+   "task_id": "immich_pr31533",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr31533|A0|r2",
+   "task_id": "immich_pr31533",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr31533|A6|r1",
+   "task_id": "immich_pr31533",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr31901|A5|r3",
+   "task_id": "immich_pr31901",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr31901|A2|r3",
+   "task_id": "immich_pr31901",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr31901|A6|r2",
+   "task_id": "immich_pr31901",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr31901|A5|r2",
+   "task_id": "immich_pr31901",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr31901|A6|r3",
+   "task_id": "immich_pr31901",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr31901|A2|r1",
+   "task_id": "immich_pr31901",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr31901|A0|r1",
+   "task_id": "immich_pr31901",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr31901|A0|r3",
+   "task_id": "immich_pr31901",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr31901|A5|r1",
+   "task_id": "immich_pr31901",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr31901|A6|r1",
+   "task_id": "immich_pr31901",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr31901|A0|r2",
+   "task_id": "immich_pr31901",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr31901|A2|r2",
+   "task_id": "immich_pr31901",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr32219|A2|r3",
+   "task_id": "immich_pr32219",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr32219|A0|r3",
+   "task_id": "immich_pr32219",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr32219|A6|r2",
+   "task_id": "immich_pr32219",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr32219|A0|r2",
+   "task_id": "immich_pr32219",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr32219|A2|r1",
+   "task_id": "immich_pr32219",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr32219|A6|r1",
+   "task_id": "immich_pr32219",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr32219|A2|r2",
+   "task_id": "immich_pr32219",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr32219|A5|r1",
+   "task_id": "immich_pr32219",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr32219|A5|r3",
+   "task_id": "immich_pr32219",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr32219|A6|r3",
+   "task_id": "immich_pr32219",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr32219|A0|r1",
+   "task_id": "immich_pr32219",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr32219|A5|r2",
+   "task_id": "immich_pr32219",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr32240|A0|r1",
+   "task_id": "immich_pr32240",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr32240|A0|r3",
+   "task_id": "immich_pr32240",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr32240|A5|r3",
+   "task_id": "immich_pr32240",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr32240|A2|r2",
+   "task_id": "immich_pr32240",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr32240|A6|r1",
+   "task_id": "immich_pr32240",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr32240|A6|r2",
+   "task_id": "immich_pr32240",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr32240|A5|r2",
+   "task_id": "immich_pr32240",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr32240|A6|r3",
+   "task_id": "immich_pr32240",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr32240|A5|r1",
+   "task_id": "immich_pr32240",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr32240|A2|r3",
+   "task_id": "immich_pr32240",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr32240|A0|r2",
+   "task_id": "immich_pr32240",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr32240|A2|r1",
+   "task_id": "immich_pr32240",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr32577|A0|r1",
+   "task_id": "immich_pr32577",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr32577|A6|r2",
+   "task_id": "immich_pr32577",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr32577|A5|r2",
+   "task_id": "immich_pr32577",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr32577|A5|r1",
+   "task_id": "immich_pr32577",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr32577|A6|r3",
+   "task_id": "immich_pr32577",
+   "arm": "A6",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr32577|A2|r3",
+   "task_id": "immich_pr32577",
+   "arm": "A2",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr32577|A6|r1",
+   "task_id": "immich_pr32577",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "immich_pr32577|A0|r3",
+   "task_id": "immich_pr32577",
+   "arm": "A0",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr32577|A2|r2",
+   "task_id": "immich_pr32577",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr32577|A0|r2",
+   "task_id": "immich_pr32577",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "immich_pr32577|A5|r3",
+   "task_id": "immich_pr32577",
+   "arm": "A5",
+   "repeat": 3
+  },
+  {
+   "run_id": "immich_pr32577|A2|r1",
+   "task_id": "immich_pr32577",
+   "arm": "A2",
+   "repeat": 1
+  }
+ ]
+}
