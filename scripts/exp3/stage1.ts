@@ -209,4 +209,4 @@ async function main() {
   }
   console.log(`done: ${done.size} (task, corpus, method) rows in ${path.relative(process.cwd(), OUT)}`);
 }
-main().catch((e) => { console.error(e); process.exit(1); });
+main().then(() => process.exit(0), (e) => { console.error(e); process.exit(1); }); // helper servers must not hold the process open

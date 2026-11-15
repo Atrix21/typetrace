@@ -17,6 +17,7 @@ Same tasks, snapshots, budget (50 results / 8k tokens) and scoring for every met
 | graphify 0.9.108 | 0.12 | 0.08 | 0.04 | 0.05 | 0.50 | 0.42 | 8,680 | 201 |
 | code-review-graph 2.4.0 (default, FTS) | 0.18 | 0.10 | 0.04 | 0.10 | 0.56 | 0.40 | 4,702 | 13 |
 | code-review-graph 2.4.0 + embeddings | 0.31 | 0.15 | 0.07 | 0.20 | 0.65 | 0.56 | 4,784 | 26 |
+| code-review-graph 2.4.0 + OUR embedder (Qwen3) | 0.28 | 0.16 | 0.10 | 0.20 | 0.73 | 0.57 | 4,796 | 117 |
 
 | Ours | vs | metric | mean Δ | 95% CI | W/L/T | p |
 |---|---|---|---:|---|---|---:|
@@ -26,12 +27,16 @@ Same tasks, snapshots, budget (50 results / 8k tokens) and scoring for every met
 | hybrid | code-review-graph 2.4.0 (default, FTS) | rc_mrr | +0.412 | [+0.262, +0.577] | 20/0/0 | 0.0000 |
 | hybrid | code-review-graph 2.4.0 + embeddings | sym_recall_10 | +0.379 | [+0.250, +0.521] | 16/0/4 | 0.0000 |
 | hybrid | code-review-graph 2.4.0 + embeddings | rc_mrr | +0.385 | [+0.233, +0.547] | 18/2/0 | 0.0001 |
+| hybrid | code-review-graph 2.4.0 + OUR embedder (Qwen3) | sym_recall_10 | +0.412 | [+0.271, +0.567] | 16/0/4 | 0.0000 |
+| hybrid | code-review-graph 2.4.0 + OUR embedder (Qwen3) | rc_mrr | +0.353 | [+0.202, +0.520] | 17/2/1 | 0.0001 |
 | compact_graph | graphify 0.9.108 | sym_recall_10 | +0.525 | [+0.412, +0.642] | 19/0/1 | 0.0001 |
 | compact_graph | graphify 0.9.108 | rc_mrr | +0.402 | [+0.224, +0.584] | 14/2/4 | 0.0005 |
 | compact_graph | code-review-graph 2.4.0 (default, FTS) | sym_recall_10 | +0.471 | [+0.342, +0.604] | 18/0/2 | 0.0000 |
 | compact_graph | code-review-graph 2.4.0 (default, FTS) | rc_mrr | +0.400 | [+0.245, +0.569] | 15/0/5 | 0.0001 |
 | compact_graph | code-review-graph 2.4.0 + embeddings | sym_recall_10 | +0.338 | [+0.208, +0.483] | 15/0/5 | 0.0001 |
 | compact_graph | code-review-graph 2.4.0 + embeddings | rc_mrr | +0.373 | [+0.217, +0.540] | 14/2/4 | 0.0001 |
+| compact_graph | code-review-graph 2.4.0 + OUR embedder (Qwen3) | sym_recall_10 | +0.371 | [+0.237, +0.517] | 16/0/4 | 0.0000 |
+| compact_graph | code-review-graph 2.4.0 + OUR embedder (Qwen3) | rc_mrr | +0.342 | [+0.187, +0.512] | 13/2/5 | 0.0002 |
 
 ## M: 26 tasks (test split)
 

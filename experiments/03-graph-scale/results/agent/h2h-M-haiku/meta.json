@@ -1,6 +1,6 @@
 {
  "run": "h2h-M-haiku",
- "status": "running",
+ "status": "completed",
  "repo": "M",
  "split": "test",
  "arms": [
@@ -50,5 +50,9 @@
  "system_prompt_sha": "ee0afe16891ef591",
  "schema_sha": "53ca3a9507c3b138",
  "run_usd": 1,
- "updated": "2026-11-14T16:39:31.271Z"
+ "updated": "2026-11-15T06:12:23.358Z",
+ "halted": null,
+ "n_plan": 312,
+ "n_scored": 312,
+ "ledger_usd": 4.5249497100000005
 }

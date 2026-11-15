@@ -63,7 +63,7 @@ function qwenServer(): Promise<string> {
     const child = spawn(abs('vendor/.venvs/embeddings/bin/python'), ['-I', abs('scripts/competitors/openai_embed_server.py'), '--port', '0'], { stdio: ['ignore', 'pipe', 'inherit'], env: { ...process.env, HF_HUB_OFFLINE: '1', TOKENIZERS_PARALLELISM: 'false' } });
     process.on('exit', () => { try { child.kill('SIGTERM'); } catch { /* */ } });
     let buf = '';
-    child.stdout!.on('data', (d) => { buf += d; const l = buf.split('\n').find((x) => x.includes('"ready"')); if (l) resolve(`http://127.0.0.1:${JSON.parse(l).port}/v1`); });
+    child.stdout!.on('data', (d) => { buf += d; const l = buf.split('\n').find((x) => x.includes('"ready"')); if (l) { child.unref(); (child.stdout as unknown as { unref?(): void }).unref?.(); resolve(`http://127.0.0.1:${JSON.parse(l).port}/v1`); } }); // ready: never keep the host process alive
     child.on('exit', (c) => reject(new Error(`embedding server exited (${c})`)));
   });
   return qwenUrl;
