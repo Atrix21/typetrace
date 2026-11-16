@@ -17,7 +17,7 @@ The agent gets one tool, `find_relevant_code`. It returns at most 800 tokens of 
 For example, on [nestjs-boilerplate](https://github.com/brocoders/nestjs-boilerplate) (first 4 of 12 results, 752 tokens in total):
 
 ```text
-$ npx typetrace query . "where are refresh tokens validated?"
+$ npx typetrace-cli query . "where are refresh tokens validated?"
 1. AuthService.validateLogin — src/auth/auth.service.ts:42-97
    → calls: AuthService.getTokensData src/auth/auth.service.ts:599; SessionService.create src/session/session.service.ts:16 +1 more
    ← called by: AuthController.login src/auth/auth.controller.ts:39
@@ -33,14 +33,16 @@ $ npx typetrace query . "where are refresh tokens validated?"
 
 ```bash
 cd your-repo
-npx typetrace init
+npx typetrace-cli init
 ```
+
+Or install it once (`npm i -g typetrace-cli`) and use the `typetrace` command: `typetrace init`.
 
 That indexes the repository and registers the MCP server in `.mcp.json`. Restart Claude Code in the repository and approve the `typetrace` server. The agent can then call `find_relevant_code` whenever it needs to find code.
 
 ```bash
-npx typetrace query . "where are refresh tokens validated?"   # see what the agent sees
-npx typetrace index .                                         # re-index after large changes
+npx typetrace-cli query . "where are refresh tokens validated?"   # see what the agent sees
+npx typetrace-cli index .                                         # re-index after large changes
 ```
 
 **Requirements and what to expect:**
@@ -161,7 +163,7 @@ graphify reports 0.497 on LOCOMO with a harness that is not public; its BM25 sco
 - **Output:** at most 800 tokens of `file:line` pointers with callers, callees and handlers, so the agent's context stays small.
 - **No LLM** is used to build or query the index, and nothing leaves your machine.
 - **Storage:** indexes live in `~/.cache/typetrace/` (move with `TYPETRACE_CACHE`) and the model in `~/.cache/typetrace/models/` (`TYPETRACE_MODEL_DIR`). Your repository is never written to, except `.mcp.json`.
-- **Monorepos:** `npx typetrace init --include packages/server/src`. Third-party type declarations are stubbed automatically above 5,000 files.
+- **Monorepos:** `npx typetrace-cli init --include packages/server/src`. Third-party type declarations are stubbed automatically above 5,000 files.
 
 ## Reproducing the benchmark
 
@@ -179,7 +181,7 @@ Steps:
 - **Setup (one command):** `git clone https://github.com/Atrix21/typetrace && cd typetrace && npm ci && npm run setup`. This clones the competitors at their pinned commits into `vendor/` and creates their Python environments, plus the PyTorch embedding environment, with [uv](https://docs.astral.sh/uv/). It also clones the S repository and builds its task snapshots. Immich and Twenty snapshots are built by `scripts/exp3/tasks.ts` from upstream commits listed in `experiments/03-graph-scale/manifests/`.
 - **Retrieval-only results** need no API access: `npx tsx scripts/exp3/stage1.ts --repo S|M|L ...`, then `python3 scripts/exp3/analyse-h2h.py`.
 - **Agent runs** need a Claude Code login. They are refused unless an approval file and a spend cap allow them.
-- **Embeddings:** every published number uses the PyTorch backend (`--gpu`). The CPU backend that `npx typetrace` uses runs the same model in ONNX. On the S tasks it matches: Recall@10 0.650 vs 0.650 for the agent tool, and at most one task differs per method ([parity check](experiments/03-graph-scale/results/onnx-parity-S/)).
+- **Embeddings:** every published number uses the PyTorch backend (`--gpu`). The CPU backend that `npx typetrace-cli` uses runs the same model in ONNX. On the S tasks it matches: Recall@10 0.650 vs 0.650 for the agent tool, and at most one task differs per method ([parity check](experiments/03-graph-scale/results/onnx-parity-S/)).
 - **Benchmark repositories:** Immich and Twenty are AGPL-3.0 and are not redistributed here. Tasks reference upstream commits, and transcripts and raw outputs containing their code are kept out of git.
 
 Earlier experiments in this repository: experiment 1 (retrieval on S, `research/findings.md`) and experiment 2 (agent diagnosis on S, `experiments/02-agent-diagnosis/findings.md`).

@@ -46,7 +46,8 @@ const flag = (k: string) => argv.includes(`--${k}`);
 process.env.TYPETRACE_EMBED_BACKEND ??= flag('gpu') ? 'python' : 'onnx';
 // The embedding model (~2.4 GB) is cached outside the package, so npx/npm reinstalls never download it again.
 process.env.TYPETRACE_MODEL_DIR ??= path.join(os.homedir(), '.cache', 'typetrace', 'models');
-const VERSION: string = JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, 'package.json'), 'utf8')).version;
+const PKG: { name: string; version: string } = JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, 'package.json'), 'utf8'));
+const VERSION = PKG.version;
 const FROM_NPM = PROJECT_ROOT.split(path.sep).includes('node_modules');
 const EXTS = ['.ts', '.tsx', '.py'];
 const SKIP = /(^|\/)(node_modules|dist|build|\.venv|venv|site-packages|__pycache__|vendor|third_party)(\/|$)/;
@@ -187,7 +188,7 @@ function install(repo: string) {
   const extra = flag('gpu') ? ['--gpu'] : [];
   // Installed from npm: launch through npx (stable across npx cache clean-ups and Node upgrades). From a source checkout: this checkout.
   cfg.mcpServers[SERVER_NAME] = FROM_NPM
-    ? { command: 'npx', args: ['-y', `typetrace@${VERSION}`, 'serve', repo, ...extra] }
+    ? { command: 'npx', args: ['-y', `${PKG.name}@${VERSION}`, 'serve', repo, ...extra] }
     : { command: process.execPath, args: [path.join(PROJECT_ROOT, 'bin', 'typetrace.js'), 'serve', repo, ...extra] };
   fs.writeFileSync(f, JSON.stringify(cfg, null, 2) + '\n');
   err(`added "${SERVER_NAME}" to ${f}. Restart Claude Code in ${repo}; the tool is mcp__${SERVER_NAME}__${EXP3_TOOL_NAME}.`);
