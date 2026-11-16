@@ -11,6 +11,7 @@
  */
 import type { Corpus, IndexStats, RetrievalBudget, RetrievalMethod, RetrievalOutput, RetrievalQuery } from '../types.js';
 import { BM25Retriever } from './bm25.js';
+import type { Chunk } from './chunker.js';
 import { EmbeddingRetriever } from './embeddings.js';
 import { DEFAULT_GRAPH_CONFIG, GraphEngine, basePrior, type GraphConfig } from './graph-engine.js';
 import { DEFAULT_SNIPPETS, loadOrBuildGraph, renderRanked, resetSourceCache, type RankedSymbol, type SnippetConfig } from './graph-retrieval.js';
@@ -38,6 +39,7 @@ export class HybridRetriever implements RetrievalMethod {
   private emb = new EmbeddingRetriever();
   private engine: GraphEngine | null = null;
   private repoRoot = '';
+  private chunkByKey = new Map<string, Chunk>(); // built once per prepare(); it was rebuilt for every query
   constructor(private cfg: HybridConfig = DEFAULT_HYBRID, name = 'hybrid') { this.name = name; }
 
   async prepare(corpus: Corpus): Promise<IndexStats> {
@@ -45,6 +47,7 @@ export class HybridRetriever implements RetrievalMethod {
     this.repoRoot = corpus.repoRoot;
     resetSourceCache();
     const b = await this.bm25.prepare(corpus);
+    this.chunkByKey = new Map(this.bm25.chunks.map((ch) => [ch.id, ch]));
     const needEmb = this.cfg.wSem > 0;
     const e = needEmb ? await this.emb.prepare(corpus) : null;
     const needGraph = this.cfg.wGraph > 0 || this.cfg.wFact > 0;
@@ -135,7 +138,7 @@ export class HybridRetriever implements RetrievalMethod {
         propByKey.set(k, p);
       }
     }
-    const chunkByKey = new Map(chunks.map((ch) => [ch.id, ch]));
+    const chunkByKey = this.chunkByKey;
     for (const [k, v] of final) {
       const node = eng?.byKey.get(k) ?? null;
       const kind = node?.type ?? chunkByKey.get(k)?.kind ?? 'module';

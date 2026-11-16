@@ -113,6 +113,8 @@ export const DEFAULT_GRAPH_CONFIG: GraphConfig = {
   cfBonus: 0.3,
 };
 
+const EVIDENCE_EDGES: ReadonlySet<string> = new Set(['CALLS', 'THROWS', 'CHECKS', 'RETURNS', 'WRITES', 'MUTATES', 'CATCHES', 'BRANCHES_TO', 'QUERIES_DATABASE', 'CALLS_EXTERNAL_API']);
+
 interface PEdge { to: string; type: EdgeType; w: number; conf: number; dir: 'fwd' | 'back'; ev: string | null; line: number | null; verification: string }
 
 export interface PathStep { from: string; to: string; type: EdgeType; dir: 'fwd' | 'back'; verification: string; line: number | null }
@@ -328,13 +330,26 @@ export class GraphEngine {
     return (n.meta?.symbol_key as string | undefined) ?? (n.file && n.qualified_name ? `${n.file}::${n.qualified_name}` : null);
   }
 
-  /** Evidence lines owned by a declaration (conditions, calls, throws, writes, returns) for skeleton snippets. */
+  private evidenceIndex: Map<string, number[]> | null = null;
+
+  /**
+   * Evidence lines owned by a declaration (conditions, calls, throws, writes, returns) for skeleton snippets.
+   * Indexed by owner on first use (experiment 6): the earlier per-call scan of every edge took most of a query's time
+   * on large graphs (about 45 scans of 859k edges per query on the L repository). Same lines, same order.
+   */
   evidenceLines(id: string): number[] {
-    const lines = new Set<number>();
-    for (const e of this.edges) {
-      if ((this.owner.get(e.src) ?? e.src) !== id || e.line == null) continue;
-      if (['CALLS', 'THROWS', 'CHECKS', 'RETURNS', 'WRITES', 'MUTATES', 'CATCHES', 'BRANCHES_TO', 'QUERIES_DATABASE', 'CALLS_EXTERNAL_API'].includes(e.type)) lines.add(e.line);
+    if (!this.evidenceIndex) {
+      const sets = new Map<string, Set<number>>();
+      for (const e of this.edges) {
+        if (e.line == null || !EVIDENCE_EDGES.has(e.type)) continue;
+        const o = this.owner.get(e.src) ?? e.src;
+        let set = sets.get(o);
+        if (!set) sets.set(o, (set = new Set()));
+        set.add(e.line);
+      }
+      this.evidenceIndex = new Map();
+      for (const [o, set] of sets) this.evidenceIndex.set(o, [...set].sort((a, b) => a - b));
     }
-    return [...lines].sort((a, b) => a - b);
+    return [...(this.evidenceIndex.get(id) ?? [])];
   }
 }

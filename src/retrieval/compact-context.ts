@@ -124,8 +124,11 @@ export function renderCompact(idx: CompactIndex | null, query: string, ranked: C
   const lines: string[] = [header];
   const listed: string[] = [];
   const mentioned = new Set<string>();
-  const listedIds: string[] = [];
   let used = countTokens(header);
+  // Graph ids of the ranked symbols, computed once (experiment 6). Every listed symbol is a ranked one, so membership
+  // here equals the earlier per-comparison test "already listed, or anywhere in the ranked list".
+  const rankedIds = new Set<string>();
+  if (idx && opt.relations) for (const x of ranked) { const id = x.symbol ? idx.byKey.get(`${x.file}::${x.symbol}`)?.id : undefined; if (id) rankedIds.add(id); }
   for (const r of ranked) {
     if (listed.length >= opt.maxSymbols) break;
     const key = r.symbol ? `${r.file}::${r.symbol}` : r.file;
@@ -139,7 +142,7 @@ export function renderCompact(idx: CompactIndex | null, query: string, ranked: C
     const ment: string[] = [];
     if (opt.relations && n && idx) {
       const rel = idx.rels.get(n.id) ?? [];
-      const inSet = (id: string) => listedIds.includes(id) || ranked.some((x) => x.symbol && idx.byKey.get(`${x.file}::${x.symbol}`)?.id === id);
+      const inSet = (id: string) => rankedIds.has(id);
       for (const dir of ['out', 'in'] as const) {
         const byVerb = new Map<string, Rel[]>();
         for (const x of rel.filter((y) => y.dir === dir)) {
@@ -165,7 +168,6 @@ export function renderCompact(idx: CompactIndex | null, query: string, ranked: C
     used += t;
     lines.push(text);
     listed.push(key);
-    if (n) listedIds.push(n.id);
     for (const m of ment) { const mn = idx!.nodes.get(m); if (mn?.file && mn.qualified_name) mentioned.add(`${mn.file}::${mn.qualified_name}`); }
   }
   const text = lines.join('\n');
