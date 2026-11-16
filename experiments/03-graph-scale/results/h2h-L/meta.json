@@ -2,9 +2,7 @@
   "repo": "L",
   "split": "test",
   "methods": [
-    "graphify",
-    "code_review_graph",
-    "code_review_graph_emb"
+    "code_review_graph_qwen"
   ],
   "budget": {
     "maxResults": 50,
@@ -32,5 +30,5 @@
   ],
   "nested": null,
   "max_package_declaration_bytes": 0,
-  "started": "2026-11-14T14:54:59.520Z"
+  "started": "2026-11-16T09:51:30.422Z"
 }

@@ -52,6 +52,7 @@ Same tasks, snapshots, budget (50 results / 8k tokens) and scoring for every met
 | graphify 0.9.108 | 0.04 | 0.00 | 0.01 | 0.04 | 0.20 | 0.15 | 8,761 | 595 |
 | code-review-graph 2.4.0 (default, FTS) | 0.03 | 0.01 | 0.01 | 0.08 | 0.18 | 0.04 | 4,024 | 23 |
 | code-review-graph 2.4.0 + embeddings | 0.26 | 0.19 | 0.14 | 0.35 | 0.47 | 0.35 | 5,524 | 52 |
+| code-review-graph 2.4.0 + OUR embedder (Qwen3) | 0.23 | 0.17 | 0.17 | 0.31 | 0.54 | 0.35 | 6,603 | 272 |
 
 | Ours | vs | metric | mean Δ | 95% CI | W/L/T | p |
 |---|---|---|---:|---|---|---:|
@@ -61,12 +62,16 @@ Same tasks, snapshots, budget (50 results / 8k tokens) and scoring for every met
 | hybrid | code-review-graph 2.4.0 (default, FTS) | rc_mrr | +0.293 | [+0.154, +0.448] | 17/1/8 | 0.0000 |
 | hybrid | code-review-graph 2.4.0 + embeddings | sym_recall_10 | +0.213 | [+0.013, +0.412] | 15/3/8 | 0.0251 |
 | hybrid | code-review-graph 2.4.0 + embeddings | rc_mrr | +0.163 | [+0.017, +0.321] | 12/7/7 | 0.0254 |
+| hybrid | code-review-graph 2.4.0 + OUR embedder (Qwen3) | sym_recall_10 | +0.247 | [+0.104, +0.407] | 13/1/12 | 0.0003 |
+| hybrid | code-review-graph 2.4.0 + OUR embedder (Qwen3) | rc_mrr | +0.129 | [-0.015, +0.277] | 13/4/9 | 0.0533 |
 | compact_graph | graphify 0.9.108 | sym_recall_10 | +0.345 | [+0.201, +0.499] | 17/0/9 | 0.0000 |
 | compact_graph | graphify 0.9.108 | rc_mrr | +0.283 | [+0.148, +0.433] | 15/0/11 | 0.0001 |
 | compact_graph | code-review-graph 2.4.0 (default, FTS) | sym_recall_10 | +0.357 | [+0.201, +0.526] | 17/0/9 | 0.0000 |
 | compact_graph | code-review-graph 2.4.0 (default, FTS) | rc_mrr | +0.280 | [+0.138, +0.439] | 15/1/10 | 0.0002 |
 | compact_graph | code-review-graph 2.4.0 + embeddings | sym_recall_10 | +0.123 | [-0.073, +0.320] | 13/4/9 | 0.1217 |
 | compact_graph | code-review-graph 2.4.0 + embeddings | rc_mrr | +0.150 | [+0.002, +0.312] | 12/7/7 | 0.0383 |
+| compact_graph | code-review-graph 2.4.0 + OUR embedder (Qwen3) | sym_recall_10 | +0.157 | [+0.038, +0.297] | 11/1/14 | 0.0159 |
+| compact_graph | code-review-graph 2.4.0 + OUR embedder (Qwen3) | rc_mrr | +0.116 | [-0.028, +0.267] | 11/5/10 | 0.0742 |
 
 ## L: 18 tasks (test split)
 
@@ -82,6 +87,7 @@ Same tasks, snapshots, budget (50 results / 8k tokens) and scoring for every met
 | graphify 0.9.108 | 0.01 | 0.01 | 0.00 | 0.00 | 0.06 | 0.03 | 5,459 | 6,319 |
 | code-review-graph 2.4.0 (default, FTS) | 0.01 | 0.00 | 0.00 | 0.00 | 0.05 | 0.02 | 4,952 | 310 |
 | code-review-graph 2.4.0 + embeddings | 0.10 | 0.08 | 0.02 | 0.06 | 0.21 | 0.17 | 6,885 | 345 |
+| code-review-graph 2.4.0 + OUR embedder (Qwen3) | 0.17 | 0.09 | 0.03 | 0.11 | 0.33 | 0.24 | 7,545 | 836 |
 
 | Ours | vs | metric | mean Δ | 95% CI | W/L/T | p |
 |---|---|---|---:|---|---|---:|
@@ -91,9 +97,13 @@ Same tasks, snapshots, budget (50 results / 8k tokens) and scoring for every met
 | hybrid | code-review-graph 2.4.0 (default, FTS) | rc_mrr | +0.229 | [+0.073, +0.415] | 8/0/10 | 0.0032 |
 | hybrid | code-review-graph 2.4.0 + embeddings | sym_recall_10 | +0.227 | [+0.134, +0.324] | 12/0/6 | 0.0001 |
 | hybrid | code-review-graph 2.4.0 + embeddings | rc_mrr | +0.212 | [+0.068, +0.382] | 8/0/10 | 0.0032 |
+| hybrid | code-review-graph 2.4.0 + OUR embedder (Qwen3) | sym_recall_10 | +0.158 | [+0.047, +0.264] | 11/1/6 | 0.0081 |
+| hybrid | code-review-graph 2.4.0 + OUR embedder (Qwen3) | rc_mrr | +0.196 | [+0.057, +0.364] | 8/0/10 | 0.0032 |
 | compact_graph | graphify 0.9.108 | sym_recall_10 | +0.272 | [+0.167, +0.392] | 13/0/5 | 0.0001 |
 | compact_graph | graphify 0.9.108 | rc_mrr | +0.219 | [+0.061, +0.407] | 6/0/12 | 0.0148 |
 | compact_graph | code-review-graph 2.4.0 (default, FTS) | sym_recall_10 | +0.278 | [+0.171, +0.398] | 13/0/5 | 0.0001 |
 | compact_graph | code-review-graph 2.4.0 (default, FTS) | rc_mrr | +0.220 | [+0.062, +0.407] | 6/0/12 | 0.0148 |
 | compact_graph | code-review-graph 2.4.0 + embeddings | sym_recall_10 | +0.184 | [+0.104, +0.267] | 11/0/7 | 0.0005 |
 | compact_graph | code-review-graph 2.4.0 + embeddings | rc_mrr | +0.204 | [+0.056, +0.375] | 6/0/12 | 0.0148 |
+| compact_graph | code-review-graph 2.4.0 + OUR embedder (Qwen3) | sym_recall_10 | +0.115 | [+0.015, +0.205] | 10/1/7 | 0.0201 |
+| compact_graph | code-review-graph 2.4.0 + OUR embedder (Qwen3) | rc_mrr | +0.188 | [+0.046, +0.357] | 6/0/12 | 0.0148 |
