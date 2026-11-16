@@ -1,0 +1,11 @@
+<!doctype html>
+<!-- Template: render.sh fills __W__, __H__ and __SCRIPT__ per diagram. -->
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=JetBrains+Mono:wght@500&display=block" rel="stylesheet">
+<style>html,body{margin:0;background:#fcfcfb}svg{display:block}</style>
+<script src="../../../node_modules/roughjs/bundled/rough.js"></script>
+<script src="kit.js"></script>
+</head><body><svg id="s" xmlns="http://www.w3.org/2000/svg"></svg>
+<script src="__SCRIPT__"></script>
+<script>Promise.all(['400 20px Kalam', '700 20px Kalam', '500 16px "JetBrains Mono"'].map((f) => document.fonts.load(f))).then(() => document.fonts.ready).then(() => { const k = kit(document.getElementById('s'), __W__, __H__); draw(k, k.C); document.title = 'ready'; });</script>
+</body></html>

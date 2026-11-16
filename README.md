@@ -4,7 +4,15 @@
 
 <p align="center">Local MCP server for Claude Code and other MCP clients · TypeScript (Python experimental) · no API keys, nothing leaves your machine · MIT</p>
 
+<p align="center">
+  <a href="https://www.npmjs.com/package/typetrace-cli"><img src="https://img.shields.io/npm/v/typetrace-cli?style=flat-square&color=2a78d6" alt="npm"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/licence-MIT-2a78d6?style=flat-square" alt="MIT licence"></a>
+  <a href="https://modelcontextprotocol.io/"><img src="https://img.shields.io/badge/MCP-server-2a78d6?style=flat-square" alt="MCP server"></a>
+</p>
+
 ---
+
+<p align="center"><img src="docs/diagrams/without-with.png" alt="Without TypeTrace the agent greps and opens file after file (513k tokens per task on the Twenty server); with TypeTrace it asks once, gets a short map of the relevant functions and opens only those files (453k tokens per task), with a task score of 0.90 vs 0.84." width="90%"></p>
 
 TypeTrace maps how your code connects, then answers an agent's question with the few places that matter:
 
@@ -13,6 +21,8 @@ TypeTrace maps how your code connects, then answers an agent's question with the
 3. **Follow the connections.** From those matches it walks the graph to the callers, callees and handlers that are actually involved.
 
 The agent gets one tool, `find_relevant_code`. It returns at most 800 tokens of `file:line` pointers with each function's callers and callees. Then the agent opens the right files instead of searching for them.
+
+<p align="center"><img src="docs/diagrams/how-it-works.png" alt="How TypeTrace works: your repo, read by the TypeScript compiler into a typed call graph; search by words and by meaning; follow the links (callers, callees, routes, events, injected services); a short answer of at most 800 tokens of file:line pointers." width="100%"></p>
 
 For example, on [nestjs-boilerplate](https://github.com/brocoders/nestjs-boilerplate) (first 4 of 12 results, 752 tokens in total):
 
@@ -68,6 +78,10 @@ Everything below was measured on three real TypeScript repositories of increasin
 
 **Recall@10** is the share of the ground-truth functions (a bug's root cause and the functions on its path, or the functions a code question is about) found in the top 10 results.
 
+<p align="center"><img src="docs/diagrams/results.png" alt="Recall@10 by repository. nestjs-boilerplate: TypeTrace 0.65, code-review-graph with embeddings 0.31, code-review-graph default 0.18, graphify 0.12. Immich: 0.39, 0.26, 0.03, 0.04. Twenty: 0.28, 0.10, 0.01, 0.01." width="100%"></p>
+
+The table gives TypeTrace's two variants: the full hybrid ranking, and the ≤800-token agent tool shown in the chart.
+
 | Repository | Lines | Tasks | **TypeTrace** (hybrid) | **TypeTrace** (agent tool, ≤800 tok) | code-review-graph + embeddings | code-review-graph (default) | graphify |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | nestjs-boilerplate | 6.3k | 20 | **0.69** | **0.65** | 0.31 | 0.18 | 0.12 |
@@ -83,6 +97,8 @@ Full table with MRR, file recall, output size and latency: [`h2h-report.md`](exp
 ### 2. Does it make a coding agent better or cheaper?
 
 Claude Code, headless, with the read-only tools Read, Grep and Glob plus the arm's MCP server. Held-out bug reports and code questions, 3 repeats per task and arm, scored automatically against frozen ground truth (no LLM judge).
+
+<p align="center"><img src="docs/diagrams/agent-tokens.png" alt="Tokens per task with a coding agent. Twenty: TypeTrace 453k (score 0.90), graphify 521k (0.87), code-review-graph 779k (0.85), grep only 513k (0.84). Immich: TypeTrace 190k (0.86), graphify 248k (0.83), code-review-graph 399k (0.86), grep only 235k (0.82)." width="100%"></p>
 
 **Twenty server (763k lines), Claude Haiku 5.5, 18 tasks:**
 
@@ -156,6 +172,8 @@ LOCOMO contains no code, so it tests only TypeTrace's search stack (BM25, Qwen3-
 graphify reports 0.497 on LOCOMO with a harness that is not public; its BM25 scores 0.362 there, against 0.540 on the open protocol. The numbers measure different things, so ours is **not** a like-for-like win over graphify's figure. Details: [`experiments/04-locomo/`](experiments/04-locomo/).
 
 ## How it works
+
+<p align="center"><img src="docs/diagrams/hidden-links.png" alt="Example on nestjs-boilerplate: the question about a refresh token that still works after a password change finds AuthService.refreshToken by meaning; the graph adds the HTTP route POST /auth/refresh, AuthController.refresh which calls it, and the functions it calls: SessionService.updateByHash, UsersService.findById and AuthService.getTokensData." width="95%"></p>
 
 - **TypeScript graph:** built with the TypeScript compiler, so calls are resolved by type, not by name. It covers typed calls, dependency injection, decorators, GraphQL resolvers, keyed event and job dispatch, HTTP routes and Kysely queries.
 - **Python graph (experimental):** tree-sitter with scope, import, inheritance (MRO) and `self.attr` resolution. Name-only guesses are kept separate and marked as inferred.
