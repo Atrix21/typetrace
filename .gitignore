@@ -17,6 +17,8 @@ experiments/03-graph-scale/results/stage1-*/raw/
 experiments/03-graph-scale/results/agent/*/transcripts/
 experiments/03-graph-scale/results/h2h-*/raw/
 experiments/05-swebench-python/results/raw/
+# Experiment 8: raw retrieval outputs contain code from the benchmark repositories (various licences) — local only
+experiments/08-swebench-multilingual/results/raw/
 
 # owner-specific privacy-scan patterns for scripts/release/export.py (never committed)
 .private-patterns

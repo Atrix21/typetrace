@@ -1,0 +1,9 @@
+{
+ "dataset": "SWE-bench/SWE-bench_Multilingual",
+ "split": "test",
+ "instances": 300,
+ "repositories": 41,
+ "sha256_of_fetched_rows_json": "eb0674a958e91763a2aeb1f9b481efeea7ffce43b6205077d89465a1ebc1188a",
+ "fetched_via": "scripts/swebench/get-multilingual.sh (datasets-server.huggingface.co/rows, 3 pages of 100)",
+ "frozen_at": "2026-11-17"
+}
