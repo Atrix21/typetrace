@@ -1,0 +1,25 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx tsc --noEmit -p tsconfig.json
+      - run: npm run build
+      - name: benchmark target (nestjs-boilerplate snapshot used by the tests)
+        run: bash scripts/setup-target-deps.sh && npm run -s setup:target
+      - run: npx vitest run
+      - name: package contents
+        run: npm pack --dry-run 2>&1 | tail -5

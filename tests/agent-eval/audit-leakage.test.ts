@@ -20,7 +20,7 @@ const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'audit-leak-'));
 let cleanup: string | null = null;
 afterAll(() => { fs.rmSync(tmp, { recursive: true, force: true }); if (cleanup) fs.rmSync(cleanup, { recursive: true, force: true }); });
 
-describe.skipIf(!hasClaude)('AUDIT leakage: restricted-oauth profile, mock API, scripted probes (graphify condition: has an ../idx dir)', () => {
+describe.skipIf(!hasClaude || !fs.existsSync(path.resolve('vendor/.venvs/graphify/bin/python')))('AUDIT leakage: restricted-oauth profile, mock API, scripted probes (graphify condition: has an ../idx dir)', () => {
   it('every out-of-workspace probe is denied or empty; .git holds one neutral commit; init shows exactly the expected tools / MCP server / no skills', async () => {
     const cfg = loadConfig();
     const ws = buildWorkspace(cfg, 'auth_reset_sessions_01', 'audit-leak-test');

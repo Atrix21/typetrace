@@ -18,6 +18,12 @@ import { LEAK_PATTERN, ourServerLaunch } from '../../src/agent-eval/mcp/inspect-
 import { embeddingConsistency, TOOL_DESCRIPTION } from '../../src/agent-eval/mcp/retrieval-server.js';
 
 const QUERY = 'JWT token verification rejects valid tokens so every request returns 401 Unauthorized';
+// Integration tests that need the benchmark environment from `npm run setup` (Python venvs, competitors, experiment-1
+// embedding cache) skip themselves when it is absent, e.g. in CI; they run on a set-up checkout.
+const has = (p: string) => fs.existsSync(path.resolve(p));
+const hasEmbeddingEnv = has('vendor/.venvs/embeddings/bin/python') && has('.cache/embeddings');
+const hasGraphify = has('vendor/.venvs/graphify/bin/python');
+const hasCrg = has('vendor/.venvs/code-review-graph/bin/python');
 const BUDGET = 3000;
 const cfg = loadConfig();
 let ws: Workspace;
@@ -76,7 +82,7 @@ describe('search_code server (ours)', () => {
     }, 180_000);
   }
 
-  for (const method of ['embeddings', 'hybrid']) it(`${method}: persistent query embedding serves results (document vectors from the experiment-1 cache)`, async () => {
+  for (const method of ['embeddings', 'hybrid']) it.skipIf(!hasEmbeddingEnv)(`${method}: persistent query embedding serves results (document vectors from the experiment-1 cache)`, async () => {
     const log = path.join(tmp, `${method}-emb.jsonl`);
     await withClient(ourServerLaunch(method, ws, BUDGET, 20, log), async (c) => {
       const t0 = performance.now();
@@ -115,7 +121,7 @@ describe('pluggable query embedder (experiment-1 behaviour unchanged unless opte
   });
 });
 
-describe('embed_server.py vs experiment-1 embed.py', () => {
+describe.skipIf(!hasEmbeddingEnv)('embed_server.py vs experiment-1 embed.py', () => {
   it('query vectors agree (cosine >= 0.999)', async () => {
     const res = await embeddingConsistency([QUERY, 'AuthService.validateLogin'], path.join(tmp, 'embcheck'));
     for (const r of res) { expect(r.cosine).toBeGreaterThanOrEqual(0.999); expect(r.tokens_server).toBe(r.tokens_cached); }
@@ -125,7 +131,7 @@ describe('embed_server.py vs experiment-1 embed.py', () => {
 describe('competitor native MCP servers', () => {
   const before = () => spawnSync('git', ['-C', ws.dir, 'status', '--porcelain', '--ignored', '--untracked-files=all'], { encoding: 'utf8' }).stdout;
 
-  it('graphify: builds a graph outside the workspace and serves a non-empty tool list', async () => {
+  it.skipIf(!hasGraphify)('graphify: builds a graph outside the workspace and serves a non-empty tool list', async () => {
     const state = before();
     const spec = await competitorServerSpec('graphify', ws);
     expect(before()).toBe(state);
@@ -143,7 +149,7 @@ describe('competitor native MCP servers', () => {
     });
   }, 300_000);
 
-  it('crg: builds a graph in CRG_DATA_DIR and serves a non-empty tool list', async () => {
+  it.skipIf(!hasCrg)('crg: builds a graph in CRG_DATA_DIR and serves a non-empty tool list', async () => {
     const state = before();
     const spec = await competitorServerSpec('crg', ws);
     expect(before()).toBe(state);
