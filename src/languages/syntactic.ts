@@ -844,21 +844,31 @@ export function buildSyntacticGraph(repoRoot: string, files: string[], repoName 
   const infos = new Map<string, FileInfo>();
   const texts = new Map<string, string>();
   const parseErrors = new Map<LangId, number>(), perLang = new Map<LangId, number>();
+  const skipped: string[] = [];
   for (const rel of files) {
     const lang = langOf(rel, hdr)?.id;
     const a = lang ? ADAPTERS[lang] : undefined;
     if (!lang || !a) continue;
     langs.add(lang);
     const text = fs.readFileSync(path.join(repoRoot, rel), 'utf8');
+    let tree: ReturnType<typeof parse> | null = null, info: FileInfo;
+    try {
+      tree = parse(lang, text);
+      perLang.set(lang, (perLang.get(lang) ?? 0) + 1);
+      if (tree.rootNode.hasError) parseErrors.set(lang, (parseErrors.get(lang) ?? 0) + 1);
+      const { defs, containers } = extractDefs(lang, a, rel, tree.rootNode);
+      info = { rel, lang, a, pkg: a.pkg(tree.rootNode, rel), imports: a.imports(tree.rootNode), defs, containers, topNames: new Map(), visible: new Set(), names: new Map(), modules: new Map() };
+    } catch (e) {
+      // one unusual file must not fail the whole index: it is skipped and reported
+      tree?.delete();
+      skipped.push(`${rel} (${(e as Error).message.slice(0, 80)})`);
+      continue;
+    }
     texts.set(rel, text);
-    const tree = parse(lang, text);
-    perLang.set(lang, (perLang.get(lang) ?? 0) + 1);
-    if (tree.rootNode.hasError) parseErrors.set(lang, (parseErrors.get(lang) ?? 0) + 1);
-    const { defs, containers } = extractDefs(lang, a, rel, tree.rootNode);
-    const info: FileInfo = { rel, lang, a, pkg: a.pkg(tree.rootNode, rel), imports: a.imports(tree.rootNode), defs, containers, topNames: new Map(), visible: new Set(), names: new Map(), modules: new Map() };
+    const defs = info.defs;
     for (const d of defs) if (!d.name.includes('.') || d.parentId === `file:${rel}` && d.kind !== 'method') { const arr = info.topNames.get(d.simple) ?? []; arr.push(d); info.topNames.set(d.simple, arr); }
     infos.set(rel, info);
-    tree.delete();
+    tree!.delete();
     for (const d of defs) d.node = null as unknown as TSNode; // freed with the tree; pass 3 re-parses
   }
   ctx.node('repository', repoId, repoName, null, null, null, { language: [...langs].sort().join(','), file_count: infos.size });
@@ -1162,7 +1172,7 @@ export function buildSyntacticGraph(repoRoot: string, files: string[], repoName 
         const cls = d.kind === 'class' || d.kind === 'interface' ? d : d.kind === 'method' ? (byId.get(d.parentId) ?? (d.owner ? resolveType(d.owner, f) : null)) : null;
         owners.push({ id: d.id, node: d.node, cls: cls && (cls.kind === 'class' || cls.kind === 'interface') ? cls : null, def: d });
       }
-      for (const o of owners) walkCalls(f, o);
+      try { for (const o of owners) walkCalls(f, o); } catch (e) { skipped.push(`${f.rel} calls (${(e as Error).message.slice(0, 80)})`); }
       p.tree.delete();
     }
   }
@@ -1334,6 +1344,7 @@ export function buildSyntacticGraph(repoRoot: string, files: string[], repoName 
     }
   }
 
+  if (skipped.length) notes.push(`skipped after an extraction error: ${skipped.length} file(s): ${skipped.slice(0, 5).join('; ')}${skipped.length > 5 ? ' ...' : ''}`);
   for (const [l, n] of [...perLang].sort()) notes.push(`${l}: ${parseErrors.get(l) ?? 0} of ${n} files have syntax the grammar did not fully parse (declarations after the error may be mis-nested)`);
   notes.push(`${[...langs].sort().join(', ')} calls: ${resolved} resolved syntactically, ${inferred} name-inferred (<=3 candidates), ${unresolved} unresolved (standard library, external packages, dynamic receivers)`);
   const cmp = (x: string, y: string) => (x < y ? -1 : x > y ? 1 : 0);

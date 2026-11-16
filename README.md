@@ -6,6 +6,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/typetrace-cli"><img src="https://img.shields.io/npm/v/typetrace-cli?style=flat-square&color=2a78d6" alt="npm"></a>
+  <a href="https://github.com/Atrix21/typetrace/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Atrix21/typetrace/ci.yml?branch=main&style=flat-square&label=tests" alt="tests"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/licence-MIT-2a78d6?style=flat-square" alt="MIT licence"></a>
   <a href="https://modelcontextprotocol.io/"><img src="https://img.shields.io/badge/MCP-server-2a78d6?style=flat-square" alt="MCP server"></a>
 </p>
