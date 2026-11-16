@@ -12,6 +12,7 @@
   "files": [
     "bin/",
     "dist/",
+    "grammars/",
     "scripts/embeddings/embed-onnx.mjs",
     "scripts/embeddings/embed.py",
     "scripts/embeddings/embed_server.py",

@@ -13,6 +13,8 @@ import { FrameworkExtractor } from '../parser/framework-extractor.js';
 import { walkOwners } from '../parser/body-walker.js';
 import { computeCoverage } from './graph-validator.js';
 import { buildPythonGraph } from '../languages/python.js';
+import { headerLang, langOf } from '../languages/registry.js';
+import { buildSyntacticGraph, isSyntactic } from '../languages/syntactic.js';
 
 export interface BuildOptions { repoRoot: string; files: string[]; tsconfigPath?: string; maxPackageDeclarationBytes?: number }
 export interface BuiltGraph {
@@ -36,14 +38,24 @@ export function computeStats(nodes: GraphNode[], edges: GraphEdge[]): GraphStats
 }
 
 export function buildGraph(opts: BuildOptions): BuiltGraph {
-  // Mixed-language repositories: one graph per front-end, merged (node/edge ids are language-qualified by file path).
-  const py = opts.files.filter((f) => f.endsWith('.py')), rest = opts.files.filter((f) => !f.endsWith('.py'));
-  if (py.length && rest.length) {
-    const a = buildGraph({ ...opts, files: rest }), b = buildGraph({ ...opts, files: py });
-    const nodes = new Map([...a.nodes, ...b.nodes].map((n) => [n.id, n])), edges = new Map([...a.edges, ...b.edges].map((e) => [e.id, e]));
+  // Mixed-language repositories: one graph per front-end (TypeScript compiler for TS/JS, Python, tree-sitter for the
+  // rest), merged; node and edge ids are qualified by file path, so they cannot collide.
+  const hdr = headerLang(opts.files);
+  const frontEnd = (f: string) => { const l = langOf(f, hdr)?.id; return l === 'python' ? 'py' : isSyntactic(l) ? 'syn' : 'ts'; };
+  const groups = (['ts', 'py', 'syn'] as const).map((k) => opts.files.filter((f) => frontEnd(f) === k)).filter((g) => g.length);
+  if (groups.length > 1) {
+    const parts = groups.map((files) => buildGraph({ ...opts, files }));
+    const nodes = new Map(parts.flatMap((p) => p.nodes).map((n) => [n.id, n])), edges = new Map(parts.flatMap((p) => p.edges).map((e) => [e.id, e]));
     const ns = [...nodes.values()].sort((x, y) => cmp(x.id, y.id)), es = [...edges.values()].sort((x, y) => cmp(x.id, y.id));
-    a.diagnostics.notes.push(...b.diagnostics.notes);
-    return { nodes: ns, edges: es, coverage: a.coverage, stats: computeStats(ns, es), build_ms: a.build_ms + b.build_ms, diagnostics: a.diagnostics };
+    for (const p of parts.slice(1)) parts[0].diagnostics.notes.push(...p.diagnostics.notes);
+    return { nodes: ns, edges: es, coverage: parts[0].coverage, stats: computeStats(ns, es), build_ms: parts.reduce((s, p) => s + p.build_ms, 0), diagnostics: parts[0].diagnostics };
+  }
+  if (opts.files.length && groups[0][0] && frontEnd(groups[0][0]) === 'syn') {
+    const g = buildSyntacticGraph(opts.repoRoot, opts.files);
+    const stats = computeStats(g.nodes, g.edges);
+    const diag = newDiagnostics(); diag.notes.push(...g.notes);
+    const coverage = { eligible_files: opts.files.length, parsed_files: opts.files.length, notes: g.notes } as unknown as CoverageReport;
+    return { nodes: g.nodes, edges: g.edges, coverage, stats, build_ms: g.build_ms, diagnostics: diag };
   }
   if (opts.files.length && opts.files.every((f) => f.endsWith('.py'))) {
     const g = buildPythonGraph(opts.repoRoot, opts.files);

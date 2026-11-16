@@ -90,7 +90,8 @@ export function createProject(opts: ProjectOptions): Project {
   const extraRoots: string[] = []; // ambient .d.ts files matched by tsconfig "include"
   const cfgPath = opts.tsconfigPath
     ? path.resolve(repoRoot, opts.tsconfigPath)
-    : fs.existsSync(path.join(repoRoot, 'tsconfig.json')) ? path.join(repoRoot, 'tsconfig.json') : null;
+    : fs.existsSync(path.join(repoRoot, 'tsconfig.json')) ? path.join(repoRoot, 'tsconfig.json')
+    : fs.existsSync(path.join(repoRoot, 'jsconfig.json')) ? path.join(repoRoot, 'jsconfig.json') : null;
   if (cfgPath && fs.existsSync(cfgPath)) {
     tsconfig = toPosix(path.relative(repoRoot, cfgPath));
     const read = ts.readConfigFile(cfgPath, ts.sys.readFile);
@@ -104,7 +105,8 @@ export function createProject(opts: ProjectOptions): Project {
     ...options,
     noEmit: true, incremental: false, composite: false, tsBuildInfoFile: undefined,
     declaration: false, declarationMap: false, sourceMap: false, emitDeclarationOnly: false,
-    allowJs: false, checkJs: false, noResolve: false,
+    // JavaScript goes through the same compiler (symbols, imports, CommonJS, inferred types) when the corpus has any.
+    allowJs: files.some((f) => /\.(c|m)?jsx?$/.test(f)), checkJs: false, noResolve: false, maxNodeModuleJsDepth: 0,
   };
 
   const rootNames = [...new Set([...files.map((f) => absByRel.get(f)!).filter((a) => fs.existsSync(a)), ...extraRoots])];

@@ -23,14 +23,15 @@ import path from 'node:path';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
-import { abs, listCorpusFiles, PROJECT_ROOT } from '../config.js';
+import { abs, PROJECT_ROOT } from '../config.js';
 import { REGISTRY } from '../evaluation/methods.js';
 import { countTokens } from '../evaluation/token-accounting.js';
 import { buildGraph } from '../graph/graph-builder.js';
 import { loadGraph, saveGraph } from '../graph/graph-store.js';
 import { EXP3_TOOL_DESCRIPTION, EXP3_TOOL_NAME, EXP3_TOOL_SCHEMA } from '../agent-eval/exp3/tool-def.js';
 import { Embedder, EmbeddingRetriever, ONNX_EMBEDDING } from '../retrieval/embeddings.js';
-import { initLanguages } from '../languages/registry.js';
+import { grammarLanguages, initLanguages } from '../languages/registry.js';
+import { languageSummary, sourceFiles } from './source-files.js';
 import { PersistentQueryEmbedder } from '../agent-eval/mcp/retrieval-server.js';
 import { primeGraphCache } from '../retrieval/graph-retrieval.js';
 import type { Corpus, RetrievalMethod } from '../types.js';
@@ -49,13 +50,7 @@ process.env.TYPETRACE_MODEL_DIR ??= path.join(os.homedir(), '.cache', 'typetrace
 const PKG: { name: string; version: string } = JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, 'package.json'), 'utf8'));
 const VERSION = PKG.version;
 const FROM_NPM = PROJECT_ROOT.split(path.sep).includes('node_modules');
-const EXTS = ['.ts', '.tsx', '.py'];
-const SKIP = /(^|\/)(node_modules|dist|build|\.venv|venv|site-packages|__pycache__|vendor|third_party)(\/|$)/;
 
-/** Source files TypeTrace indexes: TypeScript and Python, excluding build output and virtualenvs. */
-function sourceFiles(repo: string, include: string[]): string[] {
-  return listCorpusFiles(repo, include, EXTS).filter((f) => !SKIP.test(f));
-}
 
 function cacheDir(repo: string): string {
   const base = process.env.TYPETRACE_CACHE ?? path.join(os.homedir(), '.cache', 'typetrace');
@@ -75,6 +70,7 @@ async function load(repo: string, quiet = false, queryEmbedder = true) {
   if (!fs.existsSync(graphPath)) throw new Error(`no index for ${repo}; run: typetrace index ${repo}`);
   const include = includeDirs(repo, dir);
   const files = sourceFiles(repo, include);
+  await initLanguages(grammarLanguages(files));
   const corpus: Corpus = { repoRoot: repo, commit: 'local', files, cacheDir: path.join(dir, 'retrieval') };
   fs.mkdirSync(corpus.cacheDir, { recursive: true });
   const graph = loadGraph(graphPath);
@@ -124,9 +120,9 @@ async function index(repo: string) {
   fs.mkdirSync(dir, { recursive: true });
   const include = opt('include')?.split(',') ?? [''];
   const files = sourceFiles(repo, include);
-  if (!files.length) throw new Error(`no TypeScript or Python files in ${repo}${opt('include') ? ` under ${include.join(', ')}` : ''}`);
-  const nPy = files.filter((f) => f.endsWith('.py')).length;
-  err(`found ${files.length - nPy} TypeScript and ${nPy} Python files`);
+  if (!files.length) throw new Error(`no supported source files in ${repo}${opt('include') ? ` under ${include.join(', ')}` : ''} (TypeScript, JavaScript, Python, Go, Java, Kotlin, Scala, C#, Rust, C, C++, Ruby, PHP, Swift)`);
+  err(`found ${files.length} files: ${languageSummary(files)}`);
+  await initLanguages(grammarLanguages(files));
   const mb = opt('max-package-decl-mb');
   err(`building the code graph…`);
   const g = buildGraph({ repoRoot: repo, files, maxPackageDeclarationBytes: mb !== undefined ? Number(mb) * 1e6 : files.length > 5000 ? 0 : 50e6 });
@@ -211,7 +207,6 @@ async function main() {
   indexes: ~/.cache/typetrace (TYPETRACE_CACHE to move); model: ~/.cache/typetrace/models (TYPETRACE_MODEL_DIR)`);
     process.exit(cmd ? 2 : 0);
   }
-  await initLanguages();
   const repo = path.resolve(repoArg);
   if (cmd === 'init') await init(repo);
   else if (cmd === 'index') await index(repo);

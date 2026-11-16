@@ -15,6 +15,8 @@ import ts from 'typescript';
 import fs from 'node:fs';
 import path from 'node:path';
 import { pythonDeclarations } from '../languages/python.js';
+import { headerLang, langOf, type HeaderLang } from '../languages/registry.js';
+import { isSyntactic, syntacticDeclarations } from '../languages/syntactic.js';
 
 export interface CanonicalSymbol {
   key: string;
@@ -31,7 +33,9 @@ export class SymbolIndex {
   readonly byFile = new Map<string, CanonicalSymbol[]>();
   readonly fileLines = new Map<string, string[]>();
 
+  private readonly header: HeaderLang;
   constructor(readonly repoRoot: string, files: string[]) {
+    this.header = headerLang(files);
     for (const f of files) this.indexFile(f);
   }
 
@@ -54,7 +58,10 @@ export class SymbolIndex {
     const text = fs.readFileSync(abs, 'utf8');
     this.fileLines.set(file, text.split('\n'));
     if (file.endsWith('.py')) { for (const d of pythonDeclarations(file, text)) this.add(d); return; }
-    const sf = ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true, file.endsWith('x') ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
+    const lang = langOf(file, this.header)?.id;
+    if (isSyntactic(lang)) { for (const d of syntacticDeclarations(lang!, file, text)) this.add(d); return; }
+    const kind = /\.(c|m)?js$/.test(file) ? ts.ScriptKind.JS : file.endsWith('.jsx') ? ts.ScriptKind.JSX : file.endsWith('x') ? ts.ScriptKind.TSX : ts.ScriptKind.TS;
+    const sf = ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true, kind);
     const lineOf = (pos: number) => sf.getLineAndCharacterOfPosition(pos).line + 1;
     const span = (n: ts.Node) => ({ start_line: lineOf(n.getStart(sf, false)), end_line: lineOf(n.getEnd()) });
     const totalLines = text.split('\n').length;
