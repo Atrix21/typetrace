@@ -168,7 +168,7 @@ Made after preliminary M results had been seen; mechanical fixes that changed no
 - the runner safeguards after two process incidents, with the affected runs discarded and rerun (E3-D23);
 - dropping distractors outside a subset corpus before validation (E3-D24).
 
-The confirmatory analysis (H1, H2, Holm) in `scripts/exp3/analyse.py` is as committed with Amendment B (370230b); only descriptive infrastructure and freshness tables were added later.
+The confirmatory analysis (H1, H2, Holm) in `scripts/exp3/analyse.py` is as committed with Amendment B (26cff0e); only descriptive infrastructure and freshness tables were added later.
 
 ---
 
