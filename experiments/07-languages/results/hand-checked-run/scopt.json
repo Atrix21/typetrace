@@ -1,0 +1,253 @@
+{
+ "repo": "scopt",
+ "origin": "https://github.com/scopt/scopt.git",
+ "commit": "270222e9ba8f32d2d71509fd9ceeaa9c35054347",
+ "languages": "29 Scala",
+ "files": 29,
+ "build_ms": 902,
+ "rss_mb": 557,
+ "nodes": 488,
+ "edges": 2371,
+ "edges_by_type": {
+  "CALLS": 1584,
+  "CONTAINS": 487,
+  "EXTENDS": 1,
+  "IMPLEMENTS": 24,
+  "IMPORTS": 9,
+  "INSTANTIATES": 266
+ },
+ "calls_by_verification": {
+  "semantic_inferred": 811,
+  "static_verified": 773
+ },
+ "calls_by_extraction": {
+  "scala-declared-type": 154,
+  "scala-implicit-this": 404,
+  "scala-name-heuristic": 789,
+  "scala-scope": 69,
+  "scala-static": 146,
+  "scala-unique-name": 22
+ },
+ "notes": [
+  "scala: 0 of 29 files have syntax the grammar did not fully parse (declarations after the error may be mis-nested)",
+  "scala calls: 950 resolved syntactically, 354 name-inferred (<=3 candidates), 1196 unresolved (standard library, external packages, dynamic receivers)"
+ ],
+ "sample": [
+  {
+   "verification": "static_verified",
+   "how": "scala-implicit-this",
+   "at": "shared/src/main/scala/scopt/Read.scala:155",
+   "call": "reads { (s: String) =>\n    s.split(sep).map(implicitly[Read[(K, V)]].reads).toList\n  }",
+   "from": "Read.immutableSeqTupleRead",
+   "to": "shared/src/main/scala/scopt/Read.scala::Read.reads",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "scala-static",
+   "at": "shared/src/test/scala/scopttest/MonadicParserSpec.scala:412",
+   "call": "OParser.parse(parser, List(\"--foo\", \"0\"), Config())",
+   "from": "MonadicParserSpec",
+   "to": "shared/src/main/scala/scopt/OParser.scala::OParser.parse#2",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "scala-implicit-this",
+   "at": "shared/src/test/scala/scopttest/MutableParserSpec.scala:90",
+   "call": "unitParserHidden(\"--debug\")",
+   "from": "MutableParserSpec",
+   "to": "shared/src/test/scala/scopttest/MutableParserSpec.scala::MutableParserSpec.unitParserHidden",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "scala-scope",
+   "at": "shared/src/main/scala/scopt/ORunner.scala:384",
+   "call": "displayToErr(\"Try \" + oxford(helpOptions.toList map {\n          _.fullName\n        }) + \" for more i",
+   "from": "ORunner.runParser.showTryHelp",
+   "to": "shared/src/main/scala/scopt/ORunner.scala::ORunner.runParser.displayToErr",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "scala-implicit-this",
+   "at": "shared/src/test/scala/scopttest/ImmutableParserSpec.scala:28",
+   "call": "intParser(\"--foo=0x01\")",
+   "from": "ImmutableParserSpec",
+   "to": "shared/src/test/scala/scopttest/ImmutableParserSpec.scala::ImmutableParserSpec.intParser",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "scala-implicit-this",
+   "at": "shared/src/main/scala/scopt/OParser.scala:7",
+   "call": "makeDef[Unit](OptionDefKind.ProgramName, \"\")",
+   "from": "OParserBuilder.programName",
+   "to": "shared/src/main/scala/scopt/OParser.scala::OParserBuilder.makeDef",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "scala-implicit-this",
+   "at": "shared/src/main/scala/scopt/OptionDef.scala:163",
+   "call": "keyName(k)",
+   "from": "OptionDef.keyValueName",
+   "to": "shared/src/main/scala/scopt/OptionDef.scala::OptionDef.keyName",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "scala-implicit-this",
+   "at": "shared/src/test/scala/scopttest/ImmutableParserSpec.scala:209",
+   "call": "emptyLiftedOptionParser(\"--foo\", \"\")",
+   "from": "ImmutableParserSpec",
+   "to": "shared/src/test/scala/scopttest/ImmutableParserSpec.scala::ImmutableParserSpec.emptyLiftedOptionParser",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "scala-implicit-this",
+   "at": "shared/src/test/scala/scopttest/ImmutableParserSpec.scala:124",
+   "call": "finiteDurationParser(\"--foo\", \"20s\")",
+   "from": "ImmutableParserSpec",
+   "to": "shared/src/test/scala/scopttest/ImmutableParserSpec.scala::ImmutableParserSpec.finiteDurationParser",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "scala-implicit-this",
+   "at": "shared/src/test/scala/scopttest/ImmutableParserSpec.scala:129",
+   "call": "pairParser(\"--foo\", \"k=1\")",
+   "from": "ImmutableParserSpec",
+   "to": "shared/src/test/scala/scopttest/ImmutableParserSpec.scala::ImmutableParserSpec.pairParser",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "scala-implicit-this",
+   "at": "shared/src/main/scala/scopt/OptionDef.scala:147",
+   "call": "fireChange(copy(_isHidden = true))",
+   "from": "OptionDef.hidden",
+   "to": "shared/src/main/scala/scopt/OptionDef.scala::OptionDef.fireChange",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "scala-implicit-this",
+   "at": "shared/src/test/scala/scopttest/ImmutableParserSpec.scala:87",
+   "call": "charParserUTF16(\"--foo:¡\")",
+   "from": "ImmutableParserSpec",
+   "to": "shared/src/test/scala/scopttest/ImmutableParserSpec.scala::ImmutableParserSpec.charParserUTF16",
+   "confidence": 0.9
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "scala-name-heuristic",
+   "at": "jvm/src/test/scala/scopt/MonadicParserSpecJVM.scala:63",
+   "call": "opt[Map[String, String]](\"kwargs\")\n        .valueName(\"k1=v1,k2=v2...\")\n        .action((x, c) => c.",
+   "from": "MonadicParserSpecJVM",
+   "to": "shared/src/main/scala/scopt/OParser.scala::OParser.action",
+   "confidence": 0.1
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "scala-name-heuristic",
+   "at": "jvm/src/test/scala/scopt/ImmutableParserSpecJVM.scala:113",
+   "call": "opt[URI](\"foo\").action((x, c) => c.copy(uri = x))",
+   "from": "ImmutableParserSpecJVM",
+   "to": "shared/src/main/scala/scopt/OParser.scala::OParser.action",
+   "confidence": 0.1
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "scala-name-heuristic",
+   "at": "shared/src/test/scala/scopttest/ImmutableParserSpec.scala:919",
+   "call": "opt[Int]('f', \"foo\").action((x, c) => c.copy(foo = x)).text(\"foo is an integer property\")",
+   "from": "ImmutableParserSpec.helpParserOneColumn",
+   "to": "shared/src/main/scala/scopt/OptionDef.scala::OptionDef.text",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "scala-name-heuristic",
+   "at": "shared/src/test/scala/scopttest/ImmutableParserSpec.scala:1047",
+   "call": "opt[Boolean](\"xyz\").action((x, c) => c.copy(xyz = x)).text(\"xyz is a boolean property\")",
+   "from": "ImmutableParserSpec.helpParserTwoColumns",
+   "to": "shared/src/main/scala/scopt/OParser.scala::OParser.text",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "scala-name-heuristic",
+   "at": "shared/src/test/scala/scopttest/ImmutableParserSpec.scala:957",
+   "call": "opt[Unit](\"debug-update\")\n            .hidden()\n            .action((_, c) => c.copy(debug = true))\n",
+   "from": "ImmutableParserSpec.helpParserOneColumn",
+   "to": "shared/src/main/scala/scopt/OptionDef.scala::OptionDef.text",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "scala-name-heuristic",
+   "at": "shared/src/test/scala/scopttest/MutableParserSpec.scala:496",
+   "call": "opt[(String, Int)](\"max\")\n        .foreach({ case (k, v) =>\n          c = c.copy(libName = k, maxCou",
+   "from": "MutableParserSpec.helpParserTwoColumns",
+   "to": "shared/src/main/scala/scopt/OParser.scala::OParser.validate",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "scala-name-heuristic",
+   "at": "shared/src/test/scala/scopttest/MutableParserSpec.scala:420",
+   "call": "opt[(String, Int)](\"max\")\n        .foreach({ case (k, v) =>\n          c = c.copy(libName = k, maxCou",
+   "from": "MutableParserSpec.helpParserOneColumn",
+   "to": "shared/src/main/scala/scopt/OptionDef.scala::OptionDef.text",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "scala-name-heuristic",
+   "at": "shared/src/test/scala/scopttest/MonadicParserSpec.scala:452",
+   "call": "opt[Unit](\"foo\").action((x, c) => c.copy(stringValue = \"foo\"))",
+   "from": "MonadicParserSpec",
+   "to": "shared/src/main/scala/scopt/OParser.scala::OParser.action",
+   "confidence": 0.1
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "scala-name-heuristic",
+   "at": "shared/src/main/scala/scopt/OptionParser.scala:191",
+   "call": "self.reportError(msg)",
+   "from": "OptionParser.parse.reportError",
+   "to": "shared/src/main/scala/scopt/OEffect.scala::DefaultOEffectSetup.reportError",
+   "confidence": 0.1
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "scala-name-heuristic",
+   "at": "shared/src/test/scala/scopttest/MutableParserSpec.scala:358",
+   "call": "arg[String](\"<a>\").foreach(x => a = x)",
+   "from": "MutableParserSpec.multipleArgs",
+   "to": "shared/src/main/scala/scopt/OParser.scala::OParser.foreach",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "scala-name-heuristic",
+   "at": "shared/src/test/scala/scopttest/ImmutableParserSpec.scala:685",
+   "call": "arg[String](\"<file>\")\n      .optional()\n      .action({ case (x, c) =>\n        c.copy(stringValue = ",
+   "from": "ImmutableParserSpec",
+   "to": "shared/src/main/scala/scopt/OptionDef.scala::OptionDef.action#2",
+   "confidence": 0.1
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "scala-name-heuristic",
+   "at": "shared/src/test/scala/scopttest/ImmutableParserSpec.scala:885",
+   "call": "arg[String](\"<a>\").action((x, c) => c.copy(a = x))",
+   "from": "ImmutableParserSpec",
+   "to": "shared/src/main/scala/scopt/OptionDef.scala::OptionDef.action#2",
+   "confidence": 0.1
+  }
+ ]
+}

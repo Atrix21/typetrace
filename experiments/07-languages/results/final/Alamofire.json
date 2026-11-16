@@ -1,0 +1,264 @@
+{
+ "repo": "Alamofire",
+ "origin": "https://github.com/Alamofire/Alamofire.git",
+ "commit": "dea4bab91767a971d6e112bc955c6a82295589b7",
+ "languages": "101 Swift, 6 JavaScript",
+ "files": 107,
+ "build_ms": 6993,
+ "rss_mb": 886,
+ "nodes": 3398,
+ "edges": 13718,
+ "edges_by_type": {
+  "BRANCHES_TO": 486,
+  "CALLS": 7689,
+  "CATCHES": 2,
+  "CHECKS": 346,
+  "CONTAINS": 3394,
+  "EXTENDS": 137,
+  "IMPLEMENTS": 60,
+  "INSTANTIATES": 1568,
+  "LOOPS": 14,
+  "PASSES_TO": 12,
+  "RECEIVES_FROM": 2,
+  "RETURNS": 6,
+  "RETURNS_VALUE_TO": 2
+ },
+ "calls_by_verification": {
+  "semantic_inferred": 421,
+  "static_verified": 5816,
+  "unknown": 1452
+ },
+ "calls_by_extraction": {
+  "swift-ctor": 1365,
+  "swift-declared-type": 2897,
+  "swift-implicit-this": 1195,
+  "swift-name-heuristic": 421,
+  "swift-scope": 22,
+  "swift-self": 126,
+  "swift-static": 151,
+  "swift-super": 20,
+  "ts-checker": 1492
+ },
+ "notes": [
+  "swift: 10 of 101 files have syntax the grammar did not fully parse (declarations after the error may be mis-nested)",
+  "swift calls: 3957 resolved syntactically, 257 name-inferred (<=3 candidates), 7669 unresolved (standard library, external packages, dynamic receivers)"
+ ],
+ "sample": [
+  {
+   "verification": "static_verified",
+   "how": "swift-ctor",
+   "at": "Tests/DataStreamTests.swift:988",
+   "call": "Redirector(behavior: .modify { _, _, _ in\n            didRedirect.fulfill()\n            return Endpo",
+   "from": "DataStreamIntegrationTests.testThatDataStreamCanBeRedirected",
+   "to": "Source/Features/RedirectHandler.swift::Redirector.init",
+   "confidence": 0.85
+  },
+  {
+   "verification": "static_verified",
+   "how": "swift-declared-type",
+   "at": "Tests/ParameterEncoderTests.swift:202",
+   "call": "encoder.encode(parameters)",
+   "from": "URLEncodedFormEncoderTests.testEncoderCanEncodeDictionary",
+   "to": "Source/Features/URLEncodedFormEncoder.swift::URLEncodedFormEncoder.encode#2",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "swift-implicit-this",
+   "at": "Tests/CombineTests.swift:179",
+   "call": "stored(Session())",
+   "from": "DataRequestCombineTests.testThatDataRequestCanPublishResult",
+   "to": "Tests/BaseTestCase.swift::BaseTestCase.stored",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "swift-implicit-this",
+   "at": "Tests/RequestInterceptorTests.swift:573",
+   "call": "response { _ in continuation.resume() }",
+   "from": "DataRequest.finished",
+   "to": "Source/Core/DataRequest.swift::DataRequest.response#3",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "swift-ctor",
+   "at": "Tests/ResponseSerializationTests.swift:42",
+   "call": "Result { try serializer.serialize(request: nil, response: nil, data: data, error: nil) }",
+   "from": "DataResponseSerializationTestCase.testThatDataResponseSerializerSucceedsWhenDataIsNotNil",
+   "to": "Source/Extensions/Result+Alamofire.swift::Result.init",
+   "confidence": 0.85
+  },
+  {
+   "verification": "static_verified",
+   "how": "swift-ctor",
+   "at": "Tests/RequestInterceptorTests.swift:154",
+   "call": "Session()",
+   "from": "AdapterTests.thatAdapterCanBeImplementedAsynchronously",
+   "to": "Source/Core/Session.swift::Session.init",
+   "confidence": 0.85
+  },
+  {
+   "verification": "static_verified",
+   "how": "swift-declared-type",
+   "at": "Tests/SessionTests.swift:409",
+   "call": "session.request(.compression(.brotli))",
+   "from": "SessionTestCase.disabled_testDefaultAcceptEncodingSupportsAppropriateEncodingsOnAppropriateSystems",
+   "to": "Source/Core/Session.swift::Session.request#3",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "swift-declared-type",
+   "at": "Tests/ResponseSerializationTests.swift:264",
+   "call": "serializer.serialize(request: nil, response: response, data: nil, error: nil)",
+   "from": "DataResponseSerializationTestCase.testThatStringResponseSerializerFailsWhenDataIsNilWithNonEmptyResponseStatusCode",
+   "to": "Source/Features/ResponseSerialization.swift::StringResponseSerializer.serialize",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "swift-declared-type",
+   "at": "Tests/RequestTests.swift:493",
+   "call": "session.request(.default)",
+   "from": "RequestResponseTestCase.testThatAutomaticallyAndManuallyResumedRequestReceivesAppropriateLifetimeEvents",
+   "to": "Source/Core/Session.swift::Session.request",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "swift-implicit-this",
+   "at": "Source/Features/ServerTrustEvaluation.swift:639",
+   "call": "validate(policy: SecPolicy.af.hostname(host)) { status, result in\n                AFError.serverTrus",
+   "from": "AlamofireExtension.performValidation",
+   "to": "Source/Features/ServerTrustEvaluation.swift::AlamofireExtension.validate#2",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "swift-ctor",
+   "at": "Tests/ResponseSerializationTests.swift:52",
+   "call": "DataResponseSerializer()",
+   "from": "DataResponseSerializationTestCase.testThatDataResponseSerializerFailsWhenDataIsNil",
+   "to": "Source/Features/ResponseSerialization.swift::DataResponseSerializer.init",
+   "confidence": 0.85
+  },
+  {
+   "verification": "static_verified",
+   "how": "swift-ctor",
+   "at": "Tests/RequestInterceptorTests.swift:509",
+   "call": "Retrier { _, _, _, completion in completion(.retryWithDelay(1.0)) }",
+   "from": "InterceptorTests.thatInterceptorStopsIteratingThroughPendingRetriersWithRetryWithDelayResult",
+   "to": "Source/Features/RequestInterceptor.swift::Retrier.init",
+   "confidence": 0.85
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "swift-name-heuristic",
+   "at": "Source/Core/ParameterEncoding.swift:288",
+   "call": "urlRequest.headers.update(.contentType(\"application/json\"))",
+   "from": "JSONEncoding.encode",
+   "to": "Source/Core/HTTPHeaders.swift::HTTPHeaders.update",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "swift-name-heuristic",
+   "at": "Tests/UploadTests.swift:230",
+   "call": "session.upload(data, to: url)\n            .uploadProgress(queue: session.rootQueue) { progress in\n  ",
+   "from": "UploadDataTestCase.testUploadDataRequestWithProgress",
+   "to": "Source/Features/Concurrency.swift::Request.uploadProgress",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "swift-name-heuristic",
+   "at": "Tests/ResponseTests.swift:571",
+   "call": "resp.mapError { error in\n                TestError.error(error: error)\n            }",
+   "from": "ResponseMapErrorTestCase.testThatMapErrorTransformsFailureValue",
+   "to": "Source/Core/Response.swift::DataResponse.mapError",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "swift-name-heuristic",
+   "at": "Source/Core/SessionDelegate.swift:266",
+   "call": "request.didReceive(data: data)",
+   "from": "SessionDelegate.urlSession#10",
+   "to": "Source/Core/DataRequest.swift::DataRequest.didReceive",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "swift-name-heuristic",
+   "at": "Tests/DataStreamTests.swift:367",
+   "call": "session.streamRequest(.stream(1))\n            .onHTTPResponse { response in\n                initialR",
+   "from": "DataStreamTests.testThatDataCanBeStreamedAndDecodedAtTheSameTime",
+   "to": "Source/Core/DataStreamRequest.swift::DataStreamRequest.responseStreamDecodable",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "swift-name-heuristic",
+   "at": "Source/Core/DataRequest.swift:303",
+   "call": "delegate.retryRequest(self, withDelay: retryResult.delay)",
+   "from": "DataRequest._response",
+   "to": "Source/Core/Request.swift::RequestDelegate.retryRequest",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "swift-name-heuristic",
+   "at": "Tests/DownloadTests.swift:1063",
+   "call": "resp.tryMapError { TestError.error(error: $0) }",
+   "from": "DownloadResponseTryMapErrorTestCase.testThatTryMapErrorTransformsError",
+   "to": "Source/Extensions/Result+Alamofire.swift::Result.tryMapError",
+   "confidence": 0.1
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "swift-name-heuristic",
+   "at": "Tests/DownloadTests.swift:973",
+   "call": "resp.mapError { TestError.error(error: $0) }",
+   "from": "DownloadResponseMapErrorTestCase.testThatMapErrorPreservesSuccessValue",
+   "to": "Source/Core/Response.swift::DataResponse.mapError",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "swift-name-heuristic",
+   "at": "Tests/CombineTests.swift:359",
+   "call": "session.request(.default)\n                .publishDecodable(type: TestResponse.self, queue: queue)\n ",
+   "from": "DataRequestCombineTests.testThatDataRequestPublishedOnSeparateQueueCanBeReceivedOntoMainQueue",
+   "to": "Source/Features/Combine.swift::DownloadResponsePublisher.receive",
+   "confidence": 0.1
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "swift-name-heuristic",
+   "at": "Tests/RequestTests.swift:1531",
+   "call": "session\n            .request(.get)\n            .adapt(using: instanceInterceptor)\n            .seria",
+   "from": "RequestInstanceInterceptorTests.sessionAdapterIsCalledBeforeInstanceAdapter",
+   "to": "Source/Features/Concurrency.swift::DataRequest.serializingDecodable",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "swift-name-heuristic",
+   "at": "Tests/ConcurrencyTests.swift:608",
+   "call": "request.streamTask()",
+   "from": "DataStreamConcurrencyTests.testThatDataStreamTaskCanBeDirectlyCancelled",
+   "to": "Source/Features/Concurrency.swift::DataStreamRequest.streamTask",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "swift-name-heuristic",
+   "at": "Tests/RequestTests.swift:1612",
+   "call": "session\n            .request(.endpoints(.delay(1).modifying(\\.timeout, to: 0.0001), .get))\n         ",
+   "from": "RequestInstanceInterceptorTests.instanceRetrierIsCalled",
+   "to": "Source/Features/Concurrency.swift::DataRequest.serializingDecodable",
+   "confidence": 0.15
+  }
+ ]
+}

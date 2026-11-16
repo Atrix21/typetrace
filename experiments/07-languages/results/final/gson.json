@@ -1,0 +1,145 @@
+{
+ "repo": "gson",
+ "origin": "https://github.com/google/gson.git",
+ "commit": "e67037d17f94415179066c8301fee4a610d9515e",
+ "languages": "268 Java",
+ "files": 268,
+ "build_ms": 1601,
+ "rss_mb": 459,
+ "nodes": 4598,
+ "edges": 26445,
+ "edges_by_type": {
+  "CALLS": 17809,
+  "CONTAINS": 4597,
+  "EXTENDS": 108,
+  "IMPLEMENTS": 103,
+  "IMPORTS": 1088,
+  "INSTANTIATES": 2740
+ },
+ "calls_by_verification": {
+  "static_verified": 17809
+ },
+ "calls_by_extraction": {
+  "java-ctor": 2402,
+  "java-declared-type": 13004,
+  "java-implicit-this": 1813,
+  "java-scope": 14,
+  "java-self": 6,
+  "java-static": 569,
+  "java-super": 1
+ },
+ "notes": [
+  "java: 0 of 268 files have syntax the grammar did not fully parse (declarations after the error may be mis-nested)",
+  "java calls: 11358 resolved syntactically, 0 name-inferred (<=3 candidates), 12702 unresolved (standard library, external packages, dynamic receivers)"
+ ],
+ "sample": [
+  {
+   "verification": "static_verified",
+   "how": "java-implicit-this",
+   "at": "gson/src/main/java/com/google/gson/stream/JsonReader.java:1881",
+   "call": "fillBuffer(4)",
+   "from": "JsonReader.readEscapeCharacter",
+   "to": "gson/src/main/java/com/google/gson/stream/JsonReader.java::JsonReader.fillBuffer",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-declared-type",
+   "at": "gson/src/test/java/com/google/gson/stream/JsonWriterTest.java:657",
+   "call": "jsonWriter.value(\"\\u0019\")",
+   "from": "JsonWriterTest.testStrings",
+   "to": "gson/src/main/java/com/google/gson/stream/JsonWriter.java::JsonWriter.value#2",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-declared-type",
+   "at": "gson/src/test/java/com/google/gson/reflect/TypeTokenTest.java:306",
+   "call": "typeToken.getRawType()",
+   "from": "TypeTokenTest.testTypeTokenNonAnonymousSubclass",
+   "to": "gson/src/main/java/com/google/gson/reflect/TypeToken.java::TypeToken.getRawType",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-declared-type",
+   "at": "gson/src/test/java/com/google/gson/FieldAttributesTest.java:61",
+   "call": "fieldAttributes.hasModifier(Modifier.PUBLIC)",
+   "from": "FieldAttributesTest.testModifiers",
+   "to": "gson/src/main/java/com/google/gson/FieldAttributes.java::FieldAttributes.hasModifier",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-ctor",
+   "at": "test-graal-native-image/src/test/java/com/google/gson/native_test/ReflectionTest.java:184",
+   "call": "new ClassWithCustomClassAdapter(1)",
+   "from": "ReflectionTest.testCustomClassAdapter",
+   "to": "test-graal-native-image/src/test/java/com/google/gson/native_test/ReflectionTest.java::ReflectionTest.ClassWithCustomClassAdapter.ClassWithCustomClassAdapter",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-declared-type",
+   "at": "gson/src/test/java/com/google/gson/functional/RuntimeTypeAdapterFactoryFunctionalTest.java:172",
+   "call": "gson.getDelegateAdapter(this, TypeToken.get(entry.getValue()))",
+   "from": "RuntimeTypeAdapterFactoryFunctionalTest.RuntimeTypeAdapterFactory.create",
+   "to": "gson/src/main/java/com/google/gson/Gson.java::Gson.getDelegateAdapter",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-declared-type",
+   "at": "gson/src/main/java/com/google/gson/JsonArray.java:73",
+   "call": "result.add(element.deepCopy())",
+   "from": "JsonArray.deepCopy",
+   "to": "gson/src/main/java/com/google/gson/JsonArray.java::JsonArray.add#2",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-declared-type",
+   "at": "proto/src/main/java/com/google/gson/protobuf/LegacyProtoTypeAdapterFactory.java:337",
+   "call": "in.nextLong()",
+   "from": "LegacyProtoTypeAdapterFactory.Adapter.readSingleFieldValue",
+   "to": "gson/src/main/java/com/google/gson/stream/JsonReader.java::JsonReader.nextLong",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-declared-type",
+   "at": "gson/src/test/java/com/google/gson/functional/TypeHierarchyAdapterTest.java:134",
+   "call": "gson.fromJson(json, Manager.class)",
+   "from": "TypeHierarchyAdapterTest.testRegisterSuperTypeFirst",
+   "to": "gson/src/main/java/com/google/gson/Gson.java::Gson.fromJson",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-ctor",
+   "at": "proto/src/test/java/com/google/gson/protobuf/functional/LegacyProtoTypeAdapterFactoryTest.java:66",
+   "call": "new GsonBuilder()",
+   "from": "LegacyProtoTypeAdapterFactoryTest",
+   "to": "gson/src/main/java/com/google/gson/GsonBuilder.java::GsonBuilder.GsonBuilder",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-ctor",
+   "at": "gson/src/test/java/com/google/gson/MixedStreamTest.java:180",
+   "call": "new JsonReader(new StringReader(\"true\"))",
+   "from": "MixedStreamTest.testReadNulls",
+   "to": "gson/src/main/java/com/google/gson/stream/JsonReader.java::JsonReader.JsonReader",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-declared-type",
+   "at": "gson/src/test/java/com/google/gson/stream/JsonWriterTest.java:67",
+   "call": "jsonWriter.value(false)",
+   "from": "JsonWriterTest.testSetStrictness",
+   "to": "gson/src/main/java/com/google/gson/stream/JsonWriter.java::JsonWriter.value#2",
+   "confidence": 0.8
+  }
+ ]
+}

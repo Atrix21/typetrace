@@ -1,0 +1,254 @@
+{
+ "repo": "spdlog",
+ "origin": "https://github.com/gabime/spdlog.git",
+ "commit": "6d9805df3f588402b17073dcd13eb569ceda864d",
+ "languages": "153 C++, 1 Python",
+ "files": 154,
+ "build_ms": 1607,
+ "rss_mb": 880,
+ "nodes": 2712,
+ "edges": 6433,
+ "edges_by_type": {
+  "CALLS": 3243,
+  "CONTAINS": 2711,
+  "EXTENDS": 31,
+  "IMPORTS": 446,
+  "INSTANTIATES": 2
+ },
+ "calls_by_verification": {
+  "semantic_inferred": 802,
+  "static_verified": 2441
+ },
+ "calls_by_extraction": {
+  "cpp-declared-type": 453,
+  "cpp-implicit-this": 538,
+  "cpp-name-heuristic": 267,
+  "cpp-path": 64,
+  "cpp-scope": 1356,
+  "cpp-self": 30,
+  "cpp-unique-name": 535
+ },
+ "notes": [
+  "python calls: 0 resolved syntactically, 0 name-inferred (<=3 candidates), 11 unresolved (builtins, external libraries, dynamic receivers)",
+  "cpp: 125 of 153 files have syntax the grammar did not fully parse (declarations after the error may be mis-nested)",
+  "cpp calls: 1885 resolved syntactically, 616 name-inferred (<=3 candidates), 6968 unresolved (standard library, external packages, dynamic receivers)"
+ ],
+ "sample": [
+  {
+   "verification": "static_verified",
+   "how": "cpp-scope",
+   "at": "include/spdlog/fmt/bundled/format.h:3493",
+   "call": "convert_float(value)",
+   "from": "size_padding.write#9",
+   "to": "include/spdlog/fmt/bundled/format.h::convert_float",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "cpp-implicit-this",
+   "at": "include/spdlog/fmt/bundled/base.h:1978",
+   "call": "flush()",
+   "from": "iterator_buffer.~iterator_buffer",
+   "to": "include/spdlog/fmt/bundled/base.h::iterator_buffer.flush",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "cpp-implicit-this",
+   "at": "include/spdlog/fmt/bundled/format.h:2539",
+   "call": "write_significand(it, f.significand, significand_size, exp,\n                                 decimal",
+   "from": "size_padding.write_fixed",
+   "to": "include/spdlog/fmt/bundled/format.h::size_padding.write_significand#3",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "cpp-declared-type",
+   "at": "include/spdlog/fmt/bundled/format.h:821",
+   "call": "buf.data()",
+   "from": "operator=.basic_memory_buffer.grow",
+   "to": "include/spdlog/fmt/bundled/base.h::buffer.data#2",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "cpp-implicit-this",
+   "at": "include/spdlog/fmt/bundled/format.h:2457",
+   "call": "write_significand(out, significand, significand_size, integral_size,\n                             de",
+   "from": "size_padding.write_significand#7",
+   "to": "include/spdlog/fmt/bundled/format.h::size_padding.write_significand#3",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "cpp-scope",
+   "at": "include/spdlog/logger.h:246",
+   "call": "log(level::debug, msg)",
+   "from": "logger.debug#3",
+   "to": "include/spdlog/logger.h::logger.log",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "cpp-scope",
+   "at": "include/spdlog/fmt/bundled/format-inl.h:1689",
+   "call": "funlockfile(f)",
+   "from": "file_print_buffer.~file_print_buffer",
+   "to": "include/spdlog/fmt/bundled/format-inl.h::funlockfile",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "cpp-declared-type",
+   "at": "include/spdlog/fmt/bundled/format.h:2941",
+   "call": "lower.assign(numerator)",
+   "from": "size_padding.format_dragon",
+   "to": "include/spdlog/fmt/bundled/format.h::size_padding.bigint.assign",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "cpp-scope",
+   "at": "include/spdlog/fmt/bundled/format.h:2832",
+   "call": "num_bits<unsigned>()",
+   "from": "size_padding.bigint.assign_pow10",
+   "to": "include/spdlog/fmt/bundled/format.h::num_bits",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "cpp-implicit-this",
+   "at": "include/spdlog/fmt/bundled/chrono.h:1441",
+   "call": "tm_min()",
+   "from": "tm_writer.on_12_hour_time",
+   "to": "include/spdlog/fmt/bundled/chrono.h::tm_writer.tm_min",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "cpp-declared-type",
+   "at": "include/spdlog/fmt/bundled/format.h:4064",
+   "call": "ctx.end()",
+   "from": "formatter.parse#2",
+   "to": "include/spdlog/fmt/bundled/base.h::parse_context.end",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "cpp-scope",
+   "at": "include/spdlog/fmt/bundled/format.h:3188",
+   "call": "num_significand_bits<double>()",
+   "from": "size_padding.format_float",
+   "to": "include/spdlog/fmt/bundled/format.h::num_significand_bits",
+   "confidence": 0.9
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "cpp-unique-name",
+   "at": "include/spdlog/fmt/bundled/printf.h:421",
+   "call": "to_unsigned(it - start)",
+   "from": "vprintf",
+   "to": "include/spdlog/fmt/bundled/base.h::to_unsigned",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "cpp-unique-name",
+   "at": "include/spdlog/fmt/bundled/format.h:2316",
+   "call": "code_point_length(begin)",
+   "from": "size_padding.parse_align",
+   "to": "include/spdlog/fmt/bundled/base.h::detail.code_point_length",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "cpp-unique-name",
+   "at": "include/spdlog/details/tcp_client.h:127",
+   "call": "throw_spdlog_ex(fmt_lib::format(\"::getaddrinfo failed: {}\", gai_strerror(rv)))",
+   "from": "details.tcp_client.connect",
+   "to": "include/spdlog/common-inl.h::throw_spdlog_ex",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "cpp-unique-name",
+   "at": "include/spdlog/fmt/bundled/chrono.h:932",
+   "call": "to_unsigned(value)",
+   "from": "to_nonnegative_int",
+   "to": "include/spdlog/fmt/bundled/base.h::to_unsigned",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "cpp-unique-name",
+   "at": "include/spdlog/fmt/bundled/format.h:1207",
+   "call": "is_constant_evaluated()",
+   "from": "write2digits",
+   "to": "include/spdlog/fmt/bundled/base.h::is_constant_evaluated#2",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "cpp-unique-name",
+   "at": "include/spdlog/fmt/bundled/format.h:2644",
+   "call": "is_constant_evaluated()",
+   "from": "size_padding.signbit",
+   "to": "include/spdlog/fmt/bundled/base.h::is_constant_evaluated#2",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "cpp-unique-name",
+   "at": "include/spdlog/fmt/bundled/format.h:3721",
+   "call": "report_error(\"width/precision is out of range\")",
+   "from": "size_padding.handle_dynamic_spec",
+   "to": "include/spdlog/fmt/bundled/format-inl.h::report_error",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "cpp-name-heuristic",
+   "at": "include/spdlog/fmt/bundled/base.h:1731",
+   "call": "context_.next_arg_id()",
+   "from": "detail.on_arg_id",
+   "to": "include/spdlog/fmt/bundled/base.h::parse_context.next_arg_id",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "cpp-name-heuristic",
+   "at": "include/spdlog/details/thread_pool-inl.h:90",
+   "call": "q_.enqueue_if_have_room(std::move(new_msg))",
+   "from": "details",
+   "to": "include/spdlog/details/mpmc_blocking_q.h::details.mpmc_blocking_queue.enqueue_if_have_room#2",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "cpp-unique-name",
+   "at": "include/spdlog/details/fmt_helper.h:37",
+   "call": "throw_spdlog_ex(\"Failed to format int\", static_cast<int>(ec))",
+   "from": "details.append_int",
+   "to": "include/spdlog/common-inl.h::throw_spdlog_ex",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "cpp-unique-name",
+   "at": "include/spdlog/fmt/bundled/base.h:2980",
+   "call": "vprint_buffered(f, fmt.str, va)",
+   "from": "print#2",
+   "to": "include/spdlog/fmt/bundled/format-inl.h::vprint_buffered",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "cpp-unique-name",
+   "at": "include/spdlog/fmt/bundled/format.h:1926",
+   "call": "to_unsigned(i)",
+   "from": "digit_grouping.apply",
+   "to": "include/spdlog/fmt/bundled/base.h::to_unsigned",
+   "confidence": 0.5
+  }
+ ]
+}

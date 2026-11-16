@@ -1,0 +1,249 @@
+{
+ "repo": "cobra",
+ "origin": "https://github.com/spf13/cobra.git",
+ "commit": "adbc8813901bba65827259daa8e22ff94ec1f30e",
+ "languages": "36 Go",
+ "files": 36,
+ "build_ms": 517,
+ "rss_mb": 332,
+ "nodes": 654,
+ "edges": 3479,
+ "edges_by_type": {
+  "CALLS": 2221,
+  "CONTAINS": 653,
+  "IMPORTS": 159,
+  "INSTANTIATES": 446
+ },
+ "calls_by_verification": {
+  "semantic_inferred": 146,
+  "static_verified": 2075
+ },
+ "calls_by_extraction": {
+  "go-declared-type": 1031,
+  "go-module": 15,
+  "go-name-heuristic": 146,
+  "go-scope": 1029
+ },
+ "notes": [
+  "go: 0 of 36 files have syntax the grammar did not fully parse (declarations after the error may be mis-nested)",
+  "go calls: 2521 resolved syntactically, 144 name-inferred (<=3 candidates), 2192 unresolved (standard library, external packages, dynamic receivers)"
+ ],
+ "sample": [
+  {
+   "verification": "static_verified",
+   "how": "go-declared-type",
+   "at": "completions.go:869",
+   "call": "cmd.Root()",
+   "from": "Command.InitDefaultCompletionCmd",
+   "to": "command.go::Command.Root",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-declared-type",
+   "at": "completions_test.go:4008",
+   "call": "rootCmd.InitDefaultCompletionCmd(tc.args...)",
+   "from": "TestInitDefaultCompletionCmd",
+   "to": "completions.go::Command.InitDefaultCompletionCmd",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-declared-type",
+   "at": "completions.go:892",
+   "call": "c.Root()",
+   "from": "Command.InitDefaultCompletionCmd",
+   "to": "command.go::Command.Root",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-scope",
+   "at": "completions_test.go:3636",
+   "call": "executeCommand(&root, args...)",
+   "from": "TestArgsNotDetectedAsFlagsCompletionInGo",
+   "to": "command_test.go::executeCommand",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-declared-type",
+   "at": "bash_completions_test.go:105",
+   "call": "rootCmd.MarkFlagFilename(\"filename-ext\")",
+   "from": "TestBashCompletions",
+   "to": "shell_completions.go::Command.MarkFlagFilename",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-scope",
+   "at": "completions_test.go:108",
+   "call": "executeCommand(rootCmd, ShellCompNoDescRequestCmd, \"s\")",
+   "from": "TestCmdNameCompletionInGo",
+   "to": "command_test.go::executeCommand",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-scope",
+   "at": "args_test.go:278",
+   "call": "getCommand(MaximumNArgs(2), true)",
+   "from": "TestMaximumNArgs_WithValid",
+   "to": "args_test.go::getCommand",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-scope",
+   "at": "bash_completions_test.go:183",
+   "call": "check(t, output, `COMPREPLY=( \"hello\" )`)",
+   "from": "TestBashCompletions",
+   "to": "bash_completions_test.go::check",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-scope",
+   "at": "command_test.go:197",
+   "call": "executeCommandWithContext(ctx, rootCmd, \"child\")",
+   "from": "TestExecuteContext",
+   "to": "command_test.go::executeCommandWithContext",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-scope",
+   "at": "args_test.go:310",
+   "call": "maximumNArgsWithMoreArgs(err, t)",
+   "from": "TestMaximumNArgs_WithMoreArgs_WithValid_WithInvalidArgs",
+   "to": "args_test.go::maximumNArgsWithMoreArgs",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-scope",
+   "at": "fish_completions_test.go:98",
+   "call": "check(t, output, fmt.Sprintf(\"%s=0\", activeHelpVar))",
+   "from": "TestFishCompletionNoActiveHelp",
+   "to": "bash_completions_test.go::check",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-scope",
+   "at": "completions_test.go:1075",
+   "call": "executeCommand(rootCmd, ShellCompNoDescRequestCmd, \"--log\", \"\")",
+   "from": "TestFlagFileExtFilterCompletionInGo",
+   "to": "command_test.go::executeCommand",
+   "confidence": 0.9
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "doc/man_docs_test.go:63",
+   "call": "rootCmd.Name()",
+   "from": "TestGenManDoc",
+   "to": "command.go::Command.Name",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "command.go:2004",
+   "call": "subcmd.IsAvailableCommand()",
+   "from": "defaultUsageFunc",
+   "to": "command.go::Command.IsAvailableCommand",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "command.go:1997",
+   "call": "subcmd.NamePadding()",
+   "from": "defaultUsageFunc",
+   "to": "command.go::Command.NamePadding",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "command.go:2013",
+   "call": "subcmd.NamePadding()",
+   "from": "defaultUsageFunc",
+   "to": "command.go::Command.NamePadding",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "command.go:1285",
+   "call": "subCmd.IsAvailableCommand()",
+   "from": "Command.InitDefaultHelpCmd",
+   "to": "command.go::Command.IsAvailableCommand",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "command.go:1993",
+   "call": "c.Groups()",
+   "from": "defaultUsageFunc",
+   "to": "command.go::Command.Groups",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "command.go:2012",
+   "call": "subcmd.IsAvailableCommand()",
+   "from": "defaultUsageFunc",
+   "to": "command.go::Command.IsAvailableCommand",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "cobra.go:120",
+   "call": "av.Len()",
+   "from": "Gt",
+   "to": "command.go::commandSorterByName.Len",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "doc/md_docs_test.go:61",
+   "call": "rootCmd.PersistentFlags()",
+   "from": "TestGenMdNoHiddenParents",
+   "to": "command.go::Command.PersistentFlags",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "command.go:1985",
+   "call": "c.NameAndAliases()",
+   "from": "defaultUsageFunc",
+   "to": "command.go::Command.NameAndAliases",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "completions.go:523",
+   "call": "subCmd.Name()",
+   "from": "Command.getCompletions",
+   "to": "command.go::Command.Name",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "bash_completions.go:654",
+   "call": "c.IsAvailableCommand()",
+   "from": "gen",
+   "to": "command.go::Command.IsAvailableCommand",
+   "confidence": 0.3
+  }
+ ]
+}

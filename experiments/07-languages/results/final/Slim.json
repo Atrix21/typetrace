@@ -1,0 +1,143 @@
+{
+ "repo": "Slim",
+ "origin": "https://github.com/slimphp/Slim.git",
+ "commit": "8d872ae0a146bba4ce750094b21754f9c9f21d00",
+ "languages": "125 PHP",
+ "files": 125,
+ "build_ms": 482,
+ "rss_mb": 879,
+ "nodes": 1002,
+ "edges": 3247,
+ "edges_by_type": {
+  "CALLS": 1469,
+  "CONTAINS": 1001,
+  "EXTENDS": 54,
+  "IMPLEMENTS": 22,
+  "IMPORTS": 306,
+  "INSTANTIATES": 395
+ },
+ "calls_by_verification": {
+  "static_verified": 1469
+ },
+ "calls_by_extraction": {
+  "php-ctor": 304,
+  "php-declared-type": 654,
+  "php-self": 435,
+  "php-static": 73,
+  "php-super": 3
+ },
+ "notes": [
+  "php: 0 of 125 files have syntax the grammar did not fully parse (declarations after the error may be mis-nested)",
+  "php calls: 1561 resolved syntactically, 0 name-inferred (<=3 candidates), 4114 unresolved (standard library, external packages, dynamic receivers)"
+ ],
+ "sample": [
+  {
+   "verification": "static_verified",
+   "how": "php-ctor",
+   "at": "tests/Middleware/ErrorMiddlewareTest.php:255",
+   "call": "new ErrorMiddleware($callableResolver, $this->getResponseFactory(), false, false, false, $logger)",
+   "from": "ErrorMiddlewareTest.testHandleMultipleExceptionsAddedAsArray",
+   "to": "Slim/Middleware/ErrorMiddleware.php::ErrorMiddleware.__construct",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "php-declared-type",
+   "at": "tests/AppTest.php:842",
+   "call": "$app->get('/', function (ServerRequestInterface $request, ResponseInterface $response) use (&$output",
+   "from": "AppTest.testAddMiddlewareOnRoute",
+   "to": "Slim/Interfaces/RouteInterface.php::RouteInterface.add",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "php-self",
+   "at": "Slim/Middleware/BodyParsingMiddleware.php:135",
+   "call": "$this->registerBodyParser('application/xml', $xmlCallable)",
+   "from": "BodyParsingMiddleware.registerDefaultBodyParsers",
+   "to": "Slim/Middleware/BodyParsingMiddleware.php::BodyParsingMiddleware.registerBodyParser",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "php-ctor",
+   "at": "tests/Routing/RouteRunnerTest.php:41",
+   "call": "new RouteCollector($responseFactory, $callableResolver)",
+   "from": "RouteRunnerTest.testRoutingIsPerformedIfRoutingResultsAreUnavailable",
+   "to": "Slim/Routing/RouteCollector.php::RouteCollector.__construct",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "php-self",
+   "at": "tests/Handlers/ErrorHandlerTest.php:48",
+   "call": "$this->setAccessible($reflectionProperty)",
+   "from": "ErrorHandlerTest.testDetermineRenderer",
+   "to": "tests/TestCase.php::TestCase.setAccessible",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "php-ctor",
+   "at": "tests/Routing/RouteCollectorProxyTest.php:275",
+   "call": "new RouteCollectorProxy(\n            $responseFactoryProphecy->reveal(),\n            $callableResolv",
+   "from": "RouteCollectorProxyTest.testDelete",
+   "to": "Slim/Routing/RouteCollectorProxy.php::RouteCollectorProxy.__construct",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "php-declared-type",
+   "at": "tests/AppTest.php:1330",
+   "call": "$app->getRouteCollector()->setDefaultInvocationStrategy(new RequestResponseNamedArgs())",
+   "from": "AppTest.testInvokeWithMatchingRouteWithNamedParameterRequestResponseNamedArgsStrategy",
+   "to": "Slim/Interfaces/RouteCollectorInterface.php::RouteCollectorInterface.setDefaultInvocationStrategy",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "php-self",
+   "at": "tests/Routing/RouteTest.php:148",
+   "call": "$this->createRoute()",
+   "from": "RouteTest.testGetCallable",
+   "to": "tests/Routing/RouteTest.php::RouteTest.createRoute",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "php-declared-type",
+   "at": "tests/MiddlewareDispatcherTest.php:549",
+   "call": "$dispatcher->add($middlewareProphecy->reveal())",
+   "from": "MiddlewareDispatcherTest.testCanBeReExecutedRecursivelyDuringDispatch",
+   "to": "Slim/MiddlewareDispatcher.php::MiddlewareDispatcher.add",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "php-declared-type",
+   "at": "tests/CallableResolverTest.php:392",
+   "call": "$resolver->resolveMiddleware($obj)",
+   "from": "CallableResolverTest.testMiddlewareObjMiddlewareClass",
+   "to": "Slim/CallableResolver.php::CallableResolver.resolveMiddleware",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "php-declared-type",
+   "at": "tests/CallableResolverTest.php:91",
+   "call": "$resolver->resolveMiddleware(__NAMESPACE__ . '\\testAdvancedCallable')",
+   "from": "CallableResolverTest.testFunctionName",
+   "to": "Slim/CallableResolver.php::CallableResolver.resolveMiddleware",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "php-declared-type",
+   "at": "tests/Middleware/BodyParsingMiddlewareTest.php:206",
+   "call": "$middleware->getBodyParser('text/foo')",
+   "from": "BodyParsingMiddlewareTest.testSettingAndGettingAParser",
+   "to": "Slim/Middleware/BodyParsingMiddleware.php::BodyParsingMiddleware.getBodyParser",
+   "confidence": 0.9
+  }
+ ]
+}

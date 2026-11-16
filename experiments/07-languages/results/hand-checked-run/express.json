@@ -1,0 +1,147 @@
+{
+ "repo": "express",
+ "origin": "https://github.com/expressjs/express.git",
+ "commit": "43fca52d28a422c8be48fd489cbd4f2d6152bab6",
+ "languages": "142 JavaScript",
+ "files": 142,
+ "build_ms": 1626,
+ "rss_mb": 773,
+ "nodes": 1795,
+ "edges": 17053,
+ "edges_by_type": {
+  "BRANCHES_TO": 517,
+  "CALLS": 11370,
+  "CATCHES": 7,
+  "CHECKS": 455,
+  "CONTAINS": 1776,
+  "INSTANTIATES": 8,
+  "LOOPS": 28,
+  "MUTATES": 83,
+  "PASSES_TO": 337,
+  "READS": 531,
+  "RECEIVES_FROM": 842,
+  "REFERENCES": 108,
+  "RETURNS": 42,
+  "RETURNS_VALUE_TO": 842,
+  "THROWS": 99,
+  "WRITES": 8
+ },
+ "calls_by_verification": {
+  "static_verified": 2202,
+  "unknown": 9168
+ },
+ "calls_by_extraction": {
+  "ts-checker": 11370
+ },
+ "notes": [],
+ "sample": [
+  {
+   "verification": "static_verified",
+   "how": "ts-checker",
+   "at": "test/app.router.js:198",
+   "call": "express()",
+   "from": "<module>@L196:C39",
+   "to": "lib/express.js::createApplication",
+   "confidence": 1
+  },
+  {
+   "verification": "static_verified",
+   "how": "ts-checker",
+   "at": "examples/web-service/index.js:34",
+   "call": "error(400, 'api key required')",
+   "from": "<module>@L34:C13",
+   "to": "examples/web-service/index.js::error",
+   "confidence": 1
+  },
+  {
+   "verification": "static_verified",
+   "how": "ts-checker",
+   "at": "examples/vhost/index.js:35",
+   "call": "express()",
+   "from": "redirect",
+   "to": "lib/express.js::createApplication",
+   "confidence": 1
+  },
+  {
+   "verification": "static_verified",
+   "how": "ts-checker",
+   "at": "examples/cookies/index.js:8",
+   "call": "express()",
+   "from": "app",
+   "to": "lib/express.js::createApplication",
+   "confidence": 1
+  },
+  {
+   "verification": "static_verified",
+   "how": "ts-checker",
+   "at": "test/res.format.js:35",
+   "call": "express()",
+   "from": "app2",
+   "to": "lib/express.js::createApplication",
+   "confidence": 1
+  },
+  {
+   "verification": "static_verified",
+   "how": "ts-checker",
+   "at": "examples/mvc/index.js:13",
+   "call": "express()",
+   "from": "app",
+   "to": "lib/express.js::createApplication",
+   "confidence": 1
+  },
+  {
+   "verification": "static_verified",
+   "how": "ts-checker",
+   "at": "examples/error-pages/index.js:9",
+   "call": "express()",
+   "from": "app",
+   "to": "lib/express.js::createApplication",
+   "confidence": 1
+  },
+  {
+   "verification": "static_verified",
+   "how": "ts-checker",
+   "at": "examples/static-files/index.js:10",
+   "call": "express()",
+   "from": "app",
+   "to": "lib/express.js::createApplication",
+   "confidence": 1
+  },
+  {
+   "verification": "static_verified",
+   "how": "ts-checker",
+   "at": "examples/markdown/index.js:13",
+   "call": "express()",
+   "from": "app",
+   "to": "lib/express.js::createApplication",
+   "confidence": 1
+  },
+  {
+   "verification": "static_verified",
+   "how": "ts-checker",
+   "at": "examples/online/index.js:25",
+   "call": "express()",
+   "from": "app",
+   "to": "lib/express.js::createApplication",
+   "confidence": 1
+  },
+  {
+   "verification": "static_verified",
+   "how": "ts-checker",
+   "at": "test/support/utils.js:84",
+   "call": "getMajorVersion(versionString)",
+   "from": "shouldSkipQuery",
+   "to": "test/support/utils.js::getMajorVersion",
+   "confidence": 1
+  },
+  {
+   "verification": "static_verified",
+   "how": "ts-checker",
+   "at": "examples/multi-router/index.js:5",
+   "call": "express()",
+   "from": "app",
+   "to": "lib/express.js::createApplication",
+   "confidence": 1
+  }
+ ]
+}

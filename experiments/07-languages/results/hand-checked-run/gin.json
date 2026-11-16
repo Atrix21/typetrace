@@ -1,0 +1,251 @@
+{
+ "repo": "gin",
+ "origin": "https://github.com/gin-gonic/gin.git",
+ "commit": "0f09c3a9b4626d9fe9979cf4d0521d6ae32ab646",
+ "languages": "98 Go",
+ "files": 98,
+ "build_ms": 865,
+ "rss_mb": 390,
+ "nodes": 1624,
+ "edges": 6459,
+ "edges_by_type": {
+  "CALLS": 3708,
+  "CONTAINS": 1623,
+  "EXTENDS": 8,
+  "IMPLEMENTS": 4,
+  "IMPORTS": 227,
+  "INSTANTIATES": 889
+ },
+ "calls_by_verification": {
+  "semantic_inferred": 331,
+  "static_verified": 3377
+ },
+ "calls_by_extraction": {
+  "go-declared-type": 1674,
+  "go-module": 24,
+  "go-name-heuristic": 331,
+  "go-scope": 1679
+ },
+ "notes": [
+  "go: 0 of 98 files have syntax the grammar did not fully parse (declarations after the error may be mis-nested)",
+  "go calls: 4215 resolved syntactically, 253 name-inferred (<=3 candidates), 5823 unresolved (standard library, external packages, dynamic receivers)"
+ ],
+ "sample": [
+  {
+   "verification": "static_verified",
+   "how": "go-scope",
+   "at": "recovery_test.go:265",
+   "call": "SetMode(TestMode)",
+   "from": "TestCustomRecovery",
+   "to": "mode.go::SetMode",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-declared-type",
+   "at": "context_test.go:1980",
+   "call": "c.NegotiateFormat(MIMEXML)",
+   "from": "TestContextNegotiationFormatWithWildcardAccept",
+   "to": "context.go::Context.NegotiateFormat",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-declared-type",
+   "at": "routes_test.go:629",
+   "call": "router.GET(\"/dir/\", func(c *Context) {})",
+   "from": "TestRouterNotFound",
+   "to": "routergroup.go::RouterGroup.GET",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-scope",
+   "at": "binding/form_mapping.go:293",
+   "call": "trySetCustom(vs[0], value)",
+   "from": "setByForm",
+   "to": "binding/form_mapping.go::trySetCustom",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-declared-type",
+   "at": "routergroup.go:163",
+   "call": "group.handle(http.MethodOptions, relativePath, handlers)",
+   "from": "RouterGroup.OPTIONS",
+   "to": "routergroup.go::RouterGroup.handle",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-scope",
+   "at": "recovery_test.go:70",
+   "call": "PerformRequest(router, http.MethodGet, \"/recovery\")",
+   "from": "TestPanicInHandler",
+   "to": "routes_test.go::PerformRequest",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-declared-type",
+   "at": "context_test.go:3162",
+   "call": "c.Scheme()",
+   "from": "TestContextScheme",
+   "to": "context.go::Context.Scheme",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-declared-type",
+   "at": "gin_integration_test.go:442",
+   "call": "router.GET(\"/c1/:dd/e1\", func(c *Context) { c.String(http.StatusOK, \"/c1/:dd/e1\") })",
+   "from": "TestTreeRunDynamicRouting",
+   "to": "routergroup.go::RouterGroup.GET",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-scope",
+   "at": "gin_test.go:521",
+   "call": "compareFunc(t, router.allNoRoute[1], middleware1)",
+   "from": "TestNoRouteWithGlobalHandlers",
+   "to": "gin_test.go::compareFunc",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-scope",
+   "at": "binding/binding_test.go:175",
+   "call": "Default(http.MethodPut, MIMETOML)",
+   "from": "TestBindingDefault",
+   "to": "binding/binding.go::Default",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-scope",
+   "at": "routes_test.go:647",
+   "call": "PerformRequest(router, http.MethodGet, tr.route)",
+   "from": "TestRouterNotFound",
+   "to": "routes_test.go::PerformRequest",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "go-scope",
+   "at": "binding/form_mapping_test.go:264",
+   "call": "mappingByPtr(&s, formSource{\"D\": {\"5s\"}}, \"form\")",
+   "from": "TestMappingTimeDuration",
+   "to": "binding/form_mapping.go::mappingByPtr",
+   "confidence": 0.9
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "ginS/gins_test.go:131",
+   "call": "engine().ServeHTTP(w, req)",
+   "from": "TestAny",
+   "to": "gin.go::Engine.ServeHTTP",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "render/html.go:79",
+   "call": "template.New(\"\").Delims(r.Delims.Left, r.Delims.Right)",
+   "from": "HTMLDebug.loadTemplate",
+   "to": "gin.go::Engine.Delims",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "response_writer_test.go:128",
+   "call": "w.Size()",
+   "from": "TestResponseWriterWrite",
+   "to": "response_writer.go::responseWriter.Size",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "binding/binding_test.go:825",
+   "call": "b.BindUri(m, &tag)",
+   "from": "TestUriBinding",
+   "to": "context.go::Context.BindUri",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "response_writer_test.go:267",
+   "call": "w.Written()",
+   "from": "TestResponseWriterHijackAfterWriteHeaderNow",
+   "to": "response_writer.go::responseWriter.Written",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "ginS/gins_test.go:190",
+   "call": "engine().ServeHTTP(w, req)",
+   "from": "TestNoRoute",
+   "to": "gin.go::Engine.ServeHTTP",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "render/json.go:188",
+   "call": "encoder.Encode(r.Data)",
+   "from": "PureJSON.Render",
+   "to": "binding/json_test.go::timePointerCodec.Encode",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "response_writer.go:124",
+   "call": "hijacker.Hijack()",
+   "from": "responseWriter.Hijack",
+   "to": "response_writer_test.go::mockHijacker.Hijack",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "response_writer_test.go:290",
+   "call": "testServer.Close()",
+   "from": "TestResponseWriterFlush",
+   "to": "binding/binding_test.go::failRead.Close",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "context_test.go:2062",
+   "call": "c.Writer.Status()",
+   "from": "TestContextAbortWithStatusJSON",
+   "to": "context.go::Context.Status",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "routergroup_test.go:195",
+   "call": "r.Match([]string{http.MethodPut, http.MethodPatch}, \"/match\", handler)",
+   "from": "testRoutesInterface",
+   "to": "routergroup.go::RouterGroup.Match",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "go-name-heuristic",
+   "at": "routergroup_test.go:80",
+   "call": "v1.OPTIONS(\"/test\", handler)",
+   "from": "performRequestInGroup",
+   "to": "routergroup.go::RouterGroup.OPTIONS",
+   "confidence": 0.3
+  }
+ ]
+}

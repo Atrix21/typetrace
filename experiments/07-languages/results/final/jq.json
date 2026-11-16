@@ -1,0 +1,256 @@
+{
+ "repo": "jq",
+ "origin": "https://github.com/jqlang/jq.git",
+ "commit": "5c001b18d7237cce1fdba63608732163f978dd23",
+ "languages": "27 C, 24 C++, 5 Python, 1 JavaScript",
+ "files": 57,
+ "build_ms": 1465,
+ "rss_mb": 878,
+ "nodes": 850,
+ "edges": 6347,
+ "edges_by_type": {
+  "BRANCHES_TO": 2,
+  "CALLS": 5380,
+  "CHECKS": 2,
+  "CONTAINS": 848,
+  "IMPORTS": 113,
+  "INSTANTIATES": 2
+ },
+ "calls_by_verification": {
+  "semantic_inferred": 1296,
+  "static_verified": 4065,
+  "unknown": 19
+ },
+ "calls_by_extraction": {
+  "c-scope": 3975,
+  "c-unique-name": 1277,
+  "cpp-scope": 23,
+  "cpp-unique-name": 19,
+  "py-scope": 67,
+  "ts-checker": 19
+ },
+ "notes": [
+  "python calls: 67 resolved syntactically, 0 name-inferred (<=3 candidates), 180 unresolved (builtins, external libraries, dynamic receivers)",
+  "c: 16 of 27 files have syntax the grammar did not fully parse (declarations after the error may be mis-nested)",
+  "cpp: 7 of 24 files have syntax the grammar did not fully parse (declarations after the error may be mis-nested)",
+  "c, cpp calls: 3978 resolved syntactically, 1294 name-inferred (<=3 candidates), 2160 unresolved (standard library, external packages, dynamic receivers)"
+ ],
+ "sample": [
+  {
+   "verification": "static_verified",
+   "how": "c-scope",
+   "at": "src/jv_print.c:148",
+   "call": "put_char(c, F, S, T)",
+   "from": "jvp_dump_string",
+   "to": "src/jv_print.c::put_char",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "c-scope",
+   "at": "src/jv_aux.c:249",
+   "call": "jv_is_valid(t)",
+   "from": "jv_has",
+   "to": "src/jv.h::jv_is_valid",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "c-scope",
+   "at": "src/jv_dtoa.c:1272",
+   "call": "lo0bits(C, &z)",
+   "from": "d2b",
+   "to": "src/jv_dtoa.c::lo0bits",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "c-scope",
+   "at": "src/jv_aux.c:124",
+   "call": "jv_get_kind(k)",
+   "from": "jv_get",
+   "to": "src/jv.c::jv_get_kind",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "c-scope",
+   "at": "src/parser.c:460",
+   "call": "block_is_single(b)",
+   "from": "constant_fold",
+   "to": "src/compile.c::block_is_single",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "c-scope",
+   "at": "src/jq_test.c:725",
+   "call": "jv_equal(jv_copy(a1), jv_copy(b))",
+   "from": "jv_test",
+   "to": "src/jv.c::jv_equal",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "c-scope",
+   "at": "src/jv_parse.c:231",
+   "call": "jv_copy(p->stack[p->stackpos-1])",
+   "from": "parse_token",
+   "to": "src/jv.c::jv_copy",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "c-scope",
+   "at": "src/jv_aux.c:334",
+   "call": "jv_number_get_value_and_consume(jv_array_get(jv_copy(neg_keys), neg_idx))",
+   "from": "jv_dels",
+   "to": "src/jv_aux.c::jv_number_get_value_and_consume",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "c-scope",
+   "at": "src/jv_parse.c:611",
+   "call": "jv_array_slice(p->output, 0, 1)",
+   "from": "stream_check_done",
+   "to": "src/jv.c::jv_array_slice",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "c-scope",
+   "at": "src/linker.c:276",
+   "call": "jv_string(\"relpath\")",
+   "from": "process_dependencies",
+   "to": "src/jv.c::jv_string",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "py-scope",
+   "at": "docs/build_manpage.py:153",
+   "call": "self.__write_cmd('.IP \"\" 0')",
+   "from": "RoffWalker._walk",
+   "to": "docs/build_manpage.py::RoffWalker.__write_cmd",
+   "confidence": 1
+  },
+  {
+   "verification": "static_verified",
+   "how": "c-scope",
+   "at": "src/compile.c:477",
+   "call": "inst_block(curr)",
+   "from": "block_drop_unreferenced",
+   "to": "src/compile.c::inst_block",
+   "confidence": 0.9
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "c-unique-name",
+   "at": "src/builtin.c:902",
+   "call": "jv_free(answer)",
+   "from": "f_bsearch",
+   "to": "src/jv.c::jv_free",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "c-unique-name",
+   "at": "src/compile.c:517",
+   "call": "jv_object()",
+   "from": "gen_module",
+   "to": "src/jv.c::jv_object",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "c-unique-name",
+   "at": "src/builtin.c:1258",
+   "call": "jv_true()",
+   "from": "f_isinfinite",
+   "to": "src/jv.c::jv_true",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "c-unique-name",
+   "at": "src/linker.c:418",
+   "call": "jq_get_lib_dirs(jq)",
+   "from": "load_module_meta",
+   "to": "src/execute.c::jq_get_lib_dirs",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "c-unique-name",
+   "at": "src/jv_dtoa_tsd.c:45",
+   "call": "pthread_setspecific(dtoa_ctx_key, ctx)",
+   "from": "tsd_dtoa_context_get",
+   "to": "src/jv.c::pthread_setspecific",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "c-unique-name",
+   "at": "src/compile.c:938",
+   "call": "jv_true()",
+   "from": "gen_or",
+   "to": "src/jv.c::jv_true",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "c-unique-name",
+   "at": "src/builtin.c:1869",
+   "call": "jv_free(a)",
+   "from": "f_localtime#3",
+   "to": "src/jv.c::jv_free",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "c-unique-name",
+   "at": "src/builtin.c:1348",
+   "call": "jv_get_kind(a)",
+   "from": "f_string_split",
+   "to": "src/jv.c::jv_get_kind",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "c-unique-name",
+   "at": "src/builtin.c:606",
+   "call": "jv_string_length_bytes(jv_copy(input))",
+   "from": "escape_string",
+   "to": "src/jv.c::jv_string_length_bytes",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "c-unique-name",
+   "at": "src/builtin.c:1681",
+   "call": "jv_string_value(a)",
+   "from": "f_strptime",
+   "to": "src/jv.c::jv_string_value",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "c-unique-name",
+   "at": "src/compile.c:547",
+   "call": "jv_object_merge(block_const(metadata), i->imm.constant)",
+   "from": "gen_import_meta",
+   "to": "src/jv.c::jv_object_merge",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "c-unique-name",
+   "at": "src/builtin.c:1456",
+   "call": "jv_get_kind(a)",
+   "from": "f_string_implode",
+   "to": "src/jv.c::jv_get_kind",
+   "confidence": 0.5
+  }
+ ]
+}

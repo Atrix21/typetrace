@@ -6,6 +6,7 @@
  *
  *   npx tsx scripts/languages/report.ts --out experiments/07-languages/results <repo-dir> [<repo-dir> ...]
  */
+import { spawnSync } from 'node:child_process';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -17,11 +18,12 @@ const argv = process.argv.slice(2);
 const oi = argv.indexOf('--out');
 const OUT = oi >= 0 ? argv[oi + 1] : null;
 const repos = argv.filter((a, i) => a !== '--out' && i !== oi + 1);
-const SAMPLE = { static_verified: 12, semantic_inferred: 6 };
+const SAMPLE = { static_verified: 12, semantic_inferred: 12 };
 
 for (const repo of repos) {
   const name = path.basename(repo);
-  const commit = fs.existsSync(path.join(repo, '.git')) ? fs.readFileSync(path.join(repo, '.git', 'HEAD'), 'utf8').trim() : null;
+  const git = (...a: string[]) => spawnSync('git', ['-C', repo, ...a], { encoding: 'utf8' }).stdout.trim() || null;
+  const commit = git('rev-parse', 'HEAD'), origin = git('remote', 'get-url', 'origin');
   const files = sourceFiles(repo, ['']);
   await initLanguages(grammarLanguages(files));
   const t0 = performance.now();
@@ -32,10 +34,10 @@ for (const repo of repos) {
   const nodes = new Map(g.nodes.map((n) => [n.id, n]));
   // seeded sample: order by hash of the edge id
   const h = (s: string) => crypto.createHash('sha256').update(s).digest('hex');
-  const sample = Object.entries(SAMPLE).flatMap(([v, k]) => calls.filter((e) => e.verification === v && !e.src.startsWith('file:')).sort((a, b) => (h(a.id) < h(b.id) ? -1 : 1)).slice(0, k)
+  const sample = Object.entries(SAMPLE).flatMap(([v, k]) => calls.filter((e) => e.verification === v && !e.src.startsWith('file:') && nodes.get(e.dst)?.file).sort((a, b) => (h(a.id) < h(b.id) ? -1 : 1)).slice(0, k)
     .map((e) => ({ verification: v, how: e.extraction, at: `${e.file}:${e.line}`, call: (e as { evidence?: string }).evidence ?? '', from: nodes.get(e.src)?.qualified_name, to: `${nodes.get(e.dst)?.file}::${nodes.get(e.dst)?.qualified_name}`, confidence: e.confidence })));
   const rec = {
-    repo: name, commit, languages: languageSummary(files), files: files.length, build_ms: ms, rss_mb: Math.round(process.memoryUsage().rss / 1e6),
+    repo: name, origin, commit, languages: languageSummary(files), files: files.length, build_ms: ms, rss_mb: Math.round(process.memoryUsage().rss / 1e6),
     nodes: g.nodes.length, edges: g.edges.length, edges_by_type: by(g.edges as typeof calls, (e) => e.type), calls_by_verification: by(calls, (e) => e.verification),
     calls_by_extraction: by(calls, (e) => e.extraction), notes: g.diagnostics.notes, sample,
   };

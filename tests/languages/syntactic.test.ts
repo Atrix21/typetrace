@@ -64,7 +64,7 @@ describe('syntactic front-end', () => {
       [`${J}app/User.java`]: 'package com.acme.app;\npublic class User { public User() {} public void touch() {} }\n',
       [`${J}app/BaseService.java`]: 'package com.acme.app;\npublic abstract class BaseService { protected void audit(String m) {} }\n',
       [`${J}app/Service.java`]: 'package com.acme.app;\npublic interface Service { User find(String id); }\n',
-      [`${J}app/UserService.java`]: 'package com.acme.app;\nimport com.acme.util.Strings;\nimport java.util.List;\npublic class UserService extends BaseService implements Service {\n  private final Repo repo;\n  public UserService(Repo r) { this.repo = r; }\n  public User find(String id) {\n    validate(id);\n    audit(id);\n    User u = repo.findById(Strings.trim(id));\n    u.touch();\n    Repo other = new Repo();\n    other.findById(id);\n    List.of(id).size();\n    return u;\n  }\n  private void validate(String id) {}\n}\n',
+      [`${J}app/UserService.java`]: 'package com.acme.app;\nimport com.acme.util.Strings;\nimport java.util.List;\npublic class UserService extends BaseService implements Service {\n  private final Repo repo;\n  public UserService(Repo r) { this.repo = r; }\n  public User find(String id) {\n    validate(id);\n    audit(id);\n    User u = repo.findById(Strings.trim(id));\n    u.touch();\n    Repo other = new Repo();\n    other.findById(id);\n    List.of(id).size();\n    return u;\n  }\n  private void validate(String id) {}\n  void chain(String id) { repo.findById(id).touch(); this.repo.findById(id).toString().length(); }\n}\n',
     });
     const S = 'app/UserService.java::UserService';
     expectEdges(has, out, [
@@ -79,15 +79,19 @@ describe('syntactic front-end', () => {
       ['EXTENDS', S, 'app/BaseService.java::BaseService'],
       ['IMPLEMENTS', S, 'app/Service.java::Service'],
       ['IMPORTS', `file:${J}app/UserService.java`, `file:${J}util/Strings.java`],
+      ['CALLS', `${S}.chain`, 'app/User.java::User.touch', 'static_verified'], // declared return type of Repo.findById
     ]);
+    expect(out(`${S}.chain`).filter((e) => !e.includes('findById')), 'String.length() is external').toEqual(['method:src/main/java/com/acme/app/User.java::User.touch [static_verified]']);
     expect(out(`${S}.find`).some((e) => e.includes('size'))).toBe(false);
   });
 
   it('Kotlin: constructor properties, objects, imported functions, X() constructors', async () => {
     const { has, out } = await graph({
       'src/main/kotlin/app/Repo.kt': 'package app\n\nclass Repo {\n  fun findById(id: String): User = User(id)\n}\n\nclass User(val id: String) {\n  fun touch() {}\n}\n',
+      'src/main/kotlin/app/Caller.java': 'package app;\nimport app.util.Strings;\nclass Caller {\n  void run(Repo repo) {\n    Strings.trim("x");\n    repo.findById("1");\n  }\n}\n',
+      'src/main/kotlin/app/Quoted.kt': 'package app\n\ninternal class `-Quoted` {\n  fun go() {\n    helper()\n  }\n\n  private fun helper() {}\n}\n',
       'src/main/kotlin/app/util/Util.kt': 'package app.util\n\nobject Strings {\n  fun trim(s: String) = s\n}\n\nfun normalize(s: String) = s\n',
-      'src/main/kotlin/app/Service.kt': 'package app\n\nimport app.util.Strings\nimport app.util.normalize\n\nopen class Base {\n  fun audit(m: String) {}\n}\n\nclass UserService(private val repo: Repo) : Base() {\n  private val cache = Repo()\n\n  fun find(id: String): User {\n    audit(id)\n    val u = repo.findById(Strings.trim(normalize(id)))\n    val r = Repo()\n    r.findById(id)\n    cache.findById(id)\n    println(u)\n    return u\n  }\n\n  companion object {\n    fun create(): UserService {\n      return UserService(Repo())\n    }\n  }\n}\n',
+      'src/main/kotlin/app/Service.kt': 'package app\n\nimport app.util.Strings\nimport app.util.normalize\n\nopen class Base {\n  fun audit(m: String) {}\n}\n\nclass UserService(private val repo: Repo) : Base() {\n  private val cache = Repo()\n\n  fun find(id: String): User {\n    audit(id)\n    val u = repo.findById(Strings.trim(normalize(id)))\n    u.touch()\n    val r = Repo()\n    r.findById(id)\n    cache.findById(id)\n    println(u)\n    return u\n  }\n\n  companion object {\n    fun create(): UserService {\n      return UserService(Repo())\n    }\n  }\n}\n',
     });
     const S = 'app/Service.kt::UserService';
     expectEdges(has, out, [
@@ -97,8 +101,13 @@ describe('syntactic front-end', () => {
       ['CALLS', `${S}.find`, 'util/Util.kt::normalize', 'static_verified'],
       ['INSTANTIATES', `${S}.find`, 'app/Repo.kt::Repo'],
       ['INSTANTIATES', 'app/Repo.kt::Repo.findById', 'app/Repo.kt::User'],
+      ['CALLS', `${S}.find`, 'app/Repo.kt::User.touch', 'static_verified'],
       ['EXTENDS', S, 'app/Service.kt::Base'],
       ['INSTANTIATES', `${S}.create`, S],
+      // Java calling Kotlin (one JVM type system), and a backtick-quoted class name
+      ['CALLS', 'app/Caller.java::Caller.run', 'util/Util.kt::Strings.trim', 'static_verified'],
+      ['CALLS', 'app/Caller.java::Caller.run', 'app/Repo.kt::Repo.findById', 'static_verified'],
+      ['CALLS', 'app/Quoted.kt::-Quoted.go', 'app/Quoted.kt::-Quoted.helper', 'static_verified'],
     ]);
     expect(out(`${S}.find`).filter((e) => e.includes('Repo.findById [static_verified]')).length, 'repo, r and cache: three call sites, all Repo.findById').toBe(3);
     expect(out(`${S}.find`).some((e) => e.includes('println'))).toBe(false);
@@ -146,7 +155,7 @@ describe('syntactic front-end', () => {
       'src/lib.rs': 'pub mod db;\nmod util;\npub mod server;\n',
       'src/db.rs': 'pub struct Pool { size: usize }\n\nimpl Pool {\n    pub fn get(&self) -> usize { self.size }\n    pub fn new() -> Pool { Pool { size: 1 } }\n}\n\npub fn connect() -> Pool { Pool::new() }\n',
       'src/util.rs': 'pub fn log(m: &str) { println!("{}", m); }\n',
-      'src/server.rs': 'use crate::db::{Pool, connect};\nuse crate::util;\n\npub trait Handler { fn handle(&self); }\n\npub struct Server { pool: Pool }\n\nimpl Server {\n    pub fn new() -> Self { Server { pool: connect() } }\n    fn run(&self) {\n        self.serve();\n        util::log("x");\n        self.pool.get();\n        let p = Pool::new();\n        p.get();\n        helper();\n        let v: Vec<u8> = Vec::new();\n    }\n    fn serve(&self) {}\n}\n\nimpl Handler for Server {\n    fn handle(&self) { self.run() }\n}\n\nfn helper() {\n    let s = Server::new();\n    s.run();\n}\n',
+      'src/server.rs': 'use crate::db::{Pool, connect};\nuse crate::util;\n\npub trait Handler { fn handle(&self); }\n\npub struct Server { pool: Pool }\n\nimpl Server {\n    pub fn new() -> Self { Server { pool: connect() } }\n    fn run(&self) {\n        self.serve();\n        util::log("x");\n        self.pool.get();\n        let p = Pool::new();\n        p.get();\n        helper();\n        let v: Vec<u8> = Vec::new();\n    }\n    fn serve(&self) {}\n}\n\nimpl Handler for Server {\n    fn handle(&self) { self.run() }\n}\n\nfn helper() {\n    let s = Server::new();\n    s.run();\n}\n\nfn chained() -> usize { Pool::new().get() + Server::new().pool.get() }\n',
     });
     const S = 'src/server.rs::Server';
     expectEdges(has, out, [
@@ -161,6 +170,7 @@ describe('syntactic front-end', () => {
       ['CALLS', 'src/server.rs::helper', `${S}.run`, 'static_verified'],
       ['CALLS', `${S}.handle`, `${S}.run`, 'static_verified'],
       ['IMPLEMENTS', S, 'src/server.rs::Handler'],
+      ['CALLS', 'src/server.rs::chained', 'src/db.rs::Pool.get', 'static_verified'],
       ['IMPORTS', 'file:src/server.rs', 'file:src/db.rs'],
       ['IMPORTS', 'file:src/lib.rs', 'file:src/util.rs'],
     ]);

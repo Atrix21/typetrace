@@ -1,0 +1,252 @@
+{
+ "repo": "serilog",
+ "origin": "https://github.com/serilog/serilog.git",
+ "commit": "43105b35095337d77f022561a8f2d3db2f9a7937",
+ "languages": "217 C#",
+ "files": 217,
+ "build_ms": 705,
+ "rss_mb": 577,
+ "nodes": 1997,
+ "edges": 6901,
+ "edges_by_type": {
+  "CALLS": 3935,
+  "CONTAINS": 1996,
+  "EXTENDS": 21,
+  "IMPLEMENTS": 78,
+  "INSTANTIATES": 871
+ },
+ "calls_by_verification": {
+  "semantic_inferred": 706,
+  "static_verified": 3229
+ },
+ "calls_by_extraction": {
+  "csharp-ctor": 707,
+  "csharp-declared-type": 634,
+  "csharp-implicit-this": 1124,
+  "csharp-name-heuristic": 706,
+  "csharp-scope": 346,
+  "csharp-static": 418
+ },
+ "notes": [
+  "csharp: 26 of 217 files have syntax the grammar did not fully parse (declarations after the error may be mis-nested)",
+  "csharp calls: 2359 resolved syntactically, 406 name-inferred (<=3 candidates), 3003 unresolved (standard library, external packages, dynamic receivers)"
+ ],
+ "sample": [
+  {
+   "verification": "static_verified",
+   "how": "csharp-static",
+   "at": "test/Serilog.Tests/Settings/CallableConfigurationMethodFinderTests.cs:29",
+   "call": "CallableConfigurationMethodFinder\n            .FindConfigurationMethods(\n                searchInAss",
+   "from": "CallableConfigurationMethodFinderTests.FindsAuditSinkSpecificConfigurationMethods",
+   "to": "src/Serilog/Settings/KeyValuePairs/CallableConfigurationMethodFinder.cs::CallableConfigurationMethodFinder.FindConfigurationMethods",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "csharp-scope",
+   "at": "src/Serilog/ILogger.cs:771",
+   "call": "Write(LogEventLevel.Information, exception, messageTemplate, NoPropertyValues)",
+   "from": "ILogger.ForContext#2.Information#6",
+   "to": "src/Serilog/ILogger.cs::ILogger.ForContext#2.Write#2",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "csharp-implicit-this",
+   "at": "src/Serilog/Configuration/LoggerSinkConfiguration.cs:344",
+   "call": "Wrap(wrapSink, configureWrappedSink)",
+   "from": "LoggerSinkConfiguration.Wrap",
+   "to": "src/Serilog/Configuration/LoggerSinkConfiguration.cs::LoggerSinkConfiguration.Wrap#2",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "csharp-implicit-this",
+   "at": "src/Serilog/Core/Logger.cs:340",
+   "call": "Write(level, exception, messageTemplate, span)",
+   "from": "Logger.Write#8",
+   "to": "src/Serilog/Core/Logger.cs::Logger.Write#3",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "csharp-static",
+   "at": "src/Serilog/Events/LogEvent.cs:156",
+   "call": "Guard.AgainstNull(property)",
+   "from": "LogEvent.AddOrUpdateProperty",
+   "to": "src/Serilog/Guard.cs::Guard.AgainstNull",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "csharp-declared-type",
+   "at": "test/Serilog.Tests/Core/BatchingSinkTests.cs:58",
+   "call": "pbs.Emit(evt)",
+   "from": "BatchingSinkTests.WhenAnEventIsEnqueuedItIsWrittenToABatchOnTimer",
+   "to": "src/Serilog/Core/Sinks/Batching/BatchingSink.cs::BatchingSink.Emit",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "csharp-declared-type",
+   "at": "test/Serilog.Tests/Formatting/Json/JsonFormatterTests.cs:230",
+   "call": "p.Parse(\"{AProperty:000}\")",
+   "from": "JsonFormatterTests.PropertyTokensWithFormatStringsAreIncludedAsRenderings",
+   "to": "src/Serilog/Parsing/MessageTemplateParser.cs::MessageTemplateParser.Parse",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "csharp-implicit-this",
+   "at": "test/Serilog.Tests/Formatting/Json/JsonFormatterTests.cs:38",
+   "call": "FormatJson(@event)",
+   "from": "JsonFormatterTests.JsonFormattedDateOnly",
+   "to": "test/Serilog.Tests/Formatting/Json/JsonFormatterTests.cs::JsonFormatterTests.FormatJson",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "csharp-implicit-this",
+   "at": "src/Serilog/Core/Logger.cs:636",
+   "call": "Write(LogEventLevel.Verbose, exception, messageTemplate, propertyValues)",
+   "from": "Logger.Verbose#10",
+   "to": "src/Serilog/Core/Logger.cs::Logger.Write#3",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "csharp-implicit-this",
+   "at": "src/Serilog/Log.cs:888",
+   "call": "Write(LogEventLevel.Error, messageTemplate, propertyValue)",
+   "from": "Log.Error#2",
+   "to": "src/Serilog/Log.cs::Log.Write#3",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "csharp-scope",
+   "at": "src/Serilog/ILogger.cs:708",
+   "call": "Write(LogEventLevel.Information, messageTemplate, propertyValue)",
+   "from": "ILogger.ForContext#2.Information#2",
+   "to": "src/Serilog/ILogger.cs::ILogger.ForContext#2.Write#3",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "csharp-implicit-this",
+   "at": "src/Serilog/Core/Logger.cs:1245",
+   "call": "Write(LogEventLevel.Fatal, messageTemplate, NoPropertyValues)",
+   "from": "Logger.Fatal",
+   "to": "src/Serilog/Core/Logger.cs::Logger.Write#3",
+   "confidence": 0.9
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "csharp-name-heuristic",
+   "at": "test/Serilog.Tests/Configuration/LoggerConfigurationTests.cs:62",
+   "call": "new LoggerConfiguration()\n            .WriteTo.Sink(sink)\n            .CreateLogger()",
+   "from": "LoggerConfigurationTests.DisposableSinksAreNotDisposedAlongWithContextualLoggers",
+   "to": "test/Serilog.Tests/Core/LoggerTests.cs::LoggerTests.CreateLogger",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "csharp-name-heuristic",
+   "at": "test/Serilog.Tests/Settings/KeyValuePairSettingsTests.cs:540",
+   "call": "new LoggerConfiguration()\n            .ReadFrom.KeyValuePairs(new Dictionary<string, string>\n       ",
+   "from": "KeyValuePairSettingsTests.WriteToSinkIsAppliedWithCustomSinkAndMinimumLevel",
+   "to": "src/Serilog/Configuration/LoggerSettingsConfiguration.cs::LoggerSettingsConfiguration.KeyValuePairs",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "csharp-name-heuristic",
+   "at": "test/Serilog.Tests/Core/ChildLoggerKnownLimitationsTests.cs:13",
+   "call": "new LoggerConfiguration()\n                .MinimumLevel.Verbose()\n                .MinimumLevel.Over",
+   "from": "ChildLoggerKnownLimitationsTests.SpecifyingMinimumLevelOverridesInWriteToLoggerWithConfigCallBackWritesWarningToSelfLog",
+   "to": "src/Serilog/Configuration/LoggerMinimumLevelConfiguration.cs::LoggerMinimumLevelConfiguration.Override",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "csharp-name-heuristic",
+   "at": "test/Serilog.Tests/Settings/KeyValuePairSettingsTests.cs:144",
+   "call": "new LoggerConfiguration()\n            .ReadFrom.KeyValuePairs(settings)\n            .WriteTo.Sink(ne",
+   "from": "KeyValuePairSettingsTests.TestMinimumLevelOverrides",
+   "to": "src/Serilog/LoggerConfiguration.cs::LoggerConfiguration.CreateLogger",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "csharp-name-heuristic",
+   "at": "test/Serilog.Tests/Configuration/LoggerConfigurationTests.cs:105",
+   "call": "new LoggerConfiguration()\n            .WriteTo.Sink(sink)\n            .Destructure.AsScalar(typeof(A",
+   "from": "LoggerConfigurationTests.SpecifyingThatATypeIsScalarCausesItToBeLoggedAsScalarEvenWhenDestructuring",
+   "to": "test/Serilog.Tests/Core/LoggerTests.cs::LoggerTests.CreateLogger",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "csharp-name-heuristic",
+   "at": "test/Serilog.Tests/Capturing/PropertyValueConverterTests.cs:432",
+   "call": "PropertyValueConverter.IsCompilerGeneratedType(typeof(Empty))",
+   "from": "PropertyValueConverterTests.RegularTypesAreNotCompilerGenerated",
+   "to": "src/Serilog/Capturing/PropertyValueConverter.cs::PropertyValueConverter.IsCompilerGeneratedType",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "csharp-name-heuristic",
+   "at": "test/Serilog.Tests/Settings/KeyValuePairSettingsTests.cs:540",
+   "call": "new LoggerConfiguration()\n            .ReadFrom.KeyValuePairs(new Dictionary<string, string>\n       ",
+   "from": "KeyValuePairSettingsTests.WriteToSinkIsAppliedWithCustomSinkAndMinimumLevel",
+   "to": "src/Serilog/Configuration/LoggerSettingsConfiguration.cs::LoggerSettingsConfiguration.KeyValuePairs#2",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "csharp-name-heuristic",
+   "at": "test/Serilog.Tests/Settings/KeyValuePairSettingsTests.cs:465",
+   "call": "new LoggerConfiguration()\n            .ReadFrom.KeyValuePairs(new Dictionary<string, string>\n       ",
+   "from": "KeyValuePairSettingsTests.DestructuringAsScalarIsAppliedWithShortTypeName",
+   "to": "src/Serilog/LoggerConfiguration.cs::LoggerConfiguration.CreateLogger",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "csharp-name-heuristic",
+   "at": "test/Serilog.Tests/Core/ChildLoggerKnownLimitationsTests.cs:169",
+   "call": "rootLoggerConfig\n            .WriteTo.Logger(childLogger)\n            .CreateLogger()",
+   "from": "ChildLoggerKnownLimitationsTests.WriteToLoggerMinimumLevelOverrideInheritanceNotSupportedScenarios",
+   "to": "test/Serilog.Tests/Core/LoggerTests.cs::LoggerTests.CreateLogger",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "csharp-name-heuristic",
+   "at": "test/Serilog.Tests/Formatting/Json/JsonFormatterTests.cs:171",
+   "call": "@event.AddOrUpdateProperty(dictProp)",
+   "from": "JsonFormatterTests.ADictionaryWithScalarKeySerializesAsAnObject",
+   "to": "src/Serilog/Events/LogEvent.cs::LogEvent.AddOrUpdateProperty",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "csharp-name-heuristic",
+   "at": "test/Serilog.Tests/Core/LoggerTests.cs:417",
+   "call": "new LoggerConfiguration()\n            .Destructure.ToMaximumCollectionCount(2)\n            .WriteTo.",
+   "from": "LoggerTests.JaggedArrayShouldRespectMaximumCollectionCount",
+   "to": "test/Serilog.Tests/Core/LoggerTests.cs::LoggerTests.CreateLogger",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "csharp-name-heuristic",
+   "at": "test/Serilog.Tests/Core/SecondaryLoggerSinkTests.cs:60",
+   "call": "new LoggerConfiguration()\n            .MinimumLevel.Debug()\n            .WriteTo.Logger(lc => lc\n   ",
+   "from": "SecondaryLoggerSinkTests.SecondaryLoggerInheritsPrimaryLevelByDefault",
+   "to": "test/Serilog.Tests/Core/LoggerTests.cs::LoggerTests.CreateLogger",
+   "confidence": 0.15
+  }
+ ]
+}

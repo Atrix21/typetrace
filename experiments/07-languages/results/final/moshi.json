@@ -1,0 +1,260 @@
+{
+ "repo": "moshi",
+ "origin": "https://github.com/square/moshi.git",
+ "commit": "889013ec2edb8d8034902662a1dc8c4f3b3f8111",
+ "languages": "86 Kotlin, 57 Java",
+ "files": 143,
+ "build_ms": 1182,
+ "rss_mb": 542,
+ "nodes": 2562,
+ "edges": 10583,
+ "edges_by_type": {
+  "CALLS": 6801,
+  "CONTAINS": 2561,
+  "EXTENDS": 54,
+  "IMPLEMENTS": 28,
+  "IMPORTS": 282,
+  "INSTANTIATES": 857
+ },
+ "calls_by_verification": {
+  "semantic_inferred": 419,
+  "static_verified": 6382
+ },
+ "calls_by_extraction": {
+  "java-ctor": 134,
+  "java-declared-type": 4399,
+  "java-implicit-this": 410,
+  "java-scope": 208,
+  "java-static": 139,
+  "kotlin-ctor": 65,
+  "kotlin-declared-type": 371,
+  "kotlin-implicit-this": 489,
+  "kotlin-name-heuristic": 419,
+  "kotlin-scope": 133,
+  "kotlin-self": 3,
+  "kotlin-static": 31
+ },
+ "notes": [
+  "java: 0 of 57 files have syntax the grammar did not fully parse (declarations after the error may be mis-nested)",
+  "kotlin: 2 of 86 files have syntax the grammar did not fully parse (declarations after the error may be mis-nested)",
+  "java, kotlin calls: 4258 resolved syntactically, 311 name-inferred (<=3 candidates), 9687 unresolved (standard library, external packages, dynamic receivers)"
+ ],
+ "sample": [
+  {
+   "verification": "static_verified",
+   "how": "java-declared-type",
+   "at": "moshi/src/test/java/com/squareup/moshi/MoshiTest.java:625",
+   "call": "builder.add(type, null)",
+   "from": "MoshiTest.addNullFails",
+   "to": "moshi/src/main/java/com/squareup/moshi/Moshi.kt::Moshi.Builder.add#4",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "kotlin-implicit-this",
+   "at": "moshi/src/main/java/com/squareup/moshi/-JsonUtf8Reader.kt:345",
+   "call": "checkLenient()",
+   "from": "-JsonUtf8Reader.doPeek",
+   "to": "moshi/src/main/java/com/squareup/moshi/-JsonUtf8Reader.kt::-JsonUtf8Reader.checkLenient",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "kotlin-implicit-this",
+   "at": "moshi/src/main/java/com/squareup/moshi/-JsonUtf8Writer.kt:231",
+   "call": "pushScope(JsonScope.STREAMING_VALUE)",
+   "from": "-JsonUtf8Writer.valueSink",
+   "to": "moshi/src/main/java/com/squareup/moshi/JsonWriter.kt::JsonWriter.pushScope",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "kotlin-implicit-this",
+   "at": "moshi/src/main/java/com/squareup/moshi/-JsonUtf8Reader.kt:120",
+   "call": "peek()",
+   "from": "-JsonUtf8Reader.endObject",
+   "to": "moshi/src/main/java/com/squareup/moshi/-JsonUtf8Reader.kt::-JsonUtf8Reader.peek",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-declared-type",
+   "at": "moshi-adapters/src/test/java/com/squareup/moshi/adapters/PolymorphicJsonAdapterFactoryTest.java:389",
+   "call": "moshi.adapter(Message.class)",
+   "from": "PolymorphicJsonAdapterFactoryTest.missingLabelKey",
+   "to": "moshi/src/main/java/com/squareup/moshi/Moshi.kt::Moshi.adapter#4",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-declared-type",
+   "at": "moshi/src/test/java/com/squareup/moshi/JsonUtf8WriterTest.java:78",
+   "call": "writer.name(\"b\").value(7.0)",
+   "from": "JsonUtf8WriterTest.prettyPrintArray",
+   "to": "moshi/src/main/java/com/squareup/moshi/JsonWriter.kt::JsonWriter.value#4",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-declared-type",
+   "at": "moshi/src/test/java/com/squareup/moshi/MoshiTest.java:1119",
+   "call": "moshi.adapter(HasPlatformType.Wrapper.class)",
+   "from": "MoshiTest.reentrantFieldErrorMessagesWrapper",
+   "to": "moshi/src/main/java/com/squareup/moshi/Moshi.kt::Moshi.adapter",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-declared-type",
+   "at": "moshi/src/test/java/com/squareup/moshi/MoshiTest.java:906",
+   "call": "moshi.adapter(String[].class)",
+   "from": "MoshiTest.objectArray",
+   "to": "moshi/src/main/java/com/squareup/moshi/Moshi.kt::Moshi.adapter#4",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "kotlin-implicit-this",
+   "at": "moshi/src/main/java/com/squareup/moshi/internal/AdapterMethodsFactory.kt:37",
+   "call": "get(toAdapters, type, annotations)",
+   "from": "AdapterMethodsFactory.create",
+   "to": "moshi/src/main/java/com/squareup/moshi/internal/AdapterMethodsFactory.kt::AdapterMethodsFactory.get",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-declared-type",
+   "at": "examples/src/main/java/com/squareup/moshi/recipes/CustomAdapterWithDelegate.java:30",
+   "call": "new Moshi.Builder().add(new StageAdapter())",
+   "from": "CustomAdapterWithDelegate.run",
+   "to": "moshi/src/main/java/com/squareup/moshi/Moshi.kt::Moshi.Builder.add",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-declared-type",
+   "at": "moshi/src/test/java/com/squareup/moshi/MoshiTest.java:1270",
+   "call": "moshi.adapter(Object.class)",
+   "from": "MoshiTest.referenceCyclesOnObjects",
+   "to": "moshi/src/main/java/com/squareup/moshi/Moshi.kt::Moshi.adapter",
+   "confidence": 0.8
+  },
+  {
+   "verification": "static_verified",
+   "how": "java-declared-type",
+   "at": "moshi/src/test/java/com/squareup/moshi/MoshiTest.java:678",
+   "call": "new Moshi.Builder().add(Pizza.class, new PizzaAdapter()).build()",
+   "from": "MoshiTest.customJsonAdapterToObjectAndFromObject",
+   "to": "moshi/src/main/java/com/squareup/moshi/Moshi.kt::Moshi.Builder.build",
+   "confidence": 0.9
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "kotlin-name-heuristic",
+   "at": "moshi-kotlin-tests/src/test/kotlin/com/squareup/moshi/kotlin/reflect/KotlinJsonAdapterTest.kt:208",
+   "call": "Moshi.Builder().add(KotlinJsonAdapterFactory()).build()",
+   "from": "KotlinJsonAdapterTest.repeatedValue",
+   "to": "moshi/src/main/java/com/squareup/moshi/Moshi.kt::Moshi.Builder.build",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "kotlin-name-heuristic",
+   "at": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/JsonClassSymbolProcessorProvider.kt:69",
+   "call": "AnnotationSpec.builder(ClassName.bestGuess(it))\n        .addMember(\"value = [%S]\", JsonClassSymbolPr",
+   "from": "JsonClassSymbolProcessor.process",
+   "to": "moshi/src/main/java/com/squareup/moshi/Moshi.kt::Moshi.Builder.build",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "kotlin-name-heuristic",
+   "at": "moshi-kotlin/src/main/java/com/squareup/moshi/kotlin/reflect/KmExecutable.kt:106",
+   "call": "jvmConstructor.defaultsSignature()",
+   "from": "KmExecutable.invoke",
+   "to": "moshi-kotlin/src/main/java/com/squareup/moshi/kotlin/reflect/Invokable.kt::Invokable.InvokableMethod.defaultsSignature",
+   "confidence": 0.1
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "kotlin-name-heuristic",
+   "at": "moshi-kotlin-tests/src/test/kotlin/com/squareup/moshi/kotlin/DualKotlinTest.kt:204",
+   "call": "moshi\n        .newBuilder()",
+   "from": "DualKotlinTest.delegatesToInstalledAdaptersBeforeNullChecking",
+   "to": "moshi/src/main/java/com/squareup/moshi/Moshi.kt::Moshi.newBuilder",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "kotlin-name-heuristic",
+   "at": "moshi-kotlin-tests/src/test/kotlin/com/squareup/moshi/kotlin/DualKotlinTest.kt:134",
+   "call": "moshi\n        .newBuilder()\n        .add(\n          object {\n            @Suppress(\"UNUSED_PARAMETER",
+   "from": "DualKotlinTest.nonNullPropertyWithJsonNameSetToNullFromAdapterFailsWithJsonDataException",
+   "to": "moshi/src/main/java/com/squareup/moshi/Moshi.kt::Moshi.Builder.build",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "kotlin-name-heuristic",
+   "at": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/shadedUtil.kt:105",
+   "call": "(result as KSAnnotation).asAnnotation(method.returnType)",
+   "from": "KSAnnotation.createInvocationHandler",
+   "to": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/shadedUtil.kt::KSAnnotation.asAnnotation",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "kotlin-name-heuristic",
+   "at": "moshi/src/main/java/com/squareup/moshi/-MoshiKotlinExtensions.kt:50",
+   "call": "adapter.nonNull()",
+   "from": "Moshi.adapter#2",
+   "to": "moshi/src/test/java/com/squareup/moshi/JsonAdapterTest.java::JsonAdapterTest.nonNull",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "kotlin-name-heuristic",
+   "at": "moshi/src/test/java/com/squareup/moshi/internal/KotlinReflectTypesTest.kt:67",
+   "call": "assertThat(javaType).isSymmetricEqualTo(kotlinType.kotlinJavaType)",
+   "from": "KotlinReflectTypesTest.varianceOutArray",
+   "to": "moshi/src/test/java/com/squareup/moshi/internal/KotlinReflectTypesTest.kt::KotlinReflectTypesTest.isSymmetricEqualTo",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "kotlin-name-heuristic",
+   "at": "moshi-kotlin-tests/src/test/kotlin/com/squareup/moshi/kotlin/DualKotlinTest.kt:92",
+   "call": "moshi\n        .newBuilder()\n        .add(\n          object {\n            @Suppress(\"UNUSED_PARAMETER",
+   "from": "DualKotlinTest.nonNullPropertySetToNullFromAdapterFailsWithJsonDataException",
+   "to": "moshi/src/main/java/com/squareup/moshi/Moshi.kt::Moshi.Builder.build",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "kotlin-name-heuristic",
+   "at": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/api/AdapterGenerator.kt:346",
+   "call": "property.generateLocalIsPresentProperty()",
+   "from": "AdapterGenerator.generateFromJsonRegular",
+   "to": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/api/PropertyGenerator.kt::PropertyGenerator.generateLocalIsPresentProperty",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "kotlin-name-heuristic",
+   "at": "moshi-kotlin-tests/src/test/kotlin/com/squareup/moshi/kotlin/DualKotlinTest.kt:176",
+   "call": "moshi\n        .newBuilder()",
+   "from": "DualKotlinTest.nonNullConstructorParameterCalledWithNullFromAdapterFailsWithJsonDataException",
+   "to": "moshi/src/main/java/com/squareup/moshi/Moshi.kt::Moshi.newBuilder",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "kotlin-name-heuristic",
+   "at": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/shadedUtil.kt:216",
+   "call": "valueProvider.invoke(it)",
+   "from": "List.toArray",
+   "to": "moshi/src/main/java/com/squareup/moshi/internal/AdapterMethodsFactory.kt::AdapterMethodsFactory.invoke",
+   "confidence": 0.1
+  }
+ ]
+}

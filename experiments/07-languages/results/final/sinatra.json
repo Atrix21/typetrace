@@ -1,0 +1,142 @@
+{
+ "repo": "sinatra",
+ "origin": "https://github.com/sinatra/sinatra.git",
+ "commit": "cb22afd7902b566b6eaba6c4ea89739494a65d12",
+ "languages": "147 Ruby",
+ "files": 147,
+ "build_ms": 830,
+ "rss_mb": 881,
+ "nodes": 1299,
+ "edges": 3669,
+ "edges_by_type": {
+  "CALLS": 2087,
+  "CONTAINS": 1298,
+  "EXTENDS": 96,
+  "IMPORTS": 129,
+  "INSTANTIATES": 59
+ },
+ "calls_by_verification": {
+  "static_verified": 2087
+ },
+ "calls_by_extraction": {
+  "ruby-ctor": 34,
+  "ruby-declared-type": 31,
+  "ruby-implicit-this": 1518,
+  "ruby-scope": 437,
+  "ruby-static": 67
+ },
+ "notes": [
+  "ruby: 0 of 147 files have syntax the grammar did not fully parse (declarations after the error may be mis-nested)",
+  "ruby calls: 2088 resolved syntactically, 0 name-inferred (<=3 candidates), 11895 unresolved (standard library, external packages, dynamic receivers)"
+ ],
+ "sample": [
+  {
+   "verification": "static_verified",
+   "how": "ruby-implicit-this",
+   "at": "test/helpers_test.rb:70",
+   "call": "status_app(200 + rand(400)) { informational? }",
+   "from": "HelpersTest",
+   "to": "test/helpers_test.rb::HelpersTest.status_app",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "ruby-ctor",
+   "at": "test/base_test.rb:77",
+   "call": "Sinatra::Base.new",
+   "from": "BaseTest",
+   "to": "lib/sinatra/base.rb::Sinatra.Base.initialize",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "ruby-implicit-this",
+   "at": "test/readme_test.rb:6",
+   "call": "mock_app { get('/') { 'Hello world!' } }",
+   "from": "ReadmeTest",
+   "to": "test/test_helper.rb::Test.mock_app",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "ruby-implicit-this",
+   "at": "test/helpers_test.rb:1421",
+   "call": "assert_status 412",
+   "from": "HelpersTest",
+   "to": "test/test_helper.rb::Test.assert_status",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "ruby-implicit-this",
+   "at": "lib/sinatra/base.rb:1187",
+   "call": "force_encoding(val)",
+   "from": "Sinatra.Base.dispatch!",
+   "to": "lib/sinatra/base.rb::Sinatra.Base.force_encoding#2",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "ruby-implicit-this",
+   "at": "test/helpers_test.rb:238",
+   "call": "mock_app { post('/') { redirect '/'} }",
+   "from": "HelpersTest",
+   "to": "test/test_helper.rb::Test.mock_app",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "ruby-implicit-this",
+   "at": "test/result_test.rb:74",
+   "call": "mock_app { get('/') { 205 } }",
+   "from": "ResultTest",
+   "to": "test/test_helper.rb::Test.mock_app",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "ruby-implicit-this",
+   "at": "rack-protection/lib/rack/protection/authenticity_token.rb:174",
+   "call": "compare_with_real_token(token, session)",
+   "from": "Rack.Protection.AuthenticityToken.valid_token?",
+   "to": "rack-protection/lib/rack/protection/authenticity_token.rb::Rack.Protection.AuthenticityToken.compare_with_real_token",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "ruby-implicit-this",
+   "at": "lib/sinatra/base.rb:1972",
+   "call": "set :handler_name, nil",
+   "from": "Sinatra.Base",
+   "to": "lib/sinatra/base.rb::Sinatra.Base.set",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "ruby-implicit-this",
+   "at": "test/templates_test.rb:204",
+   "call": "mock_app { enable(:inline_templates) }",
+   "from": "TemplatesTest",
+   "to": "test/test_helper.rb::Test.mock_app",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "ruby-implicit-this",
+   "at": "test/filter_test.rb:420",
+   "call": "assert_body 'bar'",
+   "from": "AfterFilterTest",
+   "to": "test/test_helper.rb::Test.assert_body",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "ruby-implicit-this",
+   "at": "rack-protection/lib/rack/protection/http_origin.rb:53",
+   "call": "safe? env",
+   "from": "Rack.Protection.HttpOrigin.accepts?",
+   "to": "rack-protection/lib/rack/protection/base.rb::Rack.Protection.Base.safe?",
+   "confidence": 0.9
+  }
+ ]
+}

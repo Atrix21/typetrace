@@ -17,9 +17,9 @@
  *                         `this`/`self`, implicit-this calls, calls on receivers whose type is declared (fields,
  *                         parameters, typed locals, `new X()` / `X()` / `X::new()` / `X{}` initialisers), static
  *                         `Type.method()` calls, and functions in the same file, an imported module or the same
- *                         package. `semantic_inferred` (confidence 0.15-0.5) when only the name matches: a bare
- *                         function name defined at most 3 times in the repository, or a method name with an unknown
- *                         receiver defined at most 3 times. Otherwise no edge.
+ *                         package, and chained calls through declared return types. `semantic_inferred` (confidence
+ *                         0.1-0.5) when only the name matches (at most 3 candidates), in the languages where such
+ *                         guesses measured >= 50% precise (see GUESS_RECEIVER / GUESS_BARE). Otherwise no edge.
  *
  * This is a syntactic front-end: no compiler, no type inference beyond declared types and constructor initialisers.
  */
@@ -33,7 +33,7 @@ import { headerLang, langOf, parse, type LangId } from './registry.js';
 type Kind = 'class' | 'interface' | 'function' | 'method';
 /** What a language adapter reports for a declaration node. `container`: an `impl`/extension/companion block whose
  *  functions belong to type `name` (or, with name null, to the enclosing type). */
-interface RawDef { kind: Kind | 'container'; name: string | null | undefined; owner?: string | null; ctor?: boolean; trait?: string | null }
+interface RawDef { kind: Kind | 'container'; name: string | null | undefined; owner?: string | null; ctor?: boolean; trait?: string | null; ret?: TSNode | null }
 interface CallInfo { name: string; recv: TSNode | null; ctor?: boolean; path?: string | null }
 interface Bind { name: string; type?: TSNode | string | null; value?: TSNode | null; field?: boolean }
 interface Imp { kind: 'module' | 'path' | 'use'; spec: string; alias?: string | null; wildcard?: boolean; relative?: boolean; line: number }
@@ -66,10 +66,32 @@ const unquote = (s: string) => s.replace(/^[a-z]*["'`]+|["'`]+$/g, '');
 const IDENT = /^[A-Za-z_$][\w$]*[!?]?$/;
 
 /** Simple type name from a type node or text: generics, pointers, references, nullability and qualifiers removed. */
+const WRAPPERS = new Set(['Option', 'Result', 'Box', 'Rc', 'Arc', 'Weak', 'Cow', 'Pin', 'RefCell', 'Cell', 'Mutex', 'RwLock', 'MutexGuard', 'Ref', 'RefMut', 'OnceCell', 'OnceLock',
+  'Optional', 'CompletableFuture', 'Future', 'Promise', 'Task', 'ValueTask', 'Mono', 'Single', 'Maybe', 'Lazy', 'Deferred', 'Try', 'Nullable', 'Provider', 'AtomicReference',
+  'shared_ptr', 'unique_ptr', 'weak_ptr', 'optional', 'std::shared_ptr', 'std::unique_ptr', 'std::optional']);
+/** First type argument of `W<A, B>` / `W[A]`, or null. */
+function firstTypeArg(s: string): string | null {
+  const i = s.search(/[<[]/);
+  if (i < 0) return null;
+  let d = 0;
+  for (let j = i + 1; j < s.length; j++) {
+    const ch = s[j];
+    if (ch === '<' || ch === '[') d++;
+    else if (ch === '>' || ch === ']') { if (d === 0) return s.slice(i + 1, j).trim(); d--; }
+    else if (ch === ',' && d === 0) return s.slice(i + 1, j).trim();
+  }
+  return null;
+}
 export function typeName(t: TSNode | string | null | undefined): string | null {
   if (!t) return null;
-  let s = (typeof t === 'string' ? t : t.text).trim();
+  let s = (typeof t === 'string' ? t : t.text).trim().replace(/^(?:->|:)\s*/, '');
   if (!s || s.length > 200) return null;
+  for (let i = 0; i < 4; i++) {
+    const m = /^\s*(?:&\s*(?:'\w+\s+)?(?:mut\s+)?)?([\w:]+)\s*[<[]/.exec(s);
+    const inner = m && WRAPPERS.has(m[1]) ? firstTypeArg(s) : null;
+    if (!inner) break;
+    s = inner;
+  }
   for (let i = 0; i < 6 && /<[^<>]*>/.test(s); i++) s = s.replace(/<[^<>]*>/g, '');
   s = s.replace(/^(?:&\s*(?:'\w+\s+)?(?:mut\s+)?|\*+\s*|(?:const|volatile|struct|class|enum|union|dyn|impl|mut|ref|final|readonly)\s+|\?)+/, '');
   s = s.replace(/[?!*&\s]+$/, '').replace(/(\[\s*\])+$/, '');
@@ -77,6 +99,13 @@ export function typeName(t: TSNode | string | null | undefined): string | null {
   s = s.replace(/\[[^\]]*\]$/, '').replace(/\(.*$/s, '');
   const seg = s.split(/::|\.|\\/).pop()!.trim();
   return /^[A-Za-z_]\w*$/.test(seg) ? seg : null;
+}
+
+/** Declared return type: Go result lists take their first type. */
+function retTypeName(t: TSNode | null | undefined): string | null {
+  if (!t) return null;
+  if (t.type === 'parameter_list') return retTypeName(F(kid(t, 'parameter_declaration'), 'type'));
+  return typeName(t);
 }
 
 /** Innermost name of a C/C++ declarator (through pointer/reference/array/init declarators). */
@@ -96,6 +125,18 @@ function cQualified(q: TSNode): { name: string; scope: string | null } {
 
 const PRIMITIVE = new Set(['int', 'long', 'short', 'byte', 'char', 'float', 'double', 'bool', 'boolean', 'void', 'var', 'val', 'let', 'auto', 'string', 'object', 'dynamic', 'any',
   'usize', 'isize', 'u8', 'u16', 'u32', 'u64', 'i8', 'i16', 'i32', 'i64', 'f32', 'f64', 'str', 'uint', 'int32', 'int64', 'uint32', 'uint64', 'float32', 'float64', 'rune', 'error', 'unsigned', 'signed', 'size_t', 'Self', 'self', 'mixed', 'callable', 'iterable', 'array']);
+/** Calls whose receiver type is unknown but whose method returns the receiver's value (wrappers, clones). */
+const PASSTHROUGH = new Set(['unwrap', 'expect', 'unwrap_or_default', 'unwrap_or', 'unwrap_or_else', 'clone', 'to_owned', 'as_ref', 'as_mut', 'borrow', 'borrow_mut', 'lock', 'read', 'write',
+  'get', 'orElse', 'orElseThrow', 'orElseGet', 'getOrThrow', 'join', 'await', 'Result', 'GetAwaiter', 'GetResult', 'value']);
+/**
+ * Name-only guesses (<=3 candidates) are kept only where hand-checked precision was >= 50% (experiments/07-languages,
+ * results/hand-check.json). Methods on a receiver of unknown type: Swift 83%, Go 71%, C# 58%, Scala 58%, Kotlin 57%,
+ * C++ 2/2 kept; Rust 22%, Ruby 18%, Java 12%, PHP 8% dropped. Bare function names: C 100%, C++ 100%, Rust 3/3 kept;
+ * unmeasured elsewhere (bare calls there resolve through scope, imports and packages), so not guessed.
+ * C++ namespace-qualified guesses (0/3) dropped.
+ */
+const GUESS_RECEIVER = new Set<LangId>(['go', 'swift', 'csharp', 'scala', 'kotlin', 'cpp']);
+const GUESS_BARE = new Set<LangId>(['c', 'cpp', 'rust']);
 const NOISE = new Set(['get', 'set', 'add', 'put', 'remove', 'delete', 'clear', 'size', 'len', 'length', 'count', 'contains', 'has', 'keys', 'values', 'items',
   'push', 'pop', 'append', 'insert', 'map', 'filter', 'reduce', 'each', 'forEach', 'iter', 'into', 'from', 'to_string', 'toString', 'String', 'Error', 'equals',
   'hashCode', 'clone', 'copy', 'unwrap', 'expect', 'ok', 'err', 'is_some', 'is_none', 'close', 'open', 'read', 'write', 'flush', 'print', 'println', 'printf',
@@ -116,10 +157,10 @@ const javaLike = { implicitThis: true, ownerScope: 'file' as const };
 const GO: Adapter = {
   implicitThis: false, ownerScope: 'dir', ctorNames: () => [],
   def(n) {
-    if (n.type === 'function_declaration') return { kind: 'function', name: F(n, 'name')?.text };
+    if (n.type === 'function_declaration') return { kind: 'function', name: F(n, 'name')?.text, ret: F(n, 'result') };
     if (n.type === 'method_declaration') {
       const p = kid(F(n, 'receiver'), 'parameter_declaration');
-      return { kind: 'method', name: F(n, 'name')?.text, owner: typeName(F(p, 'type')) };
+      return { kind: 'method', name: F(n, 'name')?.text, owner: typeName(F(p, 'type')), ret: F(n, 'result') };
     }
     if (n.type === 'type_spec') return { kind: F(n, 'type')?.type === 'interface_type' ? 'interface' : 'class', name: F(n, 'name')?.text };
     return null;
@@ -173,7 +214,7 @@ const JAVA: Adapter = {
     switch (n.type) {
       case 'class_declaration': case 'record_declaration': case 'enum_declaration': return { kind: 'class', name: F(n, 'name')?.text };
       case 'interface_declaration': case 'annotation_type_declaration': return { kind: 'interface', name: F(n, 'name')?.text };
-      case 'method_declaration': return { kind: 'function', name: F(n, 'name')?.text };
+      case 'method_declaration': return { kind: 'function', name: F(n, 'name')?.text, ret: F(n, 'type') };
       case 'constructor_declaration': case 'compact_constructor_declaration': return { kind: 'function', name: F(n, 'name')?.text, ctor: true };
     }
     return null;
@@ -224,7 +265,9 @@ const KOTLIN: Adapter = {
       case 'function_declaration': {
         const nm = F(n, 'name') ?? kid(n, ...KID);
         const recv = kids(n).find((c) => ['user_type', 'nullable_type', 'receiver_type'].includes(c.type) && nm && c.startIndex < nm.startIndex);
-        return { kind: 'function', name: nm?.text, owner: recv ? typeName(recv.text) : null };
+        const params = kid(n, 'function_value_parameters');
+        const ret = params ? kids(n).find((c) => ['user_type', 'nullable_type'].includes(c.type) && c.startIndex > params.startIndex) : null;
+        return { kind: 'function', name: nm?.text, owner: recv ? typeName(recv.text) : null, ret };
       }
     }
     return null;
@@ -282,7 +325,7 @@ const SCALA: Adapter = {
     switch (n.type) {
       case 'class_definition': case 'object_definition': case 'enum_definition': return { kind: 'class', name: F(n, 'name')?.text };
       case 'trait_definition': return { kind: 'interface', name: F(n, 'name')?.text };
-      case 'function_definition': case 'function_declaration': return { kind: 'function', name: F(n, 'name')?.text };
+      case 'function_definition': case 'function_declaration': return { kind: 'function', name: F(n, 'name')?.text, ret: F(n, 'return_type') };
     }
     return null;
   },
@@ -340,7 +383,7 @@ const CSHARP: Adapter = {
     switch (n.type) {
       case 'class_declaration': case 'struct_declaration': case 'record_declaration': case 'record_struct_declaration': case 'enum_declaration': return { kind: 'class', name: F(n, 'name')?.text };
       case 'interface_declaration': return { kind: 'interface', name: F(n, 'name')?.text };
-      case 'method_declaration': case 'local_function_statement': return { kind: 'function', name: F(n, 'name')?.text };
+      case 'method_declaration': case 'local_function_statement': return { kind: 'function', name: F(n, 'name')?.text, ret: F(n, 'returns') ?? F(n, 'type') };
       case 'constructor_declaration': return { kind: 'function', name: F(n, 'name')?.text, ctor: true };
     }
     return null;
@@ -407,7 +450,7 @@ const RUST: Adapter = {
       case 'struct_item': case 'enum_item': case 'union_item': return { kind: 'class', name: F(n, 'name')?.text };
       case 'trait_item': return { kind: 'interface', name: F(n, 'name')?.text };
       case 'impl_item': return { kind: 'container', name: typeName(F(n, 'type')), trait: typeName(F(n, 'trait')) };
-      case 'function_item': case 'function_signature_item': return { kind: 'function', name: F(n, 'name')?.text };
+      case 'function_item': case 'function_signature_item': return { kind: 'function', name: F(n, 'name')?.text, ret: F(n, 'return_type') };
     }
     return null;
   },
@@ -475,7 +518,7 @@ function cFamily(cpp: boolean): Adapter {
           if (!d) return null;
           const { name, scope } = cQualified(d);
           const owner = scope ? typeName(scope) : null;
-          return { kind: 'function', name, owner: owner && /^[A-Z]/.test(owner) ? owner : null, ctor: !!owner && name === owner };
+          return { kind: 'function', name, owner: owner && /^[A-Z]/.test(owner) ? owner : null, ctor: !!owner && name === owner, ret: F(n, 'type') };
         }
         case 'struct_specifier': case 'union_specifier': case 'class_specifier': case 'enum_specifier':
           return F(n, 'body') && F(n, 'name') ? { kind: 'class', name: typeName(F(n, 'name')) } : null;
@@ -581,8 +624,8 @@ const PHP: Adapter = {
     switch (n.type) {
       case 'class_declaration': case 'trait_declaration': case 'enum_declaration': return { kind: 'class', name: F(n, 'name')?.text };
       case 'interface_declaration': return { kind: 'interface', name: F(n, 'name')?.text };
-      case 'method_declaration': return { kind: 'function', name: F(n, 'name')?.text, ctor: F(n, 'name')?.text === '__construct' };
-      case 'function_definition': return { kind: 'function', name: F(n, 'name')?.text };
+      case 'method_declaration': return { kind: 'function', name: F(n, 'name')?.text, ctor: F(n, 'name')?.text === '__construct', ret: F(n, 'return_type') };
+      case 'function_definition': return { kind: 'function', name: F(n, 'name')?.text, ret: F(n, 'return_type') };
     }
     return null;
   },
@@ -648,7 +691,7 @@ const SWIFT: Adapter = {
     switch (n.type) {
       case 'class_declaration': return hasToken(n, 'extension') ? { kind: 'container', name: typeName(F(n, 'name')) } : { kind: 'class', name: typeName(F(n, 'name')) };
       case 'protocol_declaration': return { kind: 'interface', name: typeName(F(n, 'name')) };
-      case 'function_declaration': case 'protocol_function_declaration': return { kind: 'function', name: F(n, 'name')?.text };
+      case 'function_declaration': case 'protocol_function_declaration': return { kind: 'function', name: F(n, 'name')?.text, ret: fieldAll(n, 'name').find((x) => x.type !== 'simple_identifier') ?? F(n, 'return_type') };
       case 'init_declaration': return { kind: 'function', name: 'init', ctor: true };
     }
     return null;
@@ -681,6 +724,10 @@ const SWIFT: Adapter = {
   isSelf: (n) => n.type === 'self_expression', isSuper: (n) => n.type === 'super_expression',
 };
 
+/** Languages that share types and calls: the JVM languages, and C with C++. */
+const FAMILY: Partial<Record<LangId, string>> = { java: 'jvm', kotlin: 'jvm', scala: 'jvm', c: 'c', cpp: 'c' };
+const sameFamily = (a: LangId, b: LangId) => a === b || (!!FAMILY[a] && FAMILY[a] === FAMILY[b]);
+
 const ADAPTERS: Partial<Record<LangId, Adapter>> = { go: GO, java: JAVA, kotlin: KOTLIN, scala: SCALA, csharp: CSHARP, rust: RUST, c: cFamily(false), cpp: cFamily(true), ruby: RUBY, php: PHP, swift: SWIFT };
 export const SYNTACTIC_LANGS = Object.keys(ADAPTERS) as LangId[];
 export const isSyntactic = (l: LangId | undefined | null): boolean => !!l && l in ADAPTERS;
@@ -700,7 +747,7 @@ function valueType(a: Adapter, lang: LangId, v: TSNode | null | undefined): stri
 /* ------------------------------------------ declarations ------------------------------------------ */
 
 export interface SynDecl { key: string; file: string; name: string; kind: Kind | 'module'; start_line: number; end_line: number; parent: string | null }
-interface Def extends SynDecl { kind: Kind; id: string; simple: string; owner: string | null; ctor: boolean; node: TSNode; signature: string; lang: LangId; start_col: number; end_col: number; parentId: string }
+interface Def extends SynDecl { kind: Kind; id: string; simple: string; owner: string | null; ctor: boolean; node: TSNode; signature: string; lang: LangId; start_col: number; end_col: number; parentId: string; /** declared return type (simple name) */ ret: string | null }
 interface Container { node: TSNode; owner: string; trait: string | null; file: string }
 
 /** Walk a file's tree and list its declarations (deterministic order). */
@@ -713,7 +760,8 @@ function extractDefs(lang: LangId, a: Adapter, file: string, root: TSNode): { de
   const walk = (n: TSNode, frames: Frame[]) => {
     for (const c of kids(n)) {
       const r = a.def(c);
-      if (!r || (r.kind !== 'container' && (!r.name || !IDENT.test(r.name.replace(/^~/, ''))))) { walk(c, frames); continue; }
+      if (r?.name && /^`.+`$/.test(r.name)) r.name = r.name.slice(1, -1); // Kotlin/Scala/Swift backtick identifiers
+      if (!r || (r.kind !== 'container' && (!r.name || (!IDENT.test(r.name.replace(/^~/, '')) && !/^[^\s(){}<>,;]+$/.test(r.name))))) { walk(c, frames); continue; }
       const top = frames[frames.length - 1];
       if (r.kind === 'container') {
         const owner = r.name ?? top?.owner ?? null;
@@ -747,7 +795,7 @@ function extractDefs(lang: LangId, a: Adapter, file: string, root: TSNode): { de
       const d: Def = {
         key, file, name: qualified, kind, start_line: c.startPosition.row + 1, end_line: c.endPosition.row + 1, parent: parentKey,
         id, simple: name, owner, ctor: !!r.ctor, node: c, signature: sig.length > 160 ? sig.slice(0, 157) + '...' : sig, lang,
-        start_col: c.startPosition.column + 1, end_col: c.endPosition.column + 1, parentId,
+        start_col: c.startPosition.column + 1, end_col: c.endPosition.column + 1, parentId, ret: retTypeName(r.ret),
       };
       defs.push(d);
       byKey.set(key, d);
@@ -828,14 +876,15 @@ export function buildSyntacticGraph(repoRoot: string, files: string[], repoName 
   for (const f of infos.values()) for (const [k, ds] of f.topNames) topByName.set(k, [...(topByName.get(k) ?? []), ...ds]);
   const methodsByName = group(all, (d) => (d.kind === 'method' ? d.simple : null));
   const filesByPkg = new Map<string, string[]>();
-  for (const f of infos.values()) if (f.pkg !== null) { const k = `${f.lang}|${f.pkg}`; const a = filesByPkg.get(k) ?? []; a.push(f.rel); filesByPkg.set(k, a); }
+  const famKey = (l: LangId) => FAMILY[l] ?? l;
+  for (const f of infos.values()) if (f.pkg !== null) { const k = `${famKey(f.lang)}|${f.pkg}`; const a = filesByPkg.get(k) ?? []; a.push(f.rel); filesByPkg.set(k, a); }
   const byBase = new Map<string, string[]>();
   for (const f of infos.keys()) { const b = path.posix.basename(f); const a = byBase.get(b) ?? []; a.push(f); byBase.set(b, a); }
   const bySuffix = (suffix: string): string[] => (byBase.get(path.posix.basename(suffix)) ?? []).filter((f) => f === suffix || f.endsWith('/' + suffix));
-  const samePkg = (f: FileInfo) => (f.pkg === null ? [] : filesByPkg.get(`${f.lang}|${f.pkg}`) ?? []);
+  const samePkg = (f: FileInfo) => (f.pkg === null ? [] : filesByPkg.get(`${famKey(f.lang)}|${f.pkg}`) ?? []);
   const pkgSets = new Map<string, Set<string>>();
   const pkgSet = (f: FileInfo): Set<string> => {
-    const k = `${f.lang}|${f.pkg}`;
+    const k = `${famKey(f.lang)}|${f.pkg}`;
     let s = pkgSets.get(k);
     if (!s) pkgSets.set(k, (s = new Set(samePkg(f))));
     return s;
@@ -937,12 +986,12 @@ export function buildSyntacticGraph(repoRoot: string, files: string[], repoName 
         }
         case 'java': case 'kotlin': case 'scala': {
           const parts = imp.spec.split('.');
-          if (imp.wildcard) { const pf = filesByPkg.get(`${f.lang}|${imp.spec}`) ?? []; for (const x of pf) f.visible.add(x); break; }
+          if (imp.wildcard) { const pf = filesByPkg.get(`${famKey(f.lang)}|${imp.spec}`) ?? []; for (const x of pf) f.visible.add(x); break; }
           const name = parts[parts.length - 1], pkg = parts.slice(0, -1).join('.');
-          let ds = declaredIn(filesByPkg.get(`${f.lang}|${pkg}`) ?? [], name);
+          let ds = declaredIn(filesByPkg.get(`${famKey(f.lang)}|${pkg}`) ?? [], name);
           if (!ds.length && parts.length > 2) { // static import / nested type: a.b.Type.member
             const owner = parts[parts.length - 2], opkg = parts.slice(0, -2).join('.');
-            const od = declaredIn(filesByPkg.get(`${f.lang}|${opkg}`) ?? [], owner);
+            const od = declaredIn(filesByPkg.get(`${famKey(f.lang)}|${opkg}`) ?? [], owner);
             ds = od.flatMap((o) => (methodsByOwner.get(o.simple) ?? []).filter((m) => m.file === o.file && m.simple === name));
             if (!ds.length) ds = od.flatMap((o) => (types.get(name) ?? []).filter((t) => t.file === o.file));
           }
@@ -1006,7 +1055,7 @@ export function buildSyntacticGraph(repoRoot: string, files: string[], repoName 
   // ---- types: resolution, bases, fields ----
   function resolveType(name: string | null, f: FileInfo): Def | null {
     if (!name) return null;
-    const cands = (types.get(name) ?? []).filter((d) => d.lang === f.lang || (f.lang === 'c' && d.lang === 'cpp') || (f.lang === 'cpp' && d.lang === 'c'));
+    const cands = (types.get(name) ?? []).filter((d) => sameFamily(d.lang, f.lang));
     if (!cands.length) return null;
     if (cands.length === 1) return cands[0];
     const pick = (xs: Def[]) => (xs.length ? xs[0] : null);
@@ -1135,42 +1184,66 @@ export function buildSyntacticGraph(repoRoot: string, files: string[], repoName 
     }
     const emit = (dst: Def, n: TSNode, conf: number, how: string, verification: 'static_verified' | 'semantic_inferred' = 'static_verified') =>
       ctx.edge({ type: 'CALLS', src: o.id, dst: dst.id, file: f.rel, line: n.startPosition.row + 1, col: n.startPosition.column + 1, extraction: `${f.lang}-${how}`, confidence: conf, verification, evidence: n.text.slice(0, 100) });
-    const instantiate = (cls: Def, n: TSNode, conf: number) => {
-      ctx.edge({ type: 'INSTANTIATES', src: o.id, dst: cls.id, file: f.rel, line: n.startPosition.row + 1, col: n.startPosition.column + 1, ...S(`${f.lang}-scope`, conf), evidence: n.text.slice(0, 100) });
-      const c = ctorOf(cls);
-      if (c) emit(c, n, conf, 'ctor');
-    };
-    const typeFromBinding = (b: { type: string | TSNode | null; value?: TSNode | null }, bf: FileInfo): Def | null => {
-      const t = typeof b.type === 'string' ? b.type : typeName(b.type);
-      return resolveType(t, bf) ?? (b.value ? typeOfValue(b.value) : null);
-    };
-    const typeOfValue = (v: TSNode): Def | null => resolveType(valueType(a, f.lang, v), f);
     const external = { external: true } as const;
-    /** A declared type that names no repository type is external (standard library, dependency). */
-    const fromDeclared = (b: { type: string | TSNode | null; value?: TSNode | null }, bf: FileInfo) => {
-      const r = typeFromBinding(b, bf);
-      if (r) return { cls: r };
+    type T = { cls?: Def; files?: string[]; isStatic?: boolean; external?: boolean } | null;
+    /** Type of a binding: its declared type, else the type of its initialiser; a declared type naming no repository type is external. */
+    const fromDeclared = (b: { type: string | TSNode | null; value?: TSNode | null }, bf: FileInfo, depth: number): T => {
       const t = typeof b.type === 'string' ? b.type : typeName(b.type);
-      return t && !PRIMITIVE.has(t) && /^[A-Za-z_]/.test(t) ? external : null;
+      const r = resolveType(t, bf);
+      if (r) return { cls: r };
+      if (t && !PRIMITIVE.has(t) && /^[A-Za-z_]/.test(t)) return external;
+      if (b.value && bf === f) { const v = exprType(b.value, depth + 1); return v; }
+      return null;
     };
-    function typeOf(e: TSNode, depth = 0): { cls?: Def; files?: string[]; isStatic?: boolean; external?: boolean } | null {
-      if (depth > 5) return null;
+    const ownerOf = (m: Def): Def | null => (byId.get(m.parentId)?.kind === 'class' || byId.get(m.parentId)?.kind === 'interface' ? byId.get(m.parentId)! : m.owner ? resolveType(m.owner, infos.get(m.file)!) : null);
+    /** Type of the value a call returns: a constructed type, or the declared return type of a statically resolved callee. */
+    function exprType(e: TSNode, depth: number): T {
+      if (depth > 8) return null;
+      for (let i = 0; i < 6 && ['unary_expression', 'reference_expression', 'parenthesized_expression', 'await_expression', 'try_expression', 'pointer_expression', 'expression_list', 'equals_value_clause', 'non_null_assertion_expression', 'postfix_expression', 'force_unwrap_expression'].includes(e.type) && kids(e).length; i++) e = kids(e)[kids(e).length - 1];
+      const c = a.call(e);
+      if (!c) return null;
+      const r = resolve(c, depth + 1);
+      if (r?.kind === 'inst') return { cls: r.cls };
+      if (r?.kind === 'calls' && r.ver === 'static_verified') {
+        const m = r.targets[0];
+        if (m.ctor) { const ow = ownerOf(m); return ow ? { cls: ow } : null; }
+        if (!m.ret) return null;
+        if (['Self', 'self', 'static', 'this', '$this'].includes(m.ret)) { const ow = ownerOf(m); return ow ? { cls: ow } : null; }
+        const rt = resolveType(m.ret, infos.get(m.file)!);
+        return rt ? { cls: rt } : PRIMITIVE.has(m.ret) ? null : external;
+      }
+      if (!r && c.recv && PASSTHROUGH.has(c.name)) return typeOf(c.recv, depth + 1); // unwrap(), clone(), get() on a known type
+      if (r?.kind === 'external') return external;
+      const vt = resolveType(valueType(a, f.lang, e), f);
+      return vt ? { cls: vt } : null;
+    }
+    const memo = new Map<number, T>(); // per owner; a pending entry (null) also breaks cycles such as `x = x.next()`
+    function typeOf(e: TSNode, depth = 0): T {
+      if (depth > 8) return null;
+      if (memo.has(e.id)) return memo.get(e.id)!;
+      memo.set(e.id, null);
+      const r = typeOfUncached(e, depth);
+      memo.set(e.id, r);
+      return r;
+    }
+    function typeOfUncached(e: TSNode, depth: number): T {
       if (a.isSelf(e)) return o.cls ? { cls: o.cls } : null;
       const m = a.member(e);
       if (m) {
         const t = typeOf(m.obj, depth + 1);
-        if (t?.cls) { const fld = fieldOf(t.cls, m.name); if (fld) return fromDeclared(fld, fld.f); }
+        if (t?.external) return external;
+        if (t?.cls) { const fld = fieldOf(t.cls, m.name); if (fld) return fromDeclared(fld, fld.f, depth); }
         if (t?.files) { const ds = declaredIn(t.files, m.name).filter((d) => d.kind === 'class' || d.kind === 'interface'); if (ds[0]) return { cls: ds[0], isStatic: true }; }
         return null;
       }
       if (['identifier', 'simple_identifier', 'variable_name', 'constant', 'type_identifier', 'name', 'scope_resolution', 'qualified_name', 'instance_variable'].includes(e.type)) {
         const txt = e.text;
         const b = env.get(txt);
-        if (b) return fromDeclared(b, f);
-        if (e.type === 'instance_variable' && o.cls) { const fld = fieldOf(o.cls, txt); return fld ? fromDeclared(fld, fld.f) : null; }
-        if (a.implicitThis && o.cls) { const fld = fieldOf(o.cls, txt); if (fld) return fromDeclared(fld, fld.f); }
+        if (b) return fromDeclared(b, f, depth);
+        if (e.type === 'instance_variable' && o.cls) { const fld = fieldOf(o.cls, txt); return fld ? fromDeclared(fld, fld.f, depth) : null; }
+        if (a.implicitThis && o.cls) { const fld = fieldOf(o.cls, txt); if (fld) return fromDeclared(fld, fld.f, depth); }
         const g = fileEnv.get(txt);
-        if (g) return fromDeclared(g, f);
+        if (g) return fromDeclared(g, f, depth);
         const mod = f.modules.get(txt);
         if (mod) return { files: mod };
         const named = (f.names.get(txt) ?? []).find((d) => d.kind === 'class' || d.kind === 'interface');
@@ -1180,8 +1253,7 @@ export function buildSyntacticGraph(repoRoot: string, files: string[], repoName 
         if (classLike && !types.has(typeName(txt) ?? '')) return external; // `Integer.parseInt`, `Task.Run`, `Arrays.asList`
         return null;
       }
-      const v = typeOfValue(e);
-      return v ? { cls: v } : null;
+      return exprType(e, depth + 1);
     }
     const fnCands = (name: string): Def[] => {
       const local = (f.topNames.get(name) ?? []).filter((d) => d.kind === 'function');
@@ -1192,71 +1264,73 @@ export function buildSyntacticGraph(repoRoot: string, files: string[], repoName 
       if (pkg.length) return pkg;
       return declaredInSet(f.visible, name).filter((d) => d.kind === 'function');
     };
-    for (const n of calls) {
-      const c = a.call(n)!;
-      if (!c.name) { unresolved++; continue; }
-      if (c.ctor) { const t = resolveType(c.name, f); if (t) { instantiate(t, n, 0.9); resolved++; } else unresolved++; continue; }
+    type Res = { kind: 'calls'; targets: Def[]; conf: number; how: string; ver: 'static_verified' | 'semantic_inferred' } | { kind: 'inst'; cls: Def; conf: number } | { kind: 'external' } | null;
+    const calls_ = (targets: Def[], conf: number, how: string, ver: 'static_verified' | 'semantic_inferred' = 'static_verified'): Res => ({ kind: 'calls', targets, conf, how, ver });
+    const guess = (cands: Def[], how: 'name-heuristic' | 'unique-name', single: number): Res =>
+      cands.length && cands.length <= 3 && (how === 'unique-name' ? GUESS_BARE : GUESS_RECEIVER).has(f.lang) ? calls_(cands, cands.length === 1 ? single : 0.3 / cands.length, how, 'semantic_inferred') : null;
+    /** Resolve one call site (no edges are written here: the call loop and the return-type chaining share it). */
+    function resolve(c: CallInfo, depth = 0): Res {
+      if (!c.name || depth > 8) return null;
+      if (c.ctor) { const t = resolveType(c.name, f); return t ? { kind: 'inst', cls: t, conf: 0.9 } : null; }
       // 1. explicit receiver
       if (c.recv) {
         if (a.isSuper(c.recv)) {
           const ms = o.cls ? (bases.get(o.cls.id) ?? []).flatMap((b) => methodsOf(b, c.name)) : [];
-          if (ms[0]) { emit(ms[0], n, 0.9, 'super'); resolved++; } else unresolved++;
-          continue;
+          return ms[0] ? calls_([ms[0]], 0.9, 'super') : null;
         }
-        const t = typeOf(c.recv);
-        if (t?.external) { unresolved++; continue; } // declared type or class name outside the repository
+        const t = typeOf(c.recv, depth + 1);
+        if (t?.external) return { kind: 'external' }; // declared type or class name outside the repository
         if (t?.cls) {
           const ms = methodsOf(t.cls, c.name);
-          if (ms.length) { for (const m of ms) emit(m, n, ms.length > 1 ? 0.8 : 0.9, a.isSelf(c.recv) ? 'self' : t.isStatic ? 'static' : 'declared-type'); resolved++; continue; }
+          if (ms.length) return calls_(ms, ms.length > 1 ? 0.8 : 0.9, a.isSelf(c.recv) ? 'self' : t.isStatic ? 'static' : 'declared-type');
         }
         if (t?.files) {
           const ds = declaredIn(t.files, c.name).filter((d) => d.kind === 'function');
-          if (ds.length) { for (const d of ds.slice(0, 3)) emit(d, n, 0.9, 'module'); resolved++; continue; }
+          if (ds.length) return calls_(ds.slice(0, 3), 0.9, 'module');
           const ty = declaredIn(t.files, c.name).find((d) => d.kind === 'class');
-          if (ty) { instantiate(ty, n, 0.85); resolved++; continue; }
+          if (ty) return { kind: 'inst', cls: ty, conf: 0.85 };
         }
-        if (!NOISE.has(c.name)) {
-          const cands = (methodsByName.get(c.name) ?? []).filter((m) => m.lang === f.lang);
-          if (cands.length && cands.length <= 3) { for (const m of cands) emit(m, n, 0.3 / cands.length, 'name-heuristic', 'semantic_inferred'); inferred++; continue; }
-        }
-        unresolved++;
-        continue;
+        if (NOISE.has(c.name)) return null;
+        return guess((methodsByName.get(c.name) ?? []).filter((m) => sameFamily(m.lang, f.lang)), 'name-heuristic', 0.3);
       }
       // 2. path calls: `Type::f()`, `module::f()`, `Self::f()`
       if (c.path) {
         const segs = c.path.split('::').filter(Boolean);
         const last = segs[segs.length - 1] ?? '';
-        let target: Def[] = [];
-        if (last === 'Self' && o.cls) target = methodsOf(o.cls, c.name);
-        else {
-          const mod = segs.length === 1 ? f.modules.get(last) : undefined;
-          const r = !mod && f.lang === 'rust' && segs.length ? rustResolve(f, segs) : null;
-          const files = mod ?? (r && !r.rest.length ? [r.file] : null);
-          if (files) target = declaredIn(files, c.name).filter((d) => d.kind === 'function');
-          if (!target.length) {
-            const t = (f.names.get(last) ?? []).find((d) => d.kind === 'class' || d.kind === 'interface') ?? (r?.rest.length ? declaredIn([r.file], r.rest[r.rest.length - 1]).find((d) => d.kind === 'class') : null) ?? resolveType(typeName(last), f);
-            if (t) { target = methodsOf(t, c.name); if (!target.length && (c.name === 'new' || c.name === last)) { instantiate(t, n, 0.85); resolved++; continue; } }
-          }
-          if (!target.length && f.lang === 'cpp' && !NOISE.has(c.name)) {
-            const guess = fnCands(c.name);
-            if (guess.length && guess.length <= 3) { for (const d of guess) emit(d, n, 0.3 / guess.length, 'namespace-guess', 'semantic_inferred'); inferred++; continue; }
-          }
+        if (last === 'Self' && o.cls) { const ms = methodsOf(o.cls, c.name); return ms.length ? calls_(ms.slice(0, 3), 0.9, 'path') : null; }
+        const mod = segs.length === 1 ? f.modules.get(last) : undefined;
+        const r = !mod && f.lang === 'rust' && segs.length ? rustResolve(f, segs) : null;
+        const files = mod ?? (r && !r.rest.length ? [r.file] : null);
+        if (files) { const ds = declaredIn(files, c.name).filter((d) => d.kind === 'function'); if (ds.length) return calls_(ds.slice(0, 3), 0.9, 'path'); }
+        const t = (f.names.get(last) ?? []).find((d) => d.kind === 'class' || d.kind === 'interface') ?? (r?.rest.length ? declaredIn([r.file], r.rest[r.rest.length - 1]).find((d) => d.kind === 'class') : null) ?? resolveType(typeName(last), f);
+        if (t) {
+          const ms = methodsOf(t, c.name);
+          if (ms.length) return calls_(ms.slice(0, 3), 0.9, 'path');
+          if (c.name === 'new' || c.name === last) return { kind: 'inst', cls: t, conf: 0.85 };
         }
-        if (target.length) { for (const d of target.slice(0, 3)) emit(d, n, 0.9, 'path'); resolved++; } else unresolved++;
-        continue;
+        return null;
       }
       // 3. bare name: implicit this, same file, imports, package, visible files, type constructor, unique in repo
-      if (a.implicitThis && o.cls) {
-        const ms = methodsOf(o.cls, c.name);
-        if (ms.length) { for (const m of ms) emit(m, n, 0.9, 'implicit-this'); resolved++; continue; }
-      }
+      if (a.implicitThis && o.cls) { const ms = methodsOf(o.cls, c.name); if (ms.length) return calls_(ms, 0.9, 'implicit-this'); }
       const fc = fnCands(c.name);
-      if (fc.length) { for (const d of fc.slice(0, 3)) emit(d, n, fc.length > 1 ? 0.8 : 0.9, 'scope'); resolved++; continue; }
+      if (fc.length) return calls_(fc.slice(0, 3), fc.length > 1 ? 0.8 : 0.9, 'scope');
       const ty = resolveType(c.name, f);
-      if (ty && /^[A-Z]/.test(c.name)) { instantiate(ty, n, 0.85); resolved++; continue; }
-      const cands = (fns.get(c.name) ?? []).filter((d) => d.lang === f.lang || (d.lang === 'c' && f.lang === 'cpp') || (d.lang === 'cpp' && f.lang === 'c'));
-      if (cands.length && cands.length <= 3 && !NOISE.has(c.name)) { for (const d of cands) emit(d, n, cands.length === 1 ? 0.5 : 0.3 / cands.length, 'unique-name', 'semantic_inferred'); inferred++; continue; }
-      unresolved++;
+      if (ty && /^[A-Z]/.test(c.name)) return { kind: 'inst', cls: ty, conf: 0.85 };
+      if (NOISE.has(c.name)) return null;
+      return guess((fns.get(c.name) ?? []).filter((d) => sameFamily(d.lang, f.lang)), 'unique-name', 0.5);
+    }
+    for (const n of calls) {
+      const r = resolve(a.call(n)!);
+      if (!r || r.kind === 'external') { unresolved++; continue; }
+      if (r.kind === 'inst') {
+        ctx.edge({ type: 'INSTANTIATES', src: o.id, dst: r.cls.id, file: f.rel, line: n.startPosition.row + 1, col: n.startPosition.column + 1, ...S(`${f.lang}-scope`, r.conf), evidence: n.text.slice(0, 100) });
+        const ct = ctorOf(r.cls);
+        if (ct) emit(ct, n, r.conf, 'ctor');
+        resolved++;
+        continue;
+      }
+      for (const d of r.targets) emit(d, n, r.conf, r.how, r.ver);
+      if (r.ver === 'static_verified') resolved++; else inferred++;
     }
   }
 

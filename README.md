@@ -2,7 +2,7 @@
 
 <p align="center"><strong>Your AI coding agent asks "where is the code for this?" and gets a short, exact answer instead of grepping through the whole repository.</strong></p>
 
-<p align="center">Local MCP server for Claude Code and other MCP clients · TypeScript (Python experimental) · no API keys, nothing leaves your machine · MIT</p>
+<p align="center">Local MCP server for Claude Code and other MCP clients · 14 languages, benchmarked on TypeScript · no API keys, nothing leaves your machine · MIT</p>
 
 <p align="center">
   <a href="https://www.npmjs.com/package/typetrace-cli"><img src="https://img.shields.io/npm/v/typetrace-cli?style=flat-square&color=2a78d6" alt="npm"></a>
@@ -16,7 +16,7 @@
 
 TypeTrace maps how your code connects, then answers an agent's question with the few places that matter:
 
-1. **Read the code.** It parses your repository with the real TypeScript compiler and records what calls what. That includes the links grep cannot see: dependency injection, decorators, event and job handlers, API routes and database tables.
+1. **Read the code.** It parses your repository and records what calls what. For TypeScript and JavaScript it uses the real TypeScript compiler, which also sees the links grep cannot: dependency injection, decorators, event and job handlers, API routes and database tables. [Other languages](#languages) use tree-sitter with declared types and imports.
 2. **Find likely matches.** It searches by words (BM25) and by meaning (a local embedding model, Qwen3-Embedding-0.6B).
 3. **Follow the connections.** From those matches it walks the graph to the callers, callees and handlers that are actually involved.
 
@@ -68,7 +68,7 @@ npx typetrace-cli index .                                         # re-index aft
   | Twenty server | 763k lines | 50,151 | ≈ 3.5 h (estimated from the chunk rate) |
 
   Re-indexing only embeds code that changed. For very large repositories, index the part you work on (`--include packages/server/src`), or use the GPU backend from a source checkout (`--gpu`, see [Reproducing](#reproducing-the-benchmark)).
-- **Languages:** TypeScript/TSX. Python is experimental (see [Python](#python)).
+- **Languages:** TypeScript, JavaScript, Python, Go, Java, Kotlin, Scala, C#, Rust, C, C++, Ruby, PHP and Swift. How well each is supported, and what has been measured, is in [Languages](#languages).
 
 ## Results
 
@@ -141,9 +141,20 @@ Where the advantage comes from, and where it doesn't:
 - **Inside the agent, the graph does not significantly improve accuracy.** The same tool without graph propagation scored within 0.02 (pre-registered, Holm p = 0.44). Agents with grep recover much of the difference by reading more files. The token savings are what replicate.
 - **Scope:** Claude Haiku 5.5 and Sonnet 5.5 only, 18–26 tasks per repository, three repositories. The repositories are public, so models may have seen them; that affects every arm equally.
 
-### Python
+### Languages
 
-Python support is **new and experimental**. It uses tree-sitter with scope, import and inheritance resolution. Links it can only guess by name are labelled as inferred, not verified. It is **not benchmarked yet**. A head-to-head on [SWE-bench Lite](https://www.swebench.com/) (300 real Python issues, ground truth from the merged fixes) is [pre-registered](experiments/05-swebench-python/protocol.md) and will be published, win or lose. Go, Java and Rust are not supported yet.
+Search (BM25 and embeddings) works the same in every language. What differs is how precisely the call graph is
+resolved, and what has been measured:
+
+| Language | How calls are resolved | Measured |
+|---|---|---|
+| **TypeScript, JavaScript** | TypeScript compiler: types, imports, CommonJS, DI, decorators, routes, events | retrieval and agent benchmarks above (TypeScript); JavaScript call edges hand-checked 12/12 |
+| **Python** | scopes, imports, inheritance (MRO), `self.x = X()` | [SWE-bench Lite head-to-head](experiments/05-swebench-python/protocol.md), pre-registered, running; published win or lose |
+| **Go, Java, Kotlin, Scala, C#, Rust, C, C++, Ruby, PHP, Swift** | tree-sitter: `this`/`self`, declared types of fields, parameters and locals, constructors, imports and packages, chained calls through return types | [graph quality on 13 open-source repositories](experiments/07-languages/): 97% of hand-checked verified call edges correct (151/156); no retrieval benchmark yet |
+
+Links resolved only by name are labelled `inferred`, not `verified`. They are kept only in the languages where they
+measured at least 50% correct. C and C++ code with heavy macro use parses less reliably, and declarations after a parse
+error can get the wrong qualified name.
 
 ### The other tools' own benchmarks: did we run TypeTrace on them?
 
@@ -153,7 +164,7 @@ Python support is **new and experimental**. It uses tree-sitter with scope, impo
 | graphify: LongMemEval-S | no | conversational memory, not code |
 | graphify: ERPNext cross-tool (Python, n = 6) | not yet | Python; the SWE-bench Lite run above is the larger Python test |
 | graphify: FastAPI edge-precision audit | not yet | Python. Our own edge audit on TypeScript: 100/100 sampled edges correct after fixes ([edge audit](experiments/03-graph-scale/dataset/audit/)) |
-| code-review-graph: token reduction on fastapi, flask, gin, httpx, express | no | Python, Go and JavaScript repositories |
+| code-review-graph: token reduction on fastapi, flask, gin, httpx, express | not yet | Python, Go and JavaScript are supported now; this run has not been done |
 | code-review-graph: impact F1 on 13 commits | no | its ground truth is derived from its own graph (its README calls the recall "a circular upper bound"); our change-impact tasks use a type-checker oracle instead |
 
 So TypeTrace has **not** been shown to beat these tools on their chosen benchmarks. It beats them on ours: real TypeScript repositories, tool-independent ground truth, competitors as shipped.
@@ -176,7 +187,8 @@ graphify reports 0.497 on LOCOMO with a harness that is not public; its BM25 sco
 <p align="center"><img src="docs/diagrams/hidden-links.png" alt="Example on nestjs-boilerplate: the question about a refresh token that still works after a password change finds AuthService.refreshToken by meaning; the graph adds the HTTP route POST /auth/refresh, AuthController.refresh which calls it, and the functions it calls: SessionService.updateByHash, UsersService.findById and AuthService.getTokensData." width="95%"></p>
 
 - **TypeScript graph:** built with the TypeScript compiler, so calls are resolved by type, not by name. It covers typed calls, dependency injection, decorators, GraphQL resolvers, keyed event and job dispatch, HTTP routes and Kysely queries.
-- **Python graph (experimental):** tree-sitter with scope, import, inheritance (MRO) and `self.attr` resolution. Name-only guesses are kept separate and marked as inferred.
+- **Python graph:** tree-sitter with scope, import, inheritance (MRO) and `self.attr` resolution.
+- **Other languages:** one tree-sitter engine with an adapter per language (`src/languages/syntactic.ts`). Name-only guesses are kept separate and marked as inferred.
 - **Search:** BM25 plus Qwen3-Embedding-0.6B, fused, then graph propagation from the best matches.
 - **Output:** at most 800 tokens of `file:line` pointers with callers, callees and handlers, so the agent's context stays small.
 - **No LLM** is used to build or query the index, and nothing leaves your machine.

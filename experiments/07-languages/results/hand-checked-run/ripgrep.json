@@ -1,0 +1,255 @@
+{
+ "repo": "ripgrep",
+ "origin": "https://github.com/BurntSushi/ripgrep.git",
+ "commit": "178cc027e283fd965cb72d0a7395b219eada170c",
+ "languages": "102 Rust, 1 Ruby",
+ "files": 103,
+ "build_ms": 1411,
+ "rss_mb": 574,
+ "nodes": 3409,
+ "edges": 10740,
+ "edges_by_type": {
+  "CALLS": 6637,
+  "CONTAINS": 3408,
+  "IMPLEMENTS": 135,
+  "IMPORTS": 257,
+  "INSTANTIATES": 303
+ },
+ "calls_by_verification": {
+  "semantic_inferred": 1864,
+  "static_verified": 4773
+ },
+ "calls_by_extraction": {
+  "ruby-name-heuristic": 4,
+  "rust-declared-type": 2305,
+  "rust-name-heuristic": 1311,
+  "rust-path": 929,
+  "rust-scope": 974,
+  "rust-self": 562,
+  "rust-static": 3,
+  "rust-unique-name": 549
+ },
+ "notes": [
+  "ruby: 0 of 1 files have syntax the grammar did not fully parse (declarations after the error may be mis-nested)",
+  "rust: 1 of 102 files have syntax the grammar did not fully parse (declarations after the error may be mis-nested)",
+  "ruby, rust calls: 5040 resolved syntactically, 1253 name-inferred (<=3 candidates), 7486 unresolved (standard library, external packages, dynamic receivers)"
+ ],
+ "sample": [
+  {
+   "verification": "static_verified",
+   "how": "rust-declared-type",
+   "at": "crates/core/flags/hiargs.rs:701",
+   "call": "builder\n            .preprocessor(self.pre.clone())",
+   "from": "HiArgs.search_worker",
+   "to": "crates/core/search.rs::SearchWorkerBuilder.preprocessor",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "rust-path",
+   "at": "crates/globset/src/lib.rs:1263",
+   "call": "GlobBuilder::new(\"c*\")",
+   "from": "matches_all_regex",
+   "to": "crates/globset/src/glob.rs::GlobBuilder.new",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "rust-declared-type",
+   "at": "crates/core/flags/defs.rs:4356",
+   "call": "v.unwrap_switch()",
+   "from": "NoIgnore.update",
+   "to": "crates/core/flags/mod.rs::FlagValue.unwrap_switch",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "rust-declared-type",
+   "at": "crates/ignore/src/walk.rs:2611",
+   "call": "td.path()",
+   "from": "symlinks",
+   "to": "crates/ignore/src/lib.rs::TempDir.path",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "rust-declared-type",
+   "at": "crates/printer/src/json.rs:769",
+   "call": "self.replacer.replacement()",
+   "from": "JSONSink.context",
+   "to": "crates/printer/src/util.rs::Replacer.replacement",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "rust-path",
+   "at": "crates/printer/src/standard.rs:2552",
+   "call": "SearcherBuilder::new()",
+   "from": "max_columns_with_count_preview_no_match",
+   "to": "crates/searcher/src/searcher/mod.rs::SearcherBuilder.new",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "rust-self",
+   "at": "crates/searcher/src/searcher/glue.rs:276",
+   "call": "self.advance(&line)",
+   "from": "MultiLine.sink_matched_inverted",
+   "to": "crates/searcher/src/searcher/glue.rs::MultiLine.advance",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "rust-self",
+   "at": "crates/printer/src/standard.rs:1465",
+   "call": "self.wtr()",
+   "from": "StandardImpl.start_hyperlink",
+   "to": "crates/printer/src/standard.rs::StandardImpl.wtr",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "rust-declared-type",
+   "at": "crates/ignore/src/incremental.rs:1070",
+   "call": "td.path()",
+   "from": "multiple_roots_keep_their_own_context",
+   "to": "crates/ignore/src/lib.rs::TempDir.path",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "rust-declared-type",
+   "at": "crates/core/main.rs:118",
+   "call": "args.stats()",
+   "from": "search",
+   "to": "crates/core/flags/hiargs.rs::HiArgs.stats",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "rust-path",
+   "at": "crates/printer/src/standard.rs:1197",
+   "call": "Match::new(0, line.len())",
+   "from": "StandardImpl.write_line",
+   "to": "crates/matcher/src/lib.rs::Match.new",
+   "confidence": 0.9
+  },
+  {
+   "verification": "static_verified",
+   "how": "rust-scope",
+   "at": "crates/regex/src/literal.rs:836",
+   "call": "I(\"bba\")",
+   "from": "repetition",
+   "to": "crates/regex/src/literal.rs::I",
+   "confidence": 0.9
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "rust-name-heuristic",
+   "at": "crates/printer/src/standard.rs:2908",
+   "call": "SearcherBuilder::new()\n            .line_number(false)\n            .multi_line(true)\n            .ma",
+   "from": "max_matches_multi_line1",
+   "to": "crates/searcher/src/testutil.rs::TesterConfig.search_reader",
+   "confidence": 0.1
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "rust-name-heuristic",
+   "at": "crates/matcher/src/lib.rs:1272",
+   "call": "(*self).try_captures_iter(haystack, caps, matched)",
+   "from": "M.try_captures_iter",
+   "to": "crates/matcher/src/lib.rs::M.try_captures_iter",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "rust-name-heuristic",
+   "at": "crates/ignore/src/walk.rs:1824",
+   "call": "state.is_continue()",
+   "from": "Worker.run_one",
+   "to": "crates/ignore/src/walk.rs::WalkState.is_continue",
+   "confidence": 0.3
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "rust-name-heuristic",
+   "at": "crates/printer/src/standard.rs:3004",
+   "call": "StandardBuilder::new()\n            .only_matching(true)\n            .column(true)",
+   "from": "only_matching",
+   "to": "crates/printer/src/color.rs::ColorSpecs.column",
+   "confidence": 0.1
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "rust-name-heuristic",
+   "at": "crates/printer/src/standard.rs:2476",
+   "call": "SearcherBuilder::new()\n            .line_number(false)\n            .build()\n            .search_read",
+   "from": "max_columns",
+   "to": "crates/searcher/src/testutil.rs::TesterConfig.search_reader",
+   "confidence": 0.1
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "rust-name-heuristic",
+   "at": "crates/ignore/src/gitignore.rs:353",
+   "call": "g.is_whitelist()",
+   "from": "GitignoreBuilder.build",
+   "to": "crates/ignore/src/lib.rs::Match.is_whitelist",
+   "confidence": 0.1
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "rust-name-heuristic",
+   "at": "crates/printer/src/standard.rs:3962",
+   "call": "searcher\n            .search_reader(\n                &matcher,\n                haystack.as_bytes(),\n",
+   "from": "regression_crlf_preserve",
+   "to": "crates/core/search.rs::SearchWorker.search_reader",
+   "confidence": 0.1
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "rust-unique-name",
+   "at": "crates/core/flags/defs.rs:2831",
+   "call": "parse_low_raw([\"--no-hidden\", \"-.\"])",
+   "from": "test_hidden",
+   "to": "crates/core/flags/parse.rs::parse_low_raw",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "rust-unique-name",
+   "at": "crates/core/flags/defs.rs:5630",
+   "call": "parse_low_raw([\"--pre-glob\", \"*.pdf\"])",
+   "from": "test_pre_glob",
+   "to": "crates/core/flags/parse.rs::parse_low_raw",
+   "confidence": 0.5
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "rust-name-heuristic",
+   "at": "crates/cli/src/wtr.rs:135",
+   "call": "w.reset()",
+   "from": "StandardStream.reset",
+   "to": "crates/cli/src/wtr.rs::StandardStream.reset",
+   "confidence": 0.15
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "rust-name-heuristic",
+   "at": "crates/searcher/src/searcher/glue.rs:1001",
+   "call": "SearcherTester::new(SHERLOCK, \" a \")\n            .after_context(1)\n            .before_context(1)",
+   "from": "context_sherlock_invert2",
+   "to": "crates/searcher/src/searcher/mod.rs::SearcherBuilder.before_context",
+   "confidence": 0.1
+  },
+  {
+   "verification": "semantic_inferred",
+   "how": "rust-unique-name",
+   "at": "crates/core/flags/defs.rs:3930",
+   "call": "parse_low_raw([\"-m\", \"5\", \"--max-count=10\"])",
+   "from": "test_max_count",
+   "to": "crates/core/flags/parse.rs::parse_low_raw",
+   "confidence": 0.5
+  }
+ ]
+}
