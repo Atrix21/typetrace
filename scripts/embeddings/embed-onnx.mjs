@@ -27,6 +27,18 @@ tokenizer.padding_side = 'left'; // last-token pooling reads the final position;
 const device = opt('device', process.env.TYPETRACE_EMBED_DEVICE || 'cpu');
 // No growing CPU arena: memory is returned between batches (large repositories embed tens of thousands of chunks).
 const model = await AutoModel.from_pretrained(ONNX_MODEL, { revision: ONNX_REVISION, dtype, device, session_options: { enableCpuMemArena: false, enableMemPattern: false } });
+if (argv.includes('--download')) { process.stderr.write(`  embedding model ready (${ONNX_MODEL})\n`); process.exit(0); }
+const PROGRESS = process.env.TYPETRACE_PROGRESS === '1';
+const P_BASE = Number(process.env.TYPETRACE_PROGRESS_BASE || 0), P_TOTAL = Number(process.env.TYPETRACE_PROGRESS_TOTAL || 0);
+let pDone = 0, pLast = 0;
+const tick = (n) => {
+  if (!PROGRESS) return;
+  pDone += n;
+  const now = Date.now();
+  if (now - pLast < 1000 && P_BASE + pDone < P_TOTAL) return;
+  pLast = now;
+  process.stderr.write(`\r  embedding code chunks on CPU: ${P_BASE + pDone}/${P_TOTAL || '?'}   `);
+};
 const TOKEN_BUDGET = Number(opt('token-budget', process.env.TYPETRACE_EMBED_TOKEN_BUDGET || '4096'));
 
 async function embed(texts) {
@@ -80,8 +92,10 @@ if (argv.includes('--server')) {
       while (s < order.length && idx.length < batch && (idx.length + 1) * lens[order[s]] <= Math.max(TOKEN_BUDGET, lens[order[s]])) idx.push(order[s++]);
       const { vecs, tokens } = await embed(idx.map((i) => texts[i]));
       idx.forEach((i, j) => fs.writeSync(out, JSON.stringify({ id: sel[i].id, vector: fmt(vecs[j]), tokens: tokens[j] }) + '\n'));
+      tick(idx.length);
     }
   }
   fs.closeSync(out);
-  process.stderr.write(JSON.stringify({ model: ONNX_MODEL, backend: 'onnx', dtype, n: items.length, seconds: (Date.now() - t0) / 1000, max_seq: maxSeq }) + '\n');
+  if (PROGRESS) process.stderr.write(P_BASE + pDone >= P_TOTAL ? '\n' : '');
+  else process.stderr.write(JSON.stringify({ model: ONNX_MODEL, backend: 'onnx', dtype, n: items.length, seconds: (Date.now() - t0) / 1000, max_seq: maxSeq }) + '\n');
 }

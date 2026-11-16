@@ -56,6 +56,8 @@ export class Embedder {
   private static memo = new Map<string, Map<string, { v: Float32Array; t: number }>>();
   /** Missing items are embedded in subprocess calls of at most this many items (bounded temp files). */
   static EMBED_BATCH_ITEMS = 5000;
+  /** Product CLI only: let the embedding subprocess print progress to the terminal (the benchmark path stays silent). */
+  static showProgress = false;
 
   private static loadCache(file: string): Map<string, { v: Float32Array; t: number }> {
     let m = Embedder.memo.get(file);
@@ -93,10 +95,12 @@ export class Embedder {
       const tmpIn = path.join(this.cacheDir, `in-${process.pid}.jsonl`);
       const tmpOut = path.join(this.cacheDir, `out-${process.pid}.jsonl`);
       fs.writeFileSync(tmpIn, part.map((x) => JSON.stringify(x)).join('\n') + '\n');
+      const progress = Embedder.showProgress ? { TYPETRACE_PROGRESS: '1', TYPETRACE_PROGRESS_BASE: String(i), TYPETRACE_PROGRESS_TOTAL: String(all.length) } : {};
       const r = spawnSync(this.python, [this.script, '--model', this.model, '--in', tmpIn, '--out', tmpOut, '--batch', String(this.batch), '--max-seq', String(this.maxSeq), '--revision', this.revision], {
-        encoding: 'utf8', env: { ...process.env, HF_HUB_OFFLINE: '1', TOKENIZERS_PARALLELISM: 'false' }, maxBuffer: 64 * 1024 * 1024,
+        encoding: 'utf8', env: { ...process.env, HF_HUB_OFFLINE: '1', TOKENIZERS_PARALLELISM: 'false', ...progress }, maxBuffer: 64 * 1024 * 1024,
+        stdio: Embedder.showProgress ? ['ignore', 'pipe', 'inherit'] : 'pipe',
       });
-      if (r.status !== 0) throw new Error(`embedding failed: ${r.stderr}`);
+      if (r.status !== 0) throw new Error(`embedding failed (exit ${r.status}): ${r.stderr ?? 'see the output above'}`);
       const add: string[] = [];
       for (const l of fs.readFileSync(tmpOut, 'utf8').split('\n')) {
         if (!l) continue;

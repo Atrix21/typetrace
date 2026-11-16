@@ -15,6 +15,7 @@
  * Indexes live in ~/.cache/typetrace/<hash of repo path>/ (override with TYPETRACE_CACHE); the repository is never
  * written except by `install` (.mcp.json).
  */
+import { spawn } from 'node:child_process';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -22,13 +23,13 @@ import path from 'node:path';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
-import { listCorpusFiles, PROJECT_ROOT } from '../config.js';
+import { abs, listCorpusFiles, PROJECT_ROOT } from '../config.js';
 import { REGISTRY } from '../evaluation/methods.js';
 import { countTokens } from '../evaluation/token-accounting.js';
 import { buildGraph } from '../graph/graph-builder.js';
 import { loadGraph, saveGraph } from '../graph/graph-store.js';
 import { EXP3_TOOL_DESCRIPTION, EXP3_TOOL_NAME, EXP3_TOOL_SCHEMA } from '../agent-eval/exp3/tool-def.js';
-import { EmbeddingRetriever } from '../retrieval/embeddings.js';
+import { Embedder, EmbeddingRetriever, ONNX_EMBEDDING } from '../retrieval/embeddings.js';
 import { initLanguages } from '../languages/registry.js';
 import { PersistentQueryEmbedder } from '../agent-eval/mcp/retrieval-server.js';
 import { primeGraphCache } from '../retrieval/graph-retrieval.js';
@@ -43,6 +44,10 @@ const err = (s: string) => process.stderr.write(s + '\n');
 const flag = (k: string) => argv.includes(`--${k}`);
 // Product default: Python-free ONNX embeddings; --gpu switches to the PyTorch backend the benchmarks used.
 process.env.TYPETRACE_EMBED_BACKEND ??= flag('gpu') ? 'python' : 'onnx';
+// The embedding model (~2.4 GB) is cached outside the package, so npx/npm reinstalls never download it again.
+process.env.TYPETRACE_MODEL_DIR ??= path.join(os.homedir(), '.cache', 'typetrace', 'models');
+const VERSION: string = JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, 'package.json'), 'utf8')).version;
+const FROM_NPM = PROJECT_ROOT.split(path.sep).includes('node_modules');
 const EXTS = ['.ts', '.tsx', '.py'];
 const SKIP = /(^|\/)(node_modules|dist|build|\.venv|venv|site-packages|__pycache__|vendor|third_party)(\/|$)/;
 
@@ -85,6 +90,34 @@ async function load(repo: string, quiet = false, queryEmbedder = true) {
   return { m, files, graph };
 }
 
+function dirBytes(dir: string): number {
+  if (!fs.existsSync(dir)) return 0;
+  let n = 0;
+  for (const f of fs.readdirSync(dir, { recursive: true }) as string[]) { try { const st = fs.statSync(path.join(dir, f)); if (st.isFile()) n += st.size; } catch { /* in flux */ } }
+  return n;
+}
+
+/** Load the embedding model once, downloading it on first use (~2.4 GB). Progress = growth of the model directory. */
+async function ensureModel() {
+  const dir = process.env.TYPETRACE_MODEL_DIR!;
+  err('checking the embedding model (Qwen3-Embedding-0.6B, runs locally)…');
+  const child = spawn(process.execPath, [abs(ONNX_EMBEDDING.script), '--download'], { stdio: ['ignore', 'ignore', 'pipe'], env: process.env });
+  let stderr = '';
+  child.stderr.on('data', (d) => { stderr += d; });
+  const before = dirBytes(dir);
+  let shown = false;
+  const timer = setInterval(() => {
+    const got = dirBytes(dir) - before;
+    if (got < 5e6) return;
+    shown = true;
+    process.stderr.write(`\r  downloading the model (first run only): ${(got / 1e9).toFixed(2)} of ~2.4 GB   `);
+  }, 1000);
+  const code = await new Promise<number | null>((resolve) => child.on('exit', resolve));
+  clearInterval(timer);
+  if (shown) process.stderr.write('\n');
+  if (code !== 0) throw new Error(`could not load the embedding model:\n${stderr.slice(-2000)}`);
+}
+
 async function index(repo: string) {
   const dir = cacheDir(repo);
   fs.mkdirSync(dir, { recursive: true });
@@ -99,6 +132,8 @@ async function index(repo: string) {
   saveGraph(path.join(dir, 'graph.sqlite'), { nodes: g.nodes, edges: g.edges, coverage: g.coverage, stats: g.stats, meta: { repo, files: files.length, build_ms: g.build_ms } });
   fs.writeFileSync(path.join(dir, 'index.json'), JSON.stringify({ repo, include, files: files.length, nodes: g.nodes.length, edges: g.edges.length, graph_build_ms: g.build_ms, at: new Date().toISOString() }, null, 2) + '\n');
   err(`graph: ${g.nodes.length} nodes, ${g.edges.length} edges in ${(g.build_ms / 1000).toFixed(1)} s`);
+  if (process.env.TYPETRACE_EMBED_BACKEND === 'onnx') await ensureModel();
+  Embedder.showProgress = true;
   const t = performance.now();
   await load(repo, true, false);
   err(`search indexes (BM25 + embeddings, ${process.env.TYPETRACE_EMBED_BACKEND === 'onnx' ? 'CPU' : 'GPU/PyTorch'}) ready in ${((performance.now() - t) / 1000).toFixed(1)} s\nindex: ${dir}`);
@@ -115,14 +150,18 @@ async function query(repo: string, q: string) {
 
 async function serve(repo: string) {
   console.log = console.error; // stdout belongs to the MCP transport
-  const { m } = await load(repo, true);
+  // Answer the MCP handshake at once and load in the background: large repositories take a minute to load, longer
+  // than an MCP client waits for a server to start. Tool calls wait for the load.
+  const ready = load(repo, true);
+  ready.catch((e) => err(`typetrace: ${(e as Error).message}`));
   let chain: Promise<unknown> = Promise.resolve();
-  const server = new Server({ name: SERVER_NAME, version: '0.1.0' }, { capabilities: { tools: {} } });
+  const server = new Server({ name: SERVER_NAME, version: VERSION }, { capabilities: { tools: {} } });
   server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [{ name: EXP3_TOOL_NAME, description: EXP3_TOOL_DESCRIPTION, inputSchema: EXP3_TOOL_SCHEMA as never }] }));
   server.setRequestHandler(CallToolRequestSchema, async (req) => {
     const q = (req.params.arguments as { query?: unknown } | undefined)?.query;
     if (req.params.name !== EXP3_TOOL_NAME || typeof q !== 'string' || !q.trim()) return { isError: true, content: [{ type: 'text' as const, text: 'Invalid call: "query" must be a non-empty string.' }] };
     const run = async () => {
+      const { m } = await ready;
       await m.prewarmQuery?.(q);
       const out = await m.retrieve({ task_id: 'mcp', query: q }, BUDGET);
       return { content: [{ type: 'text' as const, text: out.context?.trim() ? out.context : 'No results.' }] };
@@ -138,22 +177,38 @@ async function serve(repo: string) {
 async function init(repo: string) {
   await index(repo);
   install(repo);
+  err(`\ndone. Next: restart Claude Code in ${repo}, approve the "${SERVER_NAME}" MCP server, and ask it about your code.\nTry it here first:  typetrace query ${JSON.stringify(repo)} "where is <something> handled?"`);
 }
 
 function install(repo: string) {
   const f = path.join(repo, '.mcp.json');
   const cfg = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {};
   cfg.mcpServers ??= {};
-  cfg.mcpServers[SERVER_NAME] = { command: process.execPath, args: [path.join(PROJECT_ROOT, 'bin', 'typetrace.js'), 'serve', repo, ...(flag('gpu') ? ['--gpu'] : [])] };
+  const extra = flag('gpu') ? ['--gpu'] : [];
+  // Installed from npm: launch through npx (stable across npx cache clean-ups and Node upgrades). From a source checkout: this checkout.
+  cfg.mcpServers[SERVER_NAME] = FROM_NPM
+    ? { command: 'npx', args: ['-y', `typetrace@${VERSION}`, 'serve', repo, ...extra] }
+    : { command: process.execPath, args: [path.join(PROJECT_ROOT, 'bin', 'typetrace.js'), 'serve', repo, ...extra] };
   fs.writeFileSync(f, JSON.stringify(cfg, null, 2) + '\n');
   err(`added "${SERVER_NAME}" to ${f}. Restart Claude Code in ${repo}; the tool is mcp__${SERVER_NAME}__${EXP3_TOOL_NAME}.`);
 }
 
 async function main() {
   const [cmd, repoArg = '.', ...rest] = positional;
+  if (flag('version') || cmd === 'version') { process.stdout.write(VERSION + '\n'); process.exit(0); }
   if (!cmd || !['init', 'index', 'query', 'serve', 'install'].includes(cmd)) {
-    err('usage: typetrace init [repo] | index <repo> | query <repo> "question" | serve <repo> | install <repo>   [--include dir,dir] [--gpu]');
-    process.exit(2);
+    err(`typetrace ${VERSION}: code search + call graph for AI coding agents (MCP)
+
+  typetrace init [repo]                 index the repo and register the MCP server with Claude Code (one step)
+  typetrace query <repo> "question"     print what the agent would see
+  typetrace index <repo>                rebuild the index (after big changes)
+  typetrace install <repo>              (re)write <repo>/.mcp.json
+  typetrace serve <repo>                run the MCP server (Claude Code starts this for you)
+
+  options: --include src,lib   only index these directories
+           --gpu               PyTorch/CUDA embeddings (source checkout with \`npm run setup\` only)
+  indexes: ~/.cache/typetrace (TYPETRACE_CACHE to move); model: ~/.cache/typetrace/models (TYPETRACE_MODEL_DIR)`);
+    process.exit(cmd ? 2 : 0);
   }
   await initLanguages();
   const repo = path.resolve(repoArg);

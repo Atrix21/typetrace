@@ -1,12 +1,48 @@
 {
   "name": "typetrace",
   "version": "0.1.0",
-  "private": true,
+  "description": "Code search + typed call graph for AI coding agents (MCP). Finds the code that matters for a task in one call; benchmarked head-to-head against graphify and code-review-graph.",
+  "author": "Atrix21",
+  "license": "MIT",
   "type": "module",
-  "description": "Typed TypeScript code graph + hybrid search for AI coding agents, over MCP, with a reproducible head-to-head benchmark.",
+  "bin": {
+    "typetrace": "bin/typetrace.js"
+  },
+  "files": [
+    "bin/",
+    "dist/",
+    "scripts/embeddings/embed-onnx.mjs",
+    "scripts/embeddings/embed.py",
+    "scripts/embeddings/embed_server.py",
+    "benchmark.config.json",
+    "README.md",
+    "LICENSE"
+  ],
   "engines": {
     "node": ">=22.13"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Atrix21/typetrace.git"
+  },
+  "homepage": "https://github.com/Atrix21/typetrace#readme",
+  "bugs": {
+    "url": "https://github.com/Atrix21/typetrace/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "claude-code",
+    "ai-agents",
+    "code-search",
+    "code-graph",
+    "call-graph",
+    "typescript",
+    "python",
+    "retrieval",
+    "rag",
+    "benchmark"
+  ],
   "scripts": {
     "setup:target": "tsx src/cli/index.ts setup-target",
     "setup:competitors": "bash scripts/setup-competitors.sh",
@@ -20,7 +56,9 @@
     "typecheck": "tsc --noEmit -p .",
     "agent-eval": "tsx src/agent-eval/cli.ts",
     "typetrace": "node bin/typetrace.js",
-    "setup": "bash scripts/setup-competitors.sh && tsx src/cli/index.ts setup-target"
+    "setup": "bash scripts/setup-competitors.sh && tsx src/cli/index.ts setup-target",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepack": "npm run build"
   },
   "dependencies": {
     "@huggingface/transformers": "4.3.2",
@@ -36,22 +74,5 @@
     "@types/node": "22.19.1",
     "tsx": "4.20.6",
     "vitest": "3.2.4"
-  },
-  "license": "MIT",
-  "bin": {
-    "typetrace": "bin/typetrace.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Atrix21/typetrace.git"
-  },
-  "keywords": [
-    "mcp",
-    "code-search",
-    "code-graph",
-    "typescript",
-    "claude-code",
-    "retrieval",
-    "benchmark"
-  ]
+  }
 }
