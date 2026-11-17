@@ -73,7 +73,7 @@ npx typetrace-cli index .                                         # re-index aft
 **Requirements and what to expect:**
 - **Node.js 22.13 or newer.** No Python, no GPU and no API key needed.
 - **First run downloads the embedding model (~2.4 GB, once)** to `~/.cache/typetrace/models`. npm dependencies take about 900 MB, mostly ONNX Runtime.
-- **RAM:** about 6 GB while indexing; the MCP server needs less.
+- **RAM:** 6.5 to 8 GB at the peak of the first index, while embeddings are computed (measured on 120 to 490-file repositories); the MCP server needs less.
 - **First index time** is dominated by embedding on the CPU. Measured on an 8-core laptop CPU (i7-11800H):
 
   | Repository | Size | Code chunks | First index |
@@ -128,7 +128,7 @@ comes from their own documentation or from our measurements.
 - **Equal agent accuracy on Immich** (0.859 vs 0.860), though with about twice the tokens.
 
 **Plain grep, which your agent already has**, wins on cost of ownership. There is nothing to install, no index to keep
-up to date, no 2.4 GB model and no 6 GB of RAM while indexing. Agents are already good at searching with it: TypeTrace's
+up to date, no 2.4 GB model and no 6 to 8 GB of RAM while indexing. Agents are already good at searching with it: TypeTrace's
 effect on task score ranged from −0.02 to +0.06 across five runs, while it saved 18 to 28% of tokens on a typical task.
 
 ## What the other tools' headline numbers measure
