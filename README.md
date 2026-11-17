@@ -139,7 +139,7 @@ documentation says so:
 | Their claim | What it compares | The closest real-world measurement |
 |---|---|---|
 | code-review-graph: "~63x fewer tokens" | The **whole repository pasted into the prompt**, against one graph answer. Its README calls this baseline "an upper bound no real agent pays". | Its own comparison against grep is 6.65x, for the tokens needed to locate an answer only. In our full Claude Code sessions, the agent with code-review-graph used **more** tokens than with grep alone: 52% more per task on average on Twenty, 70% more on Immich. The agent still reads the files after the graph answers. |
-| graphify: "0.497 recall@10" | LOCOMO: finding the right turns in long **chat conversations**. No code is involved. | Our search stack on an open LOCOMO protocol: 0.745 ([below](#locomo-conversational-memory-search-stack-only)). Different harness, so not a like-for-like win. |
+| graphify: "0.497 recall@10" | LOCOMO: finding the right turns in long **chat conversations**. No code is involved. | On an open LOCOMO protocol, BM25 plus our embedding model scores 0.635, and 0.745 with a cross-encoder reranker that TypeTrace does not ship ([below](#locomo-conversational-memory-search-components-only)). Different harness, so not a like-for-like win. |
 | graphify: "cut agent token spend by 80%" | Graphify Cloud, its paid hosted product, which we did not test. | The open-source graphify we tested: 2% more tokens per task than grep alone on Twenty, 6% more on Immich (averages). |
 | code-review-graph: impact F1 0.69 | Ground truth built from its own graph. Its README calls the recall "a circular upper bound". | Not run. Our change-impact tasks use a type-checker as the oracle instead. |
 
@@ -272,15 +272,15 @@ Links resolved only by name are labelled `inferred`, not `verified`. They are ke
 measured at least 50% correct. C and C++ code with heavy macro use parses less reliably, and declarations after a parse
 error can get the wrong qualified name.
 
-### LOCOMO (conversational memory; search stack only)
+### LOCOMO (conversational memory; search components only)
 
-LOCOMO contains no code, so it tests only TypeTrace's search stack (BM25, Qwen3-Embedding-0.6B and a cross-encoder reranker, no LLM). The protocol is open: categories 1–4, 1,536 questions, dialogue turns as the retrieval unit, recall@10 of the evidence turns. It is identical to an [independent public replication](https://github.com/devkancheti4-design/model-d-graphify), whose BM25 score of 0.540 we reproduce exactly.
+LOCOMO contains no code, so there is no graph and TypeTrace's own ranking does not apply. What it tests is the search components: BM25 and TypeTrace's embedding model (Qwen3-Embedding-0.6B), fused by reciprocal rank, and optionally a cross-encoder reranker (bge-reranker-base). TypeTrace does not ship the reranker: on code it failed its held-out test ([experiment 6](experiments/06-next-direction/findings.md)). No LLM is used. The protocol is open: categories 1–4, 1,536 questions, dialogue turns as the retrieval unit, recall@10 of the evidence turns. It is identical to an [independent public replication](https://github.com/devkancheti4-design/model-d-graphify), whose BM25 score of 0.540 we reproduce exactly.
 
 | Method | Recall@10 (all 1,536) | Recall@10 (seeded 300) |
 |---|---:|---:|
-| **TypeTrace search (hybrid + rerank)** | **0.745** | **0.753** |
+| hybrid RRF + cross-encoder reranker (not in TypeTrace) | **0.745** | **0.753** |
 | dense (Qwen3-Embedding-0.6B) | 0.637 | 0.642 |
-| hybrid RRF | 0.635 | 0.662 |
+| hybrid RRF (BM25 + Qwen3) | 0.635 | 0.662 |
 | BM25 | 0.540 | 0.566 |
 
 graphify reports 0.497 on LOCOMO with a harness that is not public; its BM25 scores 0.362 there, against 0.540 on the open protocol. The numbers measure different things, so ours is **not** a like-for-like win over graphify's figure. Details: [`experiments/04-locomo/`](experiments/04-locomo/).

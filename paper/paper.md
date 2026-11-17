@@ -408,7 +408,7 @@ second-best retrieval, because its outputs are large and the agent still read th
 |---|---|---|
 | code-review-graph: "~63× fewer tokens" | the whole repository in the prompt vs one graph answer; its README calls this baseline "an upper bound no real agent pays" | its own comparison against grep is 6.65× (tokens to locate an answer); in our agent runs, +52–70% tokens vs grep |
 | graphify: "cut agent token spend by 80%" | its paid hosted product | the open-source tool: +2–6% tokens vs grep |
-| graphify: "0.497 recall@10" | LOCOMO: memory over chat conversations, no code | our search stack on an open LOCOMO protocol: 0.745 (BM25 0.540); different harness, so not a like-for-like comparison |
+| graphify: "0.497 recall@10" | LOCOMO: memory over chat conversations, no code | open LOCOMO protocol: BM25 0.540; BM25 + our embedding model (RRF) 0.635; plus a cross-encoder reranker we do not ship, 0.745. Different harness, so not a like-for-like comparison |
 | code-review-graph: impact F1 0.69 | ground truth from its own graph ("a circular upper bound") | not run; our impact tasks use a type-checker oracle |
 
 ### 7.4 Other negative results (experiment 6)
