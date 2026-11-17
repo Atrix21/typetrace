@@ -69,7 +69,11 @@ here. Neither was tested by this experiment:
 2. **Graph precision.** The TypeScript graph is resolved by the type checker. The Python graph is syntactic: of the
    calls it sees in a typical snapshot, about a fifth are resolved from scopes, imports and `self` types, a tenth are
    inferred by name (at most three candidates), and the rest are left unresolved (`graphs.jsonl`, astropy: 19,666 /
-   10,990 / 61,427). Name-inferred edges into large classes connect many functions that a bug does not involve.
+   10,990 / 61,427). One version of this explanation, that name-inferred edges add noise, is not supported by an
+   exploratory check. Across the 41 instances where the graph changed Recall@10, the share of name-inferred call edges
+   correlates slightly *positively* with the graph's effect (Spearman +0.28). pytest has the highest share (67%) and
+   the largest gain. The share of resolved calls correlates weakly (+0.16). scikit-learn, where the graph hurts most,
+   has the lowest resolved share (25%). With 41 instances and 12 repositories, this does not settle the question.
 
 Per repository the effect varies widely (`results/report.md`): the graph helps on pytest (+0.12, 17 instances) and
 django (+0.02, 114), and hurts on scikit-learn (−0.20, 23) and sympy (−0.03, 77). Repositories with 3 to 6 instances

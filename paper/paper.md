@@ -322,7 +322,10 @@ neighbours of the best seeds (sibling methods, constructors, tests that call the
 single changed function out of the top 10. The 17 wins are the same mechanism working the other way. Two plausible
 explanations, neither tested:
 1. **Graph precision.** In a typical snapshot only about 21% of call sites resolve from scopes, imports and `self`
-   types; 12% are name-inferred and 67% are left unresolved.
+   types; 12% are name-inferred and 67% are left unresolved. Name inference itself does not look like the culprit,
+   though. In an exploratory check over the 41 instances where the graph changed Recall@10, a higher share of
+   name-inferred edges went with a *better* graph effect (Spearman +0.28; pytest has the highest share, 67%, and the
+   largest gain).
 2. **Ground truth.** SWE-bench credits only the changed functions, while our TypeScript tasks also count the path.
    Against this, the graph helped on TypeScript with changed-functions-only ground truth (the 127 mined fixes).
 
