@@ -80,7 +80,9 @@ We ask three questions, each with pre-registered tests:
 
 **Repository-level localisation and retrieval.** SWE-bench [Jimenez et al., 2024] made real GitHub issues the
 standard test for repository-level software engineering. Its Lite and Multilingual subsets [Yang et al., 2025] are
-used here. Agentless [Xia et al., 2024] showed that a fixed localise–repair–validate pipeline is competitive with
+used here. Agents such as SWE-agent [Yang et al., 2024] and AutoCodeRover [Zhang et al., 2024] made
+repository navigation an explicit part of the agent: a purpose-built shell interface in one case, search over the
+program's syntax tree in the other. Agentless [Xia et al., 2024] showed that a fixed localise–repair–validate pipeline is competitive with
 autonomous agents, which makes localisation the step most worth studying in isolation. CodeRAG-Bench [Wang et al.,
 2025] finds that retrievers often fail to fetch useful context for code generation.
 
@@ -98,7 +100,8 @@ Our setting differs in three ways:
 
 **Embeddings.** We use Qwen3-Embedding-0.6B [Zhang et al., 2025] locally.
 
-**Practitioner tools.** graphify and code-review-graph are the comparison systems (§5.2). To our knowledge, no
+**Practitioner tools.** The Model Context Protocol [Anthropic, 2024] lets any agent call such a tool. graphify and
+code-review-graph are the comparison systems (§5.2). To our knowledge, no
 independent evaluation of them has been published.
 
 ## 3. System: TypeTrace
@@ -468,6 +471,7 @@ with this paper make such claims easier to check.
 
 ## References
 
+- Anthropic (2024). Introducing the Model Context Protocol. https://www.anthropic.com/news/model-context-protocol (25 November 2024).
 - Chen, Z., Tang, X., et al. (2025). LocAgent: Graph-Guided LLM Agents for Code Localization. arXiv:2503.09089.
 - Holm, S. (1979). A simple sequentially rejective multiple test procedure. *Scandinavian Journal of Statistics*, 6(2), 65–70.
 - Jimenez, C. E., Yang, J., et al. (2024). SWE-bench: Can Language Models Resolve Real-World GitHub Issues? ICLR 2024. arXiv:2310.06770.
@@ -478,6 +482,8 @@ with this paper make such claims easier to check.
 - Wang, Z. Z., Asai, A., et al. (2025). CodeRAG-Bench: Can Retrieval Augment Code Generation? Findings of NAACL 2025. arXiv:2406.14497.
 - Xia, C. S., Deng, Y., Dunn, S., & Zhang, L. (2024). Agentless: Demystifying LLM-based Software Engineering Agents. arXiv:2407.01489.
 - Yang, J., et al. (2025). SWE-smith: Scaling Data for Software Engineering Agents. arXiv:2504.21798. (Introduces SWE-bench Multilingual.)
+- Yang, J., Jimenez, C. E., et al. (2024). SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering. arXiv:2405.15793.
+- Zhang, Y., Ruan, H., Fan, Z., & Roychoudhury, A. (2024). AutoCodeRover: Autonomous Program Improvement. ISSTA 2024. arXiv:2404.05427.
 - Zhang, Y., et al. (2025). Qwen3 Embedding: Advancing Text Embedding and Reranking Through Foundation Models. arXiv:2506.05176.
 - graphify, v0.9.108, https://github.com/Graphify-Labs/graphify (software).
 - code-review-graph, v2.4.0, https://github.com/tirth8205/code-review-graph (software).
