@@ -210,11 +210,14 @@ Both are vendored at pinned commits and run as shipped. Every method indexes exa
 neutral copy of the corpus.
 
 In the agent arms, each competitor runs through its own native MCP server with every read-only tool it ships. Two
-bugs in our harness were found and fixed, and both disadvantaged a competitor:
-1. graphify's graph was unreachable in the agent arm;
-2. code-review-graph indexed the fixed code on bug tasks.
+bugs in our harness were found and fixed. They cut both ways:
+1. **graphify's graph was unreachable in the agent arm.** This hurt graphify. It was found on the first real run;
+   that run was invalidated and the rest ran after the fix.
+2. **code-review-graph's retrieval adapter would have indexed the fixed code** on the M and L bug tasks, because it
+   cloned committed history. This would have helped code-review-graph. It was fixed before any M or L competitor
+   result existed, and the S rows were recomputed (means moved by at most 0.01).
 
-Both are recorded in the decision log, with reruns.
+Both are recorded in the experiment 3 decision log (E3-D28, E3-D31).
 
 ### 5.3 Agent harness
 
@@ -468,6 +471,45 @@ with this paper make such claims easier to check.
 | Experiment 6 | `experiments/06-next-direction/findings.md` |
 | Graph quality, 11 languages | `experiments/07-languages/README.md` |
 | LOCOMO | `experiments/04-locomo/` |
+
+## Appendix A: SWE-bench Lite by repository
+
+Recall@10 per repository (from `experiments/05-swebench-python/results/report.md`). Repositories with few instances
+are noisy; the unit of analysis is the instance.
+
+| Repository | n | Ours, no graph | `hybrid` | `compact_graph` | CRG + emb. | graphify | CRG default |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| django/django | 114 | 0.54 | 0.56 | 0.53 | 0.42 | 0.19 | 0.14 |
+| sympy/sympy | 77 | 0.35 | 0.32 | 0.32 | 0.31 | 0.16 | 0.12 |
+| matplotlib/matplotlib | 23 | 0.52 | 0.51 | 0.45 | 0.27 | 0.00 | 0.04 |
+| scikit-learn/scikit-learn | 23 | 0.52 | 0.32 | 0.33 | 0.50 | 0.17 | 0.27 |
+| pytest-dev/pytest | 17 | 0.41 | 0.53 | 0.47 | 0.09 | 0.09 | 0.06 |
+| sphinx-doc/sphinx | 16 | 0.44 | 0.38 | 0.38 | 0.25 | 0.06 | 0.06 |
+| astropy/astropy | 6 | 0.58 | 0.67 | 0.58 | 0.50 | 0.00 | 0.17 |
+| psf/requests | 6 | 0.83 | 0.67 | 0.67 | 0.50 | 0.33 | 0.33 |
+| pylint-dev/pylint | 6 | 0.67 | 0.50 | 0.67 | 0.00 | 0.17 | 0.00 |
+| pydata/xarray | 5 | 0.40 | 0.40 | 0.40 | 0.40 | 0.00 | 0.00 |
+| mwaskom/seaborn | 4 | 0.75 | 0.75 | 0.75 | 0.25 | 0.00 | 0.00 |
+| pallets/flask | 3 | 0.50 | 0.67 | 0.67 | 0.83 | 0.67 | 0.17 |
+
+The graph helps on pytest (+0.12 over the same search without it) and slightly on django (+0.02), and hurts on
+scikit-learn (−0.20) and sympy (−0.03).
+
+## Appendix B: Experiment 1 ablation (small repository, 14 held-out tasks)
+
+Removing one component from the frozen `hybrid` configuration (from `research/findings.md`, §E).
+
+| Removed component | Δ Recall@10 [95% CI] | Δ root-cause MRR [95% CI] |
+|---|---|---|
+| Graph traversal (the graph entirely) | **−0.24 [−0.40, −0.08]** | **−0.24 [−0.45, −0.04]** |
+| Structural edges | −0.05 [−0.12, 0.00] | −0.02 [−0.04, 0.00] |
+| Data-flow edges | −0.04 [−0.10, 0.00] | +0.01 [−0.04, 0.05] |
+| Lexical signals (BM25, exact symbol, graph facts) | −0.04 [−0.14, 0.04] | −0.02 [−0.13, 0.12] |
+| Semantic signal (embeddings) | −0.02 [−0.07, 0.00] | +0.01 [−0.13, 0.15] |
+| Ranking priors | −0.06 [−0.15, 0.04] | −0.01 [−0.05, 0.03] |
+| Control-flow edges | 0.00 | +0.07 [−0.02, 0.18] |
+| Confidence weighting | 0.00 | +0.02 [−0.00, 0.05] |
+| Framework-inferred edges (DI dispatch, roles, config keys) | 0.00 | +0.02 [−0.01, 0.06] |
 
 ## References
 

@@ -150,7 +150,7 @@ while i < len(src):
             out.append(r'\end{abstract}')
             continue
         cmd = {2: 'section', 3: 'subsection', 4: 'paragraph'}[level]
-        star = '*' if text.lower() in ('references',) else ''
+        star = '*' if text.lower() in ('references',) or text.startswith('Appendix') else ''
         out.append(f'\\{cmd}{star}{{{inline(text)}}}')
         i += 1
         continue
