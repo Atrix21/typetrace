@@ -28,6 +28,11 @@ export function embeddingBackend(): 'python' | 'onnx' {
   return b;
 }
 
+/** Thrown when Embedder.shouldPause asks the embedding to stop between batches; everything embedded so far is cached. */
+export class EmbeddingPaused extends Error {
+  constructor(readonly done: number, readonly total: number) { super(`embedding paused at ${done}/${total}`); }
+}
+
 export class Embedder {
   readonly model: string;
   readonly revision: string;
@@ -53,34 +58,50 @@ export class Embedder {
    * Process-level vector cache per cache file, loaded once by streaming the JSONL (experiment 3: Twenty's cache exceeds
    * V8's maximum string length and was re-read by every method). Values and keys are unchanged.
    */
-  private static memo = new Map<string, Map<string, { v: Float32Array; t: number }>>();
+  private static memo = new Map<string, { map: Map<string, { v: Float32Array; t: number }>; offset: number }>();
   /** Missing items are embedded in subprocess calls of at most this many items (bounded temp files). */
   static EMBED_BATCH_ITEMS = 5000;
   /** Product CLI only: let the embedding subprocess print progress to the terminal (the benchmark path stays silent). */
   static showProgress = false;
+  /**
+   * Product server only: never compute document vectors, use the cached ones. Chunks without a cached vector get no
+   * semantic score (the background job embeds them). Query vectors are still computed. Benchmarks never set this.
+   */
+  static cachedOnly = false;
+  /** Product background job: called after each batch is appended to the cache (progress, server reload). */
+  static onBatch: ((done: number, total: number) => void) | null = null;
+  /** Product background job: checked after each batch; true stops embedding with EmbeddingPaused (resumable). */
+  static shouldPause: (() => boolean) | null = null;
 
+  /**
+   * Vectors of a cache file, read once and then only the bytes appended since (another process may be embedding into
+   * the same cache). Only complete lines are read, so a line still being written is picked up next time.
+   */
   private static loadCache(file: string): Map<string, { v: Float32Array; t: number }> {
-    let m = Embedder.memo.get(file);
-    if (m) return m;
-    m = new Map();
-    if (fs.existsSync(file)) {
-      const fd = fs.openSync(file, 'r');
-      const buf = Buffer.alloc(64 * 1024 * 1024);
-      let rest = '';
-      try {
-        for (;;) {
-          const n = fs.readSync(fd, buf, 0, buf.length, null);
-          if (n <= 0) break;
-          const text = rest + buf.toString('utf8', 0, n);
-          const lines = text.split('\n');
-          rest = lines.pop() ?? '';
-          for (const l of lines) { if (!l) continue; const d = JSON.parse(l); m.set(d.k, { v: Float32Array.from(d.v), t: d.t }); }
-        }
-        if (rest) { const d = JSON.parse(rest); m.set(d.k, { v: Float32Array.from(d.v), t: d.t }); }
-      } finally { fs.closeSync(fd); }
-    }
-    Embedder.memo.set(file, m);
-    return m;
+    let e = Embedder.memo.get(file);
+    if (!e) { e = { map: new Map(), offset: 0 }; Embedder.memo.set(file, e); }
+    if (!fs.existsSync(file) || fs.statSync(file).size <= e.offset) return e.map;
+    const fd = fs.openSync(file, 'r');
+    const buf = Buffer.alloc(64 * 1024 * 1024);
+    let rest = Buffer.alloc(0);
+    try {
+      for (;;) {
+        const n = fs.readSync(fd, buf, 0, buf.length, e.offset + rest.length);
+        if (n <= 0) break;
+        const data = Buffer.concat([rest, buf.subarray(0, n)]);
+        const end = data.lastIndexOf(0x0a);
+        if (end < 0) { rest = data; continue; }
+        for (const l of data.toString('utf8', 0, end).split('\n')) { if (!l) continue; const d = JSON.parse(l); e.map.set(d.k, { v: Float32Array.from(d.v), t: d.t }); }
+        e.offset += end + 1;
+        rest = data.subarray(end + 1);
+      }
+    } finally { fs.closeSync(fd); }
+    return e.map;
+  }
+
+  /** Number of cached vectors (any repository sharing this cache directory). */
+  static cachedCount(cacheDir: string): number {
+    return Embedder.loadCache(path.join(cacheDir, 'vectors.jsonl')).size;
   }
 
   /** Returns vectors (and model-token counts) for items, computing missing ones in bounded subprocess calls. */
@@ -88,7 +109,7 @@ export class Embedder {
     const cacheFile = path.join(this.cacheDir, 'vectors.jsonl');
     const cache = Embedder.loadCache(cacheFile);
     const uniq = new Map<string, EmbedItem>();
-    for (const it of items) { const k = this.key(it); if (!cache.has(k)) uniq.set(k, { ...it, id: k }); }
+    for (const it of items) { const k = this.key(it); if (!cache.has(k) && !(Embedder.cachedOnly && it.kind === 'doc')) uniq.set(k, { ...it, id: k }); }
     const all = [...uniq.values()];
     for (let i = 0; i < all.length; i += Embedder.EMBED_BATCH_ITEMS) {
       const part = all.slice(i, i + Embedder.EMBED_BATCH_ITEMS);
@@ -110,11 +131,14 @@ export class Embedder {
       }
       fs.appendFileSync(cacheFile, add.join('\n') + '\n');
       fs.rmSync(tmpIn); fs.rmSync(tmpOut);
+      Embedder.onBatch?.(Math.min(i + part.length, all.length), all.length);
+      if (i + part.length < all.length && Embedder.shouldPause?.()) throw new EmbeddingPaused(i + part.length, all.length);
     }
     const vectors = new Map<string, Float32Array>();
     const tokens = new Map<string, number>();
     for (const it of items) {
-      const c = cache.get(this.key(it))!;
+      const c = cache.get(this.key(it));
+      if (!c) continue; // cachedOnly: not embedded yet
       vectors.set(it.id, c.v);
       tokens.set(it.id, c.t);
     }
@@ -143,7 +167,7 @@ export class EmbeddingRetriever implements RetrievalMethod {
   /** Overrides the content-hash vector cache dir (default: sibling `embeddings/` of the corpus cacheDir). */
   static embeddingCacheDir: string | null = null;
   chunks: Chunk[] = [];
-  vecs: Float32Array[] = [];
+  vecs: (Float32Array | null)[] = []; // null only with Embedder.cachedOnly: not embedded yet (no semantic score)
   embedder!: Embedder;
   private queryCache = new Map<string, { v: Float32Array; tokens: number }>();
   private queryEmbedder: QueryEmbedder | null = EmbeddingRetriever.defaultQueryEmbedder;
@@ -154,13 +178,18 @@ export class EmbeddingRetriever implements RetrievalMethod {
     const symIndex = new SymbolIndex(corpus.repoRoot, corpus.files);
     this.chunks = buildChunks(symIndex);
     const { vectors, tokens, computed } = this.embedder.embed(this.chunks.map((c) => ({ id: c.id + '#' + c.start_line, text: c.text, kind: 'doc' as const })));
-    this.vecs = this.chunks.map((c) => vectors.get(c.id + '#' + c.start_line)!);
+    this.vecs = this.chunks.map((c) => vectors.get(c.id + '#' + c.start_line) ?? null);
+    this.covered = this.vecs.filter(Boolean).length;
     const embTokens = [...tokens.values()].reduce((a, b) => a + b, 0);
     return {
       method: this.name, index_ms: performance.now() - t0, index_llm_tokens: 0, embedding_tokens: embTokens,
-      details: { model: this.embedder.model, revision: this.embedder.revision, chunks: this.chunks.length, newly_embedded: computed, note: 'index_ms includes model load unless vectors were cached' },
+      details: { model: this.embedder.model, revision: this.embedder.revision, chunks: this.chunks.length, covered: this.covered, newly_embedded: computed, note: 'index_ms includes model load unless vectors were cached' },
     };
   }
+
+  /** Chunks with a vector. Equal to chunks.length except with Embedder.cachedOnly while the background job runs. */
+  covered = 0;
+  get hasVectors(): boolean { return this.covered > 0; }
 
   /** Embed all queries in one model invocation (avoids per-query model start-up). */
   warmQueries(qs: RetrievalQuery[]) {
@@ -181,7 +210,7 @@ export class EmbeddingRetriever implements RetrievalMethod {
       this.warmQueries([{ task_id: '_q', query }]);
     }
     const qv = this.queryCache.get(query)!.v;
-    return this.vecs.map((v) => dot(qv, v));
+    return this.vecs.map((v) => (v ? dot(qv, v) : 0));
   }
 
   queryTokens(query: string): number | null {

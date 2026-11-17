@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased (branch `product/fast-index-autoupdate-clients`)
+
+- **Usable in minutes, not hours.** `init` returns once the call graph and the keyword index are built (81 s on a
+  763k-line repository). The embeddings follow in a background job at low priority, and the server switches over by
+  itself. On the small benchmark repository this fast mode loses nothing measurable (Recall@10 0.662 vs 0.650,
+  [experiment 9](experiments/09-fast-first-index/)); the large repositories are still to be measured.
+  `--wait` keeps the old behaviour, and `--no-embed` skips the model altogether.
+- **The index keeps itself current.** The server rescans the indexed files, rebuilds in the background when edits
+  settle, embeds only the changed code, and reloads without making queries wait.
+- **Nine AI coding tools.** `init`/`install` register TypeTrace with Claude Code, Cursor, VS Code (GitHub Copilot),
+  Codex, Gemini CLI, OpenCode, Kiro, Windsurf and Zed. They merge into existing configuration and never rewrite a
+  file they cannot parse. `uninstall` removes the entries.
+- **`typetrace status`** shows what is indexed, what changed since, and the progress of background jobs.
+- Fixed: a flag without a value (`--gpu`) no longer swallows the repository argument.
+
 ## 0.2.0 (unreleased)
 
 - **More languages.** JavaScript now goes through the TypeScript compiler, like TypeScript.

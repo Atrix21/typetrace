@@ -65,11 +65,14 @@ export class HybridRetriever implements RetrievalMethod {
 
   /** Opt-in async query embedding (see EmbeddingRetriever.prewarmQuery); no-op unless a QueryEmbedder is configured. */
   async prewarmQuery(query: string): Promise<void> {
-    if (this.cfg.wSem > 0) await this.emb.prewarmQuery(query);
+    if (this.cfg.wSem > 0 && this.emb.hasVectors) await this.emb.prewarmQuery(query);
   }
 
+  /** Embedding coverage (product status): chunks with a vector / all chunks. */
+  get coverage(): { covered: number; total: number } { return { covered: this.emb.covered, total: this.emb.chunks.length }; }
+
   async retrieveBatch(qs: RetrievalQuery[], budget: RetrievalBudget): Promise<RetrievalOutput[]> {
-    if (this.cfg.wSem > 0) this.emb.warmQueries(qs);
+    if (this.cfg.wSem > 0 && this.emb.hasVectors) this.emb.warmQueries(qs);
     const out: RetrievalOutput[] = [];
     for (const q of qs) out.push(await this.retrieve(q, budget));
     return out;
@@ -93,8 +96,9 @@ export class HybridRetriever implements RetrievalMethod {
       const max = hits[0]?.[1] ?? 1;
       for (const [i, s] of hits) addSig(chunks[i].id, 'bm25', s / max, c.wLex);
     }
-    // Semantic (embeddings over the same chunks)
-    if (c.wSem > 0) {
+    // Semantic (embeddings over the same chunks). No vectors yet (product, first index still embedding): this signal is
+    // absent, which ranks exactly like wSem = 0 (compact_graph_lex).
+    if (c.wSem > 0 && this.emb.hasVectors) {
       const sc = this.emb.scoreAll(q.query);
       const sorted = [...sc].sort((a, b) => a - b);
       const med = sorted[Math.floor(sorted.length / 2)];

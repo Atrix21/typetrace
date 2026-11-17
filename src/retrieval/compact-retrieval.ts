@@ -41,6 +41,8 @@ export class CompactRetriever implements RetrievalMethod {
 
   /** Query-embedding warm-up of the underlying hybrid (persistent embedder), as the experiment-2 MCP server does. */
   async prewarmQuery(query: string): Promise<void> { await this.base.prewarmQuery(query); }
+  /** Embedding coverage of the underlying search (product status). */
+  get coverage(): { covered: number; total: number } { return this.base.coverage; }
 
   private sig = (file: string, start: number, end: number) => {
     let l = this.lines.get(file);

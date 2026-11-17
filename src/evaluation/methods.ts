@@ -48,6 +48,13 @@ export const REGISTRY: Record<string, Factory> = {
     const { hybridConfig } = await import('./configs.js');
     return new CompactRetriever('compact_graph', new HybridRetriever(hybridConfig(), 'hybrid'), true);
   },
+  // Product fast mode (no embeddings yet): BM25 + exact symbols + graph facts + graph propagation, same rendering.
+  compact_graph_lex: async () => {
+    const { HybridRetriever } = await import('../retrieval/hybrid-retrieval.js');
+    const { CompactRetriever } = await import('../retrieval/compact-retrieval.js');
+    const { hybridConfig } = await import('./configs.js');
+    return new CompactRetriever('compact_graph_lex', new HybridRetriever(hybridConfig({ wSem: 0 }), 'hybrid_lex'), true);
+  },
   compact_nograph: async () => {
     const { HybridRetriever } = await import('../retrieval/hybrid-retrieval.js');
     const { CompactRetriever } = await import('../retrieval/compact-retrieval.js');

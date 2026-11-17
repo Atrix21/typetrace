@@ -18,7 +18,7 @@
 Before a coding agent can fix a bug or change a feature, it has to find the code involved. Usually it greps, opens a
 file, greps again and opens another, and every file it reads costs tokens. TypeTrace does that search step for it.
 
-You index the repository once. The agent gets one tool, `find_relevant_code`. It answers in at most 800 tokens: the
+You run one command. It indexes the repository and keeps the index current while you work. The agent gets one tool, `find_relevant_code`. It answers in at most 800 tokens: the
 functions most likely involved, where they are (`file:line`), and their callers and callees. The agent then opens
 those files instead of searching for them.
 
@@ -62,18 +62,22 @@ npx typetrace-cli init
 
 Or install it once (`npm i -g typetrace-cli`) and use the `typetrace` command: `typetrace init`.
 
-That indexes the repository and registers the MCP server in `.mcp.json`. Restart Claude Code in the repository and approve the `typetrace` server. The agent can then call `find_relevant_code` whenever it needs to find code. Other MCP clients can run the same server (`typetrace serve <repo>`), but you add it to their configuration yourself.
+That builds the call graph and the keyword index, registers TypeTrace with each [supported AI coding tool](#supported-tools) it finds on your machine, and returns. Building the graph took 22 s on a 63k-line repository and 81 s on a 763k-line one. Semantic search (the embedding model) is then added by a background job at low priority. Until it finishes, search uses keywords and the call graph, and the server switches over by itself. Restart your tool in the repository and approve the `typetrace` server. The agent can then call `find_relevant_code` whenever it needs to find code.
 
 ```bash
 npx typetrace-cli query . "where are refresh tokens validated?"   # see what the agent sees
-npx typetrace-cli index .                                         # re-index after large changes
+npx typetrace-cli status .                                        # what is indexed, what is still running
+npx typetrace-cli init . --wait                                   # or: compute the embeddings before returning
+npx typetrace-cli init . --no-embed                               # or: keywords + call graph only, no model download
 ```
+
+**Keeping the index current.** While your tool runs the server, the server rescans the indexed files every 15 seconds. When edits have settled for 10 seconds, it rebuilds the graph in a background job, then embeds only the code that changed. Queries never wait: the previous index answers until the new one is loaded. Changes made while no server runs (a `git pull`, a branch switch) are picked up when it starts. `typetrace index` rebuilds everything in the foreground.
 
 **Requirements and what to expect:**
 - **Node.js 22.13 or newer.** No Python, no GPU and no API key needed.
 - **First run downloads the embedding model (~2.4 GB, once)** to `~/.cache/typetrace/models`. npm dependencies take about 900 MB, mostly ONNX Runtime.
 - **RAM:** about 6 GB while indexing; the MCP server needs less.
-- **First index time** is dominated by embedding on the CPU. Measured on an 8-core laptop CPU (i7-11800H):
+- **Semantic search, first time,** is dominated by embedding on the CPU, in the background. Measured on an 8-core laptop CPU (i7-11800H):
 
   | Repository | Size | Code chunks | First index |
   |---|---:|---:|---:|
@@ -81,8 +85,26 @@ npx typetrace-cli index .                                         # re-index aft
   | Immich server | 63k lines | 5,764 | ≈ 25 min (estimated from the chunk rate) |
   | Twenty server | 763k lines | 50,151 | ≈ 3.5 h (estimated from the chunk rate) |
 
-  Re-indexing only embeds code that changed, but it does not happen automatically: run `typetrace index` after large changes. For very large repositories, index the part you work on (`--include packages/server/src`), or use the GPU backend from a source checkout (`--gpu`, see [Reproducing](#reproducing-the-benchmark)).
+  TypeTrace answers before this finishes (keywords and call graph; see [the fast mode](experiments/09-fast-first-index/)). Re-indexing only embeds code that changed. For very large repositories, index the part you work on (`--include packages/server/src`), or use the GPU backend from a source checkout (`--gpu`, see [Reproducing](#reproducing-the-benchmark)).
 - **Languages:** TypeScript, JavaScript, Python, Go, Java, Kotlin, Scala, C#, Rust, C, C++, Ruby, PHP and Swift. How well each is supported, and what has been measured, is in [Languages](#languages).
+
+### Supported tools
+
+`init` registers TypeTrace with Claude Code and with every other tool below that it finds on your machine (`--client all`, `--client cursor,codex` or `--client none` to choose; `typetrace install --dry-run` shows the changes first). It only adds or updates its own `typetrace` entry, and keeps everything else in the file. A file that is not plain JSON (with comments, say) is left untouched, and the entry to paste is printed instead. `typetrace uninstall` removes the entries.
+
+| Tool | Configuration written | Notes |
+|---|---|---|
+| Claude Code | `.mcp.json` | |
+| Cursor | `.cursor/mcp.json` | |
+| VS Code (GitHub Copilot) | `.vscode/mcp.json` | |
+| Codex | `.codex/config.toml` | read once you trust the project |
+| Gemini CLI | `.gemini/settings.json` | |
+| OpenCode | `opencode.json` | |
+| Kiro | `.kiro/settings/mcp.json` | |
+| Windsurf | `~/.codeium/windsurf/mcp_config.json` | global: serves the indexed repository Windsurf starts it in |
+| Zed | `~/.config/zed/settings.json` | global: same |
+
+Files in the repository name the repository. The two global entries name none: the server serves the nearest indexed repository above the directory the tool starts it in, and says so when there is none, rather than answering about another repository.
 
 ## The evidence in one table
 
@@ -109,18 +131,21 @@ comes from their own documentation or from our measurements.
   14 languages and only code.
 - **An architecture overview.** A report of the most-connected parts of the code and its subsystems, and `path` and
   `explain` queries. TypeTrace has no overview.
-- **A quick start.** No embedding model to download. In our runs it indexed the 763k-line Twenty server in under 2
-  minutes. TypeTrace's first index of the same repository takes about 3.5 hours on a laptop CPU.
+- **A complete index quickly.** No embedding model to download. In our runs it indexed the 763k-line Twenty server in
+  under 2 minutes. TypeTrace answers after about 1.5 minutes on the same repository, but only with keywords and the
+  call graph; its semantic search takes about 3.5 hours on a laptop CPU to finish in the background. How much the
+  fast mode gives up on large repositories is [not measured yet](experiments/09-fast-first-index/).
 - **Similar agent accuracy.** With a coding agent, its task scores were not significantly lower than TypeTrace's
   (0.867 vs 0.896 on Twenty, 0.833 vs 0.860 on Immich). TypeTrace's advantage there is tokens, not correctness.
 
 **[code-review-graph](https://github.com/tirth8205/code-review-graph)** is a better fit if you want:
 - **Code review.** Blast-radius analysis of a change, risk-scored `detect_changes`, and a GitHub Action that posts PR
   comments and can block a merge. TypeTrace has none of this.
-- **An index that keeps itself current.** Git and editor hooks and a watch mode re-parse changed files (about 2.5 s for
-  a two-file edit, by its own measurement). TypeTrace re-indexes when you run `typetrace index`.
-- **Setup in many tools at once.** One `install` configures more than 15 AI coding tools (Cursor, Codex, Copilot,
-  Gemini CLI and others). TypeTrace's `init` sets up Claude Code only.
+- **Fast updates, also outside agent sessions.** Git and editor hooks and a watch mode re-parse only the changed files
+  (about 2.5 s for a two-file edit, by its own measurement). TypeTrace updates only while its server runs, and
+  rebuilds the whole graph each time (81 s on the 763k-line repository).
+- **More tools.** One `install` configures more than 15 AI coding tools. TypeTrace's `init` configures
+  [9](#supported-tools).
 - **Extras:** an interactive graph view, an architecture overview, dead-code and rename tools, exports to GraphML, Neo4j
   and Obsidian, and framework-aware Java (Spring) and PHP (Laravel) parsing.
 - **A quick start.** Its default mode needs no model. It indexed Twenty in under a minute in our runs.
@@ -271,7 +296,7 @@ graphify reports 0.497 on LOCOMO with a harness that is not public; its BM25 sco
 - **Search:** BM25 plus Qwen3-Embedding-0.6B, fused, then graph propagation from the best matches.
 - **Output:** at most 800 tokens of `file:line` pointers with callers, callees and handlers, so the agent's context stays small.
 - **No LLM** is used to build or query the index, and nothing leaves your machine.
-- **Storage:** indexes live in `~/.cache/typetrace/` (move with `TYPETRACE_CACHE`) and the model in `~/.cache/typetrace/models/` (`TYPETRACE_MODEL_DIR`). Your repository is never written to, except `.mcp.json`.
+- **Storage:** indexes live in `~/.cache/typetrace/` (move with `TYPETRACE_CACHE`) and the model in `~/.cache/typetrace/models/` (`TYPETRACE_MODEL_DIR`). Your repository is never written to, except the tools' MCP configuration files that `init` and `install` add (listed in [Supported tools](#supported-tools)).
 - **Monorepos:** `npx typetrace-cli init --include packages/server/src`. Third-party type declarations are stubbed automatically above 5,000 files.
 
 ## Reproducing the benchmark
