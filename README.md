@@ -1,8 +1,8 @@
 <h1 align="center">TypeTrace</h1>
 
-<p align="center"><strong>Your AI coding agent asks "where is the code for this?" and gets a short, exact answer instead of grepping through the whole repository.</strong></p>
+<p align="center"><strong>Finds the code your AI coding agent needs for a task, and hands it back as a short list of <code>file:line</code> pointers with what calls what.</strong></p>
 
-<p align="center">Local MCP server for Claude Code and other MCP clients · 14 languages, benchmarked on TypeScript · no API keys, nothing leaves your machine · MIT</p>
+<p align="center">Local MCP server for Claude Code and other MCP clients · 14 languages, benchmarked on TypeScript (Python in progress) · no API keys, nothing leaves your machine · MIT</p>
 
 <p align="center">
   <a href="https://www.npmjs.com/package/typetrace-cli"><img src="https://img.shields.io/npm/v/typetrace-cli?style=flat-square&color=2a78d6" alt="npm"></a>
@@ -13,17 +13,14 @@
 
 ---
 
-<p align="center"><img src="docs/diagrams/without-with.png" alt="Without TypeTrace the agent greps and opens file after file (513k tokens per task on the Twenty server); with TypeTrace it asks once, gets a short map of the relevant functions and opens only those files (453k tokens per task), with a task score of 0.90 vs 0.84." width="90%"></p>
+## What it is
 
-TypeTrace maps how your code connects, then answers an agent's question with the few places that matter:
+Before a coding agent can fix a bug or change a feature, it has to find the code involved. Usually it greps, opens a
+file, greps again and opens another, and every file it reads costs tokens. TypeTrace does that search step for it.
 
-1. **Read the code.** It parses your repository and records what calls what. For TypeScript and JavaScript it uses the real TypeScript compiler, which also sees the links grep cannot: dependency injection, decorators, event and job handlers, API routes and database tables. [Other languages](#languages) use tree-sitter with declared types and imports.
-2. **Find likely matches.** It searches by words (BM25) and by meaning (a local embedding model, Qwen3-Embedding-0.6B).
-3. **Follow the connections.** From those matches it walks the graph to the callers, callees and handlers that are actually involved.
-
-The agent gets one tool, `find_relevant_code`. It returns at most 800 tokens of `file:line` pointers with each function's callers and callees. Then the agent opens the right files instead of searching for them.
-
-<p align="center"><img src="docs/diagrams/how-it-works.png" alt="How TypeTrace works: your repo, read by the TypeScript compiler into a typed call graph; search by words and by meaning; follow the links (callers, callees, routes, events, injected services); a short answer of at most 800 tokens of file:line pointers." width="100%"></p>
+You index the repository once. The agent gets one tool, `find_relevant_code`. It answers in at most 800 tokens: the
+functions most likely involved, where they are (`file:line`), and their callers and callees. The agent then opens
+those files instead of searching for them.
 
 For example, on [nestjs-boilerplate](https://github.com/brocoders/nestjs-boilerplate) (first 4 of 12 results, 752 tokens in total):
 
@@ -40,6 +37,22 @@ $ npx typetrace-cli query . "where are refresh tokens validated?"
 4. JwtRefreshStrategy.validate — src/auth/strategies/jwt-refresh.strategy.ts:24-32
 ```
 
+**What it is not:**
+- **Not an agent.** It does not edit code. The agent still reads the files; TypeTrace tells it which ones.
+- **Not a replacement for grep.** The agent keeps grep. TypeTrace's clear, measured benefit is fewer tokens; its gain in
+  correct answers on top of grep is small (see [the evidence](#the-evidence-in-one-table)).
+- **Not a code-review or change-impact tool.** For blast radius, risk-scored diffs and PR comments, use
+  [code-review-graph](#where-the-other-tools-are-the-better-choice).
+- **Not a knowledge graph of your docs, PDFs or media, or a memory of past conversations.** That is
+  [graphify](#where-the-other-tools-are-the-better-choice).
+- **Not a visual map of your architecture.** There is no graph viewer.
+
+**Who it is for:** you use Claude Code (or another MCP client) on a medium or large repository, and you want the agent to
+find the right code with less searching and fewer tokens. It is strongest on TypeScript, where it uses the real
+compiler, and every agent benchmark so far is TypeScript.
+
+<p align="center"><img src="docs/diagrams/without-with.png" alt="Without TypeTrace the agent greps and opens file after file (513k tokens per task on the Twenty server); with TypeTrace it asks once, gets a short map of the relevant functions and opens only those files (453k tokens per task), with a task score of 0.90 vs 0.84." width="90%"></p>
+
 ## Quick start
 
 ```bash
@@ -49,7 +62,7 @@ npx typetrace-cli init
 
 Or install it once (`npm i -g typetrace-cli`) and use the `typetrace` command: `typetrace init`.
 
-That indexes the repository and registers the MCP server in `.mcp.json`. Restart Claude Code in the repository and approve the `typetrace` server. The agent can then call `find_relevant_code` whenever it needs to find code.
+That indexes the repository and registers the MCP server in `.mcp.json`. Restart Claude Code in the repository and approve the `typetrace` server. The agent can then call `find_relevant_code` whenever it needs to find code. Other MCP clients can run the same server (`typetrace serve <repo>`), but you add it to their configuration yourself.
 
 ```bash
 npx typetrace-cli query . "where are refresh tokens validated?"   # see what the agent sees
@@ -68,12 +81,83 @@ npx typetrace-cli index .                                         # re-index aft
   | Immich server | 63k lines | 5,764 | ≈ 25 min (estimated from the chunk rate) |
   | Twenty server | 763k lines | 50,151 | ≈ 3.5 h (estimated from the chunk rate) |
 
-  Re-indexing only embeds code that changed. For very large repositories, index the part you work on (`--include packages/server/src`), or use the GPU backend from a source checkout (`--gpu`, see [Reproducing](#reproducing-the-benchmark)).
+  Re-indexing only embeds code that changed, but it does not happen automatically: run `typetrace index` after large changes. For very large repositories, index the part you work on (`--include packages/server/src`), or use the GPU backend from a source checkout (`--gpu`, see [Reproducing](#reproducing-the-benchmark)).
 - **Languages:** TypeScript, JavaScript, Python, Go, Java, Kotlin, Scala, C#, Rust, C, C++, Ruby, PHP and Swift. How well each is supported, and what has been measured, is in [Languages](#languages).
+
+## The evidence in one table
+
+Every test below was written down before it was run, against tool-independent ground truth, and losses are reported.
+Details follow in [Results](#results).
+
+| Question | Answer | How sure |
+|---|---|---|
+| Does it find the code a task needs better than graphify and code-review-graph? | **Yes, on all three TypeScript repositories.** Recall@10 0.33 to 0.69, against at most 0.31 for either competitor. | Strong: 16 of 18 comparisons p ≤ 0.001 |
+| The same, on Python? | **Running now:** [SWE-bench Lite](experiments/05-swebench-python/protocol.md), 300 real GitHub issues. Published here when it finishes, win or lose. | n/a |
+| The same, in the other 11 languages? | **Not measured yet.** Only the call graph has been checked: 151 of 156 hand-checked edges correct. [SWE-bench Multilingual](experiments/08-swebench-multilingual/protocol.md) is pre-registered and runs next. | n/a |
+| Does a coding agent use fewer tokens with it? | **Yes.** 18 to 28% fewer than with grep alone; 23 to 34% fewer than with graphify; half or less of code-review-graph. | Strong: significant on every run |
+| Does the agent get more answers right? | **A little.** +0.06 and +0.04 task score over grep alone with Claude Haiku, +0.03 with Sonnet (not significant). The leads over graphify and code-review-graph are not significant. | Weak |
+| Is it cheaper in dollars? | On the 763k-line repository, yes (cheapest arm). On the 63k-line one, about the same as graphify and grep: cached prompt tokens are cheap. | Measured, two repositories |
+| Does the call graph help, beyond plain search? | For finding code, yes on the smallest and largest repositories (Recall@10 +0.24 and +0.16). Inside the agent, no significant difference (within 0.02). | Mixed |
+
+## Where the other tools are the better choice
+
+TypeTrace does one job: find the code for a task. The other tools do more, and some things better. Each point below
+comes from their own documentation or from our measurements.
+
+**[graphify](https://github.com/Graphify-Labs/graphify)** is a better fit if you want:
+- **Breadth.** About 40 programming languages, plus docs, PDFs, images and audio/video in the same graph. TypeTrace reads
+  14 languages and only code.
+- **An architecture overview.** A report of the most-connected parts of the code and its subsystems, and `path` and
+  `explain` queries. TypeTrace has no overview.
+- **A quick start.** No embedding model to download. In our runs it indexed the 763k-line Twenty server in under 2
+  minutes. TypeTrace's first index of the same repository takes about 3.5 hours on a laptop CPU.
+- **Similar agent accuracy.** With a coding agent, its task scores were not significantly lower than TypeTrace's
+  (0.867 vs 0.896 on Twenty, 0.833 vs 0.860 on Immich). TypeTrace's advantage there is tokens, not correctness.
+
+**[code-review-graph](https://github.com/tirth8205/code-review-graph)** is a better fit if you want:
+- **Code review.** Blast-radius analysis of a change, risk-scored `detect_changes`, and a GitHub Action that posts PR
+  comments and can block a merge. TypeTrace has none of this.
+- **An index that keeps itself current.** Git and editor hooks and a watch mode re-parse changed files (about 2.5 s for
+  a two-file edit, by its own measurement). TypeTrace re-indexes when you run `typetrace index`.
+- **Setup in many tools at once.** One `install` configures more than 15 AI coding tools (Cursor, Codex, Copilot,
+  Gemini CLI and others). TypeTrace's `init` sets up Claude Code only.
+- **Extras:** an interactive graph view, an architecture overview, dead-code and rename tools, exports to GraphML, Neo4j
+  and Obsidian, and framework-aware Java (Spring) and PHP (Laravel) parsing.
+- **A quick start.** Its default mode needs no model. It indexed Twenty in under a minute in our runs.
+- **Equal agent accuracy on Immich** (0.859 vs 0.860), though with about twice the tokens.
+
+**Plain grep, which your agent already has**, wins on cost of ownership. There is nothing to install, no index to keep
+up to date, no 2.4 GB model and no 6 GB of RAM while indexing. Agents are already good at searching with it: TypeTrace
+adds 0.03 to 0.06 task score on top, and saves 18 to 28% of tokens.
+
+## What the other tools' headline numbers measure
+
+Their READMEs quote numbers that look much larger than ours. They measure different things, and their own
+documentation says so:
+
+| Their claim | What it compares | The closest real-world measurement |
+|---|---|---|
+| code-review-graph: "~63x fewer tokens" | The **whole repository pasted into the prompt**, against one graph answer. Its README calls this baseline "an upper bound no real agent pays". | Its own comparison against grep is 6.65x, for the tokens needed to locate an answer only. In our full Claude Code sessions, the agent with code-review-graph used **more** tokens than with grep alone: 52% more on Twenty, 70% more on Immich. The agent still reads the files after the graph answers. |
+| graphify: "0.497 recall@10" | LOCOMO: finding the right turns in long **chat conversations**. No code is involved. | Our search stack on an open LOCOMO protocol: 0.745 ([below](#locomo-conversational-memory-search-stack-only)). Different harness, so not a like-for-like win. |
+| graphify: "cut agent token spend by 80%" | Graphify Cloud, its paid hosted product, which we did not test. | The open-source graphify we tested: 2% more tokens than grep alone on Twenty, 6% more on Immich. |
+| code-review-graph: impact F1 0.69 | Ground truth built from its own graph. Its README calls the recall "a circular upper bound". | Not run. Our change-impact tasks use a type-checker as the oracle instead. |
+
+So TypeTrace has **not** been shown to beat these tools on their own benchmarks. It beats them at finding code on ours:
+real TypeScript repositories, ground truth independent of every tool, and the competitors as shipped. Which of their
+benchmarks we ran:
+
+| Their benchmark | Run with TypeTrace? | Why |
+|---|---|---|
+| graphify: LOCOMO recall@10 / QA | recall only, on an open protocol (below) | their harness is not public; QA needs their LLM reader and judge |
+| graphify: LongMemEval-S | no | conversational memory, not code |
+| graphify: ERPNext cross-tool (Python, n = 6) | no | SWE-bench Lite (300 Python issues) is the larger Python test |
+| graphify: FastAPI edge-precision audit | not yet | our own edge audits: 100/100 sampled TypeScript edges correct after fixes ([edge audit](experiments/03-graph-scale/dataset/audit/)), 151/156 in 11 other languages ([experiment 7](experiments/07-languages/)) |
+| code-review-graph: token reduction on fastapi, flask, gin, httpx, express | no | measures answer size against the whole repository; we measure tokens of real agent sessions instead |
+| code-review-graph: impact F1 on 13 commits | no | its ground truth comes from its own graph |
 
 ## Results
 
-Everything below was measured on three real TypeScript repositories of increasing size, against [graphify](https://github.com/Graphify-Labs/graphify) 0.9.108 and [code-review-graph](https://github.com/tirth8205/code-review-graph) 2.4.0. Both ran at their latest releases, through their own MCP servers, on exactly the same files. The tests were pre-registered before the runs, losses are reported, and [everything is reproducible](#reproducing-the-benchmark).
+Measured on three real TypeScript repositories of increasing size, against [graphify](https://github.com/Graphify-Labs/graphify) 0.9.108 and [code-review-graph](https://github.com/tirth8205/code-review-graph) 2.4.0. Both ran at their latest releases, through their own MCP servers, on exactly the same files. The tests were pre-registered before the runs, losses are reported, and [everything is reproducible](#reproducing-the-benchmark).
 
 ### 1. Does it find the right code? (retrieval, no model calls)
 
@@ -92,6 +176,7 @@ The table gives TypeTrace's two variants: the full hybrid ranking, and the ≤80
 - **TypeTrace is ahead at every scale.** Paired over tasks, 16 of the 18 TypeTrace-vs-competitor comparisons have p ≤ 0.001. The two exceptions are on Immich against code-review-graph + embeddings: hybrid +0.21 (p = 0.025) and the agent tool +0.12 (p = 0.12, not significant).
 - **It is not just a better embedding model.** We re-ran code-review-graph with TypeTrace's own embedding model (Qwen3-Embedding-0.6B). It scored 0.28, 0.23 and 0.17, still well below TypeTrace on every repository (p < 0.01 each).
 - **The graph matters more as repositories grow.** On Twenty, the same search without the graph scores 0.17; with it, 0.33.
+- **Why the competitors score so low here.** code-review-graph's default search is keyword-only; its own documentation says natural-language questions "hit FTS5 only and return nothing" without embeddings, which is why the embeddings variant is in the table. graphify's `query` matches keywords to graph nodes and returns their neighbourhood. It often finds the right file but not the function. Our scoring credits each tool's results by name or by line range, with the same rules for every tool ([`normalise.ts`](src/evaluation/normalise.ts)).
 
 Full table with MRR, file recall, output size and latency: [`h2h-report.md`](experiments/03-graph-scale/results/h2h-report.md).
 
@@ -128,7 +213,7 @@ What this shows (pre-registered tests, Holm-corrected, paired by task):
 
 ## Is this a fair fight? Read this before quoting the numbers
 
-**TypeTrace was built for TypeScript, and every benchmark above is TypeScript.** It uses the TypeScript compiler, while graphify and code-review-graph are multi-language tree-sitter tools. The repositories and tasks were chosen to study scale, not to favour any tool, but TypeScript is TypeTrace's home ground.
+**TypeTrace was built for TypeScript, and every benchmark above is TypeScript.** It uses the TypeScript compiler, while graphify and code-review-graph are multi-language tree-sitter tools. The repositories and tasks were chosen to study scale, not to favour any tool, but TypeScript is TypeTrace's home ground. The Python and multi-language benchmarks are there to test it away from home.
 
 What makes the comparison fair:
 - **Ground truth is independent of every tool.** It comes from merged fix PRs, a type-checker oracle for change impact, and independent audits, all frozen before any retrieval output existed.
@@ -151,24 +236,11 @@ resolved, and what has been measured:
 |---|---|---|
 | **TypeScript, JavaScript** | TypeScript compiler: types, imports, CommonJS, DI, decorators, routes, events | retrieval and agent benchmarks above (TypeScript); JavaScript call edges hand-checked 12/12 |
 | **Python** | scopes, imports, inheritance (MRO), `self.x = X()` | [SWE-bench Lite head-to-head](experiments/05-swebench-python/protocol.md), pre-registered, running; published win or lose |
-| **Go, Java, Kotlin, Scala, C#, Rust, C, C++, Ruby, PHP, Swift** | tree-sitter: `this`/`self`, declared types of fields, parameters and locals, constructors, imports and packages, chained calls through return types | [graph quality on 13 open-source repositories](experiments/07-languages/): 97% of hand-checked verified call edges correct (151/156); no retrieval benchmark yet |
+| **Go, Java, Kotlin, Scala, C#, Rust, C, C++, Ruby, PHP, Swift** | tree-sitter: `this`/`self`, declared types of fields, parameters and locals, constructors, imports and packages, chained calls through return types | [graph quality on 13 open-source repositories](experiments/07-languages/): 97% of hand-checked verified call edges correct (151/156); retrieval benchmark ([SWE-bench Multilingual](experiments/08-swebench-multilingual/protocol.md)) pre-registered |
 
 Links resolved only by name are labelled `inferred`, not `verified`. They are kept only in the languages where they
 measured at least 50% correct. C and C++ code with heavy macro use parses less reliably, and declarations after a parse
 error can get the wrong qualified name.
-
-### The other tools' own benchmarks: did we run TypeTrace on them?
-
-| Their benchmark | Run with TypeTrace? | Why |
-|---|---|---|
-| graphify: LOCOMO recall@10 / QA | recall only, on an open protocol (below) | their harness is not public; QA needs their LLM reader and judge |
-| graphify: LongMemEval-S | no | conversational memory, not code |
-| graphify: ERPNext cross-tool (Python, n = 6) | not yet | Python; the SWE-bench Lite run above is the larger Python test |
-| graphify: FastAPI edge-precision audit | not yet | Python. Our own edge audit on TypeScript: 100/100 sampled edges correct after fixes ([edge audit](experiments/03-graph-scale/dataset/audit/)) |
-| code-review-graph: token reduction on fastapi, flask, gin, httpx, express | not yet | Python, Go and JavaScript are supported now; this run has not been done |
-| code-review-graph: impact F1 on 13 commits | no | its ground truth is derived from its own graph (its README calls the recall "a circular upper bound"); our change-impact tasks use a type-checker oracle instead |
-
-So TypeTrace has **not** been shown to beat these tools on their chosen benchmarks. It beats them on ours: real TypeScript repositories, tool-independent ground truth, competitors as shipped.
 
 ### LOCOMO (conversational memory; search stack only)
 
@@ -184,6 +256,12 @@ LOCOMO contains no code, so it tests only TypeTrace's search stack (BM25, Qwen3-
 graphify reports 0.497 on LOCOMO with a harness that is not public; its BM25 scores 0.362 there, against 0.540 on the open protocol. The numbers measure different things, so ours is **not** a like-for-like win over graphify's figure. Details: [`experiments/04-locomo/`](experiments/04-locomo/).
 
 ## How it works
+
+<p align="center"><img src="docs/diagrams/how-it-works.png" alt="How TypeTrace works: your repo, read by the TypeScript compiler into a typed call graph; search by words and by meaning; follow the links (callers, callees, routes, events, injected services); a short answer of at most 800 tokens of file:line pointers." width="100%"></p>
+
+1. **Read the code.** It parses your repository and records what calls what. For TypeScript and JavaScript it uses the real TypeScript compiler, which also sees the links grep cannot: dependency injection, decorators, event and job handlers, API routes and database tables. [Other languages](#languages) use tree-sitter with declared types and imports.
+2. **Find likely matches.** It searches by words (BM25) and by meaning (a local embedding model, Qwen3-Embedding-0.6B).
+3. **Follow the connections.** From those matches it walks the graph to the callers, callees and handlers that are actually involved.
 
 <p align="center"><img src="docs/diagrams/hidden-links.png" alt="Example on nestjs-boilerplate: the question about a refresh token that still works after a password change finds AuthService.refreshToken by meaning; the graph adds the HTTP route POST /auth/refresh, AuthController.refresh which calls it, and the functions it calls: SessionService.updateByHash, UsersService.findById and AuthService.getTokensData." width="95%"></p>
 
