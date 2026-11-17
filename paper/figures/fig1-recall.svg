@@ -1,0 +1,75 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 430' width='900' height='430'>
+<rect width='900' height='430' fill='#fcfcfb'/>
+<text x='64.0' y='28.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='16' fill='#1f1f1d' text-anchor='start' font-weight='600'>Finding the code a task needs: Recall@10</text>
+<text x='64.0' y='48.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#55554f' text-anchor='start' font-weight='normal'>Same tasks, files and budget for every tool; ground truth independent of all tools. Higher is better.</text>
+<rect x='64.0' y='63.0' width='12' height='12' rx='3' fill='#2a78d6'/>
+<text x='81.0' y='73.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#55554f' text-anchor='start' font-weight='normal'>TypeTrace (hybrid)</text>
+<rect x='215.2' y='63.0' width='12' height='12' rx='3' fill='#eb6834'/>
+<text x='232.2' y='73.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#55554f' text-anchor='start' font-weight='normal'>TypeTrace (agent tool, ≤800 tok)</text>
+<rect x='456.0' y='63.0' width='12' height='12' rx='3' fill='#1baf7a'/>
+<text x='473.0' y='73.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#55554f' text-anchor='start' font-weight='normal'>code-review-graph + embeddings</text>
+<rect x='684.0' y='63.0' width='12' height='12' rx='3' fill='#eda100'/>
+<text x='701.0' y='73.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#55554f' text-anchor='start' font-weight='normal'>graphify</text>
+<rect x='64.0' y='83.0' width='12' height='12' rx='3' fill='#e87ba4'/>
+<text x='81.0' y='93.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#55554f' text-anchor='start' font-weight='normal'>code-review-graph (default)</text>
+<line x1='64' x2='884' y1='366.0' y2='366.0' stroke='#e4e3df' stroke-width='1'/>
+<text x='56.0' y='370.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='end' font-weight='normal'>0.0</text>
+<line x1='64' x2='884' y1='303.0' y2='303.0' stroke='#e4e3df' stroke-width='1'/>
+<text x='56.0' y='307.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='end' font-weight='normal'>0.2</text>
+<line x1='64' x2='884' y1='240.0' y2='240.0' stroke='#e4e3df' stroke-width='1'/>
+<text x='56.0' y='244.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='end' font-weight='normal'>0.4</text>
+<line x1='64' x2='884' y1='177.0' y2='177.0' stroke='#e4e3df' stroke-width='1'/>
+<text x='56.0' y='181.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='end' font-weight='normal'>0.6</text>
+<line x1='64' x2='884' y1='114.0' y2='114.0' stroke='#e4e3df' stroke-width='1'/>
+<text x='56.0' y='118.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='end' font-weight='normal'>0.8</text>
+<text transform='rotate(-90 16 240.0)' x='16.0' y='240.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>Recall@10</text>
+<path d='M82.0,366.0 V152.7 Q82.0,148.7 86.0,148.7 H109.8 Q113.8,148.7 113.8,152.7 V366.0 Z' fill='#2a78d6'/>
+<text x='97.9' y='143.7' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.69</text>
+<path d='M115.8,366.0 V165.2 Q115.8,161.2 119.8,161.2 H143.6 Q147.6,161.2 147.6,165.2 V366.0 Z' fill='#eb6834'/>
+<text x='131.7' y='156.2' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.65</text>
+<path d='M149.6,366.0 V272.4 Q149.6,268.4 153.6,268.4 H177.4 Q181.4,268.4 181.4,272.4 V366.0 Z' fill='#1baf7a'/>
+<text x='165.5' y='263.4' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.31</text>
+<path d='M183.4,366.0 V332.2 Q183.4,328.2 187.4,328.2 H211.2 Q215.2,328.2 215.2,332.2 V366.0 Z' fill='#eda100'/>
+<text x='199.3' y='323.2' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.12</text>
+<path d='M217.2,366.0 V313.3 Q217.2,309.3 221.2,309.3 H245.0 Q249.0,309.3 249.0,313.3 V366.0 Z' fill='#e87ba4'/>
+<text x='233.1' y='304.3' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.18</text>
+<text x='166.5' y='386.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='middle' font-weight='600'>nestjs-boilerplate</text>
+<text x='166.5' y='402.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>TypeScript, 6k lines, 20 tasks</text>
+<path d='M287.0,366.0 V218.8 Q287.0,214.8 291.0,214.8 H314.8 Q318.8,214.8 318.8,218.8 V366.0 Z' fill='#2a78d6'/>
+<text x='302.9' y='209.8' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.48</text>
+<path d='M320.8,366.0 V247.2 Q320.8,243.2 324.8,243.2 H348.6 Q352.6,243.2 352.6,247.2 V366.0 Z' fill='#eb6834'/>
+<text x='336.7' y='238.2' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.39</text>
+<path d='M354.6,366.0 V288.1 Q354.6,284.1 358.6,284.1 H382.4 Q386.4,284.1 386.4,288.1 V366.0 Z' fill='#1baf7a'/>
+<text x='370.5' y='279.1' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.26</text>
+<path d='M388.4,366.0 V357.4 Q388.4,353.4 392.4,353.4 H416.2 Q420.2,353.4 420.2,357.4 V366.0 Z' fill='#eda100'/>
+<text x='404.3' y='348.4' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.04</text>
+<path d='M422.2,366.0 V360.6 Q422.2,356.6 426.2,356.6 H450.0 Q454.0,356.6 454.0,360.6 V366.0 Z' fill='#e87ba4'/>
+<text x='438.1' y='351.6' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.03</text>
+<text x='371.5' y='386.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='middle' font-weight='600'>Immich server</text>
+<text x='371.5' y='402.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>TypeScript, 63k, 26</text>
+<path d='M492.0,366.0 V266.1 Q492.0,262.1 496.0,262.1 H519.8 Q523.8,262.1 523.8,266.1 V366.0 Z' fill='#2a78d6'/>
+<text x='507.9' y='257.1' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.33</text>
+<path d='M525.8,366.0 V281.8 Q525.8,277.8 529.8,277.8 H553.6 Q557.6,277.8 557.6,281.8 V366.0 Z' fill='#eb6834'/>
+<text x='541.7' y='272.8' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.28</text>
+<path d='M559.6,366.0 V338.5 Q559.6,334.5 563.6,334.5 H587.4 Q591.4,334.5 591.4,338.5 V366.0 Z' fill='#1baf7a'/>
+<text x='575.5' y='329.5' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.10</text>
+<path d='M593.4,366.0 V364.4 Q593.4,362.9 595.0,362.9 H623.6 Q625.2,362.9 625.2,364.4 V366.0 Z' fill='#eda100'/>
+<text x='609.3' y='357.9' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.01</text>
+<path d='M627.2,366.0 V364.4 Q627.2,362.9 628.8,362.9 H657.4 Q659.0,362.9 659.0,364.4 V366.0 Z' fill='#e87ba4'/>
+<text x='643.1' y='357.9' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.01</text>
+<text x='576.5' y='386.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='middle' font-weight='600'>Twenty server</text>
+<text x='576.5' y='402.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>TypeScript, 763k, 18</text>
+<path d='M697.0,366.0 V222.3 Q697.0,218.3 701.0,218.3 H724.8 Q728.8,218.3 728.8,222.3 V366.0 Z' fill='#2a78d6'/>
+<text x='712.9' y='213.3' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.47</text>
+<path d='M730.8,366.0 V227.0 Q730.8,223.0 734.8,223.0 H758.6 Q762.6,223.0 762.6,227.0 V366.0 Z' fill='#eb6834'/>
+<text x='746.7' y='218.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.45</text>
+<path d='M764.6,366.0 V258.5 Q764.6,254.5 768.6,254.5 H792.4 Q796.4,254.5 796.4,258.5 V366.0 Z' fill='#1baf7a'/>
+<text x='780.5' y='249.5' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.35</text>
+<path d='M798.4,366.0 V322.4 Q798.4,318.4 802.4,318.4 H826.2 Q830.2,318.4 830.2,322.4 V366.0 Z' fill='#eda100'/>
+<text x='814.3' y='313.4' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.15</text>
+<path d='M832.2,366.0 V330.0 Q832.2,326.0 836.2,326.0 H860.0 Q864.0,326.0 864.0,330.0 V366.0 Z' fill='#e87ba4'/>
+<text x='848.1' y='321.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.13</text>
+<text x='781.5' y='386.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='middle' font-weight='600'>SWE-bench Lite</text>
+<text x='781.5' y='402.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>Python, 300 issues</text>
+<line x1='64' x2='884' y1='366.0' y2='366.0' stroke='#8a8a82' stroke-width='1'/>
+</svg>

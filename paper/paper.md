@@ -234,6 +234,10 @@ Both are recorded in the decision log, with reruns.
 
 ### 6.1 RQ1: retrieval against the competitors
 
+![Figure 1: Recall@10 by repository and tool](figures/fig1-recall.svg)
+
+*Figure 1. Recall@10 on the three TypeScript repositories (test splits; S all tasks) and on SWE-bench Lite.*
+
 **TypeScript** (test splits; S uses all 20 tasks):
 
 | Repository | TypeTrace `hybrid` | TypeTrace `compact_graph` | CRG + embeddings | CRG default | graphify |
@@ -283,6 +287,10 @@ credits each tool's results by name or line range, with identical rules for ever
 
 ### 6.2 RQ2: the graph's own contribution
 
+![Figure 2: the graph's contribution per setting](figures/fig2-graph-effect.svg)
+
+*Figure 2. Recall@10 of the fused search with graph propagation minus the identical search without it.*
+
 The contrast is the same fused search with and without propagation (`hybrid` vs `hybrid_nograph`, identical
 otherwise).
 
@@ -313,6 +321,10 @@ explanations, neither tested:
    Against this, the graph helped on TypeScript with changed-functions-only ground truth (the 127 mined fixes).
 
 ### 6.3 RQ3: inside a coding agent
+
+![Figure 3: agent tokens per task](figures/fig3-agent-tokens.svg)
+
+*Figure 3. Tokens per task in the head-to-head agent runs (Claude Haiku 5.5).*
 
 **Head-to-head runs** (Claude Haiku 5.5; 3 repeats per task and arm):
 
