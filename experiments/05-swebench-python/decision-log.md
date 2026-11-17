@@ -43,3 +43,18 @@ code builds it.
 **Effect on the run.** The 224 instances scored before the crash (all 9 methods each) are kept as they are. The run
 resumed from instance 225 with the fix. `tasks.jsonl` has a second row for `sympy__sympy-11870`, because the runner had
 written the task before the crash. The analysis uses the first row per instance (both rows are identical).
+
+## E5-D03 (2026-11-17, during the run): two pauses, no code change
+
+The run was paused twice on the owner's request. Neither pause changed code or settings.
+
+- **12:41 IST, between instances,** at 243 of 300, for a laptop shutdown. It resumed at 14:00 from the same tree.
+  The results file was compared with a backup before resuming and was identical.
+- **18:09 IST, mid-instance,** at 271 of 300. The machine was short of memory, so the run was stopped at once,
+  while `sympy__sympy-18835` was being scored. Seven of its nine methods were already scored. code-review-graph was
+  building its index when the run stopped. Every results line was checked and was complete. Before the run resumed
+  at 22:15, that half-written code-review-graph index (`.cache/swebench/run/sympy__sympy-18835/crg`, with its write
+  lock still in place) was deleted. Both code-review-graph methods therefore built a fresh index, as they do for
+  every instance. The seven scored rows were kept. The runner wrote `tasks.jsonl` again for this instance on resume,
+  so that file holds a second, identical row for it, as for `sympy__sympy-11870` (E5-D02). The analysis uses the
+  first row per instance.
