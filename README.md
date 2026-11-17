@@ -94,7 +94,7 @@ Details follow in [Results](#results).
 | Does it find the code a task needs better than graphify and code-review-graph? | **Yes, on all three TypeScript repositories.** Recall@10 0.33 to 0.69, against at most 0.31 for either competitor. | Strong: 16 of 18 comparisons p ≤ 0.001 |
 | The same, on Python? | **Running now:** [SWE-bench Lite](experiments/05-swebench-python/protocol.md), 300 real GitHub issues. Published here when it finishes, win or lose. | n/a |
 | The same, in the other 11 languages? | **Not measured yet.** Only the call graph has been checked: 151 of 156 hand-checked edges correct. [SWE-bench Multilingual](experiments/08-swebench-multilingual/protocol.md) is pre-registered and runs next. | n/a |
-| Does a coding agent use fewer tokens with it? | **Yes.** 18 to 28% fewer than with grep alone; 23 to 34% fewer than with graphify; half or less of code-review-graph. | Strong: significant on every run |
+| Does a coding agent use fewer tokens with it? | **Yes.** On a typical task, 18 to 28% fewer than with grep alone, 23 to 34% fewer than with graphify, and about half of code-review-graph's. Averaged over all tasks, 12 to 21% fewer than grep alone, because a few long tasks dominate the average. | Strong: significant on every run |
 | Does the agent get more answers right? | **A little.** +0.06 and +0.04 task score over grep alone with Claude Haiku, +0.03 with Sonnet (not significant). The leads over graphify and code-review-graph are not significant. | Weak |
 | Is it cheaper in dollars? | On the 763k-line repository, yes (cheapest arm). On the 63k-line one, about the same as graphify and grep: cached prompt tokens are cheap. | Measured, two repositories |
 | Does the call graph help, beyond plain search? | For finding code, yes on the smallest and largest repositories (Recall@10 +0.24 and +0.16). Inside the agent, no significant difference (within 0.02). | Mixed |
@@ -128,7 +128,7 @@ comes from their own documentation or from our measurements.
 
 **Plain grep, which your agent already has**, wins on cost of ownership. There is nothing to install, no index to keep
 up to date, no 2.4 GB model and no 6 GB of RAM while indexing. Agents are already good at searching with it: TypeTrace
-adds 0.03 to 0.06 task score on top, and saves 18 to 28% of tokens.
+adds 0.03 to 0.06 task score on top, and saves 18 to 28% of tokens on a typical task.
 
 ## What the other tools' headline numbers measure
 
@@ -137,9 +137,9 @@ documentation says so:
 
 | Their claim | What it compares | The closest real-world measurement |
 |---|---|---|
-| code-review-graph: "~63x fewer tokens" | The **whole repository pasted into the prompt**, against one graph answer. Its README calls this baseline "an upper bound no real agent pays". | Its own comparison against grep is 6.65x, for the tokens needed to locate an answer only. In our full Claude Code sessions, the agent with code-review-graph used **more** tokens than with grep alone: 52% more on Twenty, 70% more on Immich. The agent still reads the files after the graph answers. |
+| code-review-graph: "~63x fewer tokens" | The **whole repository pasted into the prompt**, against one graph answer. Its README calls this baseline "an upper bound no real agent pays". | Its own comparison against grep is 6.65x, for the tokens needed to locate an answer only. In our full Claude Code sessions, the agent with code-review-graph used **more** tokens than with grep alone: 52% more per task on average on Twenty, 70% more on Immich. The agent still reads the files after the graph answers. |
 | graphify: "0.497 recall@10" | LOCOMO: finding the right turns in long **chat conversations**. No code is involved. | Our search stack on an open LOCOMO protocol: 0.745 ([below](#locomo-conversational-memory-search-stack-only)). Different harness, so not a like-for-like win. |
-| graphify: "cut agent token spend by 80%" | Graphify Cloud, its paid hosted product, which we did not test. | The open-source graphify we tested: 2% more tokens than grep alone on Twenty, 6% more on Immich. |
+| graphify: "cut agent token spend by 80%" | Graphify Cloud, its paid hosted product, which we did not test. | The open-source graphify we tested: 2% more tokens per task than grep alone on Twenty, 6% more on Immich (averages). |
 | code-review-graph: impact F1 0.69 | Ground truth built from its own graph. Its README calls the recall "a circular upper bound". | Not run. Our change-impact tasks use a type-checker as the oracle instead. |
 
 So TypeTrace has **not** been shown to beat these tools on their own benchmarks. It beats them at finding code on ours:
@@ -207,7 +207,7 @@ Claude Code, headless, with the read-only tools Read, Grep and Glob plus the arm
 **Twenty server, Claude Sonnet 5.5, 18 tasks × 2 (TypeTrace vs grep only):** task score 0.873 vs 0.845, 166k vs 209k tokens per task.
 
 What this shows (pre-registered tests, Holm-corrected, paired by task):
-- **Fewer tokens: yes, every time.** Against graphify, 23% fewer per task on Twenty (p = 0.003) and 34% fewer on Immich (p < 0.001). Against code-review-graph, half the tokens or less on both (p < 0.001, fewer on 43 of 44 tasks). Against grep only, 18–28% fewer on all three runs (p ≤ 0.03).
+- **Fewer tokens: yes, every time.** The test compares tokens task by task, so the percentages below are for a typical task (the geometric mean of the per-task ratios). Against graphify, 23% fewer on Twenty (p = 0.003) and 34% fewer on Immich (p < 0.001). Against code-review-graph, about half the tokens on both (p < 0.001, fewer on 43 of 44 tasks). Against grep only, 18–28% fewer on all three runs (p ≤ 0.03). The tables show averages per task, where a few long tasks weigh more: 12% fewer than grep only on Twenty, 19% on Immich and 21% with Sonnet.
 - **More correct answers: not shown.** TypeTrace scores highest or tied in every run, but its accuracy leads over graphify and code-review-graph are **not statistically significant** with 18–26 tasks. Against grep only, the gain is small but consistent: +0.06 on Twenty (p = 0.03) and +0.04 on Immich (p = 0.02) with Haiku; +0.03 with Sonnet (not significant). These are exploratory tests, not the pre-registered family.
 - **Cost:** on Twenty, TypeTrace runs are the cheapest. On Immich, cost per task is about the same as graphify and grep only, despite fewer tokens: cached prompt tokens are cheap, so token savings do not always become dollar savings.
 
