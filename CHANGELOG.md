@@ -14,7 +14,7 @@
 - **Faster tool calls.** `find_relevant_code` answers 13× faster on a 63k-line repository (730 → 54 ms) and 46× faster on a
   763k-line one (13.3 s → 0.29 s), with byte-identical output ([experiment 6](experiments/06-next-direction/findings.md)).
 - **Indexing skips** build output, dependency folders, generated code and files over 1 MB in every language.
-- **CI** runs type-checking, the build and the test suite on every push.
+- **CI** runs type-checking, the build and the test suite on every push to `main` and on every pull request.
 
 ## 0.1.0
 
