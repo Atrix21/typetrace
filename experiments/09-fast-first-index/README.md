@@ -59,3 +59,15 @@ The first answer can come as soon as the call graph is built. Measured graph bui
 
 Raw outputs are not committed (they contain code from the benchmark repositories). `results/<repo>/` holds the metrics
 and the run's metadata.
+
+## Live check: background embedding and the switch-over
+
+On 2026-11-18, the built branch was run on a fresh copy of nestjs-boilerplate (172 indexed files). It used an empty
+cache, real CPU (ONNX) embedding, and an MCP client that asked the same question every 20 s:
+
+- **`init`** returned after 1.4 s. `status` showed the job starting, then progress ("112 of 733 code chunks, about
+  86 s left"), then "complete".
+- **The served tool switched over without a restart.** The first nine answers were the fast mode's: the top result
+  was `AuthService.getTokensData`. When the embedding finished, the server logged "index reloaded". From then on its
+  answers were byte-identical to `typetrace query` on the finished index: the top result was
+  `AuthService.validateLogin`, as in the published agent tool.
