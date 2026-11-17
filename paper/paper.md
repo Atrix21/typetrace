@@ -390,8 +390,10 @@ retrieves more of the code involved in a task when two conditions hold:
 2. **The task spans modules.**
 
 It does not support the broader claim that "a code graph helps". With a syntactic Python graph, propagation added as
-much noise as signal. On a mid-sized repository with mostly local tasks (Immich), the effect was small. Seed quality
-dominates: in our ablations the embedding model and BM25 seeds account for most of the gap to the competitors.
+much noise as signal. On a mid-sized repository with mostly local tasks (Immich), the effect was small. Seed quality matters as much as the graph. Our embedding model alone (Qwen3, no graph, no BM25) closes 39% to
+95% of the gap between code-review-graph with MiniLM and TypeTrace, depending on the repository (S: 0.51 against
+0.31 and 0.69; M: 0.47 against 0.26 and 0.48; L: 0.19 against 0.10 and 0.33). The graph adds to good seeds; it does
+not replace them.
 
 ### 7.2 Retrieval gains vs agent gains
 

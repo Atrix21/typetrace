@@ -1,7 +1,9 @@
 # Paper draft
 
-`paper.md` is the working draft of the research paper on this repository's experiments. It is Markdown for now, so
-that it diffs and reviews like the rest of the repository; it will be converted to LaTeX once the content is settled.
+`paper.md` is the working draft of the research paper on this repository's experiments, and the only source: it is
+Markdown so that it diffs and reviews like the rest of the repository. `build/build.sh` turns it into
+[`build/paper.pdf`](build/paper.pdf) (figures to PNG with headless Chrome, `build/md2tex.py` to LaTeX, then
+[Tectonic](https://tectonic-typesetting.github.io/)). Never edit generated LaTeX; edit `paper.md` and rebuild.
 
 Rules for this draft:
 - **Sourced numbers only.** Every number comes from a committed result file, listed in the claim-to-source map
