@@ -13,6 +13,8 @@ start of the run, one change touches code the runner uses:
   output is identical (checked on five snapshots by graph hash, see E5-D02). Python files are part of this
   experiment's corpus where a repository has them, because the corpus is the product's own file selection.
 
+**The scored run started on 2026-11-18 at 04:03 IST from commit `3846da1`** (which includes E8-D02 below).
+
 Everything else since the protocol commit is documentation, results of experiment 5, its analysis script, the package
 version, and the run queue's new `multilingual` step. No retrieval output of this experiment existed before the run.
 The ground-truth dry run (`--gt-only`) ran before the protocol was committed and involves no retrieval method.
