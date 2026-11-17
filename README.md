@@ -323,7 +323,7 @@ Steps:
 - **Embeddings:** every published number uses the PyTorch backend (`--gpu`). The CPU backend that `npx typetrace-cli` uses runs the same model in ONNX. On the S tasks it matches: Recall@10 0.650 vs 0.650 for the agent tool, and at most one task differs per method ([parity check](experiments/03-graph-scale/results/onnx-parity-S/)).
 - **Benchmark repositories:** Immich and Twenty are AGPL-3.0 and are not redistributed here. Tasks reference upstream commits, and transcripts and raw outputs containing their code are kept out of git.
 
-Earlier experiments in this repository: experiment 1 (retrieval on S, `research/findings.md`) and experiment 2 (agent diagnosis on S, `experiments/02-agent-diagnosis/findings.md`).
+Every experiment in this repository (questions, data, main results, links): [`experiments/README.md`](experiments/README.md). The paper draft is in [`paper/`](paper/).
 
 ## Licence
 

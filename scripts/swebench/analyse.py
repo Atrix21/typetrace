@@ -184,6 +184,18 @@ def main():
         out.setdefault('empty', {})[m] = e
         md.append(f'| {m} | {e} |')
 
+    fails = load(f'{D}/failures.jsonl')
+    if fails:
+        md.append('\n## Failures (recorded, decision E8-D02)\n')
+        md.append('| Method | Stage | Failures | Instances |')
+        md.append('|---|---|---:|---:|')
+        agg = defaultdict(set); cnt = defaultdict(int)
+        for f in fails:
+            agg[(f['method'], f['stage'])].add(f['task_id']); cnt[(f['method'], f['stage'])] += 1
+        for (m, st), ts in sorted(agg.items()):
+            md.append(f'| {m} | {st} | {cnt[(m, st)]} | {len(ts)} |')
+        out['failures'] = {f'{m}|{st}': sorted(ts) for (m, st), ts in agg.items()}
+
     json.dump(out, open(f'{D}/report.json', 'w'), indent=1)
     open(f'{D}/report.md', 'w').write('\n'.join(md) + '\n')
     print('\n'.join(md))

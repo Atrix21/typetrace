@@ -9,10 +9,13 @@ import path from 'node:path';
 import type { Corpus, RetrievalOutput, RetrievalQuery } from '../types.js';
 
 export function runPython(python: string, script: string, args: string[], env: Record<string, string> = {}): { stdout: string; stderr: string } {
+  // Optional wall-clock limit per call (TYPETRACE_PY_TIMEOUT_MS; unset = none, as in experiments 1-5). Set by the
+  // experiment 8 queue step so that one hung competitor run cannot stall an unattended multi-day run.
+  const timeout = Number(process.env.TYPETRACE_PY_TIMEOUT_MS || 0) || undefined;
   const r = spawnSync(python, ['-I', script, ...args], {
-    encoding: 'utf8', maxBuffer: 512 * 1024 * 1024, env: { ...process.env, PYTHONHASHSEED: '0', HF_HUB_OFFLINE: '1', ...env },
+    encoding: 'utf8', maxBuffer: 512 * 1024 * 1024, timeout, killSignal: 'SIGKILL', env: { ...process.env, PYTHONHASHSEED: '0', HF_HUB_OFFLINE: '1', ...env },
   });
-  if (r.status !== 0) throw new Error(`${path.basename(script)} ${args[0]} failed (exit ${r.status}):\n${r.stderr?.slice(-4000)}`);
+  if (r.status !== 0) throw new Error(`${path.basename(script)} ${args[0]} failed (exit ${r.status}${r.error ? `, ${r.error.message}` : ''}${r.signal ? `, ${r.signal}` : ''}):\n${r.stderr?.slice(-4000)}`);
   return { stdout: r.stdout, stderr: r.stderr };
 }
 
