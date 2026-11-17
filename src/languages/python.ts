@@ -103,7 +103,7 @@ export function buildPythonGraph(repoRoot: string, files: string[], repoName = p
 
   // pass 1: declarations
   const methodsByName = new Map<string, Def[]>();
-  const classBases = new Map<string, TSNode[]>(); // class def id -> base expression nodes
+  const classBases = new Map<string, { def: Def; exprs: TSNode[] }>(); // class def id -> its declaration and base expression nodes
   for (const fi of infos.values()) {
     const visit = (n: TSNode, scope: string[], cls: string | null, parentId: string) => {
       for (const c of n.namedChildren) {
@@ -125,7 +125,7 @@ export function buildPythonGraph(repoRoot: string, files: string[], repoName = p
           fi.defs.set(qualified, def);
           if (!scope.length) fi.topNames.set(nm, id);
           if (kind === 'method') { const a = methodsByName.get(nm) ?? []; a.push(def); methodsByName.set(nm, a); }
-          if (isClass) classBases.set(id, (d.childForFieldName('superclasses')?.namedChildren ?? []).filter((x): x is TSNode => !!x && x.type !== 'keyword_argument'));
+          if (isClass) classBases.set(id, { def, exprs: (d.childForFieldName('superclasses')?.namedChildren ?? []).filter((x): x is TSNode => !!x && x.type !== 'keyword_argument') });
           const body = d.childForFieldName('body');
           if (body) visit(body, [...scope, nm], isClass ? nm : null, id);
         } else if (['if_statement', 'try_statement', 'with_statement', 'else_clause', 'elif_clause', 'except_clause', 'finally_clause', 'block'].includes(c.type)) {
@@ -203,8 +203,10 @@ export function buildPythonGraph(repoRoot: string, files: string[], repoName = p
 
   // EXTENDS + MRO
   const bases = new Map<string, string[]>();
-  for (const [cid, exprs] of classBases) {
-    const c = defById.get(cid)!; const fi = infos.get(c.file)!;
+  // The class's own declaration, not defById: a later function of the same qualified name in the same file replaces
+  // the class in fi.defs (sympy does this), and the class still gets its EXTENDS edges.
+  for (const [cid, { def: c, exprs }] of classBases) {
+    const fi = infos.get(c.file)!;
     const out: string[] = [];
     for (const e of exprs) {
       const r = resolveExpr(fi, e, c.scope);
