@@ -1,0 +1,42 @@
+{
+  "repo": "M",
+  "split": "test",
+  "methods": [
+    "compact_graph_lex"
+  ],
+  "budget": {
+    "maxResults": 50,
+    "maxContextTokens": 8000
+  },
+  "tasks": [
+    "immich_im_t1",
+    "immich_im_t11",
+    "immich_im_t13",
+    "immich_im_t15",
+    "immich_im_t2",
+    "immich_im_t3",
+    "immich_im_t4",
+    "immich_im_t5",
+    "immich_im_t6",
+    "immich_im_t7",
+    "immich_im_t9",
+    "immich_pr28884",
+    "immich_pr29028",
+    "immich_pr29035",
+    "immich_pr29240",
+    "immich_pr29354",
+    "immich_pr29516",
+    "immich_pr29737",
+    "immich_pr30431",
+    "immich_pr30512",
+    "immich_pr31473",
+    "immich_pr31533",
+    "immich_pr31901",
+    "immich_pr32219",
+    "immich_pr32240",
+    "immich_pr32577"
+  ],
+  "nested": null,
+  "max_package_declaration_bytes": 50000000,
+  "started": "2026-11-17T21:53:24.235Z"
+}

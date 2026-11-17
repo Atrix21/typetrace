@@ -85,7 +85,7 @@ npx typetrace-cli init . --no-embed                               # or: keywords
   | Immich server | 63k lines | 5,764 | ≈ 25 min (estimated from the chunk rate) |
   | Twenty server | 763k lines | 50,151 | ≈ 3.5 h (estimated from the chunk rate) |
 
-  TypeTrace answers before this finishes (keywords and call graph; see [the fast mode](experiments/09-fast-first-index/)). Re-indexing only embeds code that changed. For very large repositories, index the part you work on (`--include packages/server/src`), or use the GPU backend from a source checkout (`--gpu`, see [Reproducing](#reproducing-the-benchmark)).
+  TypeTrace answers before this finishes, with keywords and the call graph ([the fast mode](experiments/09-fast-first-index/)). On repositories up to about 60k lines those answers were as good as the full tool's. On the 763k-line one they were clearly worse (Recall@10 0.17 instead of 0.28) until the embeddings were done; `typetrace status` shows the progress. Re-indexing only embeds code that changed. For very large repositories, index the part you work on (`--include packages/server/src`), or use the GPU backend from a source checkout (`--gpu`, see [Reproducing](#reproducing-the-benchmark)).
 - **Languages:** TypeScript, JavaScript, Python, Go, Java, Kotlin, Scala, C#, Rust, C, C++, Ruby, PHP and Swift. How well each is supported, and what has been measured, is in [Languages](#languages).
 
 ### Supported tools
@@ -133,8 +133,8 @@ comes from their own documentation or from our measurements.
   `explain` queries. TypeTrace has no overview.
 - **A complete index quickly.** No embedding model to download. In our runs it indexed the 763k-line Twenty server in
   under 2 minutes. TypeTrace answers after about 1.5 minutes on the same repository, but only with keywords and the
-  call graph; its semantic search takes about 3.5 hours on a laptop CPU to finish in the background. How much the
-  fast mode gives up on large repositories is [not measured yet](experiments/09-fast-first-index/).
+  call graph; its semantic search takes about 3.5 hours on a laptop CPU to finish in the background, and until then its
+  answers are clearly worse on that repository (Recall@10 0.17 instead of 0.28, [measured](experiments/09-fast-first-index/)).
 - **Similar agent accuracy.** With a coding agent, its task scores were not significantly lower than TypeTrace's
   (0.867 vs 0.896 on Twenty, 0.833 vs 0.860 on Immich). TypeTrace's advantage there is tokens, not correctness.
 
