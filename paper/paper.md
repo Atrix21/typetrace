@@ -1,7 +1,7 @@
 # Do Code Graphs Help Coding Agents Find Code? A Pre-Registered Evaluation of Type-Resolved Call Graphs for Retrieval
 
 **Draft, 2026-11-18.** Every number in this draft comes from a committed result file in this repository; §10 maps
-each claim to its source. Section 6.4 (SWE-bench Multilingual) is pending: its run started on 2026-11-18.
+each claim to its source. Section 6.4 reports SWE-bench Multilingual (experiment 8), which finished on 2026-11-18.
 
 *Author: [to be added].*
 
@@ -19,11 +19,12 @@ pre-registered, and the ground truth does not depend on any of the tools.
 On three TypeScript repositories from 6k to 763k lines (64 audited tasks), TypeTrace's Recall@10 was 0.33 to 0.69.
 Neither competitor exceeded 0.31, and 16 of 18 paired comparisons had p ≤ 0.001. On SWE-bench Lite (300 Python
 issues), Recall@10 was 0.469, against 0.354 for code-review-graph with embeddings and 0.151 for graphify (Holm
-p ≤ 0.0005).
+p ≤ 0.0005). On SWE-bench Multilingual (299 issues in nine other languages), it was 0.389, against 0.261 and 0.123
+(Holm p = 0.0001), and TypeTrace led in every language.
 
 The call graph's own contribution is conditional. On TypeScript, graph propagation added +0.24, +0.05 and +0.16
-Recall@10, concentrated on cross-module tasks (Holm p = 0.019). On Python, where the graph is syntactic, it
-added nothing (−0.018, n.s.).
+Recall@10, concentrated on cross-module tasks (Holm p = 0.019). On SWE-bench it added nothing: −0.018 on Python
+and −0.002 across the nine other languages, neither significant.
 
 We also ran Claude Code agents in 918 headless sessions on held-out tasks. With a ≤800-token, graph-annotated pointer
 list, the agents used 18–28% fewer tokens than with grep alone on a typical task, in all five runs. Agents given
@@ -71,8 +72,9 @@ We ask three questions, each with pre-registered tests:
    audited tasks. The ground truth comes from merged fixes, a type-checker oracle for change impact, and audits
    frozen before any retrieval output existed (§4).
 3. **Pre-registered head-to-heads against graphify and code-review-graph:** retrieval-only on TypeScript and on
-   SWE-bench Lite (Python), and agent-level with Claude Code (§5–6).
-4. **Negative and conditional results reported as such** (§6, §7): no graph benefit on Python, no replicated agent
+   SWE-bench Lite (Python) and SWE-bench Multilingual (nine other languages), and agent-level with Claude Code
+   (§5–6).
+4. **Negative and conditional results reported as such** (§6, §7): no graph benefit on SWE-bench in any language, no replicated agent
    accuracy gain, a cross-encoder reranker that failed its held-out test, and a change-history prior that hurt.
 5. **An audit of the competitors' headline claims** against what they measure (§7.3).
 
@@ -173,7 +175,8 @@ repository's 20 tasks are injected bugs, one per snapshot (experiment 1).
 
 **SWE-bench Multilingual (experiment 8).** 300 issues in Java, Rust, Go, PHP, Ruby, C, C++, JavaScript and
 TypeScript, with the same ground-truth rule. The version we froze has 41 repositories; the dataset's documentation
-says 42. The protocol was frozen before any retrieval output existed. Results are pending (§6.4).
+says 42. The protocol was frozen before any retrieval output existed. One instance is excluded because its fix
+changes only an HTML template, leaving 299. Results are in §6.4.
 
 **Metrics.**
 - **Primary:** symbol Recall@10.
@@ -309,6 +312,8 @@ otherwise).
 | M+L, cross-module tasks minus local tasks | type-checked | +0.12 [+0.03, +0.21], Holm p = 0.019 (H2) |
 | Immich + Twenty, 127 mined fixes (development data) | type-checked | +0.075, p = 0.010 |
 | SWE-bench Lite, Python | syntactic | **−0.018 [−0.055, +0.019]**, Holm p = 0.83 (P3) |
+| SWE-bench Multilingual, nine languages | syntactic (TS/JS: type-checked) | **−0.002 [−0.034, +0.029]**, Holm p = 0.55 (P3) |
+| SWE-bench Multilingual, TypeScript and JavaScript only (43) | type-checked | −0.035 [−0.140, +0.058] (exploratory) |
 
 The pre-registered scale hypothesis (H1) was not supported: the effect does not grow monotonically with size. The
 slope of the graph effect is +0.06 per 10× lines [−0.02, +0.15] on nested sub-corpora of Twenty. Within Twenty, as
@@ -383,11 +388,36 @@ alone, because cached prompt tokens are cheap.
 without retrieval tools. Left to choose, it never called a retrieval tool. Given retrieved context in a single call
 with no tools, accuracy rose from 31–33% (file list only) to 71–98% (graph-based or hybrid context).
 
-### 6.4 SWE-bench Multilingual (pending)
+### 6.4 SWE-bench Multilingual
 
 Pre-registered (experiment 8), with the same tests as Lite: P1 vs graphify, P2 vs code-review-graph with embeddings,
-and P3 for the graph's contribution in nine languages. The run started on 2026-11-18. This section will report it
-when it finishes, whatever the result.
+and P3 for the graph's contribution. 299 issues from 41 repositories; no method failed on any instance.
+
+| Method | Recall@10 | RC MRR | File R@10 | Output tokens |
+|---|---:|---:|---:|---:|
+| TypeTrace without graph (`hybrid_nograph`) | **0.392** | 0.269 | 0.713 | 7,582 |
+| TypeTrace `hybrid` | 0.389 | **0.281** | **0.729** | 6,199 |
+| TypeTrace `compact_graph` | 0.381 | 0.272 | 0.671 | 750 |
+| graph-only ranker | 0.281 | 0.185 | 0.660 | 5,484 |
+| embeddings (Qwen3-0.6B) | 0.280 | 0.169 | 0.679 | 7,424 |
+| BM25 | 0.271 | 0.158 | 0.576 | 7,588 |
+| code-review-graph + embeddings | 0.261 | 0.186 | 0.619 | 10,467 |
+| graphify | 0.123 | 0.079 | 0.553 | 7,389 |
+| code-review-graph default | 0.069 | 0.047 | 0.144 | 4,211 |
+
+| Test | Δ Recall@10 | 95% CI | Holm p |
+|---|---:|---|---:|
+| P1: `hybrid` > graphify | +0.266 | [+0.212, +0.322] | 0.0001 |
+| P2: `hybrid` > code-review-graph + embeddings | +0.128 | [+0.074, +0.183] | 0.0001 |
+| P3: `hybrid` > `hybrid_nograph` | −0.002 | [−0.034, +0.029] | 0.55 |
+
+Per language of the ground truth (exploratory), TypeTrace's Recall@10 ranges from 0.222 (C++, 12 issues) to 0.518 (C,
+28), and it is above both competitors in all nine languages. The graph's effect ranges from −0.107 (Java, 43) to
++0.103 (PHP, 43). Losses follow the Lite mechanism: in `google__gson-1100`, the neighbours of the top match
+`GsonBuilder.setDateFormat` (its constructor, `create`, three `Gson.toJson` overloads) push the changed
+`DefaultDateTypeAdapter.write` from fifth to below tenth. code-review-graph's default search returned nothing for 206
+of 299 issue texts, as on Lite. The agent tool's output is 0.12× graphify's and 0.09× that of code-review-graph with
+embeddings per instance (geometric means).
 
 ## 7. Discussion
 
@@ -398,8 +428,10 @@ retrieves more of the code involved in a task when two conditions hold:
 1. **The graph is precise.** It is resolved by a type checker, including framework dispatch.
 2. **The task spans modules.**
 
-It does not support the broader claim that "a code graph helps". With a syntactic Python graph, propagation added as
-much noise as signal. On a mid-sized repository with mostly local tasks (Immich), the effect was small. Seed quality matters as much as the graph. Our embedding model alone (Qwen3, no graph, no BM25) closes 39% to
+It does not support the broader claim that "a code graph helps". On SWE-bench, propagation added as much noise as
+signal in all ten languages. This includes the 43 TypeScript and JavaScript issues, whose graph is type-checked
+(−0.035, CI [−0.140, +0.058]). That interval is wide and includes the +0.075 measured on mined TypeScript fixes, but
+the benefit is so far shown only on our own three TypeScript repositories. On a mid-sized repository with mostly local tasks (Immich), the effect was small. Seed quality matters as much as the graph. Our embedding model alone (Qwen3, no graph, no BM25) closes 39% to
 95% of the gap between code-review-graph with MiniLM and TypeTrace, depending on the repository (S: 0.51 against
 0.31 and 0.69; M: 0.47 against 0.26 and 0.48; L: 0.19 against 0.10 and 0.33). The graph adds to good seeds; it does
 not replace them.
@@ -455,8 +487,8 @@ became 0.29 s.
 ## 9. Conclusion
 
 A type-resolved call graph combined with strong lexical and dense search finds the code a task needs substantially
-better than two popular code-graph MCP tools: on three TypeScript repositories and on 300 Python issues chosen by
-others. Inside a coding agent, the robust benefit is fewer tokens, not more correct answers. The graph itself helps
+better than two popular code-graph MCP tools: on three TypeScript repositories, on 300 Python issues and on 299
+issues in nine other languages chosen by others. Inside a coding agent, the robust benefit is fewer tokens, not more correct answers. The graph itself helps
 when it is precise and the task crosses modules, and not otherwise. Large headline numbers for code-graph tools
 usually reflect their baselines. We hope the pre-registered protocols, frozen datasets and decision logs released
 with this paper make such claims easier to check.
@@ -469,6 +501,7 @@ with this paper make such claims easier to check.
 | Graph effect on TypeScript (H1, H2) | `experiments/03-graph-scale/results/stage1-report-test.md`, `README.md` (experiment 3) |
 | Experiment 1 ablation | `research/findings.md`, `evaluation/results/ablation-test/` |
 | SWE-bench Lite | `experiments/05-swebench-python/findings.md`, `results/report.md` |
+| SWE-bench Multilingual | `experiments/08-swebench-multilingual/findings.md`, `results/report.md` |
 | Agent runs | `experiments/03-graph-scale/results/agent/*-report.md`, decision log E3-D26 |
 | Experiment 2 | `experiments/02-agent-diagnosis/findings.md` |
 | Experiment 6 | `experiments/06-next-direction/findings.md` |

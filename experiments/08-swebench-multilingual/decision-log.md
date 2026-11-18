@@ -40,3 +40,11 @@ method completed, as an exploratory check.
 
 Checked on one instance (`gin-gonic__gin-1805`) with a deliberately unknown method name. The failure was recorded,
 the run went on, and the other method's row was written.
+
+## E8-D03 (2026-11-18, during the run): one pause, no code change
+
+The run was paused once on the owner's request, at 09:25 IST, between instances, after 44 of 300 instances
+(`burntsushi__ripgrep-2576`). No instance was partly scored, so no cache was cleaned. Before the run resumed at
+11:13 IST, the results file was compared with a backup taken at the pause and was identical, and the runner code was
+checked to be unchanged since `3846da1`. The run finished at 19:34 IST. No method failed on any instance, so
+`failures.jsonl` was never created and every included instance has a row for all nine methods.

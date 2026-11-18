@@ -13,7 +13,7 @@ draws on all of them.
 | 5 | Does the lead hold on Python, on a public benchmark chosen by others? | SWE-bench Lite, 300 issues | Ahead of both competitors (P1, P2 supported); the Python graph adds nothing (P3 not supported, −0.018) | [`05-swebench-python/findings.md`](05-swebench-python/findings.md) |
 | 6 | Is there a next accuracy improvement (change history, commit titles, reranking, …)? | development data, then one held-out test | None found: the reranker failed its held-out test. Queries became 13–46× faster with byte-identical output | [`06-next-direction/findings.md`](06-next-direction/findings.md) |
 | 7 | Are the new language front-ends' graphs correct? | 13 open-source repositories, 11 languages | 151 of 156 hand-checked verified call edges correct | [`07-languages/`](07-languages/README.md) |
-| 8 | Does the lead hold in nine other languages? | SWE-bench Multilingual, 300 issues | Running (started 2026-11-18); reported win or lose | [`08-swebench-multilingual/protocol.md`](08-swebench-multilingual/protocol.md) |
+| 8 | Does the lead hold in nine other languages? | SWE-bench Multilingual, 300 issues | Done: ahead of both competitors (Holm p = 0.0001 each); the graph adds nothing (−0.002) | [`08-swebench-multilingual/findings.md`](08-swebench-multilingual/findings.md) |
 
 Experiment 9 (how much the product's fast first index loses before embeddings exist) lives on the product branch
 `product/fast-index-autoupdate-clients` until that branch is merged.

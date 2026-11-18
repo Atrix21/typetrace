@@ -82,21 +82,25 @@ def grouped(fname, title, subtitle, groups, keys, data, ymax, fmt, yticks, ylabe
 
 
 # Figure 1. Recall@10. Sources: experiments/03-graph-scale/results/h2h-report.md (S all 20, M test 26, L test 18);
-# experiments/05-swebench-python/results/report.md (SWE-bench Lite, 300).
+# experiments/05-swebench-python/results/report.md (SWE-bench Lite, 300);
+# experiments/08-swebench-multilingual/results/report.md (SWE-bench Multilingual, 299).
 R = {
     'nestjs-boilerplate': {'hybrid': .69, 'compact': .65, 'crg_emb': .31, 'graphify': .12, 'crg': .18},
     'Immich server': {'hybrid': .48, 'compact': .39, 'crg_emb': .26, 'graphify': .04, 'crg': .03},
     'Twenty server': {'hybrid': .33, 'compact': .28, 'crg_emb': .10, 'graphify': .01, 'crg': .01},
     'SWE-bench Lite': {'hybrid': .469, 'compact': .454, 'crg_emb': .354, 'graphify': .151, 'crg': .127},
+    'SWE-bench Multilingual': {'hybrid': .389, 'compact': .381, 'crg_emb': .261, 'graphify': .123, 'crg': .069},
 }
 if PRINT:  # the paper reports the smallest repository on its 14 held-out test tasks (the 6 others tuned the ranking)
     R['nestjs-boilerplate'] = {'hybrid': .667, 'compact': .607, 'crg_emb': .238, 'graphify': .077, 'crg': .107}
 grouped('fig1-recall.svg', 'Finding the code a task needs: Recall@10',
         'Same tasks, files and budget for every tool; ground truth independent of all tools. Higher is better.',
-        [('nestjs-boilerplate', 'TypeScript, 6k lines, ' + ('14 test tasks' if PRINT else '20 tasks')), ('Immich server', 'TypeScript, ' + ('62k' if PRINT else '63k') + ', 26'),
-         ('Twenty server', 'TypeScript, 763k, 18'), ('SWE-bench Lite', 'Python, 300 issues')],
+        [('nestjs-boilerplate', ('TS, 6k lines, 14 tasks' if PRINT else 'TypeScript, 6k lines, 20 tasks')), ('Immich server', ('TS, 62k, 26' if PRINT else 'TypeScript, 63k, 26')),
+         ('Twenty server', ('TS, 763k, 18' if PRINT else 'TypeScript, 763k, 18')), ('SWE-bench Lite', 'Python, 300 issues'),
+         ('SWE-bench Multilingual', '9 languages, 299')],
         ['hybrid', 'compact', 'crg_emb', 'graphify', 'crg'], R, 0.8,
-        lambda v, axis=False: f'{v:.1f}' if axis else f'{v:.2f}', [0, .2, .4, .6, .8], 'Recall@10')
+        lambda v, axis=False: f'{v:.1f}' if axis else f'{v:.2f}', [0, .2, .4, .6, .8], 'Recall@10',
+        size=(820, 300) if PRINT else (1000, 430))
 
 # Figure 3. Agent tokens per task (thousands). Source: experiments/03-graph-scale/results/agent/h2h-{L,M}-haiku-test-report.md.
 T3 = {'Twenty server': {'compact': 453, 'graphify': 521, 'crg_emb': 779, 'grep': 513},
@@ -113,17 +117,20 @@ NAME.update(NAME_AGENT)
 # Figure 2. The graph's own contribution: hybrid minus the identical search without graph propagation, Recall@10,
 # with 95% CIs. Sources: research/findings.md (exp 1 ablation), experiments/03-graph-scale/README.md (S, M, L),
 # experiments/06-next-direction/findings.md (127 mined fixes; CI not reported there, point only),
-# experiments/05-swebench-python/results/report.md (P3).
+# experiments/05-swebench-python/results/report.md (P3), experiments/08-swebench-multilingual/findings.md (P3 and the
+# exploratory TypeScript/JavaScript subset).
 D = [('nestjs-boilerplate (TS, type-checked graph)', .24, .09, .40),
      ('Immich server (TS, type-checked)', .05, .00, .12),
      ('Twenty server (TS, type-checked)', .16, .07, .25),
      ('127 mined fixes, Immich + Twenty (dev data)', .075, None, None),
-     ('SWE-bench Lite (Python, syntactic graph)', -.018, -.055, .019)]
-W, H, L, R2, T = (430, 210, 150, 34, 8) if PRINT else (900, 330, 330, 30, 70)
+     ('SWE-bench Lite (Python, syntactic graph)', -.018, -.055, .019),
+     ('SWE-bench Multilingual (9 languages)', -.002, -.034, .029),
+     ('its TypeScript/JavaScript subset (43, type-checked)', -.035, -.140, .058)]
+W, H, L, R2, T = (430, 250, 150, 34, 8) if PRINT else (900, 390, 330, 30, 70)
 if PRINT:
-    D = [(lab, *v) for lab, v in zip(['S, TS (6k lines)', 'M, TS (62k)', 'L, TS (763k)', 'M+L mined fixes', 'SWE-bench Lite, Py'], [d[1:] for d in D])]
+    D = [(lab, *v) for lab, v in zip(['S, TS (6k lines)', 'M, TS (62k)', 'L, TS (763k)', 'M+L mined fixes', 'SWE-bench Lite, Py', 'SWE-bench Multiling.', 'its TS/JS subset (43)'], [d[1:] for d in D])]
 pw = W - L - R2
-x = lambda v: L + (v + .1) / .55 * pw
+x = lambda v: L + (v + .15) / .6 * pw
 out = [f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 {W} {H}' width='{W}' height='{H}'>", f"<rect width='{W}' height='{H}' fill='{'#ffffff' if PRINT else SURF}'/>"]
 if not PRINT:
     out += [text(16, 28, 'What the call graph adds: Recall@10 with graph propagation minus without', 16, INK, weight='600'),

@@ -1,34 +1,42 @@
-<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 430 210' width='430' height='210'>
-<rect width='430' height='210' fill='#ffffff'/>
-<line x1='150.0' x2='150.0' y1='8' y2='170' stroke='#e4e3df' stroke-width='1'/>
-<text x='150.0' y='188.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>−0.1</text>
-<line x1='194.7' x2='194.7' y1='8' y2='170' stroke='#8a8a82' stroke-width='1'/>
-<text x='194.7' y='188.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>0</text>
-<line x1='239.5' x2='239.5' y1='8' y2='170' stroke='#e4e3df' stroke-width='1'/>
-<text x='239.5' y='188.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>+0.1</text>
-<line x1='284.2' x2='284.2' y1='8' y2='170' stroke='#e4e3df' stroke-width='1'/>
-<text x='284.2' y='188.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>+0.2</text>
-<line x1='328.9' x2='328.9' y1='8' y2='170' stroke='#e4e3df' stroke-width='1'/>
-<text x='328.9' y='188.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>+0.3</text>
-<line x1='373.6' x2='373.6' y1='8' y2='170' stroke='#e4e3df' stroke-width='1'/>
-<text x='373.6' y='188.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>+0.4</text>
-<text x='136.0' y='28.2' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='end' font-weight='normal'>S, TS (6k lines)</text>
-<line x1='235.0' x2='373.6' y1='24.2' y2='24.2' stroke='#2a78d6' stroke-width='2'/>
-<circle cx='302.1' cy='24.2' r='5' fill='#2a78d6' stroke='#fcfcfb' stroke-width='2'/>
-<text x='383.6' y='28.2' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#55554f' text-anchor='start' font-weight='normal'>+0.24</text>
-<text x='136.0' y='60.6' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='end' font-weight='normal'>M, TS (62k)</text>
-<line x1='194.7' x2='248.4' y1='56.6' y2='56.6' stroke='#2a78d6' stroke-width='2'/>
-<circle cx='217.1' cy='56.6' r='5' fill='#2a78d6' stroke='#fcfcfb' stroke-width='2'/>
-<text x='258.4' y='60.6' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#55554f' text-anchor='start' font-weight='normal'>+0.05</text>
-<text x='136.0' y='93.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='end' font-weight='normal'>L, TS (763k)</text>
-<line x1='226.0' x2='306.5' y1='89.0' y2='89.0' stroke='#2a78d6' stroke-width='2'/>
-<circle cx='266.3' cy='89.0' r='5' fill='#2a78d6' stroke='#fcfcfb' stroke-width='2'/>
-<text x='316.5' y='93.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#55554f' text-anchor='start' font-weight='normal'>+0.16</text>
-<text x='136.0' y='125.4' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='end' font-weight='normal'>M+L mined fixes</text>
-<circle cx='228.3' cy='121.4' r='5' fill='#2a78d6' stroke='#fcfcfb' stroke-width='2'/>
-<text x='238.3' y='125.4' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#55554f' text-anchor='start' font-weight='normal'>+0.075</text>
-<text x='136.0' y='157.8' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='end' font-weight='normal'>SWE-bench Lite, Py</text>
-<line x1='170.1' x2='203.2' y1='153.8' y2='153.8' stroke='#2a78d6' stroke-width='2'/>
-<circle cx='186.7' cy='153.8' r='5' fill='#2a78d6' stroke='#fcfcfb' stroke-width='2'/>
-<text x='213.2' y='157.8' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#55554f' text-anchor='start' font-weight='normal'>−0.018</text>
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 430 250' width='430' height='250'>
+<rect width='430' height='250' fill='#ffffff'/>
+<line x1='170.5' x2='170.5' y1='8' y2='210' stroke='#e4e3df' stroke-width='1'/>
+<text x='170.5' y='228.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>−0.1</text>
+<line x1='211.5' x2='211.5' y1='8' y2='210' stroke='#8a8a82' stroke-width='1'/>
+<text x='211.5' y='228.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>0</text>
+<line x1='252.5' x2='252.5' y1='8' y2='210' stroke='#e4e3df' stroke-width='1'/>
+<text x='252.5' y='228.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>+0.1</text>
+<line x1='293.5' x2='293.5' y1='8' y2='210' stroke='#e4e3df' stroke-width='1'/>
+<text x='293.5' y='228.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>+0.2</text>
+<line x1='334.5' x2='334.5' y1='8' y2='210' stroke='#e4e3df' stroke-width='1'/>
+<text x='334.5' y='228.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>+0.3</text>
+<line x1='375.5' x2='375.5' y1='8' y2='210' stroke='#e4e3df' stroke-width='1'/>
+<text x='375.5' y='228.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>+0.4</text>
+<text x='136.0' y='26.4' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='end' font-weight='normal'>S, TS (6k lines)</text>
+<line x1='248.4' x2='375.5' y1='22.4' y2='22.4' stroke='#2a78d6' stroke-width='2'/>
+<circle cx='309.9' cy='22.4' r='5' fill='#2a78d6' stroke='#fcfcfb' stroke-width='2'/>
+<text x='385.5' y='26.4' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#55554f' text-anchor='start' font-weight='normal'>+0.24</text>
+<text x='136.0' y='55.3' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='end' font-weight='normal'>M, TS (62k)</text>
+<line x1='211.5' x2='260.7' y1='51.3' y2='51.3' stroke='#2a78d6' stroke-width='2'/>
+<circle cx='232.0' cy='51.3' r='5' fill='#2a78d6' stroke='#fcfcfb' stroke-width='2'/>
+<text x='270.7' y='55.3' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#55554f' text-anchor='start' font-weight='normal'>+0.05</text>
+<text x='136.0' y='84.1' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='end' font-weight='normal'>L, TS (763k)</text>
+<line x1='240.2' x2='314.0' y1='80.1' y2='80.1' stroke='#2a78d6' stroke-width='2'/>
+<circle cx='277.1' cy='80.1' r='5' fill='#2a78d6' stroke='#fcfcfb' stroke-width='2'/>
+<text x='324.0' y='84.1' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#55554f' text-anchor='start' font-weight='normal'>+0.16</text>
+<text x='136.0' y='113.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='end' font-weight='normal'>M+L mined fixes</text>
+<circle cx='242.2' cy='109.0' r='5' fill='#2a78d6' stroke='#fcfcfb' stroke-width='2'/>
+<text x='252.2' y='113.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#55554f' text-anchor='start' font-weight='normal'>+0.075</text>
+<text x='136.0' y='141.9' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='end' font-weight='normal'>SWE-bench Lite, Py</text>
+<line x1='188.9' x2='219.3' y1='137.9' y2='137.9' stroke='#2a78d6' stroke-width='2'/>
+<circle cx='204.1' cy='137.9' r='5' fill='#2a78d6' stroke='#fcfcfb' stroke-width='2'/>
+<text x='229.3' y='141.9' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#55554f' text-anchor='start' font-weight='normal'>−0.018</text>
+<text x='136.0' y='170.7' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='end' font-weight='normal'>SWE-bench Multiling.</text>
+<line x1='197.6' x2='223.4' y1='166.7' y2='166.7' stroke='#2a78d6' stroke-width='2'/>
+<circle cx='210.7' cy='166.7' r='5' fill='#2a78d6' stroke='#fcfcfb' stroke-width='2'/>
+<text x='233.4' y='170.7' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#55554f' text-anchor='start' font-weight='normal'>−0.002</text>
+<text x='136.0' y='199.6' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='end' font-weight='normal'>its TS/JS subset (43)</text>
+<line x1='154.1' x2='235.3' y1='195.6' y2='195.6' stroke='#2a78d6' stroke-width='2'/>
+<circle cx='197.2' cy='195.6' r='5' fill='#2a78d6' stroke='#fcfcfb' stroke-width='2'/>
+<text x='245.3' y='199.6' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#55554f' text-anchor='start' font-weight='normal'>−0.035</text>
 </svg>

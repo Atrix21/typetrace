@@ -35,9 +35,9 @@
 \begin{abstract}
 Code-graph tools that plug into coding agents through the Model Context Protocol advertise large gains, such as ``63$\times$ fewer tokens''. The baselines behind such figures are rarely the ones a developer has in mind. We present \tool, a local retrieval tool that fuses lexical and dense search and propagates scores along a call graph resolved by the TypeScript type checker. We compare it with two popular open-source code-graph tools, \gfy and \crg, in a series of pre-registered experiments. Their ground truth is independent of every tool.
 
-\emph{Retrieval.} On 58 held-out tasks from three TypeScript repositories of 6k to 763k lines, \tool's Recall@10 is 0.33--0.67, while neither competitor exceeds 0.26 when given the task text (16 of 18 paired comparisons $p \le 0.001$). On SWE-bench Lite (300 Python issues), the scores are 0.469 against 0.354 and 0.151 (Holm-adjusted $p \le 0.0005$).
+\emph{Retrieval.} On 58 held-out tasks from three TypeScript repositories of 6k to 763k lines, \tool's Recall@10 is 0.33--0.67, while neither competitor exceeds 0.26 when given the task text (16 of 18 paired comparisons $p \le 0.001$). On SWE-bench Lite (300 Python issues), the scores are 0.469 against 0.354 and 0.151 (Holm-adjusted $p \le 0.0005$). On SWE-bench Multilingual (299 issues in nine further languages), they are 0.389 against 0.261 and 0.123 (Holm-adjusted $p = 0.0001$), and \tool leads in every language.
 
-\emph{The graph.} Graph propagation adds 0.05--0.24 Recall@10 on TypeScript, concentrated on cross-module tasks. It adds nothing on Python, where the graph is syntactic.
+\emph{The graph.} Graph propagation adds 0.05--0.24 Recall@10 on TypeScript, concentrated on cross-module tasks. It adds nothing on SWE-bench, in any of ten languages ($-0.018$ on Python, $-0.002$ on the others).
 
 \emph{Agents.} In 918 headless Claude Code sessions, a compact retrieval answer reduced tokens per task by 18--28\% against grep alone in all five runs. The same answer without graph propagation saved a similar amount, and neither reliably improved accuracy. Agents given the competitors used about as many tokens as grep alone (\gfy) or 52--70\% more (\crg).
 
@@ -76,8 +76,8 @@ To answer them we built \tool, an open-source MCP server, and a benchmark harnes
 \begin{enumerate}
 \item \textbf{\tool}, an open-source retrieval tool (\S\ref{sec:tool}). It fuses exact-symbol, BM25 and dense retrieval, and propagates scores along a call graph that the TypeScript compiler resolves, including dependency injection, decorators, routes and event dispatch. It answers with a list of \texttt{file:line} pointers of at most 800 tokens.
 \item \textbf{A scale ladder of real TypeScript repositories} with 81 audited tasks, 58 of them held out for testing (\S\ref{sec:design}). Ground truth comes from merged fixes and a type-checker oracle, and was frozen before any retrieval output existed.
-\item \textbf{Pre-registered comparisons} with \gfy and \crg (\S\ref{sec:results}): retrieval-only on TypeScript and on SWE-bench Lite, and agent-level with Claude Code. The agent comparison includes an ablation that separates the graph from the retrieval answer.
-\item \textbf{Conditional and negative results, reported as such.} The graph does not help on Python. Graph content does not change agent outcomes. Agent accuracy gains do not replicate. A cross-encoder reranker fails its held-out test.
+\item \textbf{Pre-registered comparisons} with \gfy and \crg (\S\ref{sec:results}): retrieval-only on TypeScript, on SWE-bench Lite and on SWE-bench Multilingual, and agent-level with Claude Code. The agent comparison includes an ablation that separates the graph from the retrieval answer.
+\item \textbf{Conditional and negative results, reported as such.} The graph does not help on SWE-bench, in any language. Graph content does not change agent outcomes. Agent accuracy gains do not replicate. A cross-encoder reranker fails its held-out test.
 \item \textbf{An audit of the competitors' headline claims} against what they measure (\S\ref{sec:claims}).
 \end{enumerate}
 
@@ -188,6 +188,8 @@ The ground truth of a task lists its root-cause symbols and its relevant symbols
 
 \textbf{Python.} SWE-bench Lite~\cite{jimenez2024swebench} provides 300 issues from 12 Python repositories that others selected. The query is the issue text, verbatim. The ground truth is the set of declarations the gold patch changes, mapped to the innermost enclosing function or class at the base commit by a syntactic index. No retrieval method is involved, and the rule was fixed before any method ran.
 
+\textbf{Nine further languages.} SWE-bench Multilingual~\cite{yang2025swesmith} provides 300 issues from 41 repositories in Java, Rust, Go, PHP, Ruby, C, C++, JavaScript and TypeScript. We use the same query, ground-truth rule and protocol. One issue is excluded because its fix changes only an HTML template, leaving 299. The corpus is the tool's own file selection (every supported source file, without build output, dependencies or generated code), and every method indexes exactly these files.
+
 \begin{table}[t]
 \caption{Benchmarks. GT size is the mean number of relevant symbols per task; test = held-out tasks used in all results.}
 \label{tab:benchmarks}
@@ -200,6 +202,7 @@ nestjs-boilerplate (S) & 6.3k & 20 (14) & -- & injected bugs \\
 Immich server (M) & 62k & 37 (26) & 5.2 & fixes, understanding \\
 Twenty server (L) & 763k & 24 (18) & 7.9 & fixes, understanding \\
 SWE-bench Lite & -- & 300 & 1.2 & GitHub issues \\
+SWE-bench Multilingual & -- & 299 & 2.2 & GitHub issues \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -252,7 +255,7 @@ Each task is run three times per arm with Haiku and twice with Sonnet. The harne
   \item H4: graph content improves the task score (A2 against A1).
   \end{itemize}
 \item \textbf{Agent head-to-head:} accuracy and tokens against each competitor, four tests per repository. This family was registered after our own retrieval and agent results were known, but before any competitor run.
-\item \textbf{SWE-bench Lite:} \hyb beats \gfy (P1), \hyb beats \crg with embeddings (P2), and \hyb beats \nog (P3). These were registered before any method ran.
+\item \textbf{SWE-bench Lite and Multilingual}, each its own family: \hyb beats \gfy (P1), \hyb beats \crg with embeddings (P2), and \hyb beats \nog (P3). These were registered before any method ran on that benchmark.
 \end{itemize}
 
 %% ------------------------------------------------------------------
@@ -264,7 +267,7 @@ Each task is run three times per arm with Haiku and twice with Sonnet. The harne
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.82\textwidth]{figures/fig1-recall.pdf}
-\caption{Recall@10 by benchmark and tool, on the held-out test tasks and all 300 SWE-bench Lite issues. Every tool gets the same files, budget and scoring.}
+\caption{Recall@10 by benchmark and tool, on the held-out test tasks, all 300 SWE-bench Lite issues and the 299 SWE-bench Multilingual issues. Every tool gets the same files, budget and scoring.}
 \label{fig:recall}
 \end{figure*}
 
@@ -294,22 +297,25 @@ CRG default & 0.11 & 0.03 & 0.01 \\
 The embedding model does not explain the gap. Swapping our embedder into \crg changes its recall by $-0.05$, $-0.03$ and $+0.07$, and leaves it 0.48, 0.25 and 0.16 below \hyb ($p < 0.01$ each). Dense retrieval with the same model over \tool's declaration chunks scores 0.47, 0.47 and 0.19. This suggests that what is embedded and searched matters as much as which model embeds it.
 
 \begin{table}[t]
-\caption{SWE-bench Lite (300 issues). RC = root cause; tokens = mean output tokens.}
+\caption{SWE-bench Lite (300 Python issues) and Multilingual (299 issues, nine languages). File = file Recall@10; Tok.\ = mean output tokens.}
 \label{tab:lite}
-\small
-\begin{tabular}{@{}lrrrr@{}}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lrrrrrr@{}}
 \toprule
-Method & \rat & RC MRR & File R@10 & Tokens \\
+ & \multicolumn{3}{c}{Lite} & \multicolumn{3}{c}{Multilingual} \\
+\cmidrule(lr){2-4}\cmidrule(l){5-7}
+Method & \rat & File & Tok. & \rat & File & Tok. \\
 \midrule
-\nog (no graph) & \textbf{0.487} & \textbf{0.316} & \textbf{0.800} & 7,660 \\
-\tool \hyb & 0.469 & 0.296 & \textbf{0.800} & 6,124 \\
-\tool \cmp & 0.454 & 0.289 & 0.747 & \textbf{748} \\
-Embeddings only & 0.419 & 0.238 & 0.780 & 7,013 \\
-BM25 & 0.392 & 0.249 & 0.700 & 7,540 \\
-CRG +emb & 0.354 & 0.200 & 0.717 & 7,288 \\
-Graph-only ranker & 0.312 & 0.179 & 0.677 & 5,741 \\
-\gfy & 0.151 & 0.083 & 0.667 & 6,570 \\
-CRG default & 0.127 & 0.085 & 0.240 & 3,824 \\
+\nog (no graph) & \textbf{0.487} & \textbf{0.800} & 7.7k & \textbf{0.392} & 0.713 & 7.6k \\
+\tool \hyb & 0.469 & \textbf{0.800} & 6.1k & 0.389 & \textbf{0.729} & 6.2k \\
+\tool \cmp & 0.454 & 0.747 & \textbf{0.7k} & 0.381 & 0.671 & \textbf{0.8k} \\
+Embeddings only & 0.419 & 0.780 & 7.0k & 0.280 & 0.679 & 7.4k \\
+BM25 & 0.392 & 0.700 & 7.5k & 0.271 & 0.576 & 7.6k \\
+CRG +emb & 0.354 & 0.717 & 7.3k & 0.261 & 0.619 & 10.5k \\
+Graph-only ranker & 0.312 & 0.677 & 5.7k & 0.281 & 0.660 & 5.5k \\
+\gfy & 0.151 & 0.667 & 6.6k & 0.123 & 0.553 & 7.4k \\
+CRG default & 0.127 & 0.240 & 3.8k & 0.069 & 0.144 & 4.2k \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -321,14 +327,21 @@ CRG default & 0.127 & 0.085 & 0.240 & 3,824 \\
 \end{itemize}
 Within a tenth of the output (748 tokens on average), \cmp still exceeds \crg with embeddings by 0.10 \rat (exploratory, $p = 0.001$). Plain BM25 over our chunks (0.392) is also above \crg with embeddings.
 
+\textbf{Nine further languages.} On SWE-bench Multilingual (Table~\ref{tab:lite}) both comparisons are supported again:
+\begin{itemize}
+\item P1, \hyb against \gfy: +0.266 [+0.212, +0.322], 121/18/160, Holm $p = 0.0001$;
+\item P2, \hyb against \crg with embeddings: +0.128 [+0.074, +0.183], 83/35/181, Holm $p = 0.0001$.
+\end{itemize}
+\tool is ahead of both competitors in each of the nine languages (exploratory), from C++ (0.222 against 0.090 and 0.028, 12 issues) to C (0.518 against 0.196 and 0.036, 28 issues). \cmp's output is 0.09$\times$ that of \crg with embeddings per issue (geometric mean).
+
 \textbf{Why the competitors score low.}
 \begin{itemize}
-\item \crg's default search returned nothing for 178 of the 300 issue texts. Its documentation states that natural-language queries return nothing without embeddings.
+\item \crg's default search returned nothing for 178 of the 300 Lite issue texts, and for 206 of the 299 Multilingual ones. Its documentation states that natural-language queries return nothing without embeddings.
 \item \gfy usually finds the right file (file R@10 0.667) but rarely the function. Its \texttt{query} returns the neighbourhood of keyword-matched nodes rather than ranked functions.
 \end{itemize}
 We inspected the raw outputs and audited the normaliser on both languages, and these are not scoring artefacts. They do reflect our protocol, however: both tools are built for agent-written queries (\S\ref{sec:design}).
 
-\finding{1}{Given the task text, \tool retrieves substantially more of the code a task needs than \gfy and \crg as shipped, on both TypeScript and Python. The gap persists when \crg uses our embedding model.}
+\finding{1}{Given the task text, \tool retrieves substantially more of the code a task needs than \gfy and \crg as shipped, on TypeScript, on Python and in nine further languages. The gap persists when \crg uses our embedding model.}
 
 \subsection{RQ2: The graph's own contribution}
 
@@ -358,13 +371,15 @@ Across repositories the effect is not monotone in size. Within Twenty, adding un
 
 \textbf{Python.} On Python the graph does not help. P3 is not supported: $-0.018$ [$-0.055$, +0.019], 17 wins, 24 losses, Holm $p = 0.83$. The effect varies by repository, from +0.12 on pytest (17 issues) to $-0.20$ on scikit-learn (23). In the 24 losses, propagation adds close neighbours of the best seeds (sibling methods, constructors, tests that call the function), and these push the single changed function out of the top ten.
 
-Language, graph construction, ground-truth form and task mix all differ between the two benchmarks, so the design cannot attribute the difference to one cause. Two candidates:
+\textbf{Nine further languages.} P3 is not supported on Multilingual either: $-0.002$ [$-0.034$, +0.029], 24 wins, 28 losses, Holm $p = 0.55$. Per language (exploratory) the effect ranges from $-0.107$ on Java to +0.103 on PHP (43 issues each). The losses show the Lite mechanism: in \texttt{google\_\_gson-1100}, the neighbours of the top match \texttt{GsonBuilder.setDateFormat} push the changed \texttt{DefaultDateTypeAdapter.write} from fifth to below tenth. On the 43 TypeScript and JavaScript issues, whose graph is type-checked as on our ladder, the graph shows no gain either: $-0.035$ [$-0.140$, +0.058]. The interval is wide and includes the +0.075 measured on the mined TypeScript fixes.
+
+Language, graph construction, ground-truth form and task mix all differ between SWE-bench and our ladder, so the design cannot attribute the difference to one cause. Two candidates:
 \begin{enumerate}
 \item \textbf{Graph precision.} In a typical Python snapshot only about 21\% of call sites resolve from scopes, imports and \texttt{self} types, 12\% are name-inferred, and 67\% stay unresolved. Name inference does not look like the culprit, though. In an exploratory check over the 41 issues where the graph changed \rat, a higher share of name-inferred edges went with a \emph{better} graph effect (Spearman +0.28).
 \item \textbf{Ground truth.} SWE-bench credits only the changed functions (one function in 248 of 300 issues). Our TypeScript tasks also count the bug's path, which is what propagation retrieves. Against this, the graph also helped on the mined TypeScript fixes, whose ground truth has the same form as SWE-bench's.
 \end{enumerate}
 
-\finding{2}{The graph's contribution is conditional. On TypeScript, propagation over a type-checked graph adds recall, mainly on cross-module and understanding tasks. Growth with repository size is suggested but not established. On Python, with a syntactic graph, it adds nothing.}
+\finding{2}{The graph's contribution is conditional. On TypeScript, propagation over a type-checked graph adds recall, mainly on cross-module and understanding tasks. Growth with repository size is suggested but not established. On SWE-bench it adds nothing, in any of ten languages, including on the type-checked TypeScript and JavaScript issues.}
 
 \subsection{RQ3: Inside a coding agent}
 
@@ -464,9 +479,9 @@ M, head-to-head (15 / 11) & $-25\%^{*}$ & $-31\%^{*}$ \\
 \section{Discussion}
 
 \subsection{When does a code graph help?}
-Our evidence supports a narrow claim. Propagating scores along call edges from good lexical and semantic seeds helped retrieval on TypeScript, on cross-module and understanding tasks, with a type-checked graph. The broader claim that ``a code graph helps'' is not supported. With a syntactic Python graph, propagation added as much noise as signal. On a mid-sized repository with mostly local tasks, the effect was small.
+Our evidence supports a narrow claim. Propagating scores along call edges from good lexical and semantic seeds helped retrieval on TypeScript, on cross-module and understanding tasks, with a type-checked graph. The broader claim that ``a code graph helps'' is not supported. On SWE-bench, propagation added as much noise as signal in all ten languages, with syntactic graphs and, on 43 TypeScript and JavaScript issues, with a type-checked one. On a mid-sized repository with mostly local tasks, the effect was small.
 
-We cannot say which condition matters. Precision is a natural candidate, but the design confounds it with language, ground truth and task mix. On the smallest repository, the most specific edges (framework dispatch) had no measurable effect; only plain call traversal did. The graph adds to good seeds and does not replace them.
+We cannot say which condition matters. Precision is a natural candidate, but the design confounds it with language, ground truth and task mix, and the type-checked graph also showed no gain on SWE-bench's TypeScript and JavaScript issues. On the smallest repository, the most specific edges (framework dispatch) had no measurable effect; only plain call traversal did. The graph adds to good seeds and does not replace them.
 
 \subsection{Retrieval gains are not agent gains}
 Retrieval gains of 0.1--0.3 \rat did not become reliable accuracy gains inside the agent. A capable agent with grep recovers most of the missing context with its own search. What a retrieval tool changed reliably was the session's token count, and that change came from the short answer, not from the graph.
@@ -539,7 +554,7 @@ Separately, indexing three query-time hot spots made queries 13--46$\times$ fast
 \par\smallskip\noindent\textbf{External validity.}
 \begin{itemize}
 \item The design was built around TypeScript, and the ranking weights were tuned on a small TypeScript repository.
-\item Python results are retrieval only. Eleven further languages have only a graph-quality check; a pre-registered SWE-bench Multilingual comparison was running at the time of writing.
+\item The SWE-bench results (ten languages) are retrieval only. Four supported languages (Kotlin, Scala, C\#, Swift) have only a graph-quality check.
 \item The agent results cover one agent (Claude Code), two models and three repositories.
 \end{itemize}
 
@@ -552,9 +567,9 @@ Separately, indexing three query-time hot spots made queries 13--46$\times$ fast
 
 %% ------------------------------------------------------------------
 \section{Conclusion}
-A type-resolved call graph combined with strong lexical and dense search finds the code a task needs substantially better than two popular code-graph MCP tools given the task text. This holds on TypeScript repositories up to 763k lines and on 300 Python issues chosen by others.
+A type-resolved call graph combined with strong lexical and dense search finds the code a task needs substantially better than two popular code-graph MCP tools given the task text. This holds on TypeScript repositories up to 763k lines, on 300 Python issues and on 299 issues in nine further languages chosen by others.
 
-The graph itself helps retrieval on TypeScript, on cross-module and understanding tasks, and not on Python. Inside a coding agent, the dependable benefit is a lower token count, and it comes from a short retrieval answer rather than from the graph. Large headline numbers for code-graph tools mostly reflect their baselines. We hope that pre-registered protocols, frozen datasets and decision logs like ours make such claims easier to check, for our tool as for any other.
+The graph itself helps retrieval on TypeScript, on cross-module and understanding tasks, and not on SWE-bench in any language. Inside a coding agent, the dependable benefit is a lower token count, and it comes from a short retrieval answer rather than from the graph. Large headline numbers for code-graph tools mostly reflect their baselines. We hope that pre-registered protocols, frozen datasets and decision logs like ours make such claims easier to check, for our tool as for any other.
 
 \section*{Data Availability}
 The tool, benchmark harness, frozen task sets, pre-registered protocols, decision logs, per-task results and analysis scripts are available from the authors. Raw retrieval outputs and agent transcripts are not redistributed, because they contain code from AGPL-licensed repositories. Tasks reference upstream commits by hash, so the outputs can be regenerated.

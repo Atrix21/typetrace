@@ -2,7 +2,7 @@
 
 <p align="center"><strong>Finds the code your AI coding agent needs for a task, and hands it back as a short list of <code>file:line</code> pointers with what calls what.</strong></p>
 
-<p align="center">Local MCP server for Claude Code and other MCP clients · 14 languages, benchmarked on TypeScript and Python · no API keys, nothing leaves your machine · MIT</p>
+<p align="center">Local MCP server for Claude Code and other MCP clients · 14 languages, finding code benchmarked in 10 of them · no API keys, nothing leaves your machine · MIT</p>
 
 <p align="center">
   <a href="https://www.npmjs.com/package/typetrace-cli"><img src="https://img.shields.io/npm/v/typetrace-cli?style=flat-square&color=2a78d6" alt="npm"></a>
@@ -49,8 +49,8 @@ $ npx typetrace-cli query . "where are refresh tokens validated?"
 
 **Who it is for:** you use Claude Code (or another MCP client) on a medium or large repository, and you want the agent to
 find the right code with less searching and fewer tokens. It is strongest on TypeScript, where it uses the real
-compiler and where the call graph measurably helps. Every agent benchmark so far is TypeScript; on Python it has been
-measured for finding code only.
+compiler and where the call graph measurably helps. Every agent benchmark so far is TypeScript; in Python and eight
+other languages it has been measured for finding code only.
 
 <p align="center"><img src="docs/diagrams/without-with.png" alt="Without TypeTrace the agent greps and opens file after file (513k tokens per task on the Twenty server); with TypeTrace it asks once, gets a short map of the relevant functions and opens only those files (453k tokens per task), with a task score of 0.90 vs 0.84." width="90%"></p>
 
@@ -95,11 +95,11 @@ Details follow in [Results](#results).
 |---|---|---|
 | Does it find the code a task needs better than graphify and code-review-graph? | **Yes, on all three TypeScript repositories.** Recall@10 0.33 to 0.69, against at most 0.31 for either competitor. | Strong: 16 of 18 comparisons p ≤ 0.001 |
 | The same, on Python? | **Yes.** [SWE-bench Lite](experiments/05-swebench-python/findings.md), 300 real GitHub issues: Recall@10 0.47 against 0.35 for code-review-graph with embeddings and 0.15 for graphify. The agent tool scores 0.45 in a tenth of the tokens. | Strong: both pre-registered tests Holm p ≤ 0.001 |
-| The same, in the other 11 languages? | **Not measured yet.** Only the call graph has been checked: 151 of 156 hand-checked edges correct. [SWE-bench Multilingual](experiments/08-swebench-multilingual/protocol.md) is pre-registered and running (started 2026-11-18); published win or lose. | n/a |
+| The same, in other languages? | **Yes, in all nine measured.** [SWE-bench Multilingual](experiments/08-swebench-multilingual/findings.md), 299 real issues in Java, Rust, Go, PHP, Ruby, C, C++, JavaScript and TypeScript: Recall@10 0.39 against 0.26 for code-review-graph with embeddings and 0.12 for graphify, ahead in every language. Kotlin, Scala, C# and Swift are not measured. | Strong: both pre-registered tests Holm p = 0.0001 |
 | Does a coding agent use fewer tokens with it? | **Yes.** On a typical task, 18 to 28% fewer than with grep alone, 23 to 34% fewer than with graphify, and about half of code-review-graph's. Averaged over all tasks, 9 to 21% fewer than grep alone, because a few long tasks dominate the average. | Strong: significant on every run |
 | Does the agent get more answers right? | **Not reliably.** Five runs compared it with grep alone: +0.06 and +0.04 task score (Haiku, p ≈ 0.03 each, exploratory), +0.03 (Sonnet), +0.01 and −0.02 (Haiku, the two pre-registered runs; not significant). The leads over graphify and code-review-graph are not significant. | Weak |
 | Is it cheaper in dollars? | On the 763k-line repository, yes (cheapest arm). On the 63k-line one, about the same as graphify and grep: cached prompt tokens are cheap. | Measured, two repositories |
-| Does the call graph help, beyond plain search? | On TypeScript, for finding code, yes on the smallest and largest repositories (Recall@10 +0.24 and +0.16). **On Python, no:** −0.02, not significant; there the lead comes from the search stack. Inside the agent, no significant difference (within 0.02). | Mixed |
+| Does the call graph help, beyond plain search? | On our TypeScript repositories, for finding code, yes on the smallest and largest (Recall@10 +0.24 and +0.16). **On SWE-bench, no**, in any language: −0.02 on Python, −0.00 across the nine others, neither significant; there the lead comes from the search stack. Inside the agent, no significant difference (within 0.02). | Mixed |
 
 ## Where the other tools are the better choice
 
@@ -145,7 +145,8 @@ documentation says so:
 | code-review-graph: impact F1 0.69 | Ground truth built from its own graph. Its README calls the recall "a circular upper bound". | Not run. Our change-impact tasks use a type-checker as the oracle instead. |
 
 So TypeTrace has **not** been shown to beat these tools on their own benchmarks. It beats them at finding code on ours
-(real TypeScript repositories) and on a public one chosen by others (SWE-bench Lite, Python), with ground truth
+(real TypeScript repositories) and on two public ones chosen by others (SWE-bench Lite in Python, SWE-bench
+Multilingual in nine other languages), with ground truth
 independent of every tool and the competitors as shipped. Which of their
 benchmarks we ran:
 
@@ -160,7 +161,7 @@ benchmarks we ran:
 
 ## Results
 
-Results 1 and 2 are measured on three real TypeScript repositories of increasing size, result 3 on SWE-bench Lite (Python), against [graphify](https://github.com/Graphify-Labs/graphify) 0.9.108 and [code-review-graph](https://github.com/tirth8205/code-review-graph) 2.4.0. Both ran at their latest releases at the time of the runs (pinned), through their own MCP servers, on exactly the same files. The tests were pre-registered before the runs, losses are reported, and [everything is reproducible](#reproducing-the-benchmark).
+Results 1 and 2 are measured on three real TypeScript repositories of increasing size, results 3 and 4 on SWE-bench Lite (Python) and SWE-bench Multilingual (nine other languages), against [graphify](https://github.com/Graphify-Labs/graphify) 0.9.108 and [code-review-graph](https://github.com/tirth8205/code-review-graph) 2.4.0. Both ran at their latest releases at the time of the runs (pinned), through their own MCP servers, on exactly the same files. The tests were pre-registered before the runs, losses are reported, and [everything is reproducible](#reproducing-the-benchmark).
 
 ### 1. Does it find the right code? (retrieval, no model calls)
 
@@ -242,9 +243,36 @@ method.
 
 Details, per-repository results and failure examples: [findings](experiments/05-swebench-python/findings.md).
 
+### 4. Nine more languages: SWE-bench Multilingual (retrieval, no model calls)
+
+[SWE-bench Multilingual](https://www.swebench.com/multilingual.html) is 300 real GitHub issues from 41 repositories in
+Java, Rust, Go, PHP, Ruby, C, C++, JavaScript and TypeScript. Same setup as result 3: the issue text as the query, the
+functions the merged fix changed as the ground truth, the same budget for every method, pre-registered
+([protocol](experiments/08-swebench-multilingual/protocol.md)). One issue was excluded because its fix changes only an
+HTML template.
+
+| Method | Recall@10 | Root-cause MRR | File Recall@10 | Output tokens |
+|---|---:|---:|---:|---:|
+| TypeTrace search without the graph | **0.39** | 0.27 | 0.71 | 7,582 |
+| **TypeTrace** (hybrid, with graph) | **0.39** | **0.28** | **0.73** | 6,199 |
+| **TypeTrace** (agent tool, ≤800 tok) | 0.38 | 0.27 | 0.67 | **750** |
+| code-review-graph + embeddings | 0.26 | 0.19 | 0.62 | 10,467 |
+| graphify | 0.12 | 0.08 | 0.55 | 7,389 |
+| code-review-graph (default) | 0.07 | 0.05 | 0.14 | 4,211 |
+
+- **Ahead of both competitors, as pre-registered:** +0.27 Recall@10 over graphify and +0.13 over code-review-graph
+  with embeddings (paired over 299 issues, both Holm p = 0.0001), and ahead of both in each of the nine languages.
+- **The call graph does not help here either:** −0.002, not significant (24 issues better with the graph, 28 worse).
+  Per language it ranges from −0.11 (Java) to +0.10 (PHP), exploratory and uncorrected. On the 43 TypeScript and
+  JavaScript issues, where the graph comes from the TypeScript compiler, it shows no gain either (−0.03, 95% CI
+  −0.14 to +0.06).
+- **The agent tool** keeps the accuracy in about a tenth of the tokens. No agent runs were made on these languages yet.
+
+Details, per-language and per-repository results: [findings](experiments/08-swebench-multilingual/findings.md).
+
 ## Is this a fair fight? Read this before quoting the numbers
 
-**TypeTrace was built for TypeScript, and the agent benchmarks above are TypeScript.** It uses the TypeScript compiler, while graphify and code-review-graph are multi-language tree-sitter tools. The repositories and tasks were chosen to study scale, not to favour any tool, but TypeScript is TypeTrace's home ground. The Python benchmark ([3](#3-python-swe-bench-lite-retrieval-no-model-calls)) tests it away from home, on public issues and ground truth chosen by others; the multi-language one is pre-registered.
+**TypeTrace was built for TypeScript, and the agent benchmarks above are TypeScript.** It uses the TypeScript compiler, while graphify and code-review-graph are multi-language tree-sitter tools. The repositories and tasks were chosen to study scale, not to favour any tool, but TypeScript is TypeTrace's home ground. The SWE-bench benchmarks ([3](#3-python-swe-bench-lite-retrieval-no-model-calls) and [4](#4-nine-more-languages-swe-bench-multilingual-retrieval-no-model-calls)) test it away from home, in ten languages, on public issues and ground truth chosen by others.
 
 What makes the comparison fair:
 - **Ground truth is independent of every tool.** It comes from merged fix PRs, a type-checker oracle for change impact, and independent audits, all frozen before any retrieval output existed.
@@ -254,7 +282,7 @@ What makes the comparison fair:
 
 Where the advantage comes from, and where it doesn't:
 - **The embedding model is part of it, but not the explanation.** Qwen3-Embedding-0.6B alone, with no graph and no BM25, already beats code-review-graph + MiniLM embeddings (Recall@10 0.51 vs 0.31, 0.47 vs 0.26, 0.19 vs 0.10). But code-review-graph *given* Qwen3 still trails TypeTrace by 0.16–0.41.
-- **On TypeScript, the graph adds most on the smallest and largest repositories.** Recall@10 +0.24 on nestjs-boilerplate, +0.05 on Immich, +0.16 on Twenty, against the same search without the graph. **On Python it adds nothing** (−0.02 on SWE-bench Lite, not significant).
+- **On TypeScript, the graph adds most on the smallest and largest repositories.** Recall@10 +0.24 on nestjs-boilerplate, +0.05 on Immich, +0.16 on Twenty, against the same search without the graph. **On SWE-bench it adds nothing**: −0.02 on Python and −0.00 across nine other languages, neither significant.
 - **Inside the agent, the graph does not significantly improve accuracy.** The same tool without graph propagation scored within 0.02 (pre-registered, Holm p = 0.44). Agents with grep recover much of the difference by reading more files. The token savings are what replicate.
 - **Scope:** Claude Haiku 5.5 and Sonnet 5.5 only, 18–26 tasks per repository, three repositories. The repositories are public, so the models may have seen them; that applies to every arm, ours included.
 
@@ -265,9 +293,9 @@ resolved, and what has been measured:
 
 | Language | How calls are resolved | Measured |
 |---|---|---|
-| **TypeScript, JavaScript** | TypeScript compiler: types, imports, CommonJS, DI, decorators, routes, events | retrieval and agent benchmarks above (TypeScript); JavaScript call edges hand-checked 12/12 |
+| **TypeScript, JavaScript** | TypeScript compiler: types, imports, CommonJS, DI, decorators, routes, events | retrieval and agent benchmarks above (TypeScript); [SWE-bench Multilingual](experiments/08-swebench-multilingual/findings.md), 43 TypeScript and JavaScript issues, retrieval only; JavaScript call edges hand-checked 12/12 |
 | **Python** | scopes, imports, inheritance (MRO), `self.x = X()` | [SWE-bench Lite](experiments/05-swebench-python/findings.md), 300 issues, retrieval only: ahead of both competitors; the call graph itself adds nothing measurable on Python |
-| **Go, Java, Kotlin, Scala, C#, Rust, C, C++, Ruby, PHP, Swift** | tree-sitter: `this`/`self`, declared types of fields, parameters and locals, constructors, imports and packages, chained calls through return types | [graph quality on 13 open-source repositories](experiments/07-languages/): 97% of hand-checked verified call edges correct (151/156); retrieval benchmark ([SWE-bench Multilingual](experiments/08-swebench-multilingual/protocol.md)) pre-registered, running |
+| **Go, Java, Kotlin, Scala, C#, Rust, C, C++, Ruby, PHP, Swift** | tree-sitter: `this`/`self`, declared types of fields, parameters and locals, constructors, imports and packages, chained calls through return types | [graph quality on 13 open-source repositories](experiments/07-languages/): 97% of hand-checked verified call edges correct (151/156); [SWE-bench Multilingual](experiments/08-swebench-multilingual/findings.md), retrieval only: ahead of both competitors in Java, Rust, Go, PHP, Ruby, C and C++; the call graph adds nothing measurable overall. Kotlin, Scala, C# and Swift: graph quality only |
 
 Links resolved only by name are labelled `inferred`, not `verified`. They are kept only in the languages where they
 measured at least 50% correct. C and C++ code with heavy macro use parses less reliably, and declarations after a parse
