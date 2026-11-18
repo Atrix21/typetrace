@@ -6,6 +6,7 @@
 import { spawnSync } from 'node:child_process';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import type { Corpus, IndexStats, RetrievalBudget, RetrievalMethod, RetrievalOutput, RetrievalQuery } from '../types.js';
 import { SymbolIndex } from '../evaluation/symbol-index.js';
@@ -90,6 +91,8 @@ export class Embedder {
     const uniq = new Map<string, EmbedItem>();
     for (const it of items) { const k = this.key(it); if (!cache.has(k)) uniq.set(k, { ...it, id: k }); }
     const all = [...uniq.values()];
+    const unlock = all.length ? gpuLock() : () => {};
+    try {
     for (let i = 0; i < all.length; i += Embedder.EMBED_BATCH_ITEMS) {
       const part = all.slice(i, i + Embedder.EMBED_BATCH_ITEMS);
       const tmpIn = path.join(this.cacheDir, `in-${process.pid}.jsonl`);
@@ -111,6 +114,7 @@ export class Embedder {
       fs.appendFileSync(cacheFile, add.join('\n') + '\n');
       fs.rmSync(tmpIn); fs.rmSync(tmpOut);
     }
+    } finally { unlock(); }
     const vectors = new Map<string, Float32Array>();
     const tokens = new Map<string, number>();
     for (const it of items) {
@@ -119,6 +123,25 @@ export class Embedder {
       tokens.set(it.id, c.t);
     }
     return { vectors, tokens, computed: uniq.size };
+  }
+}
+
+/**
+ * Machine-wide lock around document embedding, on only when TYPETRACE_EMBED_LOCK=1 (experiment 10: parallel agent
+ * workers must not load several model copies onto one 6 GB GPU at once). Experiments 1-8 never set it. A lock whose
+ * owner process is gone is taken over.
+ */
+function gpuLock(): () => void {
+  if (process.env.TYPETRACE_EMBED_LOCK !== '1') return () => {};
+  const lock = path.join(os.tmpdir(), 'typetrace-embed.lock');
+  const sleep = (ms: number) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+  for (;;) {
+    try { fs.writeFileSync(lock, String(process.pid), { flag: 'wx' }); return () => { try { fs.rmSync(lock); } catch { /* */ } }; } catch { /* held */ }
+    const owner = Number(fs.readFileSync(lock, 'utf8') || 0);
+    let alive = false;
+    try { if (owner) { process.kill(owner, 0); alive = true; } } catch { /* gone */ }
+    if (!alive) { try { fs.rmSync(lock); } catch { /* */ } continue; }
+    sleep(500);
   }
 }
 

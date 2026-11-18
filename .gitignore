@@ -22,3 +22,9 @@ experiments/08-swebench-multilingual/results/raw/
 
 # owner-specific privacy-scan patterns for scripts/release/export.py (never committed)
 .private-patterns
+# Experiment 10: agent transcripts and tool logs contain code from the benchmark repositories; mock runs are local tests
+experiments/10-swebench-agents/results/*/transcripts/
+experiments/10-swebench-agents/results/*/tool-logs/
+experiments/10-swebench-agents/results/mock-*/
+# Experiment 10: the approval file names the owner's logins; only the example is committed
+experiments/10-swebench-agents/APPROVAL.json

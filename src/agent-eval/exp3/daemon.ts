@@ -19,6 +19,8 @@ import { EmbeddingRetriever } from '../../retrieval/embeddings.js';
 import { primeGraphCache } from '../../retrieval/graph-retrieval.js';
 import type { Corpus, RetrievalMethod } from '../../types.js';
 import { PersistentQueryEmbedder } from '../mcp/retrieval-server.js';
+import { RemoteQueryEmbedder } from '../shared-embedder.js';
+import { grammarLanguages, initLanguages } from '../../languages/registry.js';
 
 export const ARMS = ['compact_graph', 'compact_nograph'] as const;
 export type Arm = (typeof ARMS)[number];
@@ -31,12 +33,16 @@ async function main() {
   const root = abs(g('root')!), graphPath = abs(g('graph')!), cacheDir = abs(g('cache')!);
   fs.mkdirSync(cacheDir, { recursive: true });
   const t0 = performance.now();
-  const files = listCorpusFiles(root, ['src']);
+  // --files <json>: an explicit corpus (experiment 10, SWE-bench snapshots); default: experiment 3's src/ tree.
+  const files: string[] = g('files') ? JSON.parse(fs.readFileSync(abs(g('files')!), 'utf8')) : listCorpusFiles(root, ['src']);
+  // Python and the tree-sitter languages need their grammars before chunking (TypeScript/JavaScript do not).
+  await initLanguages(grammarLanguages(files));
   const corpus: Corpus = { repoRoot: root, commit: 'agent', files, cacheDir };
   const graph = loadGraph(graphPath);
   primeGraphCache(corpus, { nodes: graph.nodes, edges: graph.edges, build_ms: 0, cached: true });
   EmbeddingRetriever.embeddingCacheDir = abs(g('emb-cache')!);
-  const embedder = new PersistentQueryEmbedder();
+  // TYPETRACE_EMBED_URL: use a shared embedding server (experiment 10, parallel workers) instead of loading a model copy.
+  const embedder = process.env.TYPETRACE_EMBED_URL ? new RemoteQueryEmbedder(process.env.TYPETRACE_EMBED_URL) : new PersistentQueryEmbedder();
   EmbeddingRetriever.defaultQueryEmbedder = embedder;
   const methods = new Map<Arm, RetrievalMethod & { prewarmQuery?(q: string): Promise<void> }>();
   for (const a of ARMS) { const m = await REGISTRY[a](); await m.prepare(corpus); methods.set(a, m); }
