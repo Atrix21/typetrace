@@ -255,9 +255,13 @@ async function main() {
   for (const f of ['runs.jsonl', 'excluded.jsonl', 'accounts.jsonl']) if (!fs.existsSync(path.join(OUT, f))) fs.writeFileSync(path.join(OUT, f), '');
   const done = new Set(readJsonl(path.join(OUT, 'runs.jsonl')).map((r) => r.run_id));
   const excl = readJsonl(path.join(OUT, 'excluded.jsonl'));
-  const attempts = (id: string) => excl.filter((e) => e.run_id === id && !isUsageLimitExclusion(e) && e.excluded_kind !== 'aborted').length;
+  const counted = (id: string) => excl.filter((e) => e.run_id === id && !isUsageLimitExclusion(e) && e.excluded_kind !== 'aborted');
+  const attempts = (id: string) => counted(id).length;
+  // E10-D02: a stalled response (no result event, exit 0) is retried up to 4 attempts in all; any other
+  // infrastructure failure is retried once, as pre-registered.
+  const canTry = (id: string) => { const c = counted(id); const stalls = c.filter((e) => e.excluded === 'infra_error:no_result').length; return c.length - stalls < 2 && c.length < 4; };
   const finalExcl = new Set(excl.filter((e) => e.retryable === false).map((e) => e.run_id));
-  const pending = (is: Issue) => plan.filter((i) => i.issue === is.id && !done.has(i.run_id) && !finalExcl.has(i.run_id) && attempts(i.run_id) < 2);
+  const pending = (is: Issue) => plan.filter((i) => i.issue === is.id && !done.has(i.run_id) && !finalExcl.has(i.run_id) && canTry(i.run_id));
 
   installSignalHandlers();
   const children = new Set<ChildProcess>();
@@ -314,7 +318,7 @@ async function main() {
       });
       for (const it of items) {
         if (halted) break;
-        for (let attempt = attempts(it.run_id) + 1; attempt <= 2 && !halted; attempt++) {
+        for (let attempt = attempts(it.run_id) + 1; canTry(it.run_id) && !halted; attempt++) {
           // account: wait while every account is exhausted
           let acctName = pool.current();
           while (!acctName && !halted) { log(`w${w}: all accounts at their limit; waiting 20 min`); await sleep(20 * 60_000); acctName = pool.current(); }

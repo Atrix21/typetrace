@@ -1,0 +1,1859 @@
+{
+ "config": {
+  "set": "pilot",
+  "n": null,
+  "arms": [
+   "A0",
+   "A1",
+   "A2",
+   "A5",
+   "A6"
+  ],
+  "model": "claude-haiku-5-5",
+  "effort": "high",
+  "repeats": 2,
+  "max_turns": 40,
+  "issues": [
+   "scikit-learn__scikit-learn-13497",
+   "matplotlib__matplotlib-26020",
+   "matplotlib__matplotlib-23314",
+   "scikit-learn__scikit-learn-10297",
+   "scikit-learn__scikit-learn-14983",
+   "sympy__sympy-21379",
+   "django__django-13964",
+   "matplotlib__matplotlib-23913",
+   "django__django-15061",
+   "sphinx-doc__sphinx-11445",
+   "pytest-dev__pytest-11143",
+   "sympy__sympy-20590",
+   "django__django-13315",
+   "django__django-13265",
+   "sympy__sympy-19487",
+   "apache__druid-15402",
+   "burntsushi__ripgrep-2576",
+   "php-cs-fixer__php-cs-fixer-7663",
+   "vuejs__core-11589",
+   "tokio-rs__tokio-4384",
+   "briannesbitt__carbon-3098",
+   "fluent__fluentd-4030",
+   "axios__axios-5892",
+   "caddyserver__caddy-6350",
+   "prometheus__prometheus-13845",
+   "micropython__micropython-12158",
+   "google__gson-1100",
+   "tokio-rs__tokio-6551",
+   "sharkdp__bat-2835",
+   "apache__lucene-12212"
+  ],
+  "claude_version": "2.1.327",
+  "mock": false,
+  "accounts": [
+   "login1",
+   "login2"
+  ],
+  "system_prompt_sha": "1c40811c7bfdc39d",
+  "schema_sha": "53ca3a9507c3b138"
+ },
+ "items": [
+  {
+   "run_id": "scikit-learn__scikit-learn-13497|A2|r2",
+   "issue": "scikit-learn__scikit-learn-13497",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13497|A6|r2",
+   "issue": "scikit-learn__scikit-learn-13497",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13497|A0|r1",
+   "issue": "scikit-learn__scikit-learn-13497",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13497|A2|r1",
+   "issue": "scikit-learn__scikit-learn-13497",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13497|A5|r2",
+   "issue": "scikit-learn__scikit-learn-13497",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13497|A1|r1",
+   "issue": "scikit-learn__scikit-learn-13497",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13497|A1|r2",
+   "issue": "scikit-learn__scikit-learn-13497",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13497|A5|r1",
+   "issue": "scikit-learn__scikit-learn-13497",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13497|A0|r2",
+   "issue": "scikit-learn__scikit-learn-13497",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13497|A6|r1",
+   "issue": "scikit-learn__scikit-learn-13497",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib__matplotlib-26020|A6|r1",
+   "issue": "matplotlib__matplotlib-26020",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib__matplotlib-26020|A0|r2",
+   "issue": "matplotlib__matplotlib-26020",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib__matplotlib-26020|A1|r1",
+   "issue": "matplotlib__matplotlib-26020",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib__matplotlib-26020|A0|r1",
+   "issue": "matplotlib__matplotlib-26020",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib__matplotlib-26020|A5|r2",
+   "issue": "matplotlib__matplotlib-26020",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib__matplotlib-26020|A1|r2",
+   "issue": "matplotlib__matplotlib-26020",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib__matplotlib-26020|A5|r1",
+   "issue": "matplotlib__matplotlib-26020",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib__matplotlib-26020|A2|r1",
+   "issue": "matplotlib__matplotlib-26020",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib__matplotlib-26020|A6|r2",
+   "issue": "matplotlib__matplotlib-26020",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib__matplotlib-26020|A2|r2",
+   "issue": "matplotlib__matplotlib-26020",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23314|A2|r2",
+   "issue": "matplotlib__matplotlib-23314",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23314|A6|r2",
+   "issue": "matplotlib__matplotlib-23314",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23314|A5|r2",
+   "issue": "matplotlib__matplotlib-23314",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23314|A2|r1",
+   "issue": "matplotlib__matplotlib-23314",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23314|A5|r1",
+   "issue": "matplotlib__matplotlib-23314",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23314|A0|r2",
+   "issue": "matplotlib__matplotlib-23314",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23314|A0|r1",
+   "issue": "matplotlib__matplotlib-23314",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23314|A6|r1",
+   "issue": "matplotlib__matplotlib-23314",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23314|A1|r1",
+   "issue": "matplotlib__matplotlib-23314",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23314|A1|r2",
+   "issue": "matplotlib__matplotlib-23314",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-10297|A1|r1",
+   "issue": "scikit-learn__scikit-learn-10297",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-10297|A6|r1",
+   "issue": "scikit-learn__scikit-learn-10297",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-10297|A1|r2",
+   "issue": "scikit-learn__scikit-learn-10297",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-10297|A2|r1",
+   "issue": "scikit-learn__scikit-learn-10297",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-10297|A0|r1",
+   "issue": "scikit-learn__scikit-learn-10297",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-10297|A5|r2",
+   "issue": "scikit-learn__scikit-learn-10297",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-10297|A6|r2",
+   "issue": "scikit-learn__scikit-learn-10297",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-10297|A0|r2",
+   "issue": "scikit-learn__scikit-learn-10297",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-10297|A2|r2",
+   "issue": "scikit-learn__scikit-learn-10297",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-10297|A5|r1",
+   "issue": "scikit-learn__scikit-learn-10297",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-14983|A2|r2",
+   "issue": "scikit-learn__scikit-learn-14983",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-14983|A0|r1",
+   "issue": "scikit-learn__scikit-learn-14983",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-14983|A5|r1",
+   "issue": "scikit-learn__scikit-learn-14983",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-14983|A5|r2",
+   "issue": "scikit-learn__scikit-learn-14983",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-14983|A2|r1",
+   "issue": "scikit-learn__scikit-learn-14983",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-14983|A1|r1",
+   "issue": "scikit-learn__scikit-learn-14983",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-14983|A1|r2",
+   "issue": "scikit-learn__scikit-learn-14983",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-14983|A6|r1",
+   "issue": "scikit-learn__scikit-learn-14983",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-14983|A0|r2",
+   "issue": "scikit-learn__scikit-learn-14983",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-14983|A6|r2",
+   "issue": "scikit-learn__scikit-learn-14983",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy__sympy-21379|A6|r1",
+   "issue": "sympy__sympy-21379",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy__sympy-21379|A2|r2",
+   "issue": "sympy__sympy-21379",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy__sympy-21379|A6|r2",
+   "issue": "sympy__sympy-21379",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy__sympy-21379|A5|r2",
+   "issue": "sympy__sympy-21379",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy__sympy-21379|A1|r1",
+   "issue": "sympy__sympy-21379",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy__sympy-21379|A2|r1",
+   "issue": "sympy__sympy-21379",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy__sympy-21379|A1|r2",
+   "issue": "sympy__sympy-21379",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy__sympy-21379|A0|r1",
+   "issue": "sympy__sympy-21379",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy__sympy-21379|A5|r1",
+   "issue": "sympy__sympy-21379",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy__sympy-21379|A0|r2",
+   "issue": "sympy__sympy-21379",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-13964|A6|r2",
+   "issue": "django__django-13964",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-13964|A2|r1",
+   "issue": "django__django-13964",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-13964|A5|r2",
+   "issue": "django__django-13964",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-13964|A1|r2",
+   "issue": "django__django-13964",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-13964|A0|r1",
+   "issue": "django__django-13964",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-13964|A1|r1",
+   "issue": "django__django-13964",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-13964|A6|r1",
+   "issue": "django__django-13964",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-13964|A5|r1",
+   "issue": "django__django-13964",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-13964|A0|r2",
+   "issue": "django__django-13964",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-13964|A2|r2",
+   "issue": "django__django-13964",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23913|A1|r1",
+   "issue": "matplotlib__matplotlib-23913",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23913|A6|r1",
+   "issue": "matplotlib__matplotlib-23913",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23913|A1|r2",
+   "issue": "matplotlib__matplotlib-23913",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23913|A6|r2",
+   "issue": "matplotlib__matplotlib-23913",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23913|A0|r2",
+   "issue": "matplotlib__matplotlib-23913",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23913|A2|r1",
+   "issue": "matplotlib__matplotlib-23913",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23913|A5|r1",
+   "issue": "matplotlib__matplotlib-23913",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23913|A2|r2",
+   "issue": "matplotlib__matplotlib-23913",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23913|A5|r2",
+   "issue": "matplotlib__matplotlib-23913",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib__matplotlib-23913|A0|r1",
+   "issue": "matplotlib__matplotlib-23913",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-15061|A2|r1",
+   "issue": "django__django-15061",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-15061|A0|r2",
+   "issue": "django__django-15061",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-15061|A0|r1",
+   "issue": "django__django-15061",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-15061|A5|r1",
+   "issue": "django__django-15061",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-15061|A6|r1",
+   "issue": "django__django-15061",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-15061|A6|r2",
+   "issue": "django__django-15061",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-15061|A1|r1",
+   "issue": "django__django-15061",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-15061|A1|r2",
+   "issue": "django__django-15061",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-15061|A2|r2",
+   "issue": "django__django-15061",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-15061|A5|r2",
+   "issue": "django__django-15061",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-11445|A2|r1",
+   "issue": "sphinx-doc__sphinx-11445",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-11445|A5|r2",
+   "issue": "sphinx-doc__sphinx-11445",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-11445|A0|r2",
+   "issue": "sphinx-doc__sphinx-11445",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-11445|A0|r1",
+   "issue": "sphinx-doc__sphinx-11445",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-11445|A6|r2",
+   "issue": "sphinx-doc__sphinx-11445",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-11445|A2|r2",
+   "issue": "sphinx-doc__sphinx-11445",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-11445|A1|r2",
+   "issue": "sphinx-doc__sphinx-11445",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-11445|A5|r1",
+   "issue": "sphinx-doc__sphinx-11445",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-11445|A6|r1",
+   "issue": "sphinx-doc__sphinx-11445",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-11445|A1|r1",
+   "issue": "sphinx-doc__sphinx-11445",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "pytest-dev__pytest-11143|A6|r2",
+   "issue": "pytest-dev__pytest-11143",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "pytest-dev__pytest-11143|A0|r1",
+   "issue": "pytest-dev__pytest-11143",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "pytest-dev__pytest-11143|A2|r1",
+   "issue": "pytest-dev__pytest-11143",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "pytest-dev__pytest-11143|A1|r1",
+   "issue": "pytest-dev__pytest-11143",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "pytest-dev__pytest-11143|A5|r2",
+   "issue": "pytest-dev__pytest-11143",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "pytest-dev__pytest-11143|A5|r1",
+   "issue": "pytest-dev__pytest-11143",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "pytest-dev__pytest-11143|A1|r2",
+   "issue": "pytest-dev__pytest-11143",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "pytest-dev__pytest-11143|A2|r2",
+   "issue": "pytest-dev__pytest-11143",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "pytest-dev__pytest-11143|A6|r1",
+   "issue": "pytest-dev__pytest-11143",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "pytest-dev__pytest-11143|A0|r2",
+   "issue": "pytest-dev__pytest-11143",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy__sympy-20590|A0|r2",
+   "issue": "sympy__sympy-20590",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy__sympy-20590|A0|r1",
+   "issue": "sympy__sympy-20590",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy__sympy-20590|A2|r1",
+   "issue": "sympy__sympy-20590",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy__sympy-20590|A5|r1",
+   "issue": "sympy__sympy-20590",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy__sympy-20590|A5|r2",
+   "issue": "sympy__sympy-20590",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy__sympy-20590|A6|r2",
+   "issue": "sympy__sympy-20590",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy__sympy-20590|A6|r1",
+   "issue": "sympy__sympy-20590",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy__sympy-20590|A1|r2",
+   "issue": "sympy__sympy-20590",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy__sympy-20590|A2|r2",
+   "issue": "sympy__sympy-20590",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy__sympy-20590|A1|r1",
+   "issue": "sympy__sympy-20590",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-13315|A5|r1",
+   "issue": "django__django-13315",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-13315|A6|r1",
+   "issue": "django__django-13315",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-13315|A1|r1",
+   "issue": "django__django-13315",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-13315|A5|r2",
+   "issue": "django__django-13315",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-13315|A2|r2",
+   "issue": "django__django-13315",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-13315|A1|r2",
+   "issue": "django__django-13315",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-13315|A6|r2",
+   "issue": "django__django-13315",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-13315|A2|r1",
+   "issue": "django__django-13315",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-13315|A0|r2",
+   "issue": "django__django-13315",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-13315|A0|r1",
+   "issue": "django__django-13315",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-13265|A5|r2",
+   "issue": "django__django-13265",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-13265|A2|r1",
+   "issue": "django__django-13265",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-13265|A1|r2",
+   "issue": "django__django-13265",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-13265|A5|r1",
+   "issue": "django__django-13265",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-13265|A6|r1",
+   "issue": "django__django-13265",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-13265|A1|r1",
+   "issue": "django__django-13265",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-13265|A0|r2",
+   "issue": "django__django-13265",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-13265|A0|r1",
+   "issue": "django__django-13265",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-13265|A6|r2",
+   "issue": "django__django-13265",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-13265|A2|r2",
+   "issue": "django__django-13265",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy__sympy-19487|A5|r2",
+   "issue": "sympy__sympy-19487",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy__sympy-19487|A0|r2",
+   "issue": "sympy__sympy-19487",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy__sympy-19487|A2|r2",
+   "issue": "sympy__sympy-19487",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy__sympy-19487|A5|r1",
+   "issue": "sympy__sympy-19487",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy__sympy-19487|A6|r1",
+   "issue": "sympy__sympy-19487",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy__sympy-19487|A0|r1",
+   "issue": "sympy__sympy-19487",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy__sympy-19487|A6|r2",
+   "issue": "sympy__sympy-19487",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy__sympy-19487|A1|r1",
+   "issue": "sympy__sympy-19487",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy__sympy-19487|A1|r2",
+   "issue": "sympy__sympy-19487",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy__sympy-19487|A2|r1",
+   "issue": "sympy__sympy-19487",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__druid-15402|A6|r2",
+   "issue": "apache__druid-15402",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__druid-15402|A0|r1",
+   "issue": "apache__druid-15402",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__druid-15402|A1|r1",
+   "issue": "apache__druid-15402",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__druid-15402|A2|r2",
+   "issue": "apache__druid-15402",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__druid-15402|A0|r2",
+   "issue": "apache__druid-15402",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__druid-15402|A2|r1",
+   "issue": "apache__druid-15402",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__druid-15402|A6|r1",
+   "issue": "apache__druid-15402",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__druid-15402|A5|r2",
+   "issue": "apache__druid-15402",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__druid-15402|A5|r1",
+   "issue": "apache__druid-15402",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__druid-15402|A1|r2",
+   "issue": "apache__druid-15402",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "burntsushi__ripgrep-2576|A0|r2",
+   "issue": "burntsushi__ripgrep-2576",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "burntsushi__ripgrep-2576|A5|r2",
+   "issue": "burntsushi__ripgrep-2576",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "burntsushi__ripgrep-2576|A1|r2",
+   "issue": "burntsushi__ripgrep-2576",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "burntsushi__ripgrep-2576|A5|r1",
+   "issue": "burntsushi__ripgrep-2576",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "burntsushi__ripgrep-2576|A2|r2",
+   "issue": "burntsushi__ripgrep-2576",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "burntsushi__ripgrep-2576|A6|r1",
+   "issue": "burntsushi__ripgrep-2576",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "burntsushi__ripgrep-2576|A0|r1",
+   "issue": "burntsushi__ripgrep-2576",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "burntsushi__ripgrep-2576|A2|r1",
+   "issue": "burntsushi__ripgrep-2576",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "burntsushi__ripgrep-2576|A6|r2",
+   "issue": "burntsushi__ripgrep-2576",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "burntsushi__ripgrep-2576|A1|r1",
+   "issue": "burntsushi__ripgrep-2576",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "php-cs-fixer__php-cs-fixer-7663|A1|r2",
+   "issue": "php-cs-fixer__php-cs-fixer-7663",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "php-cs-fixer__php-cs-fixer-7663|A1|r1",
+   "issue": "php-cs-fixer__php-cs-fixer-7663",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "php-cs-fixer__php-cs-fixer-7663|A0|r1",
+   "issue": "php-cs-fixer__php-cs-fixer-7663",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "php-cs-fixer__php-cs-fixer-7663|A2|r1",
+   "issue": "php-cs-fixer__php-cs-fixer-7663",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "php-cs-fixer__php-cs-fixer-7663|A0|r2",
+   "issue": "php-cs-fixer__php-cs-fixer-7663",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "php-cs-fixer__php-cs-fixer-7663|A6|r2",
+   "issue": "php-cs-fixer__php-cs-fixer-7663",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "php-cs-fixer__php-cs-fixer-7663|A2|r2",
+   "issue": "php-cs-fixer__php-cs-fixer-7663",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "php-cs-fixer__php-cs-fixer-7663|A5|r1",
+   "issue": "php-cs-fixer__php-cs-fixer-7663",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "php-cs-fixer__php-cs-fixer-7663|A6|r1",
+   "issue": "php-cs-fixer__php-cs-fixer-7663",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "php-cs-fixer__php-cs-fixer-7663|A5|r2",
+   "issue": "php-cs-fixer__php-cs-fixer-7663",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "vuejs__core-11589|A1|r1",
+   "issue": "vuejs__core-11589",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "vuejs__core-11589|A1|r2",
+   "issue": "vuejs__core-11589",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "vuejs__core-11589|A0|r1",
+   "issue": "vuejs__core-11589",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "vuejs__core-11589|A5|r2",
+   "issue": "vuejs__core-11589",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "vuejs__core-11589|A5|r1",
+   "issue": "vuejs__core-11589",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "vuejs__core-11589|A6|r2",
+   "issue": "vuejs__core-11589",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "vuejs__core-11589|A6|r1",
+   "issue": "vuejs__core-11589",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "vuejs__core-11589|A2|r2",
+   "issue": "vuejs__core-11589",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "vuejs__core-11589|A0|r2",
+   "issue": "vuejs__core-11589",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "vuejs__core-11589|A2|r1",
+   "issue": "vuejs__core-11589",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "tokio-rs__tokio-4384|A5|r2",
+   "issue": "tokio-rs__tokio-4384",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "tokio-rs__tokio-4384|A1|r1",
+   "issue": "tokio-rs__tokio-4384",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "tokio-rs__tokio-4384|A0|r2",
+   "issue": "tokio-rs__tokio-4384",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "tokio-rs__tokio-4384|A6|r1",
+   "issue": "tokio-rs__tokio-4384",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "tokio-rs__tokio-4384|A1|r2",
+   "issue": "tokio-rs__tokio-4384",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "tokio-rs__tokio-4384|A6|r2",
+   "issue": "tokio-rs__tokio-4384",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "tokio-rs__tokio-4384|A0|r1",
+   "issue": "tokio-rs__tokio-4384",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "tokio-rs__tokio-4384|A2|r1",
+   "issue": "tokio-rs__tokio-4384",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "tokio-rs__tokio-4384|A2|r2",
+   "issue": "tokio-rs__tokio-4384",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "tokio-rs__tokio-4384|A5|r1",
+   "issue": "tokio-rs__tokio-4384",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "briannesbitt__carbon-3098|A6|r2",
+   "issue": "briannesbitt__carbon-3098",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "briannesbitt__carbon-3098|A0|r1",
+   "issue": "briannesbitt__carbon-3098",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "briannesbitt__carbon-3098|A1|r1",
+   "issue": "briannesbitt__carbon-3098",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "briannesbitt__carbon-3098|A2|r2",
+   "issue": "briannesbitt__carbon-3098",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "briannesbitt__carbon-3098|A5|r1",
+   "issue": "briannesbitt__carbon-3098",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "briannesbitt__carbon-3098|A0|r2",
+   "issue": "briannesbitt__carbon-3098",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "briannesbitt__carbon-3098|A2|r1",
+   "issue": "briannesbitt__carbon-3098",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "briannesbitt__carbon-3098|A5|r2",
+   "issue": "briannesbitt__carbon-3098",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "briannesbitt__carbon-3098|A6|r1",
+   "issue": "briannesbitt__carbon-3098",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "briannesbitt__carbon-3098|A1|r2",
+   "issue": "briannesbitt__carbon-3098",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "fluent__fluentd-4030|A0|r2",
+   "issue": "fluent__fluentd-4030",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "fluent__fluentd-4030|A0|r1",
+   "issue": "fluent__fluentd-4030",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "fluent__fluentd-4030|A5|r2",
+   "issue": "fluent__fluentd-4030",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "fluent__fluentd-4030|A2|r2",
+   "issue": "fluent__fluentd-4030",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "fluent__fluentd-4030|A6|r2",
+   "issue": "fluent__fluentd-4030",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "fluent__fluentd-4030|A6|r1",
+   "issue": "fluent__fluentd-4030",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "fluent__fluentd-4030|A1|r2",
+   "issue": "fluent__fluentd-4030",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "fluent__fluentd-4030|A2|r1",
+   "issue": "fluent__fluentd-4030",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "fluent__fluentd-4030|A1|r1",
+   "issue": "fluent__fluentd-4030",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "fluent__fluentd-4030|A5|r1",
+   "issue": "fluent__fluentd-4030",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "axios__axios-5892|A6|r1",
+   "issue": "axios__axios-5892",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "axios__axios-5892|A1|r1",
+   "issue": "axios__axios-5892",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "axios__axios-5892|A0|r2",
+   "issue": "axios__axios-5892",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "axios__axios-5892|A2|r1",
+   "issue": "axios__axios-5892",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "axios__axios-5892|A6|r2",
+   "issue": "axios__axios-5892",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "axios__axios-5892|A5|r2",
+   "issue": "axios__axios-5892",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "axios__axios-5892|A0|r1",
+   "issue": "axios__axios-5892",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "axios__axios-5892|A5|r1",
+   "issue": "axios__axios-5892",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "axios__axios-5892|A1|r2",
+   "issue": "axios__axios-5892",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "axios__axios-5892|A2|r2",
+   "issue": "axios__axios-5892",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "caddyserver__caddy-6350|A1|r1",
+   "issue": "caddyserver__caddy-6350",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "caddyserver__caddy-6350|A2|r1",
+   "issue": "caddyserver__caddy-6350",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "caddyserver__caddy-6350|A0|r2",
+   "issue": "caddyserver__caddy-6350",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "caddyserver__caddy-6350|A6|r1",
+   "issue": "caddyserver__caddy-6350",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "caddyserver__caddy-6350|A2|r2",
+   "issue": "caddyserver__caddy-6350",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "caddyserver__caddy-6350|A6|r2",
+   "issue": "caddyserver__caddy-6350",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "caddyserver__caddy-6350|A5|r1",
+   "issue": "caddyserver__caddy-6350",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "caddyserver__caddy-6350|A5|r2",
+   "issue": "caddyserver__caddy-6350",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "caddyserver__caddy-6350|A0|r1",
+   "issue": "caddyserver__caddy-6350",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "caddyserver__caddy-6350|A1|r2",
+   "issue": "caddyserver__caddy-6350",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "prometheus__prometheus-13845|A1|r1",
+   "issue": "prometheus__prometheus-13845",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "prometheus__prometheus-13845|A5|r2",
+   "issue": "prometheus__prometheus-13845",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "prometheus__prometheus-13845|A0|r2",
+   "issue": "prometheus__prometheus-13845",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "prometheus__prometheus-13845|A2|r2",
+   "issue": "prometheus__prometheus-13845",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "prometheus__prometheus-13845|A1|r2",
+   "issue": "prometheus__prometheus-13845",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "prometheus__prometheus-13845|A6|r2",
+   "issue": "prometheus__prometheus-13845",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "prometheus__prometheus-13845|A6|r1",
+   "issue": "prometheus__prometheus-13845",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "prometheus__prometheus-13845|A5|r1",
+   "issue": "prometheus__prometheus-13845",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "prometheus__prometheus-13845|A2|r1",
+   "issue": "prometheus__prometheus-13845",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "prometheus__prometheus-13845|A0|r1",
+   "issue": "prometheus__prometheus-13845",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "micropython__micropython-12158|A0|r2",
+   "issue": "micropython__micropython-12158",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "micropython__micropython-12158|A0|r1",
+   "issue": "micropython__micropython-12158",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "micropython__micropython-12158|A5|r1",
+   "issue": "micropython__micropython-12158",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "micropython__micropython-12158|A1|r1",
+   "issue": "micropython__micropython-12158",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "micropython__micropython-12158|A2|r1",
+   "issue": "micropython__micropython-12158",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "micropython__micropython-12158|A1|r2",
+   "issue": "micropython__micropython-12158",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "micropython__micropython-12158|A5|r2",
+   "issue": "micropython__micropython-12158",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "micropython__micropython-12158|A6|r1",
+   "issue": "micropython__micropython-12158",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "micropython__micropython-12158|A2|r2",
+   "issue": "micropython__micropython-12158",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "micropython__micropython-12158|A6|r2",
+   "issue": "micropython__micropython-12158",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "google__gson-1100|A2|r1",
+   "issue": "google__gson-1100",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "google__gson-1100|A0|r2",
+   "issue": "google__gson-1100",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "google__gson-1100|A0|r1",
+   "issue": "google__gson-1100",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "google__gson-1100|A1|r2",
+   "issue": "google__gson-1100",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "google__gson-1100|A5|r1",
+   "issue": "google__gson-1100",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "google__gson-1100|A6|r1",
+   "issue": "google__gson-1100",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "google__gson-1100|A1|r1",
+   "issue": "google__gson-1100",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "google__gson-1100|A2|r2",
+   "issue": "google__gson-1100",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "google__gson-1100|A6|r2",
+   "issue": "google__gson-1100",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "google__gson-1100|A5|r2",
+   "issue": "google__gson-1100",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "tokio-rs__tokio-6551|A1|r1",
+   "issue": "tokio-rs__tokio-6551",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "tokio-rs__tokio-6551|A2|r2",
+   "issue": "tokio-rs__tokio-6551",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "tokio-rs__tokio-6551|A1|r2",
+   "issue": "tokio-rs__tokio-6551",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "tokio-rs__tokio-6551|A6|r1",
+   "issue": "tokio-rs__tokio-6551",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "tokio-rs__tokio-6551|A5|r1",
+   "issue": "tokio-rs__tokio-6551",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "tokio-rs__tokio-6551|A0|r1",
+   "issue": "tokio-rs__tokio-6551",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "tokio-rs__tokio-6551|A6|r2",
+   "issue": "tokio-rs__tokio-6551",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "tokio-rs__tokio-6551|A2|r1",
+   "issue": "tokio-rs__tokio-6551",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "tokio-rs__tokio-6551|A0|r2",
+   "issue": "tokio-rs__tokio-6551",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "tokio-rs__tokio-6551|A5|r2",
+   "issue": "tokio-rs__tokio-6551",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "sharkdp__bat-2835|A2|r2",
+   "issue": "sharkdp__bat-2835",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "sharkdp__bat-2835|A5|r2",
+   "issue": "sharkdp__bat-2835",
+   "arm": "A5",
+   "repeat": 2
+  },
+  {
+   "run_id": "sharkdp__bat-2835|A6|r2",
+   "issue": "sharkdp__bat-2835",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "sharkdp__bat-2835|A1|r2",
+   "issue": "sharkdp__bat-2835",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "sharkdp__bat-2835|A2|r1",
+   "issue": "sharkdp__bat-2835",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "sharkdp__bat-2835|A0|r1",
+   "issue": "sharkdp__bat-2835",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sharkdp__bat-2835|A1|r1",
+   "issue": "sharkdp__bat-2835",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "sharkdp__bat-2835|A5|r1",
+   "issue": "sharkdp__bat-2835",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "sharkdp__bat-2835|A6|r1",
+   "issue": "sharkdp__bat-2835",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "sharkdp__bat-2835|A0|r2",
+   "issue": "sharkdp__bat-2835",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__lucene-12212|A1|r2",
+   "issue": "apache__lucene-12212",
+   "arm": "A1",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__lucene-12212|A2|r1",
+   "issue": "apache__lucene-12212",
+   "arm": "A2",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__lucene-12212|A6|r2",
+   "issue": "apache__lucene-12212",
+   "arm": "A6",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__lucene-12212|A2|r2",
+   "issue": "apache__lucene-12212",
+   "arm": "A2",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__lucene-12212|A6|r1",
+   "issue": "apache__lucene-12212",
+   "arm": "A6",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__lucene-12212|A5|r1",
+   "issue": "apache__lucene-12212",
+   "arm": "A5",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__lucene-12212|A1|r1",
+   "issue": "apache__lucene-12212",
+   "arm": "A1",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__lucene-12212|A0|r2",
+   "issue": "apache__lucene-12212",
+   "arm": "A0",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__lucene-12212|A0|r1",
+   "issue": "apache__lucene-12212",
+   "arm": "A0",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__lucene-12212|A5|r2",
+   "issue": "apache__lucene-12212",
+   "arm": "A5",
+   "repeat": 2
+  }
+ ]
+}

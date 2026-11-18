@@ -58,3 +58,69 @@ configuration folders hold a CLAUDE.md, skills, memory and MCP servers.
 
 Only redacted verdicts are kept. The raw requests of the positive control contain private configuration and are
 not stored.
+
+## E10-D01 (2026-11-18, during the pilot): 2 workers instead of 4, for memory
+
+The pilot started at 22:33 IST with 4 workers. After about 85 minutes and 139 scored runs, the machine had about 1 GB
+of memory available and its swap was full. Each worker holds one retrieval daemon per issue, and on the larger
+Python repositories these grew to 1.2 to 3.2 GB each, next to a competitor index build and the owner's desktop
+applications. The free-memory gate only applies when a worker starts an issue, so it could not prevent this.
+
+The run was stopped cleanly with SIGTERM at 23:35 IST and resumed with 2 workers. The in-flight runs had not been
+recorded, so they run again; nothing scored was lost or changed. An interrupted code-review-graph build is recorded as
+a setup error, which counts against no run. The graph and daemon caches were deleted before resuming, so nothing
+half-written is reused. The protocol allows up to 4 workers. The (arm, repeat) order is seeded within each issue,
+so the number of workers changes only the speed. The main run will also use 2 workers unless a measurement shows
+more fit in memory.
+
+The failed attempts so far, recorded for the retry decision before the main run, are all on one issue
+(`sympy__sympy-21379`): 6 with no result event (exit 0) across A1, A2, A5 and A6, and 1 crash (exit 1) under memory
+pressure. In each case the model's response stream stopped and Claude Code exited without a result.
+
+## E10-D02 (2026-11-19, after the pilot, before the main run): stalled responses get up to 4 attempts
+
+**What failed in the pilot.** 298 of 300 runs were scored. 10 attempts failed, on 2 of the 30 issues:
+- `sympy__sympy-21379`: 8 attempts across A1, A2, A5 and A6;
+- `caddyserver__caddy-6350`: 2 attempts, in A2 and A6.
+
+Nine of the ten were stalls. The model's response stream stopped, usually during a long thinking block, and Claude
+Code exited 0 without a result event. The tenth was a crash (exit 1) under memory pressure (E10-D01). A stall is not
+an outcome of the agent's work: a retry of the same run usually succeeded (for example `sympy__sympy-21379|A2|r2` on
+its second attempt, with 22 turns). Two runs failed twice and were lost (`sympy__sympy-21379|A6|r1` and `|A5|r2`).
+Each issue's other repeat of those arms was scored, so all 30 pilot issues have every arm.
+
+**Why change the rule.** Stalls are more likely in long runs, so dropping runs after two stalls would drop long runs
+selectively. That can differ by arm.
+
+**The change.** From the main run on, a stall gets up to 4 attempts in all. Any other infrastructure failure is still
+retried once, as pre-registered. This change follows from failure counts only, never from accuracy. It was tested
+with a mock run seeded with failure records:
+- two stalls: retried;
+- one stall and one crash: retried;
+- two crashes: not retried.
+
+## E10-D03 (2026-11-19): main-run sample size from the pilot
+
+`python3 scripts/swebench/agent_power.py experiments/10-swebench-agents/results/pilot` (30 issues, 298 runs):
+
+| Paired difference (per issue) | SD |
+|---|---:|
+| A2 − A0 | 0.160 |
+| A2 − A1 | 0.265 |
+
+- The rule takes the larger SD, 0.265.
+- Its 80% upper bound is 0.301.
+- *n* = ⌈((z₀.₉₈₇₅ + z₀.₈₀) · 0.301 / 0.05)²⌉ = **346 issues**, below the 570 cap. Achieved power at *n*: 0.80.
+
+The main sample is the first 346 issues of the main pool in `selection.json`: about 173 from Lite and 173 from
+Multilingual, in alternating order. The run uses 5 arms × 2 repeats, 3,460 runs in all.
+
+**What the pilot measured, besides the SD:**
+- **Per run:** 40 s wall time and 100k tokens on average (mostly cache reads); $0.006 at list price (ledger total
+  $1.77).
+- **Account usage:** the first login's 7-day window went from 71% to 74% over the pilot. Its 5-hour window peaked
+  near 61%.
+- **Throughput with 2 workers:** about 2 runs per minute once the indexes are built.
+
+The pilot's accuracy numbers were seen. Per the protocol, no prompt, tool, arm or scoring change follows from them.
+They are not part of any confirmatory test.
