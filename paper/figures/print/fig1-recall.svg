@@ -1,0 +1,73 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 700 300' width='700' height='300'>
+<rect width='700' height='300' fill='#ffffff' />
+<rect x='64.0' y='11.0' width='12' height='12' rx='3' fill='#2a78d6'/>
+<text x='81.0' y='21.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#55554f' text-anchor='start' font-weight='normal'>TypeTrace (hybrid)</text>
+<rect x='215.2' y='11.0' width='12' height='12' rx='3' fill='#eb6834'/>
+<text x='232.2' y='21.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#55554f' text-anchor='start' font-weight='normal'>TypeTrace (agent tool, ≤800 tok)</text>
+<rect x='456.0' y='11.0' width='12' height='12' rx='3' fill='#1baf7a'/>
+<text x='473.0' y='21.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#55554f' text-anchor='start' font-weight='normal'>code-review-graph + embeddings</text>
+<rect x='64.0' y='31.0' width='12' height='12' rx='3' fill='#eda100'/>
+<text x='81.0' y='41.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#55554f' text-anchor='start' font-weight='normal'>graphify</text>
+<rect x='151.2' y='31.0' width='12' height='12' rx='3' fill='#e87ba4'/>
+<text x='168.2' y='41.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#55554f' text-anchor='start' font-weight='normal'>code-review-graph (default)</text>
+<line x1='64' x2='684' y1='236.0' y2='236.0' stroke='#e4e3df' stroke-width='1'/>
+<text x='56.0' y='240.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='end' font-weight='normal'>0.0</text>
+<line x1='64' x2='684' y1='192.5' y2='192.5' stroke='#e4e3df' stroke-width='1'/>
+<text x='56.0' y='196.5' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='end' font-weight='normal'>0.2</text>
+<line x1='64' x2='684' y1='149.0' y2='149.0' stroke='#e4e3df' stroke-width='1'/>
+<text x='56.0' y='153.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='end' font-weight='normal'>0.4</text>
+<line x1='64' x2='684' y1='105.5' y2='105.5' stroke='#e4e3df' stroke-width='1'/>
+<text x='56.0' y='109.5' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='end' font-weight='normal'>0.6</text>
+<line x1='64' x2='684' y1='62.0' y2='62.0' stroke='#e4e3df' stroke-width='1'/>
+<text x='56.0' y='66.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='end' font-weight='normal'>0.8</text>
+<text transform='rotate(-90 16 149.0)' x='16.0' y='149.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>Recall@10</text>
+<path d='M82.0,236.0 V94.9 Q82.0,90.9 86.0,90.9 H99.8 Q103.8,90.9 103.8,94.9 V236.0 Z' fill='#2a78d6'/>
+<text x='92.9' y='85.9' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.67</text>
+<path d='M105.8,236.0 V108.0 Q105.8,104.0 109.8,104.0 H123.6 Q127.6,104.0 127.6,108.0 V236.0 Z' fill='#eb6834'/>
+<text x='116.7' y='99.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.61</text>
+<path d='M129.6,236.0 V188.2 Q129.6,184.2 133.6,184.2 H147.4 Q151.4,184.2 151.4,188.2 V236.0 Z' fill='#1baf7a'/>
+<text x='140.5' y='179.2' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.24</text>
+<path d='M153.4,236.0 V223.3 Q153.4,219.3 157.4,219.3 H171.2 Q175.2,219.3 175.2,223.3 V236.0 Z' fill='#eda100'/>
+<text x='164.3' y='214.3' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.08</text>
+<path d='M177.2,236.0 V216.7 Q177.2,212.7 181.2,212.7 H195.0 Q199.0,212.7 199.0,216.7 V236.0 Z' fill='#e87ba4'/>
+<text x='188.1' y='207.7' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.11</text>
+<text x='141.5' y='256.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='middle' font-weight='600'>nestjs-boilerplate</text>
+<text x='141.5' y='272.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>TypeScript, 6k lines, 14 test tasks</text>
+<path d='M237.0,236.0 V135.6 Q237.0,131.6 241.0,131.6 H254.8 Q258.8,131.6 258.8,135.6 V236.0 Z' fill='#2a78d6'/>
+<text x='247.9' y='126.6' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.48</text>
+<path d='M260.8,236.0 V155.2 Q260.8,151.2 264.8,151.2 H278.6 Q282.6,151.2 282.6,155.2 V236.0 Z' fill='#eb6834'/>
+<text x='271.7' y='146.2' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.39</text>
+<path d='M284.6,236.0 V183.4 Q284.6,179.4 288.6,179.4 H302.4 Q306.4,179.4 306.4,183.4 V236.0 Z' fill='#1baf7a'/>
+<text x='295.5' y='174.4' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.26</text>
+<path d='M308.4,236.0 V231.3 Q308.4,227.3 312.4,227.3 H326.2 Q330.2,227.3 330.2,231.3 V236.0 Z' fill='#eda100'/>
+<text x='319.3' y='222.3' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.04</text>
+<path d='M332.2,236.0 V232.7 Q332.2,229.5 335.5,229.5 H350.7 Q354.0,229.5 354.0,232.7 V236.0 Z' fill='#e87ba4'/>
+<text x='343.1' y='224.5' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.03</text>
+<text x='296.5' y='256.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='middle' font-weight='600'>Immich server</text>
+<text x='296.5' y='272.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>TypeScript, 62k, 26</text>
+<path d='M392.0,236.0 V168.2 Q392.0,164.2 396.0,164.2 H409.8 Q413.8,164.2 413.8,168.2 V236.0 Z' fill='#2a78d6'/>
+<text x='402.9' y='159.2' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.33</text>
+<path d='M415.8,236.0 V179.1 Q415.8,175.1 419.8,175.1 H433.6 Q437.6,175.1 437.6,179.1 V236.0 Z' fill='#eb6834'/>
+<text x='426.7' y='170.1' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.28</text>
+<path d='M439.6,236.0 V218.2 Q439.6,214.2 443.6,214.2 H457.4 Q461.4,214.2 461.4,218.2 V236.0 Z' fill='#1baf7a'/>
+<text x='450.5' y='209.2' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.10</text>
+<path d='M463.4,236.0 V234.9 Q463.4,233.8 464.5,233.8 H484.1 Q485.2,233.8 485.2,234.9 V236.0 Z' fill='#eda100'/>
+<text x='474.3' y='228.8' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.01</text>
+<path d='M487.2,236.0 V234.9 Q487.2,233.8 488.3,233.8 H507.9 Q509.0,233.8 509.0,234.9 V236.0 Z' fill='#e87ba4'/>
+<text x='498.1' y='228.8' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.01</text>
+<text x='451.5' y='256.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='middle' font-weight='600'>Twenty server</text>
+<text x='451.5' y='272.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>TypeScript, 763k, 18</text>
+<path d='M547.0,236.0 V138.0 Q547.0,134.0 551.0,134.0 H564.8 Q568.8,134.0 568.8,138.0 V236.0 Z' fill='#2a78d6'/>
+<text x='557.9' y='129.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.47</text>
+<path d='M570.8,236.0 V141.3 Q570.8,137.3 574.8,137.3 H588.6 Q592.6,137.3 592.6,141.3 V236.0 Z' fill='#eb6834'/>
+<text x='581.7' y='132.3' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.45</text>
+<path d='M594.6,236.0 V163.0 Q594.6,159.0 598.6,159.0 H612.4 Q616.4,159.0 616.4,163.0 V236.0 Z' fill='#1baf7a'/>
+<text x='605.5' y='154.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.35</text>
+<path d='M618.4,236.0 V207.2 Q618.4,203.2 622.4,203.2 H636.2 Q640.2,203.2 640.2,207.2 V236.0 Z' fill='#eda100'/>
+<text x='629.3' y='198.2' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.15</text>
+<path d='M642.2,236.0 V212.4 Q642.2,208.4 646.2,208.4 H660.0 Q664.0,208.4 664.0,212.4 V236.0 Z' fill='#e87ba4'/>
+<text x='653.1' y='203.4' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>0.13</text>
+<text x='606.5' y='256.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='middle' font-weight='600'>SWE-bench Lite</text>
+<text x='606.5' y='272.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>Python, 300 issues</text>
+<line x1='64' x2='684' y1='236.0' y2='236.0' stroke='#8a8a82' stroke-width='1'/>
+</svg>

@@ -9,6 +9,11 @@ the bars because three of the five hues are below 3:1 contrast against the backg
 import os
 
 OUT = os.path.dirname(os.path.abspath(__file__))
+# PRINT=1: figures for a two-column paper (no title inside the figure: the caption carries it; narrower, so text stays
+# legible at text width). Written to figures/print/.
+PRINT = os.environ.get('PRINT') == '1'
+if PRINT:
+    OUT = os.path.join(OUT, 'print'); os.makedirs(OUT, exist_ok=True)
 INK, INK2, MUTED, GRID, SURF = '#1f1f1d', '#55554f', '#8a8a82', '#e4e3df', '#fcfcfb'
 C = {'hybrid': '#2a78d6', 'compact': '#eb6834', 'crg_emb': '#1baf7a', 'graphify': '#eda100', 'crg': '#e87ba4', 'grep': '#9a9a93'}
 NAME = {'hybrid': 'TypeTrace (hybrid)', 'compact': 'TypeTrace (agent tool, ≤800 tok)', 'crg_emb': 'code-review-graph + embeddings',
@@ -42,12 +47,14 @@ def legend(keys, x, y, width):
     return out, cy
 
 
-def grouped(fname, title, subtitle, groups, keys, data, ymax, fmt, yticks, ylabel):
-    W, H = 900, 430
+def grouped(fname, title, subtitle, groups, keys, data, ymax, fmt, yticks, ylabel, size=None):
+    W, H = size or ((700, 300) if PRINT else (900, 430))
     L, R, T, B = 64, 16, 92, 64
     out = [f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 {W} {H}' width='{W}' height='{H}'>",
-           f"<rect width='{W}' height='{H}' fill='{SURF}'/>", text(L, 28, title, 16, INK, weight='600'), text(L, 48, subtitle, 12, INK2)]
-    leg, ly = legend(keys, L, 72, W - L - R)
+           f"<rect width='{W}' height='{H}' fill='#ffffff' />" if PRINT else f"<rect width='{W}' height='{H}' fill='{SURF}'/>"]
+    if not PRINT:
+        out += [text(L, 28, title, 16, INK, weight='600'), text(L, 48, subtitle, 12, INK2)]
+    leg, ly = legend(keys, L, 20 if PRINT else 72, W - L - R)
     out += leg
     T = ly + 22
     ph, pw = H - T - B, W - L - R
@@ -82,9 +89,11 @@ R = {
     'Twenty server': {'hybrid': .33, 'compact': .28, 'crg_emb': .10, 'graphify': .01, 'crg': .01},
     'SWE-bench Lite': {'hybrid': .469, 'compact': .454, 'crg_emb': .354, 'graphify': .151, 'crg': .127},
 }
+if PRINT:  # the paper reports the smallest repository on its 14 held-out test tasks (the 6 others tuned the ranking)
+    R['nestjs-boilerplate'] = {'hybrid': .667, 'compact': .607, 'crg_emb': .238, 'graphify': .077, 'crg': .107}
 grouped('fig1-recall.svg', 'Finding the code a task needs: Recall@10',
         'Same tasks, files and budget for every tool; ground truth independent of all tools. Higher is better.',
-        [('nestjs-boilerplate', 'TypeScript, 6k lines, 20 tasks'), ('Immich server', 'TypeScript, 63k, 26'),
+        [('nestjs-boilerplate', 'TypeScript, 6k lines, ' + ('14 test tasks' if PRINT else '20 tasks')), ('Immich server', 'TypeScript, ' + ('62k' if PRINT else '63k') + ', 26'),
          ('Twenty server', 'TypeScript, 763k, 18'), ('SWE-bench Lite', 'Python, 300 issues')],
         ['hybrid', 'compact', 'crg_emb', 'graphify', 'crg'], R, 0.8,
         lambda v, axis=False: f'{v:.1f}' if axis else f'{v:.2f}', [0, .2, .4, .6, .8], 'Recall@10')
@@ -95,9 +104,9 @@ T3 = {'Twenty server': {'compact': 453, 'graphify': 521, 'crg_emb': 779, 'grep':
 NAME_AGENT = dict(NAME); NAME['compact'] = 'TypeTrace (agent tool)'
 grouped('fig3-agent-tokens.svg', 'Tokens per task with a coding agent (Claude Code, Haiku 5.5)',
         'Mean over tasks, 3 repeats each. Task scores: Twenty 0.90 / 0.87 / 0.85 / 0.84, Immich 0.86 / 0.83 / 0.86 / 0.82 (not significantly different).',
-        [('Twenty server', '763k lines, 18 tasks'), ('Immich server', '63k lines, 26 tasks')],
+        [('Twenty server', '763k lines, 18 tasks'), ('Immich server', ('62k' if PRINT else '63k') + ' lines, 26 tasks')],
         ['compact', 'graphify', 'crg_emb', 'grep'], T3, 800,
-        lambda v, axis=False: f'{v:.0f}k', [0, 200, 400, 600, 800], 'tokens per task')
+        lambda v, axis=False: f'{v:.0f}k', [0, 200, 400, 600, 800], 'tokens per task', size=(430, 300) if PRINT else None)
 NAME.update(NAME_AGENT)
 
 
@@ -110,15 +119,18 @@ D = [('nestjs-boilerplate (TS, type-checked graph)', .24, .09, .40),
      ('Twenty server (TS, type-checked)', .16, .07, .25),
      ('127 mined fixes, Immich + Twenty (dev data)', .075, None, None),
      ('SWE-bench Lite (Python, syntactic graph)', -.018, -.055, .019)]
-W, H, L, R2, T = 900, 330, 330, 30, 70
+W, H, L, R2, T = (430, 210, 150, 34, 8) if PRINT else (900, 330, 330, 30, 70)
+if PRINT:
+    D = [(lab, *v) for lab, v in zip(['S, TS (6k lines)', 'M, TS (62k)', 'L, TS (763k)', 'M+L mined fixes', 'SWE-bench Lite, Py'], [d[1:] for d in D])]
 pw = W - L - R2
 x = lambda v: L + (v + .1) / .55 * pw
-out = [f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 {W} {H}' width='{W}' height='{H}'>", f"<rect width='{W}' height='{H}' fill='{SURF}'/>",
-       text(16, 28, 'What the call graph adds: Recall@10 with graph propagation minus without', 16, INK, weight='600'),
-       text(16, 48, 'Same search otherwise identical. Lines: 95% bootstrap CI over tasks (none published for the mined fixes). Right of zero: the graph helps.', 12, INK2)]
+out = [f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 {W} {H}' width='{W}' height='{H}'>", f"<rect width='{W}' height='{H}' fill='{'#ffffff' if PRINT else SURF}'/>"]
+if not PRINT:
+    out += [text(16, 28, 'What the call graph adds: Recall@10 with graph propagation minus without', 16, INK, weight='600'),
+            text(16, 48, 'Same search otherwise identical. Lines: 95% bootstrap CI over tasks (none published for the mined fixes). Right of zero: the graph helps.', 12, INK2)]
 for t in [-.1, 0, .1, .2, .3, .4]:
     out.append(f"<line x1='{x(t):.1f}' x2='{x(t):.1f}' y1='{T}' y2='{H - 40}' stroke='{MUTED if t == 0 else GRID}' stroke-width='1'/>")
-    out.append(text(x(t), H - 22, f'{t:+.1f}' if t else '0', 11, MUTED, 'middle'))
+    out.append(text(x(t), H - 22, (f'{t:+.1f}' if t else '0').replace('-', '−'), 11, MUTED, 'middle'))
 rh = (H - 40 - T) / len(D)
 for i, (lab, m, lo, hi) in enumerate(D):
     cy = T + rh * (i + .5)
@@ -126,7 +138,38 @@ for i, (lab, m, lo, hi) in enumerate(D):
     if lo is not None:
         out.append(f"<line x1='{x(lo):.1f}' x2='{x(hi):.1f}' y1='{cy:.1f}' y2='{cy:.1f}' stroke='{C['hybrid']}' stroke-width='2'/>")
     out.append(f"<circle cx='{x(m):.1f}' cy='{cy:.1f}' r='5' fill='{C['hybrid']}' stroke='{SURF}' stroke-width='2'/>")
-    out.append(text(x(hi if hi is not None else m) + 10, cy + 4, f'{m:+.3f}' if abs(m) < .1 and m != .05 else f'{m:+.2f}', 11, INK2))
+    out.append(text(x(hi if hi is not None else m) + 10, cy + 4, (f'{m:+.3f}' if abs(m) < .1 and m != .05 else f'{m:+.2f}').replace('-', '−'), 11, INK2))
 out.append('</svg>')
 open(os.path.join(OUT, 'fig2-graph-effect.svg'), 'w').write('\n'.join(out))
+
+
+# Figure 0 (print only): pipeline overview. Boxes and arrows, no data.
+def box(x, y, w, h, title, lines, fill='#f3f6fb', stroke='#2a78d6'):
+    o = [f"<rect x='{x}' y='{y}' width='{w}' height='{h}' rx='6' fill='{fill}' stroke='{stroke}' stroke-width='1.2'/>",
+         text(x + w / 2, y + 17, title, 12, INK, 'middle', '600')]
+    for i, l in enumerate(lines):
+        o.append(text(x + w / 2, y + 33 + i * 14, l, 10.5, INK2, 'middle'))
+    return o
+
+
+def arrow(x1, y1, x2, y2):
+    return [f"<line x1='{x1}' y1='{y1}' x2='{x2 - 6}' y2='{y2}' stroke='{MUTED}' stroke-width='1.4'/>",
+            f"<path d='M{x2},{y2} l-7,-4 v8 z' fill='{MUTED}'/>"]
+
+
+if PRINT:
+    W, H, Y = 700, 166, 22
+    o = [f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 {W} {H}' width='{W}' height='{H}'>", f"<rect width='{W}' height='{H}' fill='#ffffff'/>"]
+    o += box(4, Y, 120, 70, 'Repository', ['TS/JS: type checker', 'Python, 11 more:', 'tree-sitter'], '#fafaf8', MUTED)
+    o += box(146, Y, 130, 70, 'Code graph', ['calls, DI, decorators,', 'routes, events, data', 'flow; edge labels'])
+    o += box(146, Y + 82, 130, 50, 'Query', ['task or issue text'], '#fafaf8', MUTED)
+    o += box(298, Y, 130, 132, 'Seeds', ['exact symbol', 'BM25', 'dense (Qwen3-0.6B)', 'graph facts', '(fused per chunk)'])
+    o += box(450, Y, 120, 132, 'Propagation', ['along call, structural', 'and data-flow edges', 'hub damping', 'kind priors,', 'test demotion'])
+    o += box(592, Y, 104, 132, 'Answer', ['\u2264 800 tokens of', 'file:line pointers', 'with callers and', 'callees, via MCP'], '#fdf3ee', '#eb6834')
+    o += arrow(124, Y + 35, 146, Y + 35) + arrow(276, Y + 35, 298, Y + 35) + arrow(276, Y + 107, 298, Y + 107) + arrow(428, Y + 66, 450, Y + 66) + arrow(570, Y + 66, 592, Y + 66)
+    o.append(f"<path d='M211,{Y} V8 H510 V{Y - 6}' fill='none' stroke='{MUTED}' stroke-width='1.2' stroke-dasharray='4 3'/>")
+    o.append(f"<path d='M510,{Y} l-4,-7 h8 z' fill='{MUTED}'/>")
+    o.append(text(360, 5 + 0, '', 10, MUTED, 'middle'))
+    o.append('</svg>')
+    open(os.path.join(OUT, 'fig0-overview.svg'), 'w').write('\n'.join(o))
 print('written:', sorted(f for f in os.listdir(OUT) if f.endswith('.svg')))
