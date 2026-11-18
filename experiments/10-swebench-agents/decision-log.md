@@ -124,3 +124,12 @@ Multilingual, in alternating order. The run uses 5 arms × 2 repeats, 3,460 runs
 
 The pilot's accuracy numbers were seen. Per the protocol, no prompt, tool, arm or scoring change follows from them.
 They are not part of any confirmatory test.
+
+## E10-D04 (2026-11-19, at the start of the main run): the pool excludes the issue without ground truth
+
+The main pool in `selection.json` has 570 issues. One of them, `gohugoio__hugo-12204` (position 276), has no ground
+truth: experiment 8 excluded it because its gold patch changes only an HTML template. The protocol leaves such
+issues out of the data, so the eligible pool has 569 issues, and the main sample is its first 346. The first launch
+(01:03 IST) counted the ineligible issue and would have run only 345. It was stopped within a minute, before any
+agent run, and its empty results were deleted. The runner now drops ineligible issues before taking the first
+*n*. The main sample is therefore pool positions 1 to 347 without position 276.

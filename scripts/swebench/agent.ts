@@ -234,6 +234,10 @@ async function main() {
   const sel = JSON.parse(fs.readFileSync(path.join(EXP, 'selection.json'), 'utf8'));
   const issuesAll = loadIssues();
   let ids: string[] = SET === 'pilot' ? sel.pilot : sel.main;
+  // The pool is defined without issues that have no ground truth (protocol, Data), so --n counts eligible issues (E10-D04).
+  const ineligible = ids.filter((i) => !issuesAll.has(i));
+  if (ineligible.length) log(`note: ${ineligible.length} pool issue(s) have no frozen ground truth and are not part of the pool: ${ineligible.join(', ')}`);
+  ids = ids.filter((i) => issuesAll.has(i));
   if (N != null) ids = ids.slice(0, N);
   if (ONLY) ids = ids.filter((i) => ONLY.includes(i));
   const issues = ids.map((i) => issuesAll.get(i)).filter((x): x is Issue => !!x);
