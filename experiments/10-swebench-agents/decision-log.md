@@ -133,3 +133,27 @@ issues out of the data, so the eligible pool has 569 issues, and the main sample
 (01:03 IST) counted the ineligible issue and would have run only 345. It was stopped within a minute, before any
 agent run, and its empty results were deleted. The runner now drops ineligible issues before taking the first
 *n*. The main sample is therefore pool positions 1 to 347 without position 276.
+
+## E10-D05 (2026-11-19, 07:08 IST): Claude Code updated itself mid-run; the version is now pinned
+
+At 07:07 IST the Claude Code auto-updater moved the `claude` on PATH from 2.1.327 to 2.1.328. The next run's init
+event reported 2.1.328, and the runner stopped the experiment, as the protocol requires. At that point 779 of 3,460
+runs were scored, all on 2.1.327. Two runs were cut off:
+- `scikit-learn__scikit-learn-15535|A2|r2`: init mismatch at start, before any model call;
+- `fluent__fluentd-3466|A0|r2`: in progress on the other worker, aborted by the halt.
+
+No run was scored on 2.1.328.
+
+**Changes before resuming:**
+- **The version is pinned.** A copy of the 2.1.327 binary sits outside Claude Code's own versions folder. The
+  runner starts with that copy first on PATH, `AGENT_EVAL_CLAUDE_BIN` pointing at it, and `DISABLE_AUTOUPDATER=1`.
+- **A resume checks the version.** The runner already refused to resume with a different model, arms or issues.
+  It now also refuses a different `claude_version` from the one in `plan.json`. Before this, a resume after an
+  update would have carried on under the new version without warning. The check was tested: with 2.1.328 on PATH,
+  a resume is refused.
+- **A version-only mismatch doesn't end a run.** The runner treated every init mismatch as final for that run. When
+  the only mismatch is the version, the cause is the installed binary changing, not the run itself. Such a run is
+  now neither final nor a counted attempt, so the scikit-learn run above is redone on 2.1.327. Init mismatches in
+  tools, model or MCP servers stay final.
+
+No prompt, tool, arm, scoring or analysis change.

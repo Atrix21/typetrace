@@ -253,18 +253,21 @@ async function main() {
   let plan = mkPlan();
   if (fs.existsSync(planFile)) {
     const prev = JSON.parse(fs.readFileSync(planFile, 'utf8'));
-    for (const k of ['set', 'arms', 'model', 'effort', 'repeats', 'max_turns', 'issues', 'system_prompt_sha', 'schema_sha'] as const) if (JSON.stringify(prev.config[k]) !== JSON.stringify((config as any)[k])) throw new Error(`resuming ${RUN} with a different ${k}`);
+    for (const k of ['set', 'arms', 'model', 'effort', 'repeats', 'max_turns', 'issues', 'claude_version', 'system_prompt_sha', 'schema_sha'] as const) if (JSON.stringify(prev.config[k]) !== JSON.stringify((config as any)[k])) throw new Error(`resuming ${RUN} with a different ${k}`);
     plan = prev.items;
   } else fs.writeFileSync(planFile, JSON.stringify({ config, items: plan }, null, 1) + '\n');
   for (const f of ['runs.jsonl', 'excluded.jsonl', 'accounts.jsonl']) if (!fs.existsSync(path.join(OUT, f))) fs.writeFileSync(path.join(OUT, f), '');
   const done = new Set(readJsonl(path.join(OUT, 'runs.jsonl')).map((r) => r.run_id));
   const excl = readJsonl(path.join(OUT, 'excluded.jsonl'));
-  const counted = (id: string) => excl.filter((e) => e.run_id === id && !isUsageLimitExclusion(e) && e.excluded_kind !== 'aborted');
+  // E10-D05: a version-only init mismatch means the installed Claude Code changed under the runner, not that the run
+  // failed. A resume runs the plan's version (checked above), so such a run is neither final nor a counted attempt.
+  const versionOnly = (e: any) => e.excluded_kind === 'init_mismatch' && /^version \|/.test(String(e.detail ?? ''));
+  const counted = (id: string) => excl.filter((e) => e.run_id === id && !isUsageLimitExclusion(e) && e.excluded_kind !== 'aborted' && !versionOnly(e));
   const attempts = (id: string) => counted(id).length;
   // E10-D02: a stalled response (no result event, exit 0) is retried up to 4 attempts in all; any other
   // infrastructure failure is retried once, as pre-registered.
   const canTry = (id: string) => { const c = counted(id); const stalls = c.filter((e) => e.excluded === 'infra_error:no_result').length; return c.length - stalls < 2 && c.length < 4; };
-  const finalExcl = new Set(excl.filter((e) => e.retryable === false).map((e) => e.run_id));
+  const finalExcl = new Set(excl.filter((e) => e.retryable === false && !versionOnly(e)).map((e) => e.run_id));
   const pending = (is: Issue) => plan.filter((i) => i.issue === is.id && !done.has(i.run_id) && !finalExcl.has(i.run_id) && canTry(i.run_id));
 
   installSignalHandlers();
