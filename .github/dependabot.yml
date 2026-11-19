@@ -1,0 +1,47 @@
+# Dependabot: security updates and weekly version updates.
+#
+# Dependencies in package.json are pinned to exact versions on purpose: the experiments' results depend on them
+# (the TypeScript compiler builds the call graph, tree-sitter parses the other languages, transformers runs the
+# embedding model). So version updates are grouped into one weekly pull request that CI must pass, major versions
+# are left for a deliberate upgrade, and a new release must be a week old before it is proposed.
+# Security updates are not affected by these limits: Dependabot opens them as soon as an advisory is published.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Asia/Kolkata
+    versioning-strategy: increase
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    labels: [dependencies]
+    commit-message:
+      prefix: deps
+      prefix-development: deps-dev
+    groups:
+      npm-minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      - dependency-name: "*"
+        update-types: [version-update:semver-major]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Asia/Kolkata
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    labels: [dependencies]
+    commit-message:
+      prefix: ci
+    groups:
+      github-actions:
+        patterns: ["*"]
