@@ -1,12 +1,13 @@
 #!/usr/bin/env tsx
 /**
- * npx tsx src/graph/build-cli.ts --repo <dir> --out <dir> [--include src,test] [--tsconfig path] [--max-package-decl-mb N] [--no-json] [--check-repro]
+ * npx tsx src/graph/build-cli.ts --repo <dir> --out <dir> [--include src,test | --files-from list.json] [--tsconfig path] [--max-package-decl-mb N] [--no-json] [--check-repro]
  * Writes graph.sqlite, graph.json, coverage.json, stats.json and prints a summary.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { abs, listCorpusFiles, loadConfig } from '../config.js';
 import { buildGraph } from './graph-builder.js';
+import { grammarLanguages, initLanguages } from '../languages/registry.js';
 import { checkReproducibility, graphHash } from './graph-validator.js';
 import { exportGraphJson, saveGraph } from './graph-store.js';
 
@@ -17,7 +18,7 @@ function arg(name: string): string | undefined {
 const flag = (n: string) => process.argv.includes(`--${n}`);
 const pct = (a: number, b: number) => (b === 0 ? 'n/a' : `${((100 * a) / b).toFixed(2)}%`);
 
-function main() {
+async function main() {
   const repoArg = arg('repo');
   const outArg = arg('out');
   if (!repoArg || !outArg) { console.error('usage: build-cli.ts --repo <dir> --out <dir> [--include src,test] [--tsconfig f] [--check-repro]'); process.exit(2); }
@@ -25,10 +26,13 @@ function main() {
   const repoRoot = fs.existsSync(cwdRepo) ? cwdRepo : abs(repoArg);
   const outDir = path.isAbsolute(outArg) ? outArg : path.resolve(outArg);
   const include = arg('include')?.split(',') ?? loadConfig().target.include_dirs;
-  const files = listCorpusFiles(repoRoot, include);
+  // --files-from <json>: an explicit corpus (experiment 10); otherwise the configured include dirs.
+  const files: string[] = arg('files-from') ? JSON.parse(fs.readFileSync(path.resolve(arg('files-from')!), 'utf8')) : listCorpusFiles(repoRoot, include);
   const maxMb = arg('max-package-decl-mb');
   const opts = { repoRoot, files, tsconfigPath: arg('tsconfig'), maxPackageDeclarationBytes: maxMb ? Number(maxMb) * 1e6 : undefined };
 
+  // Python and the tree-sitter languages need their grammars loaded first (the TypeScript compiler does not).
+  await initLanguages(grammarLanguages(files));
   const g = buildGraph(opts);
   const hash = graphHash(g.nodes, g.edges);
   fs.mkdirSync(outDir, { recursive: true });
@@ -51,9 +55,9 @@ function main() {
   imports               ${c.resolved_imports}/${c.detected_imports} resolved (${pct(c.resolved_imports, c.detected_imports)})
   unresolved references ${c.unresolved_references}
   unsupported syntax    ${JSON.stringify(c.unsupported_syntax)}`);
-  if (c.parse_failures.length) console.log(`  parse failures: ${JSON.stringify(c.parse_failures)}`);
-  if (c.unresolved_imports.length) console.log(`  unresolved imports: ${c.unresolved_imports.join(', ')}`);
-  console.log(`\nnotes:\n${c.notes.map((n) => '  - ' + n).join('\n')}`);
+  if (c.parse_failures?.length) console.log(`  parse failures: ${JSON.stringify(c.parse_failures)}`);
+  if (c.unresolved_imports?.length) console.log(`  unresolved imports: ${c.unresolved_imports.join(', ')}`);
+  console.log(`\nnotes:\n${(c.notes ?? []).map((n) => '  - ' + n).join('\n')}`);
   if (flag('check-repro')) {
     const r = checkReproducibility(opts);
     console.log(`\nreproducibility: ${r.identical ? 'IDENTICAL' : 'DIFFERENT'} (${r.hash_a} vs ${r.hash_b}) builds ${r.build_ms.join('ms, ')}ms`);
@@ -61,4 +65,4 @@ function main() {
   }
   console.log(`\nwrote ${outDir}/{graph.sqlite,graph.json,coverage.json,stats.json}`);
 }
-main();
+main().catch((e) => { console.error(e); process.exit(1); });

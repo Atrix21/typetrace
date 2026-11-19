@@ -128,17 +128,30 @@ async function main() {
     const cacheDir = abs(`.cache/swebench-ml/run/${inst.instance_id}`);
     const corpus: Corpus = { repoRoot: root, commit: inst.base_commit, files, cacheDir };
     clearGraphCache();
-    const g = buildGraph({ repoRoot: root, files, maxPackageDeclarationBytes: files.length > 5000 ? 0 : 50e6 });
-    primeGraphCache(corpus, { nodes: g.nodes, edges: g.edges, build_ms: g.build_ms, cached: true });
+    // Failures (decision E8-D02): a method that throws, or a competitor call over TYPETRACE_PY_TIMEOUT_MS, is recorded in
+    // failures.jsonl with no metrics row, and the run goes on. The instance then lacks that method and the analysis
+    // leaves it out (counted per method). A failed method is retried when the run resumes.
+    const fail = (method: string, stage: string, e: unknown) => {
+      const msg = e instanceof Error ? e.message : String(e);
+      append('failures.jsonl', { task_id: inst.instance_id, repo: inst.repo, method, stage, error: msg.slice(0, 2000), at: new Date().toISOString() });
+      log(`FAILED ${inst.instance_id} ${method} (${stage}): ${msg.split('\n')[0].slice(0, 200)}`);
+    };
+    try {
+      const g = buildGraph({ repoRoot: root, files, maxPackageDeclarationBytes: files.length > 5000 ? 0 : 50e6 });
+      primeGraphCache(corpus, { nodes: g.nodes, edges: g.edges, build_ms: g.build_ms, cached: true });
+      append('graphs.jsonl', { task_id: inst.instance_id, nodes: g.nodes.length, edges: g.edges.length, build_ms: g.build_ms, notes: g.diagnostics.notes });
+    } catch (e) { fail('(graph)', 'graph build', e); }
     EmbeddingRetriever.embeddingCacheDir = abs(`.cache/swebench-ml/emb/${inst.repo.replace('/', '__')}`);
-    append('graphs.jsonl', { task_id: inst.instance_id, nodes: g.nodes.length, edges: g.edges.length, build_ms: g.build_ms, notes: g.diagnostics.notes });
     for (const name of pending) {
-      const m = await REGISTRY[name]();
-      const ts = performance.now();
-      const st = await m.prepare(corpus);
-      const prep = performance.now() - ts;
-      const out = await m.retrieve({ task_id: task.task_id, query: task.description }, BUDGET);
-      await m.close?.();
+      let m: Awaited<ReturnType<(typeof REGISTRY)[string]>> | null = null;
+      let st: Awaited<ReturnType<NonNullable<typeof m>['prepare']>>, out: Awaited<ReturnType<NonNullable<typeof m>['retrieve']>>, prep: number;
+      try {
+        m = await REGISTRY[name]();
+        const ts = performance.now();
+        st = await m.prepare(corpus);
+        prep = performance.now() - ts;
+        out = await m.retrieve({ task_id: task.task_id, query: task.description }, BUDGET);
+      } catch (e) { fail(name, m ? 'prepare/retrieve' : 'load', e); continue; } finally { await m?.close?.(); }
       const norm = normaliseOutput(index, out);
       const row = { ...computeTaskMetrics(index, task, norm, { native_context_tokens: countTokens(out.context), latency_ms: out.latency_ms, llm_tokens: 0, n_results: out.results.length }), method: name, repo: inst.repo, corpus_files: files.length, gt_languages: langs };
       append('metrics.jsonl', row);

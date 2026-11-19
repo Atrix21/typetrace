@@ -1,6 +1,6 @@
 {
   "name": "typetrace-cli",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Code search + typed call graph for AI coding agents (MCP). Finds the code that matters for a task in one call; benchmarked head-to-head against graphify and code-review-graph.",
   "author": "Atrix21",
   "license": "MIT",

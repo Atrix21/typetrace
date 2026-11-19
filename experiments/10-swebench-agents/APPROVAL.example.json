@@ -1,0 +1,11 @@
+{
+ "approved_by": "repository owner (chat approval; quote withheld)",
+ "approved_at": "<ISO time of the owner's go>",
+ "_scope": "Experiment 10: Claude Code agents on SWE-bench issues, Haiku, two subscription logins (login1, then login2) (failover on usage limits). Dollar caps are list-price runaway guards over spend-ledger.jsonl; the real limit is the plans' usage windows.",
+ "approvals": [
+  { "_stage": "pilot", "protocol": "agentic", "conditions": "*", "model": "claude-haiku-5-5", "split": "pilot", "billing": "subscription", "account": "<name of login1>", "max_total_usd": 100 },
+  { "_stage": "pilot", "protocol": "agentic", "conditions": "*", "model": "claude-haiku-5-5", "split": "pilot", "billing": "subscription", "account": "<name of login2>", "max_total_usd": 100 },
+  { "_stage": "main", "protocol": "agentic", "conditions": "*", "model": "claude-haiku-5-5", "split": "main", "billing": "subscription", "account": "<name of login1>", "max_total_usd": 400 },
+  { "_stage": "main", "protocol": "agentic", "conditions": "*", "model": "claude-haiku-5-5", "split": "main", "billing": "subscription", "account": "<name of login2>", "max_total_usd": 400 }
+ ]
+}

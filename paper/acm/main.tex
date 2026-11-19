@@ -1,0 +1,580 @@
+%% Do Code Graphs Help Coding Agents Find Code? -- ACM sigconf version.
+%% Build: paper/acm/build.sh (Tectonic). The author block is filled in by the build script from authors.*.tex.
+\documentclass[sigconf,nonacm]{acmart}
+
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{xspace}
+\usepackage{listings}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.2em}
+
+\settopmatter{printacmref=false,printfolios=true}
+\renewcommand\footnotetextcopyrightpermission[1]{}
+\pagestyle{plain}
+
+\newcommand{\tool}{TypeTrace\xspace}
+\newcommand{\gfy}{graphify\xspace}
+\newcommand{\crg}{code-review-graph\xspace}
+\newcommand{\hyb}{\textsf{hybrid}\xspace}
+\newcommand{\nog}{\textsf{hybrid\_nograph}\xspace}
+\newcommand{\cmp}{\textsf{compact}\xspace}
+\newcommand{\rat}{R@10\xspace}
+\newcommand{\finding}[2]{\par\smallskip\noindent\fbox{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{\small\textbf{Finding #1.} #2}}\par\smallskip}
+
+\lstset{basicstyle=\ttfamily\scriptsize,columns=fullflexible,breaklines=true,frame=single,framesep=2pt,xleftmargin=3pt,xrightmargin=3pt,aboveskip=4pt,belowskip=2pt}
+
+\begin{document}
+
+\title{Do Code Graphs Help Coding Agents Find Code?}
+\subtitle{A Pre-Registered Evaluation of Type-Resolved Call Graphs for Repository-Level Retrieval}
+
+\input{authors.tex}
+
+\begin{abstract}
+Code-graph tools that plug into coding agents through the Model Context Protocol advertise large gains, such as ``63$\times$ fewer tokens''. The baselines behind such figures are rarely the ones a developer has in mind. We present \tool, a local retrieval tool that fuses lexical and dense search and propagates scores along a call graph resolved by the TypeScript type checker. We compare it with two popular open-source code-graph tools, \gfy and \crg, in a series of pre-registered experiments. Their ground truth is independent of every tool.
+
+\emph{Retrieval.} On 58 held-out tasks from three TypeScript repositories of 6k to 763k lines, \tool's Recall@10 is 0.33--0.67, while neither competitor exceeds 0.26 when given the task text (16 of 18 paired comparisons $p \le 0.001$). On SWE-bench Lite (300 Python issues), the scores are 0.469 against 0.354 and 0.151 (Holm-adjusted $p \le 0.0005$). On SWE-bench Multilingual (299 issues in nine further languages), they are 0.389 against 0.261 and 0.123 (Holm-adjusted $p = 0.0001$), and \tool leads in every language.
+
+\emph{The graph.} Graph propagation adds 0.05--0.24 Recall@10 on TypeScript, concentrated on cross-module tasks. It adds nothing on SWE-bench, in any of ten languages ($-0.018$ on Python, $-0.002$ on the others).
+
+\emph{Agents.} In 918 headless Claude Code sessions, a compact retrieval answer reduced tokens per task by 18--28\% against grep alone in all five runs. The same answer without graph propagation saved a similar amount, and neither reliably improved accuracy. Agents given the competitors used about as many tokens as grep alone (\gfy) or 52--70\% more (\crg).
+
+The headline figures of code-graph tools thus mostly reflect their baselines. In our measurements, a graph helps an agent retrieve code but not answer better.
+\end{abstract}
+
+\keywords{code search, code graphs, software engineering agents, Model Context Protocol, pre-registration, retrieval evaluation}
+
+\maketitle
+
+%% ------------------------------------------------------------------
+\section{Introduction}
+
+Before a coding agent can fix a bug or change a feature, it has to find the code involved. Agents such as Claude Code, Codex and Cursor typically do this by searching: they grep, open a file, grep again, and pay for every file they read. A growing class of tools offers to shortcut this step. They index a repository into a graph of declarations and their relations, and expose it to the agent as a tool through the Model Context Protocol (MCP)~\cite{anthropic2024mcp}. Two popular open-source examples are \gfy~\cite{graphify} and \crg~\cite{crg}. Their documentation reports striking numbers: ``${\sim}63\times$ fewer tokens'', ``cut agent token spend by 80\%'', ``0.497 recall@10''.
+
+These numbers are hard to interpret:
+\begin{itemize}
+\item The token figure compares one graph answer with the whole repository pasted into a prompt. The tool's own documentation calls this baseline ``an upper bound no real agent pays''.
+\item The recall figure comes from LOCOMO~\cite{maharana2024locomo}, a benchmark of long chat conversations that contains no code.
+\item An impact-analysis score is computed against ground truth derived from the tool's own graph.
+\end{itemize}
+None of this is unusual for open-source tooling. It does leave a practical question open: \emph{does a code graph make an agent find code better, or more cheaply, than the search the agent already has?}
+
+The research literature does not settle this either. Systems such as RepoGraph~\cite{ouyang2025repograph}, CodexGraph~\cite{liu2025codexgraph}, LocAgent~\cite{chen2025locagent} and CoSIL~\cite{jiang2025cosil} show that repository graphs can help LLM-based agents on SWE-bench~\cite{jimenez2024swebench}. However, they evaluate the graph inside a specific agent, mostly on Python. They rarely separate the graph's contribution from the search that seeds it, or from the agent that consumes it.
+
+We study three research questions:
+\begin{itemize}
+\item[\textbf{RQ1}] \textbf{Retrieval.} Given a task description, does graph-augmented retrieval find the code a task needs better than existing code-graph tools?
+\item[\textbf{RQ2}] \textbf{The graph's contribution.} Holding the search stack fixed, does propagation over a call graph add recall? How does this depend on the language, the task and the repository size?
+\item[\textbf{RQ3}] \textbf{Agents.} Inside a real coding agent, does the tool change accuracy, token use or cost? Is any effect due to the graph or to the retrieval answer itself?
+\end{itemize}
+
+To answer them we built \tool, an open-source MCP server, and a benchmark harness that runs \tool and the competitors on identical files, with identical budgets and scoring rules. The hypotheses, metrics and statistical tests of each experiment were committed before the data they concern existed. Every later change is recorded in a decision log.
+
+\smallskip\noindent\textbf{Contributions.}
+\begin{enumerate}
+\item \textbf{\tool}, an open-source retrieval tool (\S\ref{sec:tool}). It fuses exact-symbol, BM25 and dense retrieval, and propagates scores along a call graph that the TypeScript compiler resolves, including dependency injection, decorators, routes and event dispatch. It answers with a list of \texttt{file:line} pointers of at most 800 tokens.
+\item \textbf{A scale ladder of real TypeScript repositories} with 81 audited tasks, 58 of them held out for testing (\S\ref{sec:design}). Ground truth comes from merged fixes and a type-checker oracle, and was frozen before any retrieval output existed.
+\item \textbf{Pre-registered comparisons} with \gfy and \crg (\S\ref{sec:results}): retrieval-only on TypeScript, on SWE-bench Lite and on SWE-bench Multilingual, and agent-level with Claude Code. The agent comparison includes an ablation that separates the graph from the retrieval answer.
+\item \textbf{Conditional and negative results, reported as such.} The graph does not help on SWE-bench, in any language. Graph content does not change agent outcomes. Agent accuracy gains do not replicate. A cross-encoder reranker fails its held-out test.
+\item \textbf{An audit of the competitors' headline claims} against what they measure (\S\ref{sec:claims}).
+\end{enumerate}
+
+%% ------------------------------------------------------------------
+\section{Background and Related Work}
+
+\noindent\textbf{Repository-level localisation.} SWE-bench~\cite{jimenez2024swebench} made real GitHub issues the standard test of repository-level software engineering. Its Lite subset and the later Multilingual set~\cite{yang2025swesmith} are widely used. Agents differ in how they navigate a repository:
+\begin{itemize}
+\item SWE-agent~\cite{yang2024sweagent} gives the model a purpose-built shell interface.
+\item AutoCodeRover~\cite{zhang2024autocoderover} searches over the program's abstract syntax tree.
+\item OrcaLoca~\cite{yu2025orcaloca} schedules and prunes an LLM agent's localisation actions.
+\end{itemize}
+Agentless~\cite{xia2024agentless} shows that a fixed localise--repair--validate pipeline is competitive with autonomous agents, which makes localisation the step most worth studying in isolation. SweRank~\cite{reddy2025swerank} casts issue localisation as retrieve-and-rerank with trained code rankers. CodeRAG-Bench~\cite{wang2025coderagbench} finds that retrievers often fail to fetch useful context for code generation.
+
+\smallskip\noindent\textbf{Code graphs for LLMs.} Several systems put a repository graph inside an LLM loop:
+\begin{itemize}
+\item RepoGraph~\cite{ouyang2025repograph} builds a line-level definition--reference graph and injects subgraphs into SWE-bench frameworks.
+\item CodexGraph~\cite{liu2025codexgraph} lets an agent query a graph database built by static analysis.
+\item LocAgent~\cite{chen2025locagent} and CoSIL~\cite{jiang2025cosil} let an agent traverse graphs of files, classes and functions for multi-hop localisation.
+\item RepoHyper~\cite{phan2024repohyper} expands similarity-retrieved code along a repository-level semantic graph for code completion.
+\item CodePlan~\cite{bairi2024codeplan} uses dependency and change-impact analysis to plan repository-wide edits.
+\end{itemize}
+Most of these graphs are syntactic or name-resolved, and most evaluations are on Python. Our setting differs in three respects:
+\begin{itemize}
+\item the ranking is deterministic and uses no LLM at index or query time;
+\item the TypeScript graph is resolved by a type checker, including framework dispatch;
+\item we measure the graph's marginal contribution separately from the search that seeds it, and separately from its effect inside an agent.
+\end{itemize}
+
+\smallskip\noindent\textbf{Practitioner tools and their evaluation.} MCP~\cite{anthropic2024mcp} lets any agent call an external tool, and code-graph MCP servers such as \gfy and \crg are popular. Their published evaluations use the tools' own harnesses and baselines. To our knowledge, no pre-registered comparison of such tools against tool-independent ground truth has been published. We follow the ACM SIGSOFT Empirical Standards~\cite{sigsoftstandards} in reporting losses and non-significant results with the same prominence as wins.
+
+%% ------------------------------------------------------------------
+\section{TypeTrace}
+\label{sec:tool}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/fig0-overview.pdf}
+\caption{\tool's pipeline. The code graph supplies graph facts to seeding (solid arrow) and the edges for propagation (dashed). No LLM is involved at any stage.}
+\label{fig:overview}
+\end{figure*}
+
+Figure~\ref{fig:overview} shows the pipeline.
+
+\smallskip\noindent\textbf{Graph construction.} For TypeScript and JavaScript, \tool uses the TypeScript compiler API, so calls are resolved by type rather than by name. Framework-specific extractors add edges that text search cannot see:
+\begin{itemize}
+\item dependency-injected services, decorators and guards;
+\item GraphQL resolvers;
+\item keyed event and job dispatch, with emitter and queue names resolved to handlers;
+\item HTTP routes and query-builder access to tables.
+\end{itemize}
+Every edge carries a verification label (statically verified, framework-inferred or unknown). Builds are deterministic: on all 21 snapshots of the smallest repository, building twice gave the same SHA-256 of nodes and edges.
+
+An audit of sampled framework-dispatch edges found low precision (0.31--0.34) in the first version. The extractor was fixed before the M and L experiments, and a re-audit found 100 of 100 sampled edges correct. Python uses a tree-sitter front-end with scope, import, inheritance (MRO) and \texttt{self.attr} resolution. Eleven further languages share one tree-sitter engine with per-language adapters. A hand check of 156 verified call edges on 13 open-source repositories found 151 correct (97\%).
+
+\smallskip\noindent\textbf{Ranking.} A natural-language query is scored against declaration-level chunks by four fused signals:
+\begin{itemize}
+\item exact symbol-name matches;
+\item BM25~\cite{robertson2009bm25};
+\item dense similarity from Qwen3-Embedding-0.6B~\cite{zhang2025qwen3embedding};
+\item graph facts such as route paths and event names.
+\end{itemize}
+The best-scoring seeds then propagate score along call, structural and data-flow edges, with hub damping. Declaration-kind priors and a test-path demotion follow. All weights were tuned once, on six development tasks of the smallest repository, and frozen. They were never re-tuned on any later repository or language.
+
+\smallskip\noindent\textbf{Output.} We evaluate three renderings of the same ranking:
+\begin{itemize}
+\item \hyb: the full ranked results within the budget;
+\item a graph-only ranker;
+\item \cmp: the agent-facing format, at most about 800 tokens of \texttt{file:line} pointers with each result's callers and callees (Listing~\ref{lst:example}).
+\end{itemize}
+The agent sees a single tool, \texttt{find\_relevant\_code}.
+
+\begin{lstlisting}[float=t,caption={First three of twelve pointers returned by the \cmp tool for ``where are refresh tokens validated?'' on the smallest benchmark repository (752 tokens in total).},label=lst:example]
+1. AuthService.validateLogin  src/auth/auth.service.ts:42-97
+   -> calls: AuthService.getTokensData :599; SessionService.create
+      src/session/session.service.ts:16 +1 more
+   <- called by: AuthController.login src/auth/auth.controller.ts:39
+2. AuthService.refreshToken  src/auth/auth.service.ts:523-560
+   -> calls: AuthService.getTokensData :599; UsersService.findById
+      src/users/users.service.ts:147; SessionService.updateByHash
+   <- called by: AuthController.refresh src/auth/auth.controller.ts:106
+3. AuthController.refresh  src/auth/auth.controller.ts:106-123
+   <- route: /auth/refresh (framework)
+\end{lstlisting}
+
+%% ------------------------------------------------------------------
+\section{Study Design}
+\label{sec:design}
+
+\subsection{Benchmarks and ground truth}
+
+Table~\ref{tab:benchmarks} summarises the benchmarks.
+
+\textbf{TypeScript.} The TypeScript ladder spans three real NestJS-style server codebases at pinned commits, of 6k to 763k lines.
+
+The smallest repository has 20 single-bug snapshots. Each has a bug injected as a minimal mutation, and a symptom-level report written by an LLM agent that knew the bug. A leakage audit screened the reports, and results are reported by lexical overlap. The six development tasks used for tuning are excluded from every result we report for this repository.
+
+The two larger repositories have tasks of five kinds:
+\begin{itemize}
+\item historical bug fixes reverted on the pinned snapshot (40 of the 56 Immich bug drafts were verified to fail before the fix and pass after it);
+\item feature-understanding questions;
+\item change-impact questions, with a type-checker oracle;
+\item data-flow questions;
+\item architecture questions.
+\end{itemize}
+
+The ground truth of a task lists its root-cause symbols and its relevant symbols: the functions on the bug's path, or the functions a question is about. The tasks were mined with LLM assistance. Two independent LLM auditors (Claude Sonnet, one per repository) then checked every draft against the code, the fix patches and the history. They had no access to any retrieval output. The flagged items were adjudicated before any retrieval run, and the sets were frozen with hashes. Tasks were split into development and test sets, and all results use the test split.
+
+\textbf{Python.} SWE-bench Lite~\cite{jimenez2024swebench} provides 300 issues from 12 Python repositories that others selected. The query is the issue text, verbatim. The ground truth is the set of declarations the gold patch changes, mapped to the innermost enclosing function or class at the base commit by a syntactic index. No retrieval method is involved, and the rule was fixed before any method ran.
+
+\textbf{Nine further languages.} SWE-bench Multilingual~\cite{yang2025swesmith} provides 300 issues from 41 repositories in Java, Rust, Go, PHP, Ruby, C, C++, JavaScript and TypeScript. We use the same query, ground-truth rule and protocol. One issue is excluded because its fix changes only an HTML template, leaving 299. The corpus is the tool's own file selection (every supported source file, without build output, dependencies or generated code), and every method indexes exactly these files.
+
+\begin{table}[t]
+\caption{Benchmarks. GT size is the mean number of relevant symbols per task; test = held-out tasks used in all results.}
+\label{tab:benchmarks}
+\small
+\begin{tabular}{@{}lrrrl@{}}
+\toprule
+Benchmark & Lines & Tasks (test) & GT size & Task types \\
+\midrule
+nestjs-boilerplate (S) & 6.3k & 20 (14) & -- & injected bugs \\
+Immich server (M) & 62k & 37 (26) & 5.2 & fixes, understanding \\
+Twenty server (L) & 763k & 24 (18) & 7.9 & fixes, understanding \\
+SWE-bench Lite & -- & 300 & 1.2 & GitHub issues \\
+SWE-bench Multilingual & -- & 299 & 2.2 & GitHub issues \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Compared tools}
+
+\gfy v0.9.108~\cite{graphify} builds an AST graph and answers with its own \texttt{query} command. \crg v2.4.0~\cite{crg} is run in two configurations:
+\begin{itemize}
+\item its default (SQLite FTS5 search);
+\item with its documented local embeddings (all-MiniLM-L6-v2), its strongest documented setup.
+\end{itemize}
+As a control for the embedding model, we also re-ran \crg with our embedder (Qwen3-Embedding-0.6B), served through its OpenAI-compatible provider interface.
+
+Both competitors were the latest releases when the comparison was registered. They are vendored at pinned commits and run as shipped. Every method indexes exactly the same files, through a neutral copy of the corpus. We also report internal baselines that share \tool's chunks and budget: BM25 alone, embeddings alone, and \nog, which is \hyb with graph propagation and graph facts disabled (the contrast for RQ2).
+
+\textbf{Protocol caveat.} In the retrieval-only comparison, every method receives the raw task text. The competitors are designed for queries chosen by an agent, so this protocol is unfavourable to keyword-based search. The agent comparison (RQ3), in which the agent writes its own queries, is the fairer test of the tools in use.
+
+Two bugs in our own harness were found and fixed, and they cut both ways:
+\begin{itemize}
+\item \gfy's graph was unreachable in the agent arm. This hurt \gfy. It was found on the first run, which was discarded.
+\item \crg's retrieval adapter would have indexed the already-fixed code on bug tasks. This would have helped \crg. It was fixed before any affected result existed.
+\end{itemize}
+
+\subsection{Agent harness}
+
+Agents are Claude Code, run headless with Claude Haiku~5.5 and Sonnet~5.5. Each session works in an isolated copy of the workspace without version-control metadata, dependencies or ground truth. The agent has the read-only tools Read, Grep and Glob, plus the MCP server of its arm. Sessions are capped at 40 turns, and every arm gets the same prompt. Answers are structured and scored automatically, without an LLM judge. A bug task scores 1 when the root cause is among the first three locations named; any other task scores the recall of its relevant symbols.
+
+The arms are:
+\begin{itemize}
+\item A0: grep and read only;
+\item A1: the \cmp tool with graph propagation disabled;
+\item A2: the \cmp tool;
+\item A5: \gfy;
+\item A6: \crg with embeddings.
+\end{itemize}
+Each task is run three times per arm with Haiku and twice with Sonnet. The harness keeps the user's own configuration away from the agent; in a pilot experiment, this was verified from the recorded requests.
+
+\subsection{Metrics and analysis}
+
+\textbf{Metrics.} The primary retrieval metric is symbol-level Recall@10 (\rat): the share of a task's relevant symbols among the top 10 results. Secondary metrics are root-cause MRR, file Recall@10, output tokens (o200k tokenizer) and latency. Every method has the same budget of 50 results and 8,000 tokens. A single normaliser credits each tool's results by symbol name or line range, with identical rules for every tool. For agents, tokens are the session's total tokens, cached prompt tokens included.
+
+\textbf{Analysis.} The unit of analysis is the task, with agent repeats averaged. Paired differences carry 95\% bootstrap confidence intervals (10,000 resamples). They are tested one-sided with a sign-flip permutation test, which is exact up to $2^{16}$ sign patterns and uses 20,000 seeded random flips beyond that. Multiplicity is controlled by Holm's procedure~\cite{holm1979} within each pre-registered family, and other tests are labelled exploratory. Token tests use the per-task log ratio, so a percentage refers to a typical task (the geometric mean). Tables of means can therefore show smaller percentages: a few long tasks dominate the mean.
+
+\textbf{Pre-registration.} Each protocol was committed before the runs it governs. The confirmatory families are:
+\begin{itemize}
+\item \textbf{TypeScript retrieval:} H1, the graph's contribution grows with corpus size; H2, it is larger on cross-module than on local tasks.
+\item \textbf{Agents, main run (Twenty, Haiku):}
+  \begin{itemize}
+  \item H3: the \cmp tool uses fewer tokens than grep alone, with a companion check that the task score does not drop by more than 0.05;
+  \item H4: graph content improves the task score (A2 against A1).
+  \end{itemize}
+\item \textbf{Agent head-to-head:} accuracy and tokens against each competitor, four tests per repository. This family was registered after our own retrieval and agent results were known, but before any competitor run.
+\item \textbf{SWE-bench Lite and Multilingual}, each its own family: \hyb beats \gfy (P1), \hyb beats \crg with embeddings (P2), and \hyb beats \nog (P3). These were registered before any method ran on that benchmark.
+\end{itemize}
+
+%% ------------------------------------------------------------------
+\section{Results}
+\label{sec:results}
+
+\subsection{RQ1: Retrieval against code-graph tools}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.82\textwidth]{figures/fig1-recall.pdf}
+\caption{Recall@10 by benchmark and tool, on the held-out test tasks, all 300 SWE-bench Lite issues and the 299 SWE-bench Multilingual issues. Every tool gets the same files, budget and scoring.}
+\label{fig:recall}
+\end{figure*}
+
+\begin{table}[t]
+\caption{Recall@10 on the TypeScript test splits. CRG = \crg; +emb = with its documented embeddings; +Q3 = with our embedding model.}
+\label{tab:ts}
+\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Method & S (14) & M (26) & L (18) \\
+\midrule
+\tool \hyb & \textbf{0.67} & \textbf{0.48} & \textbf{0.33} \\
+\tool \cmp ($\le$800 tok) & 0.61 & 0.39 & 0.28 \\
+\nog (no graph) & 0.43 & 0.43 & 0.17 \\
+Embeddings only (Qwen3) & 0.47 & 0.47 & 0.19 \\
+\midrule
+CRG +Q3 (control) & 0.19 & 0.23 & 0.17 \\
+CRG +emb & 0.24 & 0.26 & 0.10 \\
+CRG default & 0.11 & 0.03 & 0.01 \\
+\gfy & 0.08 & 0.04 & 0.01 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{TypeScript.} Figure~\ref{fig:recall} and Table~\ref{tab:ts} report the TypeScript results. \tool leads at every scale. Of the 18 paired comparisons between \tool (\hyb or \cmp) and a competitor configuration, 16 have $p \le 0.001$. The two exceptions are on M against \crg with embeddings: \hyb +0.21 ($p = 0.025$) and \cmp +0.12 ($p = 0.12$).
+
+The embedding model does not explain the gap. Swapping our embedder into \crg changes its recall by $-0.05$, $-0.03$ and $+0.07$, and leaves it 0.48, 0.25 and 0.16 below \hyb ($p < 0.01$ each). Dense retrieval with the same model over \tool's declaration chunks scores 0.47, 0.47 and 0.19. This suggests that what is embedded and searched matters as much as which model embeds it.
+
+\begin{table}[t]
+\caption{SWE-bench Lite (300 Python issues) and Multilingual (299 issues, nine languages). File = file Recall@10; Tok.\ = mean output tokens.}
+\label{tab:lite}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+ & \multicolumn{3}{c}{Lite} & \multicolumn{3}{c}{Multilingual} \\
+\cmidrule(lr){2-4}\cmidrule(l){5-7}
+Method & \rat & File & Tok. & \rat & File & Tok. \\
+\midrule
+\nog (no graph) & \textbf{0.487} & \textbf{0.800} & 7.7k & \textbf{0.392} & 0.713 & 7.6k \\
+\tool \hyb & 0.469 & \textbf{0.800} & 6.1k & 0.389 & \textbf{0.729} & 6.2k \\
+\tool \cmp & 0.454 & 0.747 & \textbf{0.7k} & 0.381 & 0.671 & \textbf{0.8k} \\
+Embeddings only & 0.419 & 0.780 & 7.0k & 0.280 & 0.679 & 7.4k \\
+BM25 & 0.392 & 0.700 & 7.5k & 0.271 & 0.576 & 7.6k \\
+CRG +emb & 0.354 & 0.717 & 7.3k & 0.261 & 0.619 & 10.5k \\
+Graph-only ranker & 0.312 & 0.677 & 5.7k & 0.281 & 0.660 & 5.5k \\
+\gfy & 0.151 & 0.667 & 6.6k & 0.123 & 0.553 & 7.4k \\
+CRG default & 0.127 & 0.240 & 3.8k & 0.069 & 0.144 & 4.2k \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Python.} On SWE-bench Lite (Table~\ref{tab:lite}), both pre-registered comparisons with competitors are supported:
+\begin{itemize}
+\item P1, \hyb against \gfy: +0.318 \rat [+0.259, +0.375], 109 wins, 10 losses and 181 ties, Holm $p = 0.0001$;
+\item P2, \hyb against \crg with embeddings: +0.115 [+0.057, +0.173], 64/32/204, Holm $p = 0.0005$.
+\end{itemize}
+Within a tenth of the output (748 tokens on average), \cmp still exceeds \crg with embeddings by 0.10 \rat (exploratory, $p = 0.001$). Plain BM25 over our chunks (0.392) is also above \crg with embeddings.
+
+\textbf{Nine further languages.} On SWE-bench Multilingual (Table~\ref{tab:lite}) both comparisons are supported again:
+\begin{itemize}
+\item P1, \hyb against \gfy: +0.266 [+0.212, +0.322], 121/18/160, Holm $p = 0.0001$;
+\item P2, \hyb against \crg with embeddings: +0.128 [+0.074, +0.183], 83/35/181, Holm $p = 0.0001$.
+\end{itemize}
+\tool is ahead of both competitors in each of the nine languages (exploratory), from C++ (0.222 against 0.090 and 0.028, 12 issues) to C (0.518 against 0.196 and 0.036, 28 issues). \cmp's output is 0.09$\times$ that of \crg with embeddings per issue (geometric mean).
+
+\textbf{Why the competitors score low.}
+\begin{itemize}
+\item \crg's default search returned nothing for 178 of the 300 Lite issue texts, and for 206 of the 299 Multilingual ones. Its documentation states that natural-language queries return nothing without embeddings.
+\item \gfy usually finds the right file (file R@10 0.667) but rarely the function. Its \texttt{query} returns the neighbourhood of keyword-matched nodes rather than ranked functions.
+\end{itemize}
+We inspected the raw outputs and audited the normaliser on both languages, and these are not scoring artefacts. They do reflect our protocol, however: both tools are built for agent-written queries (\S\ref{sec:design}).
+
+\finding{1}{Given the task text, \tool retrieves substantially more of the code a task needs than \gfy and \crg as shipped, on TypeScript, on Python and in nine further languages. The gap persists when \crg uses our embedding model.}
+
+\subsection{RQ2: The graph's own contribution}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig2-graph-effect.pdf}
+\caption{Recall@10 of \hyb minus \nog on test tasks, with 95\% bootstrap CIs. The mined-fix point is development data; its source reports no CI.}
+\label{fig:graph}
+\end{figure}
+
+\textbf{TypeScript.} Figure~\ref{fig:graph} isolates the graph. On TypeScript, propagation adds:
+\begin{itemize}
+\item +0.24 [+0.09, +0.40] on S;
+\item +0.05 [0.00, +0.12] on M;
+\item +0.16 [+0.07, +0.25] on L.
+\end{itemize}
+In a component ablation on S, removing call-graph traversal costs $-0.24$ [$-0.40$, $-0.08$], the only removal whose interval excludes zero. Structural and data-flow edges have small, borderline effects ($-0.05$ and $-0.04$). Control-flow, confidence and framework-dispatch edges have none. On 127 mined Immich and Twenty fixes, whose ground truth is only the changed functions, removing the graph costs 0.075 (24 losses, 12 wins, $p = 0.010$); this set is development data, not a confirmatory test.
+
+The effect is concentrated in understanding tasks (feature, change-impact, data-flow and architecture questions). On Twenty they gain +0.26 from the graph, while bug-localisation tasks gain nothing (+0.00); for those, every method is at the floor.
+
+\textbf{Pre-registered hypotheses.}
+\begin{itemize}
+\item \textbf{H2 is supported.} The effect is larger on cross-module than on local tasks: +0.12 [+0.03, +0.21], Holm $p = 0.019$.
+\item \textbf{H1 is not supported, but not falsified either.} We tested growth with size on nested sub-corpora of Twenty, built by code community. The slope is +0.062 per tenfold increase in lines. This is above the pre-registered minimum effect of +0.05, but its interval includes zero ([$-0.021$, +0.150], Holm $p = 0.10$). The pre-specified sensitivity analysis on randomly built sub-corpora gives +0.073 [+0.016, +0.142] ($p = 0.014$, unadjusted).
+\end{itemize}
+Across repositories the effect is not monotone in size. Within Twenty, adding unrelated code around the same tasks lowers the recall of the search without the graph from 0.32 to 0.20 to 0.17. The graph-propagated search holds up better, going from 0.42 to 0.43 to 0.33.
+
+\textbf{Python.} On Python the graph does not help. P3 is not supported: $-0.018$ [$-0.055$, +0.019], 17 wins, 24 losses, Holm $p = 0.83$. The effect varies by repository, from +0.12 on pytest (17 issues) to $-0.20$ on scikit-learn (23). In the 24 losses, propagation adds close neighbours of the best seeds (sibling methods, constructors, tests that call the function), and these push the single changed function out of the top ten.
+
+\textbf{Nine further languages.} P3 is not supported on Multilingual either: $-0.002$ [$-0.034$, +0.029], 24 wins, 28 losses, Holm $p = 0.55$. Per language (exploratory) the effect ranges from $-0.107$ on Java to +0.103 on PHP (43 issues each). The losses show the Lite mechanism: in \texttt{google\_\_gson-1100}, the neighbours of the top match \texttt{GsonBuilder.setDateFormat} push the changed \texttt{DefaultDateTypeAdapter.write} from fifth to below tenth. On the 43 TypeScript and JavaScript issues, whose graph is type-checked as on our ladder, the graph shows no gain either: $-0.035$ [$-0.140$, +0.058]. The interval is wide and includes the +0.075 measured on the mined TypeScript fixes.
+
+Language, graph construction, ground-truth form and task mix all differ between SWE-bench and our ladder, so the design cannot attribute the difference to one cause. Two candidates:
+\begin{enumerate}
+\item \textbf{Graph precision.} In a typical Python snapshot only about 21\% of call sites resolve from scopes, imports and \texttt{self} types, 12\% are name-inferred, and 67\% stay unresolved. Name inference does not look like the culprit, though. In an exploratory check over the 41 issues where the graph changed \rat, a higher share of name-inferred edges went with a \emph{better} graph effect (Spearman +0.28).
+\item \textbf{Ground truth.} SWE-bench credits only the changed functions (one function in 248 of 300 issues). Our TypeScript tasks also count the bug's path, which is what propagation retrieves. Against this, the graph also helped on the mined TypeScript fixes, whose ground truth has the same form as SWE-bench's.
+\end{enumerate}
+
+\finding{2}{The graph's contribution is conditional. On TypeScript, propagation over a type-checked graph adds recall, mainly on cross-module and understanding tasks. Growth with repository size is suggested but not established. On SWE-bench it adds nothing, in any of ten languages, including on the type-checked TypeScript and JavaScript issues.}
+
+\subsection{RQ3: Inside a coding agent}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig3-agent-tokens.pdf}
+\caption{Mean tokens per task in the head-to-head agent runs (Claude Haiku~5.5, three repeats per task and arm).}
+\label{fig:tokens}
+\end{figure}
+
+\begin{table}[t]
+\caption{Head-to-head agent runs (Claude Haiku~5.5). Score = task score; tokens and cost are arithmetic means per task (list prices); use = share of sessions that called the arm's tool.}
+\label{tab:agent}
+\small
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Repo & Arm & Score & Tokens & Cost & Use \\
+\midrule
+\multirow{4}{*}{L (18)} & A2 \tool & \textbf{0.896} & \textbf{453k} & \textbf{\$0.019} & 100\% \\
+ & A5 \gfy & 0.867 & 521k & \$0.022 & 87\% \\
+ & A6 \crg +emb & 0.851 & 779k & \$0.041 & 81\% \\
+ & A0 grep only & 0.837 & 513k & \$0.023 & -- \\
+\midrule
+\multirow{4}{*}{M (26)} & A2 \tool & \textbf{0.860} & \textbf{190k} & \$0.013 & 100\% \\
+ & A5 \gfy & 0.833 & 248k & \$0.013 & 92\% \\
+ & A6 \crg +emb & 0.859 & 399k & \$0.019 & 69\% \\
+ & A0 grep only & 0.816 & 235k & \$0.013 & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:agent} and Figure~\ref{fig:tokens} report the head-to-head runs.
+
+\textbf{Tokens against the competitors.} The pre-registered token tests are supported on both repositories. Against \gfy, a typical task uses 23\% fewer tokens on L (Holm $p = 0.003$) and 34\% fewer on M ($p < 0.001$). Against \crg, it uses 51\% fewer on L and 59\% fewer on M ($p < 0.001$), and fewer on 43 of 44 tasks.
+
+\textbf{Accuracy against the competitors.} The accuracy tests are not significant (Holm $p$ 0.26 to 0.47).
+
+\textbf{Graph or answer?} The ablation run separates the two (Twenty, Haiku, A0/A1/A2):
+\begin{itemize}
+\item H3 is supported: the \cmp tool uses fewer tokens than grep alone (log ratio +0.20 [+0.10, +0.30], Holm $p = 0.002$).
+\item H4 is not supported: graph content adds no significant task score (A2 against A1: +0.021 [$-0.014$, +0.069], Holm $p = 0.44$).
+\item Graph content does not change tokens either. Against grep alone, A1 (no propagation) saved 12\% on Twenty ($p = 0.051$) and 33\% on Immich ($p < 0.001$; exploratory). Between A1 and A2, tokens did not differ significantly: A2 used 7\% fewer on Twenty and 8\% more on Immich.
+\end{itemize}
+The token saving therefore comes from the compact retrieval answer, not from the graph.
+
+\begin{table}[t]
+\caption{Five runs comparing A2 with grep alone (A0). Tokens: typical-task change. NI: one-sided 95\% lower bound of the task-score difference against the $-0.05$ non-inferiority margin.}
+\label{tab:replication}
+\small
+\begin{tabular}{@{}lrrl@{}}
+\toprule
+Run & $\Delta$ score & Tokens & NI bound \\
+\midrule
+L, Haiku (main, pre-registered) & $-0.016$ & $-18\%$ & $-0.057$ (missed) \\
+M, Haiku (main) & $+0.007$ & $-28\%$ & $-0.058$ (missed) \\
+L, Haiku (head-to-head) & $+0.059$ & $-21\%$ & $+0.015$ \\
+M, Haiku (head-to-head) & $+0.044$ & $-28\%$ & $+0.012$ \\
+L, Sonnet & $+0.028$ & $-18\%$ & $-0.009$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Replication against grep.} Table~\ref{tab:replication} shows all five runs:
+\begin{itemize}
+\item \textbf{Tokens replicate.} The reduction is 18--28\% in every run, each with $p \le 0.03$.
+\item \textbf{Accuracy does not.} The effect ranges from $-0.016$ to $+0.059$. It is significant only in the two head-to-head runs (exploratory), and it narrowly misses the non-inferiority margin in the two main runs.
+\end{itemize}
+Files opened per session were nearly unchanged (12.0 against 11.5 on L; 5.7 against 5.8 on M). The saving is therefore not a matter of opening fewer files. We did not decompose where in the session it arises.
+
+\begin{table}[t]
+\caption{Typical-task change in tokens, A2 against grep alone, by task type (exploratory). $^{*}$: $p \le 0.012$; n.s.: not significant.}
+\label{tab:bytype}
+\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Run (Haiku) & Bug localisation & Understanding \\
+\midrule
+L, main (7 / 11 tasks) & $-9\%$ n.s. & $-24\%^{*}$ \\
+L, head-to-head (7 / 11) & $-6\%$ n.s. & $-30\%^{*}$ \\
+M, main (15 / 11) & $-26\%^{*}$ & $-30\%^{*}$ \\
+M, head-to-head (15 / 11) & $-25\%^{*}$ & $-31\%^{*}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{By task type.} On understanding tasks, tokens fall by 24--31\% in every run ($p \le 0.001$ each; Table~\ref{tab:bytype}, exploratory). On bug localisation, the fall is clear on Immich (25--26\%) but small and not significant on Twenty (6--9\%). One explanation we did not test: bug reports often name identifiers that grep can find directly, while a question about a feature or an impact has no such anchor.
+
+\textbf{Competitors against grep.} Mean tokens per task were 1\% (L) and 6\% (M) higher with \gfy than with grep alone, and 52\% and 70\% higher with \crg. The agent still searched and read the code after the tool answered, so a long tool output added to the session rather than replacing work.
+
+\textbf{Cost.} Token savings became dollar savings on L. On M, the cost per task was about equal across \tool, \gfy and grep alone, because cached prompt tokens are cheap.
+
+\textbf{Earlier pilot.} In an earlier experiment on the smallest repository with Sonnet, the agent with grep was at ceiling with or without retrieval tools; free to choose, it never called one. In a single call without tools, however, retrieved context raised diagnosis accuracy from 31--33\% (file list only) to 71--98\% (graph-based or hybrid context).
+
+\finding{3}{Inside a capable agent, a compact retrieval answer reduces tokens by 18--28\% against grep alone, in every run and most on understanding tasks. The saving does not depend on graph content, and accuracy gains do not replicate. Tools whose answers are long increase total tokens.}
+
+%% ------------------------------------------------------------------
+\section{Discussion}
+
+\subsection{When does a code graph help?}
+Our evidence supports a narrow claim. Propagating scores along call edges from good lexical and semantic seeds helped retrieval on TypeScript, on cross-module and understanding tasks, with a type-checked graph. The broader claim that ``a code graph helps'' is not supported. On SWE-bench, propagation added as much noise as signal in all ten languages, with syntactic graphs and, on 43 TypeScript and JavaScript issues, with a type-checked one. On a mid-sized repository with mostly local tasks, the effect was small.
+
+We cannot say which condition matters. Precision is a natural candidate, but the design confounds it with language, ground truth and task mix, and the type-checked graph also showed no gain on SWE-bench's TypeScript and JavaScript issues. On the smallest repository, the most specific edges (framework dispatch) had no measurable effect; only plain call traversal did. The graph adds to good seeds and does not replace them.
+
+\subsection{Retrieval gains are not agent gains}
+Retrieval gains of 0.1--0.3 \rat did not become reliable accuracy gains inside the agent. A capable agent with grep recovers most of the missing context with its own search. What a retrieval tool changed reliably was the session's token count, and that change came from the short answer, not from the graph.
+
+The size of the tool's answer matters as much as its ranking. The arm with the second-best retrieval (\crg with embeddings) used the most tokens. For evaluators, this argues for token accounting over whole agent sessions instead of the size of a single answer.
+
+\subsection{Implications}
+\textbf{For practitioners.} A retrieval tool is worth installing for the tokens a short answer saves, mostly on questions about features and change impact. It is not worth installing for higher accuracy. In our runs, graph content did not change agent outcomes.
+
+\textbf{For tool builders.} Keep answers short and make them point to code rather than reproduce it. A graph earns its cost in retrieval on cross-module questions, and only when its edges are reliable.
+
+\textbf{For evaluators.} Concretely:
+\begin{itemize}
+\item compare against the agent's own search, not an unrealistic baseline;
+\item count tokens over whole sessions;
+\item separate the graph from the search that seeds it, and from the answer format;
+\item pre-register the tests, and report the runs that do not replicate.
+\end{itemize}
+
+\subsection{What the headline claims measure}
+\label{sec:claims}
+Table~\ref{tab:claims} sets the competitors' published figures against what they compare and against our closest measurement. None of them is wrong on its own terms, but none of them measures what a developer would assume.
+
+The LOCOMO row comes from an auxiliary experiment on LOCOMO's open protocol (1,536 questions; recall@10 of the evidence dialogue turns). It uses BM25 and our embedding model, fused by reciprocal rank, with no code and no graph. graphify's own harness is not public, so the numbers are not directly comparable.
+
+\begin{table*}[t]
+\caption{Competitors' headline figures (from their documentation~\cite{graphify,crg}), what they compare, and our closest measurement.}
+\label{tab:claims}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.2\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}>{\raggedright\arraybackslash}p{0.4\textwidth}@{}}
+\toprule
+Claim & Baseline / setting & Closest measurement here \\
+\midrule
+\crg: ``${\sim}63\times$ fewer tokens'' & the whole repository in the prompt (``an upper bound no real agent pays'') & its own comparison against grep is 6.65$\times$, for locating an answer; in agent sessions, +52--70\% tokens against grep \\
+\gfy: ``cut agent token spend by 80\%'' & its hosted commercial product & the open-source tool: +1--6\% tokens against grep \\
+\gfy: ``0.497 recall@10'' & LOCOMO: memory over chat conversations, no code & open protocol: BM25 0.540; BM25 + our embedder 0.635 (different harness) \\
+\crg: impact F1 0.69 & ground truth derived from its own graph & not run; our change-impact tasks use a type-checker oracle \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Other negative results}
+After the TypeScript experiments, we tested six further directions on development data:
+\begin{itemize}
+\item \textbf{A change-history prior.} Recently changed files do predict where fixes land, but adding the prior to text retrieval never helped and lowered MRR in every file-level setting.
+\item \textbf{Commit titles as file descriptions.} The gain was not robust.
+\item \textbf{A cross-encoder reranker.} It looked positive on development data, then failed a pre-registered test on the held-out splits, used once for this purpose: +0.005 [$-0.035$, +0.045], $p = 0.40$.
+\item \textbf{Three other directions} showed no reliable gain.
+\end{itemize}
+Separately, indexing three query-time hot spots made queries 13--46$\times$ faster with byte-identical output: on 763k lines, from 13.3\,s to 0.29\,s.
+
+%% ------------------------------------------------------------------
+\section{Threats to Validity}
+
+\par\smallskip\noindent\textbf{Construct validity.}
+\begin{itemize}
+\item \rat measures what an agent is shown first, not whether the issue gets fixed; we did not measure resolution rates.
+\item The agent task score credits naming the right locations, not explaining the fix.
+\item Session tokens include cached prompt tokens, which cost less than new tokens. Our dollar figures account for this; our token figures do not.
+\end{itemize}
+
+\par\smallskip\noindent\textbf{Internal validity.}
+\begin{itemize}
+\item \textbf{Task construction.} The tool's authors built the TypeScript tasks, with LLM assistance. The smallest repository's bug reports were written by an LLM that knew the bug. The audits were performed by LLM auditors. SWE-bench Lite, selected by others, counters these risks.
+\item \textbf{Registration timing.} The agent head-to-head was registered after our own results were known, though before any competitor run.
+\item \textbf{Competitor configuration.} The competitors ran as shipped, with \crg's documented embeddings and a same-embedder control added. A different configuration, or agent-written queries in the retrieval-only comparison, might score differently.
+\item \textbf{Stubbed types on L.} On the 763k-line repository, third-party types are stubbed to fit a 15\,GB machine, so the graph is not fully type-resolved there.
+\end{itemize}
+
+\par\smallskip\noindent\textbf{External validity.}
+\begin{itemize}
+\item The design was built around TypeScript, and the ranking weights were tuned on a small TypeScript repository.
+\item The SWE-bench results (ten languages) are retrieval only. Four supported languages (Kotlin, Scala, C\#, Swift) have only a graph-quality check.
+\item The agent results cover one agent (Claude Code), two models and three repositories.
+\end{itemize}
+
+\par\smallskip\noindent\textbf{Conclusion validity.}
+\begin{itemize}
+\item The agent comparisons use 18--26 tasks per repository, so accuracy differences below about 0.05 cannot be resolved.
+\item We correct within pre-registered families and label everything else exploratory. We also report the two main runs in which non-inferiority narrowly failed.
+\item All repositories are public, so the models, including the embedding model, may have seen them. This applies to every arm.
+\end{itemize}
+
+%% ------------------------------------------------------------------
+\section{Conclusion}
+A type-resolved call graph combined with strong lexical and dense search finds the code a task needs substantially better than two popular code-graph MCP tools given the task text. This holds on TypeScript repositories up to 763k lines, on 300 Python issues and on 299 issues in nine further languages chosen by others.
+
+The graph itself helps retrieval on TypeScript, on cross-module and understanding tasks, and not on SWE-bench in any language. Inside a coding agent, the dependable benefit is a lower token count, and it comes from a short retrieval answer rather than from the graph. Large headline numbers for code-graph tools mostly reflect their baselines. We hope that pre-registered protocols, frozen datasets and decision logs like ours make such claims easier to check, for our tool as for any other.
+
+\section*{Data Availability}
+The tool, benchmark harness, frozen task sets, pre-registered protocols, decision logs, per-task results and analysis scripts are available from the authors. Raw retrieval outputs and agent transcripts are not redistributed, because they contain code from AGPL-licensed repositories. Tasks reference upstream commits by hash, so the outputs can be regenerated.
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{references}
+
+\end{document}

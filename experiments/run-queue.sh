@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # The ONE work queue for this machine: strictly sequential, each step gated on free memory (>= 8 GB available).
-# Usage: experiments/run-queue.sh [step ...]   steps: haiku-M onnx-S d2b swebench sonnet-L (default: all, in that order).
+# Usage: experiments/run-queue.sh [step ...]   steps: haiku-M onnx-S d2b swebench multilingual sonnet-L (default: all except multilingual, in that order).
 # Finished rows/runs are skipped, so re-running a step only does what is missing.
 # Agent steps resume after a usage-limit halt (exit 3). Touch experiments/03-graph-scale/STOP to stop between steps.
 cd "$(dirname "$0")/.."
@@ -33,9 +33,14 @@ swebench() {
   npx tsx scripts/swebench/run.ts --out experiments/05-swebench-python/results 2>&1 | FILT
   [ ${PIPESTATUS[0]} -eq 0 ] || { echo "swebench failed — stopping queue"; exit 1; }
 }
+multilingual() {
+  step multilingual
+  TYPETRACE_PY_TIMEOUT_MS=10800000 npx tsx scripts/swebench/multilingual.ts --out experiments/08-swebench-multilingual/results 2>&1 | FILT  # 3 h per competitor call (E8-D02)
+  [ ${PIPESTATUS[0]} -eq 0 ] || { echo "multilingual failed — stopping queue"; exit 1; }
+}
 sonnet_L() { agent h2h-L-sonnet --repo L --split test --arms A0,A2,A5,A6 --repeats 2 --model claude-sonnet-5-5; }
 STEPS=("$@"); [ ${#STEPS[@]} -gt 0 ] || STEPS=(haiku-M onnx-S d2b swebench sonnet-L)
 for s in "${STEPS[@]}"; do
-  case $s in haiku-M) haiku_M;; onnx-S) onnx_S;; d2b) d2b;; swebench) swebench;; sonnet-L) sonnet_L;; *) echo "unknown step $s"; exit 2;; esac
+  case $s in haiku-M) haiku_M;; onnx-S) onnx_S;; d2b) d2b;; swebench) swebench;; multilingual) multilingual;; sonnet-L) sonnet_L;; *) echo "unknown step $s"; exit 2;; esac
 done
 echo "=== queue done ($*) $(date -Is)"

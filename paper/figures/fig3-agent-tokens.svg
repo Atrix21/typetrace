@@ -1,0 +1,45 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 430' width='900' height='430'>
+<rect width='900' height='430' fill='#fcfcfb'/>
+<text x='64.0' y='28.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='16' fill='#1f1f1d' text-anchor='start' font-weight='600'>Tokens per task with a coding agent (Claude Code, Haiku 5.5)</text>
+<text x='64.0' y='48.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#55554f' text-anchor='start' font-weight='normal'>Mean over tasks, 3 repeats each. Task scores: Twenty 0.90 / 0.87 / 0.85 / 0.84, Immich 0.86 / 0.83 / 0.86 / 0.82 (not significantly different).</text>
+<rect x='64.0' y='63.0' width='12' height='12' rx='3' fill='#eb6834'/>
+<text x='81.0' y='73.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#55554f' text-anchor='start' font-weight='normal'>TypeTrace (agent tool)</text>
+<rect x='240.8' y='63.0' width='12' height='12' rx='3' fill='#eda100'/>
+<text x='257.8' y='73.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#55554f' text-anchor='start' font-weight='normal'>graphify</text>
+<rect x='328.0' y='63.0' width='12' height='12' rx='3' fill='#1baf7a'/>
+<text x='345.0' y='73.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#55554f' text-anchor='start' font-weight='normal'>code-review-graph + embeddings</text>
+<rect x='556.0' y='63.0' width='12' height='12' rx='3' fill='#9a9a93'/>
+<text x='573.0' y='73.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#55554f' text-anchor='start' font-weight='normal'>grep / read only</text>
+<line x1='64' x2='884' y1='366.0' y2='366.0' stroke='#e4e3df' stroke-width='1'/>
+<text x='56.0' y='370.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='end' font-weight='normal'>0k</text>
+<line x1='64' x2='884' y1='298.0' y2='298.0' stroke='#e4e3df' stroke-width='1'/>
+<text x='56.0' y='302.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='end' font-weight='normal'>200k</text>
+<line x1='64' x2='884' y1='230.0' y2='230.0' stroke='#e4e3df' stroke-width='1'/>
+<text x='56.0' y='234.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='end' font-weight='normal'>400k</text>
+<line x1='64' x2='884' y1='162.0' y2='162.0' stroke='#e4e3df' stroke-width='1'/>
+<text x='56.0' y='166.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='end' font-weight='normal'>600k</text>
+<line x1='64' x2='884' y1='94.0' y2='94.0' stroke='#e4e3df' stroke-width='1'/>
+<text x='56.0' y='98.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='end' font-weight='normal'>800k</text>
+<text transform='rotate(-90 16 230.0)' x='16.0' y='230.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>tokens per task</text>
+<path d='M197.0,366.0 V216.0 Q197.0,212.0 201.0,212.0 H227.0 Q231.0,212.0 231.0,216.0 V366.0 Z' fill='#eb6834'/>
+<text x='214.0' y='207.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>453k</text>
+<path d='M233.0,366.0 V192.9 Q233.0,188.9 237.0,188.9 H263.0 Q267.0,188.9 267.0,192.9 V366.0 Z' fill='#eda100'/>
+<text x='250.0' y='183.9' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>521k</text>
+<path d='M269.0,366.0 V105.1 Q269.0,101.1 273.0,101.1 H299.0 Q303.0,101.1 303.0,105.1 V366.0 Z' fill='#1baf7a'/>
+<text x='286.0' y='96.1' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>779k</text>
+<path d='M305.0,366.0 V195.6 Q305.0,191.6 309.0,191.6 H335.0 Q339.0,191.6 339.0,195.6 V366.0 Z' fill='#9a9a93'/>
+<text x='322.0' y='186.6' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>513k</text>
+<text x='269.0' y='386.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='middle' font-weight='600'>Twenty server</text>
+<text x='269.0' y='402.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>763k lines, 18 tasks</text>
+<path d='M607.0,366.0 V305.4 Q607.0,301.4 611.0,301.4 H637.0 Q641.0,301.4 641.0,305.4 V366.0 Z' fill='#eb6834'/>
+<text x='624.0' y='296.4' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>190k</text>
+<path d='M643.0,366.0 V285.7 Q643.0,281.7 647.0,281.7 H673.0 Q677.0,281.7 677.0,285.7 V366.0 Z' fill='#eda100'/>
+<text x='660.0' y='276.7' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>248k</text>
+<path d='M679.0,366.0 V234.3 Q679.0,230.3 683.0,230.3 H709.0 Q713.0,230.3 713.0,234.3 V366.0 Z' fill='#1baf7a'/>
+<text x='696.0' y='225.3' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>399k</text>
+<path d='M715.0,366.0 V290.1 Q715.0,286.1 719.0,286.1 H745.0 Q749.0,286.1 749.0,290.1 V366.0 Z' fill='#9a9a93'/>
+<text x='732.0' y='281.1' font-family='Inter, Helvetica, Arial, sans-serif' font-size='10' fill='#55554f' text-anchor='middle' font-weight='normal'>235k</text>
+<text x='679.0' y='386.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='12' fill='#1f1f1d' text-anchor='middle' font-weight='600'>Immich server</text>
+<text x='679.0' y='402.0' font-family='Inter, Helvetica, Arial, sans-serif' font-size='11' fill='#8a8a82' text-anchor='middle' font-weight='normal'>63k lines, 26 tasks</text>
+<line x1='64' x2='884' y1='366.0' y2='366.0' stroke='#8a8a82' stroke-width='1'/>
+</svg>
