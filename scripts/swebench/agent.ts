@@ -301,6 +301,9 @@ async function main() {
       const index = new SymbolIndex(root, files);
       const task = { task_id: is.id, split: SET, description: is.problem, root_cause_symbols: is.gt, relevant_symbols: is.gt, relevant_files: [...new Set(is.gt.map((k) => k.split('::')[0]))], task_type: 'bug_localisation', repo: is.repo } as GroundTruthTask;
       const key = sha(`${is.repo}|${is.base_commit}|${files.length}`).slice(0, 16);
+      // E10-D06: the issue's indexes (our graph and daemon cache, the competitors' builds) are rebuilt from scratch for
+      // every issue and never read after it, so they are deleted with its workspaces; left behind they filled the disk.
+      compDirs.push(path.join(SCRATCH, 'graphs', key), path.join(SCRATCH, 'daemon', key), path.join(SCRATCH, 'competitors', key));
       const comp: Record<string, { ws: string; spec: McpServerSpec; state: string; build_ms: number }> = {};
       await serialBuild(async () => {
         await initLanguages(grammarLanguages(files));

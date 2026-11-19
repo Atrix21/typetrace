@@ -157,3 +157,28 @@ No run was scored on 2.1.328.
   tools, model or MCP servers stay final.
 
 No prompt, tool, arm, scoring or analysis change.
+
+## E10-D06 (2026-11-19, 09:35 IST): the disk filled; per-issue indexes are now deleted after each issue
+
+At 09:35 IST the laptop's disk ran out of space, and the runner exited at 1,024 of 3,460 runs scored. When an issue
+finished, the runner deleted its workspaces but not its indexes: our graph and daemon cache, and the graphify and
+code-review-graph builds. These folders are rebuilt from scratch for every issue and never read afterwards, but
+they piled up at about 420 MB per issue: 57 GB over 136 issues.
+
+**What was affected:**
+- **Issue setups.** Seven failed in the last three minutes: three code-review-graph builds and four snapshots. All
+  are recorded as retryable setup failures. They don't count against any run's attempts, and their runs are pending.
+- **One record.** The last line of `excluded.jsonl`, the setup failure of `matplotlib__matplotlib-25332`, was cut off
+  mid-write. It was completed from its own prefix and the fixed snapshot path (`snap/<issue>`) and carries a
+  `repaired` field. A copy of the files as they were is kept outside the repository.
+- **Scored runs: none.** The last four scored runs before the stop (`fmtlib__fmt-3901`) all score 0. They were
+  checked: the four answers are complete and agree with each other, and the miss is in the issue, not the disk.
+  The tool-call counts of the runs just before the stop match the pattern of the whole run and of the pilot.
+- **An orphaned retrieval daemon.** It was stopped.
+
+**The change:** an issue's index folders are added to the folders deleted when the issue ends. Nothing reads them
+after that, so no run changes. Two main-sample issues share a snapshot (`sympy__sympy-21612` and
+`sympy__sympy-21614`, 46 positions apart). With the change, the second builds its own graph instead of reusing the
+first one's, like every other issue. The leftover folders (57 GB) were deleted before resuming.
+
+No prompt, tool, arm, scoring or analysis change.
