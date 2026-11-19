@@ -14,9 +14,7 @@ draws on all of them.
 | 6 | Is there a next accuracy improvement (change history, commit titles, reranking, …)? | development data, then one held-out test | None found: the reranker failed its held-out test. Queries became 13–46× faster with byte-identical output | [`06-next-direction/findings.md`](06-next-direction/findings.md) |
 | 7 | Are the new language front-ends' graphs correct? | 13 open-source repositories, 11 languages | 151 of 156 hand-checked verified call edges correct | [`07-languages/`](07-languages/README.md) |
 | 8 | Does the lead hold in nine other languages? | SWE-bench Multilingual, 300 issues | Done: ahead of both competitors (Holm p = 0.0001 each); the graph adds nothing (−0.002) | [`08-swebench-multilingual/findings.md`](08-swebench-multilingual/findings.md) |
-
-Experiment 9 (how much the product's fast first index loses before embeddings exist) lives on the product branch
-`product/fast-index-autoupdate-clients` until that branch is merged.
+| 9 | How much does the product's fast first index (no embeddings yet) lose? | experiment 3's tasks on the 6k / 63k / 763k-line ladder | Nothing up to 63k lines (+0.01); clearly worse on 763k lines (Recall@10 0.17 vs 0.28) until the background embeddings finish, identical after | [`09-fast-first-index/`](09-fast-first-index/README.md) |
 
 **Conventions.**
 - **Unit and tests:** the unit is the task or instance. Paired tests are one-sided sign-flip permutation tests with

@@ -1,7 +1,7 @@
 {
   "name": "typetrace-cli",
   "version": "0.2.0",
-  "description": "Code search + typed call graph for AI coding agents (MCP). Finds the code that matters for a task in one call; benchmarked head-to-head against graphify and code-review-graph.",
+  "description": "Local code search + call graph for AI coding agents, served over MCP: Claude Code, Cursor, Codex, Copilot and five more. 14 languages, no API keys. Benchmarked head-to-head against graphify and code-review-graph.",
   "author": "Atrix21",
   "license": "MIT",
   "type": "module",
@@ -43,7 +43,23 @@
     "python",
     "retrieval",
     "rag",
-    "benchmark"
+    "benchmark",
+    "cursor",
+    "codex",
+    "javascript",
+    "go",
+    "java",
+    "rust",
+    "cpp",
+    "csharp",
+    "ruby",
+    "php",
+    "kotlin",
+    "swift",
+    "tree-sitter",
+    "swe-bench",
+    "graphify",
+    "code-review-graph"
   ],
   "scripts": {
     "setup:target": "tsx src/cli/index.ts setup-target",
