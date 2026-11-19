@@ -1,0 +1,33 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;width:1280px;height:640px;background:#0d1117;color:#e6edf3;font-family:"Inter","DejaVu Sans",sans-serif}
+.w{box-sizing:border-box;width:1280px;height:640px;padding:64px 72px;display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center}
+h1{font-size:92px;margin:0 0 18px;letter-spacing:-2px;font-weight:800}
+h1 span{color:#58a6ff}
+p.t{font-size:31px;line-height:1.3;margin:0 0 30px;color:#c9d1d9}
+.pills{display:flex;flex-wrap:wrap;gap:9px}
+.pill{font:20px "FiraCode Nerd Font Mono","DejaVu Sans Mono",monospace;padding:6px 12px;border:1.5px solid #30363d;border-radius:999px;color:#c9d1d9}
+.cmd{margin-top:30px;font:26px "FiraCode Nerd Font Mono","DejaVu Sans Mono",monospace;color:#7ee787}
+.c h2{font-size:24px;font-weight:600;color:#c9d1d9;margin:0 0 6px}
+.c .s{font-size:18px;color:#8b949e;margin:0 0 22px}
+.g{margin-bottom:22px}.g .l{font-size:19px;color:#8b949e;margin-bottom:8px}
+.r{display:flex;align-items:center;gap:10px;margin:5px 0;font-size:19px}
+.r .n{width:196px;white-space:nowrap;color:#c9d1d9}.r .b{height:22px;border-radius:4px}.r .v{font:19px "DejaVu Sans Mono",monospace;color:#e6edf3}
+</style></head><body><div class="w">
+<div>
+<h1>Type<span>Trace</span></h1>
+<p class="t">Finds the code your AI coding agent needs, and hands back a short map: <code>file:line</code> plus what calls what.</p>
+<div class="pills"><span class="pill">MCP</span><span class="pill">14 languages</span><span class="pill">local · no API keys</span></div>
+<div class="cmd">$ npx typetrace-cli init .</div>
+</div>
+<div class="c">
+<h2>Finds the code that had to change</h2>
+<div class="s">Recall@10 on real GitHub issues · pre-registered tests<br>code-review-graph run with its embeddings</div>
+<div class="g"><div class="l">SWE-bench Lite · 300 issues · Python</div>
+<div class="r"><span class="n">TypeTrace</span><span class="b" style="width:282px;background:#58a6ff"></span><span class="v">0.47</span></div>
+<div class="r"><span class="n">code-review-graph</span><span class="b" style="width:212px;background:#6e7681"></span><span class="v">0.35</span></div>
+<div class="r"><span class="n">graphify</span><span class="b" style="width:91px;background:#6e7681"></span><span class="v">0.15</span></div></div>
+<div class="g"><div class="l">SWE-bench Multilingual · 299 issues · 9 languages</div>
+<div class="r"><span class="n">TypeTrace</span><span class="b" style="width:233px;background:#58a6ff"></span><span class="v">0.39</span></div>
+<div class="r"><span class="n">code-review-graph</span><span class="b" style="width:157px;background:#6e7681"></span><span class="v">0.26</span></div>
+<div class="r"><span class="n">graphify</span><span class="b" style="width:74px;background:#6e7681"></span><span class="v">0.12</span></div></div>
+</div></div></body></html>

@@ -1,0 +1,20 @@
+name: Feature request
+description: Suggest a language, a client, or a change to how TypeTrace finds code
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: The task or workflow, and where TypeTrace falls short today.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would help?
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Anything measurable?
+      description: Changes to ranking are judged by benchmarks (see CONTRIBUTING.md). An example query with the result you expected is a good start.

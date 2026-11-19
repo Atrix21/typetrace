@@ -9,7 +9,12 @@
   <a href="https://github.com/Atrix21/typetrace/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Atrix21/typetrace/ci.yml?branch=main&style=flat-square&label=tests" alt="tests"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/licence-MIT-2a78d6?style=flat-square" alt="MIT licence"></a>
   <a href="https://modelcontextprotocol.io/"><img src="https://img.shields.io/badge/MCP-server-2a78d6?style=flat-square" alt="MCP server"></a>
+  <a href="https://doi.org/10.5281/zenodo.24363177"><img src="https://img.shields.io/badge/preprint-10.5281%2Fzenodo.24363177-2a78d6?style=flat-square" alt="preprint DOI"></a>
 </p>
+
+<p align="center"><code>npx typetrace-cli init .</code> in your repository, then restart your AI coding tool.</p>
+
+<p align="center"><img src="docs/demo.gif" alt="Terminal recording: typetrace init builds the code graph of nestjs-boilerplate in 1.4 seconds and registers TypeTrace with five AI coding tools; a query for what happens when a user confirms their email returns the service methods, controllers and routes involved, with file:line and their callers and callees." width="820"></p>
 
 ---
 

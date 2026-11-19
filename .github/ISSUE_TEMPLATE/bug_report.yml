@@ -1,0 +1,40 @@
+name: Bug report
+description: Something in TypeTrace is broken or gives a wrong answer
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for reporting. A minimal way to reproduce it is the most useful thing you can add.
+  - type: input
+    id: version
+    attributes:
+      label: TypeTrace version
+      description: Output of `npx typetrace-cli --version`
+      placeholder: "0.2.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: client
+    attributes:
+      label: Where did it happen?
+      options: [Command line (init / query / status), Claude Code, Cursor, VS Code (GitHub Copilot), Codex, Gemini CLI, OpenCode, Kiro, Windsurf, Zed, Other]
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Operating system, Node.js version, repository language(s) and rough size
+      placeholder: "Ubuntu 24.04, Node 22.13, TypeScript monorepo, ~200k lines"
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+      description: For a wrong or missing search result, include the query and the function you expected to see.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Commands, a public repository and commit if possible, and the full output (`typetrace status` helps).
+      render: text
