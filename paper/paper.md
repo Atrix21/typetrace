@@ -3,7 +3,7 @@
 **Draft, 2026-11-18.** Every number in this draft comes from a committed result file in this repository; §10 maps
 each claim to its source. Section 6.4 reports SWE-bench Multilingual (experiment 8), which finished on 2026-11-18.
 
-*Author: Aditya Reddy Singireddy.*
+*Author: Aditya Reddy Singireddy.* © 2026 Aditya Reddy Singireddy. All rights reserved: the repository's code is MIT-licensed, this paper is not ([LICENSE](LICENSE)).
 
 ---
 

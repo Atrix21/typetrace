@@ -383,4 +383,4 @@ Every experiment in this repository (questions, data, main results, links): [`ex
 
 ## Licence
 
-MIT, see [LICENSE](LICENSE). It covers this repository's code and documentation, not the benchmark repositories it downloads.
+MIT, see [LICENSE](LICENSE). It covers this repository's code and documentation, not the benchmark repositories it downloads, and not the paper: [`paper/`](paper/) is © 2026 Aditya Reddy Singireddy, all rights reserved ([`paper/LICENSE`](paper/LICENSE)).
