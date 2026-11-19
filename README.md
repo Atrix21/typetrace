@@ -44,8 +44,9 @@ $ npx typetrace-cli query . "where are refresh tokens validated?"
 
 **What it is not:**
 - **Not an agent.** It does not edit code. The agent still reads the files; TypeTrace tells it which ones.
-- **Not a replacement for grep.** The agent keeps grep. TypeTrace's clear, measured benefit is fewer tokens; a gain in
-  correct answers on top of grep has not replicated (see [the evidence](#the-evidence-in-one-table)).
+- **Not a replacement for grep.** The agent keeps grep. TypeTrace's measured benefit over grep is fewer tokens on
+  tasks that span several files (our TypeScript tasks); on 346 SWE-bench issues it saved none. A gain in correct
+  answers on top of grep has not been shown (see [the evidence](#the-evidence-in-one-table)).
 - **Not a code-review or change-impact tool.** For blast radius, risk-scored diffs and PR comments, use
   [code-review-graph](#where-the-other-tools-are-the-better-choice).
 - **Not a knowledge graph of your docs, PDFs or media, or a memory of past conversations.** That is
@@ -54,8 +55,8 @@ $ npx typetrace-cli query . "where are refresh tokens validated?"
 
 **Who it is for:** you use Claude Code (or another MCP client) on a medium or large repository, and you want the agent to
 find the right code with less searching and fewer tokens. It is strongest on TypeScript, where it uses the real
-compiler and where the call graph measurably helps. Every agent benchmark so far is TypeScript; in Python and eight
-other languages it has been measured for finding code only.
+compiler and where the call graph measurably helps. With a coding agent it has been measured on our TypeScript tasks
+and on [346 SWE-bench issues in ten languages](experiments/10-swebench-agents/findings.md).
 
 <p align="center"><img src="docs/diagrams/without-with.png" alt="Without TypeTrace the agent greps and opens file after file (513k tokens per task on the Twenty server); with TypeTrace it asks once, gets a short map of the relevant functions and opens only those files (453k tokens per task), with a task score of 0.90 vs 0.84." width="90%"></p>
 
@@ -123,10 +124,10 @@ Details follow in [Results](#results).
 | Does it find the code a task needs better than graphify and code-review-graph? | **Yes, on all three TypeScript repositories.** Recall@10 0.33 to 0.69, against at most 0.31 for either competitor. | Strong: 16 of 18 comparisons p ≤ 0.001 |
 | The same, on Python? | **Yes.** [SWE-bench Lite](experiments/05-swebench-python/findings.md), 300 real GitHub issues: Recall@10 0.47 against 0.35 for code-review-graph with embeddings and 0.15 for graphify. The agent tool scores 0.45 in a tenth of the tokens. | Strong: both pre-registered tests Holm p ≤ 0.001 |
 | The same, in other languages? | **Yes, in all nine measured.** [SWE-bench Multilingual](experiments/08-swebench-multilingual/findings.md), 299 real issues in Java, Rust, Go, PHP, Ruby, C, C++, JavaScript and TypeScript: Recall@10 0.39 against 0.26 for code-review-graph with embeddings and 0.12 for graphify, ahead in every language. Kotlin, Scala, C# and Swift are not measured. | Strong: both pre-registered tests Holm p = 0.0001 |
-| Does a coding agent use fewer tokens with it? | **Yes.** On a typical task, 18 to 28% fewer than with grep alone, 23 to 34% fewer than with graphify, and about half of code-review-graph's. Averaged over all tasks, 9 to 21% fewer than grep alone, because a few long tasks dominate the average. | Strong: significant on every run |
-| Does the agent get more answers right? | **Not reliably.** Five runs compared it with grep alone: +0.06 and +0.04 task score (Haiku, p ≈ 0.03 each, exploratory), +0.03 (Sonnet), +0.01 and −0.02 (Haiku, the two pre-registered runs; not significant). The leads over graphify and code-review-graph are not significant. | Weak |
+| Does a coding agent use fewer tokens with it? | **Than graphify and code-review-graph, yes; than grep alone, it depends on the task.** On our TypeScript tasks, 18 to 28% fewer than grep alone on a typical task, 23 to 34% fewer than graphify and about half of code-review-graph's. On [346 SWE-bench issues in ten languages](experiments/10-swebench-agents/findings.md), the same as grep alone (−1%, not significant), 23% fewer than graphify and 60% fewer than code-review-graph. | Strong: pre-registered, every comparison listed |
+| Does the agent get more answers right? | **No.** On [346 SWE-bench issues](experiments/10-swebench-agents/findings.md) every arm found a changed function in its top three in 81% of issues (TypeTrace 0.809, grep alone 0.812, graphify 0.808, code-review-graph 0.812), and the 95% CI rules out a gain over grep above 0.014. On our TypeScript tasks, five runs ranged from −0.02 to +0.06 against grep alone. | Strong for SWE-bench: pre-registered, n set by a power analysis |
 | Is it cheaper in dollars? | On the 763k-line repository, yes (cheapest arm). On the 63k-line one, about the same as graphify and grep: cached prompt tokens are cheap. | Measured, two repositories |
-| Does the call graph help, beyond plain search? | On our TypeScript repositories, for finding code, yes on the smallest and largest (Recall@10 +0.24 and +0.16). **On SWE-bench, no**, in any language: −0.02 on Python, −0.00 across the nine others, neither significant; there the lead comes from the search stack. Inside the agent, no significant difference (within 0.02). | Mixed |
+| Does the call graph help, beyond plain search? | On our TypeScript repositories, for finding code, yes on the smallest and largest (Recall@10 +0.24 and +0.16). **On SWE-bench, no**, in any language: −0.02 on Python, −0.00 across the nine others, neither significant; there the lead comes from the search stack. Inside the agent, no difference on either (within 0.02 on TypeScript; −0.001 on 346 SWE-bench issues). | Mixed |
 
 ## Where the other tools are the better choice
 
@@ -143,7 +144,8 @@ comes from their own documentation or from our measurements.
   call graph; its semantic search takes about 3.5 hours on a laptop CPU to finish in the background, and until then its
   answers are clearly worse on that repository (Recall@10 0.17 instead of 0.28, [measured](experiments/09-fast-first-index/)).
 - **Similar agent accuracy.** With a coding agent, its task scores were not significantly lower than TypeTrace's
-  (0.867 vs 0.896 on Twenty, 0.833 vs 0.860 on Immich). TypeTrace's advantage there is tokens, not correctness.
+  (0.867 vs 0.896 on Twenty, 0.833 vs 0.860 on Immich, 0.808 vs 0.809 on 346 SWE-bench issues). TypeTrace's
+  advantage there is tokens, not correctness.
 
 **[code-review-graph](https://github.com/tirth8205/code-review-graph)** is a better fit if you want:
 - **Code review.** Blast-radius analysis of a change, risk-scored `detect_changes`, and a GitHub Action that posts PR
@@ -159,8 +161,9 @@ comes from their own documentation or from our measurements.
 - **Equal agent accuracy on Immich** (0.859 vs 0.860), though with about twice the tokens.
 
 **Plain grep, which your agent already has**, wins on cost of ownership. There is nothing to install, no index to keep
-up to date, no 2.4 GB model and no 6 to 8 GB of RAM while indexing. Agents are already good at searching with it: TypeTrace's
-effect on task score ranged from −0.02 to +0.06 across five runs, while it saved 18 to 28% of tokens on a typical task.
+up to date, no 2.4 GB model and no 6 to 8 GB of RAM while indexing. Agents are already good at searching with it: on 346
+SWE-bench issues, grep alone matched every tool in accuracy and TypeTrace in tokens. TypeTrace saved 18 to 28% of tokens
+only on our TypeScript tasks, where the code for a task is spread over more files.
 
 ## What the other tools' headline numbers measure
 
@@ -244,6 +247,20 @@ What this shows (pre-registered tests, Holm-corrected, paired by task):
 - **Fewer tokens: yes, every time.** The test compares tokens task by task, so the percentages below are for a typical task (the geometric mean of the per-task ratios). Against graphify, 23% fewer on Twenty (p = 0.003) and 34% fewer on Immich (p < 0.001). Against code-review-graph, about half the tokens on both (p < 0.001, fewer on 43 of 44 tasks). Against grep only, 18–28% fewer on all five runs (p ≤ 0.03), including the two pre-registered ones. The tables show averages per task, where a few long tasks weigh more: 12% fewer than grep only on Twenty, 19% on Immich and 21% with Sonnet (9% and 14% in the two pre-registered Haiku runs).
 - **More correct answers: not shown.** TypeTrace scores highest or tied in both head-to-head runs, but its accuracy leads over graphify and code-review-graph are **not statistically significant** with 18–26 tasks. Against grep only, the five runs disagree: +0.06 on Twenty (p = 0.03) and +0.04 on Immich (p = 0.02) in the head-to-head runs with Haiku; +0.03 with Sonnet; +0.01 on Immich and −0.02 on Twenty in the pre-registered Haiku runs (the tables above are the head-to-head runs). Accuracy tests are exploratory. The pre-registered token test (H3) came with a check that task score drops by at most 0.05; it held with Sonnet and in both head-to-head runs, and narrowly missed in the two pre-registered Haiku runs (lower bounds −0.057 and −0.058). The token savings replicate, while any accuracy gain does not.
 - **Cost:** on Twenty, TypeTrace runs are the cheapest. On Immich, cost per task is about the same as graphify and grep only, despite fewer tokens: cached prompt tokens are cheap, so token savings do not always become dollar savings.
+
+**SWE-bench issues, 10 languages ([experiment 10](experiments/10-swebench-agents/findings.md)).** 346 issues (174 from Lite, 172 from Multilingual), Claude Haiku 5.5, 2 repeats, the same five arms as bare MCP servers. Pre-registered; the sample size came from a power analysis on a 30-issue pilot.
+
+| Arm | Changed function in top 3 | Tokens / run (mean) | Median | Tool used |
+|---|---:|---:|---:|---:|
+| + TypeTrace | 0.809 | 70k | **41k** | 98% |
+| + TypeTrace without the graph | 0.811 | **65k** | 42k | 96% |
+| + graphify | 0.808 | 88k | 54k | 17% |
+| + code-review-graph (with embeddings) | **0.812** | 147k | 109k | 18% |
+| grep / read only | **0.812** | 70k | 44k | — |
+
+- **Accuracy: no difference.** None of the four pre-registered tests comes close (Holm p = 1.0); TypeTrace is non-inferior to grep alone (lower bound −0.017 against a −0.05 margin).
+- **Tokens: same as grep alone, far below both competitors.** −1% against grep (not significant), −23% against graphify and −60% against code-review-graph (Holm p = 0.0001 each). The competitors' extra tokens are mostly their tool definitions, sent on every turn: the agent called them in fewer than 1 run in 5.
+- **One exploratory result against TypeTrace:** a changed function was ranked *first* slightly less often with it (0.678 against 0.701 for grep alone, 95% CI of the difference [−0.043, −0.004], uncorrected).
 
 ### 3. Python: SWE-bench Lite (retrieval, no model calls)
 

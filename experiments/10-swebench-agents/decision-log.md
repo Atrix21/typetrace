@@ -182,3 +182,11 @@ after that, so no run changes. Two main-sample issues share a snapshot (`sympy__
 first one's, like every other issue. The leftover folders (57 GB) were deleted before resuming.
 
 No prompt, tool, arm, scoring or analysis change.
+
+## E10-D07 (2026-11-20, 05:19 IST): run finished; absolute paths shortened in excluded.jsonl
+
+The main run finished at 05:19 IST with 3,460 of 3,460 runs scored (346 issues × 5 arms × 2 repeats), all on the
+first login. Before publishing, the absolute paths in `results/main/excluded.jsonl` (the local scratch folder and
+the competitor adapter, inside error messages of failed issue setups) were shortened to repository-relative paths.
+No other field and no scored run changed; the original file is kept outside the repository. The analysis ran
+unchanged: `python3 scripts/swebench/analyse_agents.py experiments/10-swebench-agents/results/main`.
