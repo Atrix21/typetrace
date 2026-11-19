@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use TypeTrace or its benchmark, please cite the paper below."
+title: "TypeTrace: code search and call graph for AI coding agents"
+type: software
+authors:
+  - family-names: Singireddy
+    given-names: Aditya Reddy
+repository-code: "https://github.com/Atrix21/typetrace"
+url: "https://www.npmjs.com/package/typetrace-cli"
+license: MIT
+version: 0.2.0
+date-released: 2026-11-19
+keywords:
+  - code search
+  - code graphs
+  - call graphs
+  - coding agents
+  - Model Context Protocol
+preferred-citation:
+  type: article
+  title: "Do Code Graphs Help Coding Agents Find Code? A Pre-Registered Evaluation of Type-Resolved Call Graphs for Repository-Level Retrieval"
+  authors:
+    - family-names: Singireddy
+      given-names: Aditya Reddy
+  year: 2026
+  month: 11
+  publisher:
+    name: Zenodo
+  doi: 10.5281/zenodo.24363177
+  url: "https://doi.org/10.5281/zenodo.24363177"
+  status: preprint

@@ -1,5 +1,8 @@
 # Paper draft
 
+Preprint v1, archived on Zenodo on 19 November 2026: [doi:10.5281/zenodo.24363177](https://doi.org/10.5281/zenodo.24363177). Later versions are added to
+the same record; this DOI always resolves to the latest one.
+
 `paper.md` is the working draft of the research paper on this repository's experiments, and the only source: it is
 Markdown so that it diffs and reviews like the rest of the repository. `build/build.sh` turns it into
 [`build/paper.pdf`](build/paper.pdf) (figures to PNG with headless Chrome, `build/md2tex.py` to LaTeX, then
