@@ -5,6 +5,7 @@ type: software
 authors:
   - family-names: Singireddy
     given-names: Aditya Reddy
+    email: aditya@atrixhq.dev
 repository-code: "https://github.com/Atrix21/typetrace"
 url: "https://www.npmjs.com/package/typetrace-cli"
 license: MIT
@@ -22,6 +23,7 @@ preferred-citation:
   authors:
     - family-names: Singireddy
       given-names: Aditya Reddy
+      email: aditya@atrixhq.dev
   year: 2026
   month: 11
   publisher:
