@@ -89,10 +89,10 @@
     "web-tree-sitter": "0.25.10"
   },
   "devDependencies": {
-    "@types/node": "22.19.1",
+    "@types/node": "22.20.5",
     "roughjs": "4.6.6",
-    "tsx": "4.20.6",
-    "vitest": "3.2.4"
+    "tsx": "4.23.15",
+    "vitest": "3.2.7"
   },
   "mcpName": "io.github.atrix21/typetrace"
 }
