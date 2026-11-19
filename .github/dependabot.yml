@@ -28,6 +28,12 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: [version-update:semver-major]
+      # tree-sitter is still 0.x, where a minor version can change the grammar ABI: web-tree-sitter and the
+      # prebuilt grammars in tree-sitter-wasms must be upgraded together, by hand (0.25 -> 0.27 broke parsing).
+      - dependency-name: web-tree-sitter
+        update-types: [version-update:semver-minor, version-update:semver-major]
+      - dependency-name: tree-sitter-wasms
+        update-types: [version-update:semver-minor, version-update:semver-major]
 
   - package-ecosystem: github-actions
     directory: /
