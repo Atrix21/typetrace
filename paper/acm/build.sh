@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Build the ACM sigconf version of the paper with Tectonic.
 #   bash paper/acm/build.sh            -> paper/acm/out/paper-anonymous.pdf
+#   NAMED=1 bash paper/acm/build.sh    -> paper/acm/out/paper.pdf (author block from authors.named.tex)
 #   BLIND_NAMES=1 bash paper/acm/build.sh -> paper/acm/out/paper-blind-read.pdf (pseudonymous author block from
 #                                          authors.blind.tex, local only, never committed)
 set -euo pipefail
@@ -22,6 +23,7 @@ for f in ../figures/print/*.svg; do
   "$C" --headless=new --disable-gpu --no-pdf-header-footer --print-to-pdf="$PWD/figures/$b.pdf" "file://$PWD/figures/$b.html" >/dev/null 2>&1; rm "figures/$b.html"
 done
 name=paper-anonymous; src=authors.anonymous.tex
+if [ "${NAMED:-0}" = 1 ]; then name=paper; src=authors.named.tex; fi
 if [ "${BLIND_NAMES:-0}" = 1 ]; then name=paper-blind-read; src=authors.blind.tex; fi
 cp "$src" authors.tex
 cp .tex/acmart.cls .tex/ACM-Reference-Format.bst .
