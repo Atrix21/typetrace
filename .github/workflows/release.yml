@@ -2,7 +2,7 @@ name: release
 # Runs when a GitHub release is published, or by hand for an existing tag.
 #  - npm: publishes typetrace-cli to npmjs.com with provenance, through npm trusted publishing (OIDC, no stored
 #    token). Skipped when that version is already on npm.
-#  - mcp-registry: lists the new version in the official MCP Registry (io.github.atrix21/typetrace).
+#  - mcp-registry: lists the new version in the official MCP Registry (io.github.Atrix21/typetrace).
 #  - github-packages: publishes the same package to GitHub Packages as @atrix21/typetrace-cli, so it is listed on the
 #    repository page. Skipped when that version is already there.
 on:

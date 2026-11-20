@@ -1,6 +1,6 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.atrix21/typetrace",
+  "name": "io.github.Atrix21/typetrace",
   "title": "TypeTrace",
   "description": "Finds the code an AI coding agent needs: file:line pointers plus callers and callees, locally.",
   "repository": {
@@ -8,12 +8,12 @@
     "source": "github"
   },
   "websiteUrl": "https://github.com/Atrix21/typetrace",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "typetrace-cli",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "runtimeHint": "npx",
       "transport": {
         "type": "stdio"

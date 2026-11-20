@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.1 (2026-11-20)
+
+- The MCP Registry name is `io.github.Atrix21/typetrace` (the registry matches the GitHub account's case). No code
+  changes from 0.3.0.
+
 ## 0.3.0 (2026-11-20)
 
 - **Claude Code setup.** For Claude Code, `init` and `install` now also write the kind of setup graphify and
