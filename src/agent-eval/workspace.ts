@@ -65,7 +65,12 @@ export function buildWorkspace(cfg: BenchmarkConfig, taskId: string, runTag = ''
   // Type information for our TS-checker graph, reachable by module resolution but outside the agent's cwd.
   fs.mkdirSync(WORK_ROOT, { recursive: true });
   const nm = path.join(WORK_ROOT, 'node_modules');
-  if (!fs.existsSync(nm)) fs.symlinkSync(abs('targets/deps/node_modules'), nm);
+  // A link to elsewhere (another checkout's targets/, or one that no longer exists) is replaced: existsSync is false
+  // for a dangling link, and symlinkSync would then fail with EEXIST on every workspace.
+  const want = abs('targets/deps/node_modules');
+  let have: string | null = null;
+  try { have = fs.readlinkSync(nm); } catch { /* absent */ }
+  if (have !== want) { fs.rmSync(nm, { force: true }); fs.symlinkSync(want, nm); }
   const files = listCorpusFiles(dir, cfg.target.include_dirs);
   const hash = workspaceHash(dir, files);
   const cacheDir = path.join(abs(cfg.cache_dir), 'agent-ws', hash.slice(0, 12));
