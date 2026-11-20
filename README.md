@@ -125,7 +125,24 @@ Files in the repository name the repository. The two global entries name none: t
 |---|---|
 | `CLAUDE.md` | a short block between `<!-- typetrace -->` markers saying when to call `find_relevant_code`; the rest of the file is kept |
 | `.claude/skills/typetrace/SKILL.md` | a skill on writing queries and following the callers and callees in the results |
-| `.claude/hooks/typetrace-nudge.mjs` and `.claude/settings.json` | a PreToolUse hook. Before a search or a read in the repository it adds one sentence saying that the repository is indexed. It never blocks a call, speaks at most 5 times per session (`TYPETRACE_NUDGE_CAP`), and stays quiet while TypeTrace has been queried in the last 30 minutes |
+| `.claude/hooks/typetrace-hook.mjs` and `.claude/settings.json` | one hook script for four events. Before a search or a read in the repository it adds one sentence saying that the repository is indexed: it never blocks a call, speaks at most 5 times per session (`TYPETRACE_NUDGE_CAP`), and stays quiet while TypeTrace has been queried in the last 30 minutes. It also keeps the worklog for [working across sessions](#working-across-sessions) |
+
+### Working across sessions
+
+TypeTrace remembers, on your machine only, what each Claude Code session searched, read and edited, and the state of
+the code when the session ended. It keeps this in its index folder, never in the repository, and
+`TYPETRACE_WORKLOG=0` turns it off. Three more MCP tools answer from it and from the call graph:
+
+| Tool | Answers | CLI |
+|---|---|---|
+| `recent_work` | what earlier sessions searched, read and edited, with the functions involved | `typetrace recent` |
+| `changes_since_last_session` | the files and functions that changed since the last session ended (exactly, in a git repository), and the code that calls them | `typetrace changes` |
+| `codebase_overview` | the codebase's areas, its most-called functions and its entry points (routes, where the graph has them) | `typetrace overview [folder]` |
+
+A new session gets one line saying where earlier sessions left off. After Claude Code compacts a long session, the
+hook restates that session's own working set as `file:line` pointers, so the agent need not search for it again.
+Whether this saves an agent work over many sessions is not measured yet: [experiment 12](experiments/12-session-continuity/protocol.md)
+is designed to test it.
 
 ## The evidence in one table
 

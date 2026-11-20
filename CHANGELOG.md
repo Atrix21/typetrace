@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.4.0 (unreleased)
+
+- **Working across sessions.** TypeTrace now remembers, on your machine only, what each Claude Code session searched,
+  read and edited, and the state of the code when it ended. Three new MCP tools answer from that and the call graph:
+  - `recent_work`: what earlier sessions worked on, with the functions involved, most recent first;
+  - `changes_since_last_session`: the files and functions that changed since the last session ended (exactly, in a
+    git repository) and the code that calls them;
+  - `codebase_overview`: the codebase's areas, its most-called functions and its entry points (routes, where the
+    graph has them). `under` narrows it to one folder.
+
+  The CLI prints the same: `typetrace recent`, `typetrace changes`, `typetrace overview [folder]`.
+- **The Claude Code hook** (now `.claude/hooks/typetrace-hook.mjs`; 0.3's `typetrace-nudge.mjs` is replaced on
+  upgrade) records the worklog after reads, edits and searches; tells a new session in one line where earlier sessions
+  left off; after a compaction, restates the session's own working set; and notes the code's state when a session
+  ends. `TYPETRACE_WORKLOG=0` turns recording off. The worklog stays in TypeTrace's index folder.
+
 ## 0.3.2 (2026-11-20)
 
 - **On PyPI.** `uvx typetrace init .` or `pip install typetrace`: the PyPI package runs this npm package with a Node.js

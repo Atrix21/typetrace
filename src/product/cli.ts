@@ -42,6 +42,8 @@ import { PersistentQueryEmbedder } from '../agent-eval/mcp/retrieval-server.js';
 import { primeGraphCache } from '../retrieval/graph-retrieval.js';
 import { applyClients, CLIENTS, describe, selectClients, SERVER_NAME, type Launch } from './clients.js';
 import { applyClaudeSetup, describeSetup } from './claude-setup.js';
+import { changesSince, DeclIndex, overview, readSnapshots, readWorklog, recentWork } from './continuity.js';
+import type { GraphEdge, GraphNode } from '../graph/graph-schema.js';
 import {
   clearGraphWanted, diffManifest, embedProgress, findIndexedRepo, graphWanted, jobRunning, paths, readManifest, readMeta,
   requestGraph, scan, spawnJob, tryLock, unlock, writeManifest, writeMeta, type IndexMeta, type Manifest,
@@ -134,7 +136,7 @@ async function embedAll(repo: string, job: boolean) {
 
 // ---- loading (read-only) ----
 
-interface Loaded { m: RetrievalMethod & { prewarmQuery?(q: string): Promise<void>; coverage?: { covered: number; total: number } }; files: string[]; meta: IndexMeta }
+interface Loaded { m: RetrievalMethod & { prewarmQuery?(q: string): Promise<void>; coverage?: { covered: number; total: number } }; files: string[]; meta: IndexMeta; nodes: GraphNode[]; edges: GraphEdge[] }
 
 /**
  * Open the index of `repo`. Default (server, query): read-only, cached vectors only. With `embed`, missing vectors
@@ -157,7 +159,22 @@ async function openIndex(repo: string, o: { embed?: boolean; queryEmbedder?: Per
   EmbeddingRetriever.defaultQueryEmbedder = o.queryEmbedder ?? null;
   const m = (await REGISTRY.compact_graph()) as Loaded['m'];
   await m.prepare(corpus);
-  return { m, files, meta };
+  return { m, files, meta, nodes: graph.nodes as GraphNode[], edges: graph.edges as GraphEdge[] };
+}
+
+// ---- working across sessions (0.4): tools beside find_relevant_code ----
+
+export const CONTINUITY_TOOLS = [
+  { name: 'recent_work', description: 'What earlier sessions in this repository searched for, read and edited, with the functions involved, most recent first. Use it when continuing earlier work.', inputSchema: { type: 'object', properties: { sessions: { type: 'number', description: 'How many sessions (default 3)' } } } },
+  { name: 'changes_since_last_session', description: 'Files and functions that changed since the previous session ended, and the code that calls them.', inputSchema: { type: 'object', properties: {} } },
+  { name: 'codebase_overview', description: 'A map of this codebase from its call graph: its areas with their size and languages, the most-called functions and the entry points.', inputSchema: { type: 'object', properties: { under: { type: 'string', description: 'Only this folder (e.g. src/server)' } } } },
+] as const;
+
+function continuityAnswer(repo: string, l: Loaded, name: string, args: Record<string, unknown>): string {
+  const dir = paths(repo).dir;
+  if (name === 'recent_work') return recentWork(readWorklog(dir), new DeclIndex(l.nodes), { sessions: Math.min(10, Math.max(1, Number(args.sessions) || 3)) });
+  if (name === 'codebase_overview') return overview(l.files, l.nodes, l.edges, { under: typeof args.under === 'string' ? args.under : undefined });
+  return changesSince(repo, readSnapshots(dir), scan(repo, l.meta.include).manifest, new DeclIndex(l.nodes), l.nodes, l.edges);
 }
 
 /** A vector cache with content means the model has been downloaded and query vectors can be computed. */
@@ -362,8 +379,13 @@ async function serve(repoArg: string | undefined) {
 
   let chain: Promise<unknown> = Promise.resolve();
   const server = new Server({ name: SERVER_NAME, version: VERSION }, { capabilities: { tools: {} } });
-  server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [{ name: EXP3_TOOL_NAME, description: EXP3_TOOL_DESCRIPTION, inputSchema: EXP3_TOOL_SCHEMA as never }] }));
+  server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [{ name: EXP3_TOOL_NAME, description: EXP3_TOOL_DESCRIPTION, inputSchema: EXP3_TOOL_SCHEMA as never }, ...CONTINUITY_TOOLS.map((t) => ({ ...t, inputSchema: t.inputSchema as never }))] }));
   server.setRequestHandler(CallToolRequestSchema, async (req) => {
+    if (CONTINUITY_TOOLS.some((t) => t.name === req.params.name)) {
+      if (!current) return { isError: true, content: [{ type: 'text' as const, text: `TypeTrace has no index for ${repo}. Ask the user to run: npx typetrace-cli init ${JSON.stringify(repo)}` }] };
+      try { return { content: [{ type: 'text' as const, text: continuityAnswer(repo, await current, req.params.name, (req.params.arguments ?? {}) as Record<string, unknown>) }] }; }
+      catch (e) { return { isError: true, content: [{ type: 'text' as const, text: `${req.params.name} failed: ${(e as Error).message}` }] }; }
+    }
     const q = (req.params.arguments as { query?: unknown } | undefined)?.query;
     if (req.params.name !== EXP3_TOOL_NAME || typeof q !== 'string' || !q.trim()) return { isError: true, content: [{ type: 'text' as const, text: 'Invalid call: "query" must be a non-empty string.' }] };
     if (!current) return { isError: true, content: [{ type: 'text' as const, text: `TypeTrace has no index for ${repo}. Ask the user to run: npx typetrace-cli init ${JSON.stringify(repo)}` }] };
@@ -386,12 +408,15 @@ async function serve(repoArg: string | undefined) {
 async function main() {
   const [cmd, repoArg, ...rest] = positional;
   if (flag('version') || cmd === 'version') { process.stdout.write(VERSION + '\n'); process.exit(0); }
-  if (!cmd || !['init', 'index', 'status', 'query', 'serve', 'install', 'uninstall'].includes(cmd)) {
+  if (!cmd || !['init', 'index', 'status', 'query', 'serve', 'install', 'uninstall', 'recent', 'overview', 'changes'].includes(cmd)) {
     err(`typetrace ${VERSION}: code search + call graph for AI coding agents (MCP)
 
   typetrace init [repo]                 index the repo and register the MCP server with your AI coding tools
   typetrace status [repo]               what is indexed, what is still running in the background
   typetrace query <repo> "question"     print what the agent would see
+  typetrace recent [repo]               what earlier sessions searched, read and edited (the recent_work tool)
+  typetrace changes [repo]              what changed since the last session ended (changes_since_last_session)
+  typetrace overview [repo] [folder]    a map of the codebase from its call graph (codebase_overview)
   typetrace index [repo]                rebuild everything now, in the foreground
   typetrace install [repo]              (re)register the server; uninstall removes it
   typetrace serve [repo]                run the MCP server (your tools start this; it keeps the index up to date)
@@ -411,6 +436,11 @@ async function main() {
   else if (cmd === 'index') await index(repo);
   else if (cmd === 'status') status(repo);
   else if (cmd === 'query') await query(repo, rest.join(' '));
+  else if (cmd === 'recent' || cmd === 'overview' || cmd === 'changes') {
+    const l = await openIndex(repo, {});
+    const name = cmd === 'recent' ? 'recent_work' : cmd === 'overview' ? 'codebase_overview' : 'changes_since_last_session';
+    process.stdout.write(continuityAnswer(repo, l, name, cmd === 'overview' && rest[0] ? { under: rest[0] } : {}) + '\n');
+  }
   else if (cmd === 'serve') await serve(repoArg);
   else if (cmd === 'install') install(repo);
   else install(repo, true);

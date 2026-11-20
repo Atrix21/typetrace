@@ -151,6 +151,6 @@ describe('the hook command', () => {
     applyClaudeSetup(repo);
     const c = settings().hooks.PreToolUse;
     expect(c).toHaveLength(1); // replaced, not duplicated
-    expect(c[0].hooks[0].command).toBe('"/opt/py env/bin/node" "$CLAUDE_PROJECT_DIR/.claude/hooks/typetrace-nudge.mjs" 2>/dev/null || true');
+    expect(c[0].hooks[0].command).toBe('"/opt/py env/bin/node" "$CLAUDE_PROJECT_DIR/.claude/hooks/typetrace-hook.mjs" 2>/dev/null || true');
   });
 });
