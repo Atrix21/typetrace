@@ -34,8 +34,8 @@ export const LEDGER_PATH = abs(`${EXP_DIR_REL}/spend-ledger.jsonl`);
 /* command builder                                                                                   */
 /* ------------------------------------------------------------------------------------------------ */
 
-export type ProfileName = 'bare' | 'restricted-oauth' | 'safe-mode';
-export const PROFILE_NAMES: ProfileName[] = ['bare', 'restricted-oauth', 'safe-mode'];
+export type ProfileName = 'bare' | 'restricted-oauth' | 'safe-mode' | 'project-oauth';
+export const PROFILE_NAMES: ProfileName[] = ['bare', 'restricted-oauth', 'safe-mode', 'project-oauth'];
 
 export const AGENT_TOOLS = ['Read', 'Grep', 'Glob'] as const;
 export const BLOCK_READS_SETTINGS = JSON.stringify({ permissions: { blockReadsOutsideWorkingDirectories: true } });
@@ -83,6 +83,17 @@ export interface ClaudeCommandOpts {
   /** Environment to take whitelisted variables from. Default process.env. */
   baseEnv?: NodeJS.ProcessEnv;
   extraArgs?: string[];
+  /**
+   * Profile 'project-oauth' only (experiment 11): the workspace's own CLAUDE.md, skills and settings (hooks) are loaded
+   * (--setting-sources project), user-level ones never. The task instructions are appended to Claude Code's own system
+   * prompt (systemPrompt) instead of replacing it, as for a user. The tools are Read, Grep, Glob, Skill and, when
+   * bashAllow is given, Bash limited to those permission patterns (e.g. "Bash(graphify query:*)").
+   */
+  bashAllow?: string[];
+  /** Profile 'project-oauth': PATH of the child (pinned tool installs first). Default: the parent's. */
+  path?: string;
+  /** Profile 'project-oauth': extra variables for the child, which its hooks and MCP servers inherit (e.g. TYPETRACE_CACHE). */
+  extraEnv?: Record<string, string>;
   /** VERIFICATION ONLY (refused for billable runs): offer one extra built-in tool, to demonstrate the init-fingerprint exclusion. */
   injectExtraTool?: string;
 }
@@ -105,7 +116,12 @@ export const PROFILE_DESCRIPTIONS: Record<ProfileName, string> = {
   bare: '--bare: skips hooks, plugins, auto-memory, keychain/OAuth and CLAUDE.md discovery. Requires ANTHROPIC_API_KEY (API-billed).',
   'restricted-oauth': '--restricted: drops code-running tools and WebFetch, ignores user/project/local settings files, confines file tools to the workspace. Works with a subscription (OAuth) login.',
   'safe-mode': '--safe-mode: disables CLAUDE.md, skills, plugins, hooks, MCP servers (see notes: --mcp-config servers), memory. Keeps OAuth.',
+  'project-oauth': '--setting-sources project: loads the workspace\'s own CLAUDE.md, skills and hooks, never user-level ones; reads outside the workspace blocked; Bash only for listed patterns. Experiment 11 (vendor setups). Works with a subscription login.',
 };
+
+/** Experiment 11: the agent's base tools under 'project-oauth' (Bash is added only with bashAllow). */
+export const PROJECT_TOOLS = ['Read', 'Grep', 'Glob', 'Skill'] as const;
+export const PROJECT_DENIED_TOOLS = ['Edit', 'Write', 'NotebookEdit', 'WebFetch', 'WebSearch', 'Task', 'Agent', 'TodoWrite'];
 
 const ENV_PASSTHROUGH = ['PATH', 'HOME', 'USER', 'LOGNAME', 'LANG', 'LC_ALL', 'LC_CTYPE', 'TZ', 'TMPDIR', 'SHELL', 'TERM'];
 export const ISOLATION_ENV: Record<string, string> = {
@@ -148,6 +164,15 @@ export function buildClaudeCommand(o: ClaudeCommandOpts): ClaudeCommand {
   const env: Record<string, string> = {};
   for (const k of ENV_PASSTHROUGH) if (base[k] != null) env[k] = base[k]!;
   Object.assign(env, ISOLATION_ENV);
+  const project = o.profile === 'project-oauth';
+  if (project) {
+    delete env.CLAUDE_CODE_DISABLE_CLAUDE_MDS; // the workspace's CLAUDE.md is part of the setup under test (user-level ones are not loaded)
+    if (o.path) env.PATH = o.path;
+    for (const [k, v] of Object.entries(o.extraEnv ?? {})) {
+      if (/^(ANTHROPIC_|CLAUDE_)/.test(k)) throw new Error(`extraEnv may not set ${k}`);
+      env[k] = v;
+    }
+  }
   if (mock) {
     env.ANTHROPIC_BASE_URL = o.mockUrl!;
     env.ANTHROPIC_API_KEY = DUMMY_API_KEY;
@@ -171,17 +196,26 @@ export function buildClaudeCommand(o: ClaudeCommandOpts): ClaudeCommand {
   const a: string[] = ['-p', '--output-format', 'stream-json', '--verbose', '--no-session-persistence', '--model', o.model];
   if (o.profile === 'bare') a.push('--bare');
   else if (o.profile === 'restricted-oauth') a.push('--restricted');
+  else if (project) a.push('--setting-sources', 'project');
   else a.push('--safe-mode');
-  a.push('--disable-slash-commands', '--strict-mcp-config', '--mcp-config', mcpPath);
-  a.push('--settings', BLOCK_READS_SETTINGS);
-  a.push('--system-prompt', o.systemPrompt ?? (agentic ? AGENT_SYSTEM_PROMPT : SINGLE_SHOT_SYSTEM_PROMPT));
+  if (!project) a.push('--disable-slash-commands');
+  a.push('--strict-mcp-config', '--mcp-config', mcpPath);
+  a.push('--settings', project ? JSON.stringify({ permissions: { blockReadsOutsideWorkingDirectories: true, ...(o.bashAllow?.length ? { allow: o.bashAllow } : {}) } }) : BLOCK_READS_SETTINGS);
+  if (project) a.push('--append-system-prompt', o.systemPrompt ?? AGENT_SYSTEM_PROMPT);
+  else a.push('--system-prompt', o.systemPrompt ?? (agentic ? AGENT_SYSTEM_PROMPT : SINGLE_SHOT_SYSTEM_PROMPT));
   a.push('--system-prompt-snapshot', 'off');
   a.push('--json-schema', JSON.stringify(o.jsonSchema ?? DIAGNOSIS_SCHEMA));
   a.push('--max-turns', String(o.maxTurns ?? (agentic ? 40 : 3)));
   if (o.maxBudgetUsd != null) a.push('--max-budget-usd', String(o.maxBudgetUsd));
   if (o.effort) a.push('--effort', o.effort);
   a.push('--permission-mode', 'dontAsk', '--permission-prompts', 'none');
-  if (agentic) {
+  if (agentic && project) {
+    const bash = o.bashAllow?.length ? ['Bash'] : [];
+    const mcpAllow = mcp ? [mcpToolPattern(mcp.name)] : [];
+    a.push('--tools', [...PROJECT_TOOLS, ...bash].join(','));
+    a.push('--allowedTools', [...PROJECT_TOOLS, ...(o.bashAllow ?? []), ...mcpAllow].join(','));
+    a.push('--disallowedTools', [...PROJECT_DENIED_TOOLS, ...(bash.length ? [] : ['Bash']), ...(mcp?.denyTools ?? []).map((t) => `mcp__${mcp!.name}__${t}`)].join(','));
+  } else if (agentic) {
     const pol = toolPolicy('agentic', mcp);
     const x = o.injectExtraTool;
     a.push('--tools', [...pol.tools, ...(x ? [x] : [])].join(','));
@@ -336,7 +370,9 @@ export class BillableGuard {
 
 /** Only `restricted-oauth` is leak-safe (others add /tmp as a working directory); only full model ids are reproducible. */
 export function assertBillablePlan(o: { profile: string; model: string; injected?: string }): void {
-  if (o.profile !== 'restricted-oauth') throw new BillableRefused(`billable runs require profile 'restricted-oauth' (got '${o.profile}': other profiles allow reads under /tmp, where sibling workspaces live)`);
+  // project-oauth (experiment 11): reads outside the workspace are blocked by permissions.blockReadsOutsideWorkingDirectories
+  // and Bash is limited to listed patterns; scripts/exp11/probe_isolation.ts verifies both, and the leak check runs before any billable run.
+  if (o.profile !== 'restricted-oauth' && o.profile !== 'project-oauth') throw new BillableRefused(`billable runs require profile 'restricted-oauth' or 'project-oauth' (got '${o.profile}': other profiles allow reads under /tmp, where sibling workspaces live)`);
   if (!/^claude-[a-z0-9.-]*\d/.test(o.model)) throw new BillableRefused(`billable runs require a pinned model id like 'claude-sonnet-5-5', not the alias '${o.model}'`);
   if (o.injected) throw new BillableRefused('fault injection is for mock mode only');
 }
@@ -532,7 +568,12 @@ export function fingerprintOf(init: any): InitFingerprint {
   };
 }
 
-export interface InitExpectation { mcp: McpServerSpec | null; model: string; version?: string; mock: boolean; billing?: Billing; /** Default agentic. Single-shot offers only StructuredOutput. */ protocol?: Protocol }
+export interface InitExpectation {
+  mcp: McpServerSpec | null; model: string; version?: string; mock: boolean; billing?: Billing; /** Default agentic. Single-shot offers only StructuredOutput. */ protocol?: Protocol;
+  /** Experiment 11 ('project-oauth'): the exact built-in tool set, the skills that may be listed (Claude Code's bundled
+   *  ones plus the arm's), and the slash commands that may be listed. Absent: experiment 2-10 rules (no skills, no commands). */
+  project?: { tools: string[]; skills: string[]; slash: string[] };
+}
 export interface InitMismatch { categories: string[]; details: string[] }
 
 /** Compare a `system/init` event with the condition's expected set. Empty `categories` = OK. */
@@ -544,16 +585,20 @@ export function checkInit(init: any, exp: InitExpectation): InitMismatch {
   const mcpPrefix = exp.mcp ? `mcp__${exp.mcp.name}__` : null;
   const expectedMcp = exp.mcp ? (EXPECTED_MCP_TOOLS[exp.mcp.name] ?? []).map((t) => `${mcpPrefix}${t}`) : [];
   const denied = new Set((exp.mcp?.denyTools ?? []).map((t) => `mcp__${exp.mcp!.name}__${t}`));
-  const expected = new Set<string>(exp.protocol === 'single_shot' ? ['StructuredOutput'] : [...AGENT_TOOLS, 'StructuredOutput', ...expectedMcp]);
+  const expected = new Set<string>(exp.protocol === 'single_shot' ? ['StructuredOutput'] : [...(exp.project?.tools ?? AGENT_TOOLS), 'StructuredOutput', ...expectedMcp]);
   const have = new Set(fp.tools);
   for (const t of have) {
     if (denied.has(t)) flag('denied_mcp_tool', `denied tool offered: ${t}`);
     else if (!expected.has(t)) flag('extra_tool', `unexpected tool: ${t}`);
   }
   for (const t of expected) if (!have.has(t)) flag('missing_tool', `missing tool: ${t}`);
-  if (fp.skills.length) flag('skills', `skills listed: ${JSON.stringify(fp.skills).slice(0, 120)}`);
+  if (exp.project) {
+    const extra = (fp.skills as string[]).filter((k) => !exp.project!.skills.includes(k));
+    const missing = exp.project.skills.filter((k) => !(fp.skills as string[]).includes(k));
+    if (extra.length || missing.length) flag('skills', `skills differ: extra ${JSON.stringify(extra).slice(0, 120)} missing ${JSON.stringify(missing).slice(0, 120)}`);
+  } else if (fp.skills.length) flag('skills', `skills listed: ${JSON.stringify(fp.skills).slice(0, 120)}`);
   // MCP prompts of the condition's own server (CRG ships five) surface as `mcp__<server>__<prompt>` slash commands; anything else is drift.
-  const badCmds = fp.slash_commands.filter((c) => !(mcpPrefix && String(c).startsWith(mcpPrefix)));
+  const badCmds = fp.slash_commands.filter((c) => !(mcpPrefix && String(c).startsWith(mcpPrefix)) && !(exp.project?.slash.includes(String(c))));
   if (badCmds.length) flag('slash_commands', `slash commands listed: ${JSON.stringify(badCmds).slice(0, 120)}`);
   const badPlugins = fp.plugins.filter((p) => p.path !== 'builtin');
   if (badPlugins.length) flag('plugins', `non-builtin plugins: ${badPlugins.map((p) => p.name).join(',')}`);

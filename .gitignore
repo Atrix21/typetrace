@@ -28,3 +28,8 @@ experiments/10-swebench-agents/results/*/tool-logs/
 experiments/10-swebench-agents/results/mock-*/
 # Experiment 10: the approval file names the owner's logins; only the example is committed
 experiments/10-swebench-agents/APPROVAL.json
+# Experiment 11: agent transcripts and tool logs contain code from the benchmark repositories; approval names the logins
+experiments/11-vendor-setups/results/*/transcripts/
+experiments/11-vendor-setups/results/*/tool-logs/
+experiments/11-vendor-setups/APPROVAL.json
+experiments/11-vendor-setups/results/mock-*/
