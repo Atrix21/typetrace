@@ -89,3 +89,8 @@ Changes after the protocol was frozen (2026-11-20, before the pilot). None yet.
   - **Record corrected.** The one record of this kind in `pilot-T1/excluded.jsonl` was reclassified (backup kept
     outside the repository).
   - **No effect on what the agent sees, or on scoring.**
+
+- **E11-D05 (2026-11-20, pilot paused by the owner): absolute paths in records.** Error messages in `excluded.jsonl`
+  quoted absolute paths of the owner's machine (as in experiment 10, E10-D07). They are shortened to
+  repository-relative paths (`~/` outside the repository) in the pilot records, and the runner now does this when it
+  writes any record. No other field changed. The original is kept outside the repository.

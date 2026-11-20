@@ -1,0 +1,2160 @@
+{
+ "config": {
+  "set": "pilot",
+  "task": "T1",
+  "n": null,
+  "arms": [
+   "G0",
+   "TT",
+   "TS",
+   "GF",
+   "CR"
+  ],
+  "model": "claude-haiku-5-5",
+  "effort": "high",
+  "repeats": 2,
+  "max_turns": 40,
+  "items": [
+   "huggingface__transformers-27663",
+   "sveltejs__svelte-1137",
+   "apolloconfig__apollo-4207",
+   "mui__material-ui-21192",
+   "psf__requests-1776",
+   "serverless__serverless-3804",
+   "apache__rocketmq-7532",
+   "scikit-learn__scikit-learn-13221",
+   "sveltejs__svelte-7280",
+   "microsoft__vscode-159031",
+   "trinodb__trino-748",
+   "sphinx-doc__sphinx-10807",
+   "sveltejs__svelte-709",
+   "apache__rocketmq-5865",
+   "django__django-16735",
+   "serverless__serverless-6345",
+   "mui__material-ui-20691",
+   "django__django-14170",
+   "serverless__serverless-5509",
+   "apache__rocketmq-5037",
+   "django__django-16745",
+   "sveltejs__svelte-987",
+   "apache__rocketmq-7563",
+   "pydata__xarray-3631",
+   "sveltejs__svelte-2065",
+   "trinodb__trino-1193",
+   "microsoft__vscode-136347",
+   "django__django-16263",
+   "serverless__serverless-5579",
+   "trinodb__trino-2768"
+  ],
+  "claude_version": "2.1.327",
+  "mock": false,
+  "accounts": [
+   "login1",
+   "login2"
+  ],
+  "system_prompt_sha": "cc79beca37e77227",
+  "schema_sha": "53ca3a9507c3b138"
+ },
+ "items": [
+  {
+   "run_id": "huggingface__transformers-27663|GF|r1",
+   "item": "huggingface__transformers-27663",
+   "unit": "huggingface__transformers-27663",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "huggingface__transformers-27663|G0|r1",
+   "item": "huggingface__transformers-27663",
+   "unit": "huggingface__transformers-27663",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "huggingface__transformers-27663|TT|r2",
+   "item": "huggingface__transformers-27663",
+   "unit": "huggingface__transformers-27663",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "huggingface__transformers-27663|CR|r2",
+   "item": "huggingface__transformers-27663",
+   "unit": "huggingface__transformers-27663",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "huggingface__transformers-27663|TS|r2",
+   "item": "huggingface__transformers-27663",
+   "unit": "huggingface__transformers-27663",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "huggingface__transformers-27663|CR|r1",
+   "item": "huggingface__transformers-27663",
+   "unit": "huggingface__transformers-27663",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "huggingface__transformers-27663|GF|r2",
+   "item": "huggingface__transformers-27663",
+   "unit": "huggingface__transformers-27663",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "huggingface__transformers-27663|G0|r2",
+   "item": "huggingface__transformers-27663",
+   "unit": "huggingface__transformers-27663",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "huggingface__transformers-27663|TS|r1",
+   "item": "huggingface__transformers-27663",
+   "unit": "huggingface__transformers-27663",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "huggingface__transformers-27663|TT|r1",
+   "item": "huggingface__transformers-27663",
+   "unit": "huggingface__transformers-27663",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-1137|TS|r1",
+   "item": "sveltejs__svelte-1137",
+   "unit": "sveltejs__svelte-1137",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-1137|TT|r2",
+   "item": "sveltejs__svelte-1137",
+   "unit": "sveltejs__svelte-1137",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-1137|GF|r1",
+   "item": "sveltejs__svelte-1137",
+   "unit": "sveltejs__svelte-1137",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-1137|G0|r2",
+   "item": "sveltejs__svelte-1137",
+   "unit": "sveltejs__svelte-1137",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-1137|TT|r1",
+   "item": "sveltejs__svelte-1137",
+   "unit": "sveltejs__svelte-1137",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-1137|CR|r2",
+   "item": "sveltejs__svelte-1137",
+   "unit": "sveltejs__svelte-1137",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-1137|GF|r2",
+   "item": "sveltejs__svelte-1137",
+   "unit": "sveltejs__svelte-1137",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-1137|TS|r2",
+   "item": "sveltejs__svelte-1137",
+   "unit": "sveltejs__svelte-1137",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-1137|G0|r1",
+   "item": "sveltejs__svelte-1137",
+   "unit": "sveltejs__svelte-1137",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-1137|CR|r1",
+   "item": "sveltejs__svelte-1137",
+   "unit": "sveltejs__svelte-1137",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "apolloconfig__apollo-4207|CR|r2",
+   "item": "apolloconfig__apollo-4207",
+   "unit": "apolloconfig__apollo-4207",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "apolloconfig__apollo-4207|GF|r1",
+   "item": "apolloconfig__apollo-4207",
+   "unit": "apolloconfig__apollo-4207",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "apolloconfig__apollo-4207|CR|r1",
+   "item": "apolloconfig__apollo-4207",
+   "unit": "apolloconfig__apollo-4207",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "apolloconfig__apollo-4207|TS|r1",
+   "item": "apolloconfig__apollo-4207",
+   "unit": "apolloconfig__apollo-4207",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "apolloconfig__apollo-4207|GF|r2",
+   "item": "apolloconfig__apollo-4207",
+   "unit": "apolloconfig__apollo-4207",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "apolloconfig__apollo-4207|G0|r1",
+   "item": "apolloconfig__apollo-4207",
+   "unit": "apolloconfig__apollo-4207",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "apolloconfig__apollo-4207|TT|r2",
+   "item": "apolloconfig__apollo-4207",
+   "unit": "apolloconfig__apollo-4207",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "apolloconfig__apollo-4207|G0|r2",
+   "item": "apolloconfig__apollo-4207",
+   "unit": "apolloconfig__apollo-4207",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "apolloconfig__apollo-4207|TS|r2",
+   "item": "apolloconfig__apollo-4207",
+   "unit": "apolloconfig__apollo-4207",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "apolloconfig__apollo-4207|TT|r1",
+   "item": "apolloconfig__apollo-4207",
+   "unit": "apolloconfig__apollo-4207",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "mui__material-ui-21192|G0|r2",
+   "item": "mui__material-ui-21192",
+   "unit": "mui__material-ui-21192",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "mui__material-ui-21192|CR|r1",
+   "item": "mui__material-ui-21192",
+   "unit": "mui__material-ui-21192",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "mui__material-ui-21192|G0|r1",
+   "item": "mui__material-ui-21192",
+   "unit": "mui__material-ui-21192",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "mui__material-ui-21192|TT|r2",
+   "item": "mui__material-ui-21192",
+   "unit": "mui__material-ui-21192",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "mui__material-ui-21192|TS|r2",
+   "item": "mui__material-ui-21192",
+   "unit": "mui__material-ui-21192",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "mui__material-ui-21192|TS|r1",
+   "item": "mui__material-ui-21192",
+   "unit": "mui__material-ui-21192",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "mui__material-ui-21192|CR|r2",
+   "item": "mui__material-ui-21192",
+   "unit": "mui__material-ui-21192",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "mui__material-ui-21192|GF|r1",
+   "item": "mui__material-ui-21192",
+   "unit": "mui__material-ui-21192",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "mui__material-ui-21192|TT|r1",
+   "item": "mui__material-ui-21192",
+   "unit": "mui__material-ui-21192",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "mui__material-ui-21192|GF|r2",
+   "item": "mui__material-ui-21192",
+   "unit": "mui__material-ui-21192",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "psf__requests-1776|TT|r2",
+   "item": "psf__requests-1776",
+   "unit": "psf__requests-1776",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "psf__requests-1776|TS|r2",
+   "item": "psf__requests-1776",
+   "unit": "psf__requests-1776",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "psf__requests-1776|GF|r2",
+   "item": "psf__requests-1776",
+   "unit": "psf__requests-1776",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "psf__requests-1776|CR|r2",
+   "item": "psf__requests-1776",
+   "unit": "psf__requests-1776",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "psf__requests-1776|TS|r1",
+   "item": "psf__requests-1776",
+   "unit": "psf__requests-1776",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "psf__requests-1776|TT|r1",
+   "item": "psf__requests-1776",
+   "unit": "psf__requests-1776",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "psf__requests-1776|G0|r2",
+   "item": "psf__requests-1776",
+   "unit": "psf__requests-1776",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "psf__requests-1776|CR|r1",
+   "item": "psf__requests-1776",
+   "unit": "psf__requests-1776",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "psf__requests-1776|GF|r1",
+   "item": "psf__requests-1776",
+   "unit": "psf__requests-1776",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "psf__requests-1776|G0|r1",
+   "item": "psf__requests-1776",
+   "unit": "psf__requests-1776",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-3804|TT|r2",
+   "item": "serverless__serverless-3804",
+   "unit": "serverless__serverless-3804",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-3804|GF|r2",
+   "item": "serverless__serverless-3804",
+   "unit": "serverless__serverless-3804",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-3804|TT|r1",
+   "item": "serverless__serverless-3804",
+   "unit": "serverless__serverless-3804",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-3804|TS|r1",
+   "item": "serverless__serverless-3804",
+   "unit": "serverless__serverless-3804",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-3804|CR|r2",
+   "item": "serverless__serverless-3804",
+   "unit": "serverless__serverless-3804",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-3804|TS|r2",
+   "item": "serverless__serverless-3804",
+   "unit": "serverless__serverless-3804",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-3804|GF|r1",
+   "item": "serverless__serverless-3804",
+   "unit": "serverless__serverless-3804",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-3804|G0|r1",
+   "item": "serverless__serverless-3804",
+   "unit": "serverless__serverless-3804",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-3804|G0|r2",
+   "item": "serverless__serverless-3804",
+   "unit": "serverless__serverless-3804",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-3804|CR|r1",
+   "item": "serverless__serverless-3804",
+   "unit": "serverless__serverless-3804",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-7532|G0|r2",
+   "item": "apache__rocketmq-7532",
+   "unit": "apache__rocketmq-7532",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-7532|GF|r2",
+   "item": "apache__rocketmq-7532",
+   "unit": "apache__rocketmq-7532",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-7532|CR|r1",
+   "item": "apache__rocketmq-7532",
+   "unit": "apache__rocketmq-7532",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-7532|G0|r1",
+   "item": "apache__rocketmq-7532",
+   "unit": "apache__rocketmq-7532",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-7532|GF|r1",
+   "item": "apache__rocketmq-7532",
+   "unit": "apache__rocketmq-7532",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-7532|TS|r1",
+   "item": "apache__rocketmq-7532",
+   "unit": "apache__rocketmq-7532",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-7532|TS|r2",
+   "item": "apache__rocketmq-7532",
+   "unit": "apache__rocketmq-7532",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-7532|CR|r2",
+   "item": "apache__rocketmq-7532",
+   "unit": "apache__rocketmq-7532",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-7532|TT|r1",
+   "item": "apache__rocketmq-7532",
+   "unit": "apache__rocketmq-7532",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-7532|TT|r2",
+   "item": "apache__rocketmq-7532",
+   "unit": "apache__rocketmq-7532",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13221|TT|r2",
+   "item": "scikit-learn__scikit-learn-13221",
+   "unit": "scikit-learn__scikit-learn-13221",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13221|GF|r1",
+   "item": "scikit-learn__scikit-learn-13221",
+   "unit": "scikit-learn__scikit-learn-13221",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13221|G0|r2",
+   "item": "scikit-learn__scikit-learn-13221",
+   "unit": "scikit-learn__scikit-learn-13221",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13221|TT|r1",
+   "item": "scikit-learn__scikit-learn-13221",
+   "unit": "scikit-learn__scikit-learn-13221",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13221|TS|r2",
+   "item": "scikit-learn__scikit-learn-13221",
+   "unit": "scikit-learn__scikit-learn-13221",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13221|GF|r2",
+   "item": "scikit-learn__scikit-learn-13221",
+   "unit": "scikit-learn__scikit-learn-13221",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13221|TS|r1",
+   "item": "scikit-learn__scikit-learn-13221",
+   "unit": "scikit-learn__scikit-learn-13221",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13221|CR|r1",
+   "item": "scikit-learn__scikit-learn-13221",
+   "unit": "scikit-learn__scikit-learn-13221",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13221|CR|r2",
+   "item": "scikit-learn__scikit-learn-13221",
+   "unit": "scikit-learn__scikit-learn-13221",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn__scikit-learn-13221|G0|r1",
+   "item": "scikit-learn__scikit-learn-13221",
+   "unit": "scikit-learn__scikit-learn-13221",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-7280|G0|r2",
+   "item": "sveltejs__svelte-7280",
+   "unit": "sveltejs__svelte-7280",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-7280|CR|r2",
+   "item": "sveltejs__svelte-7280",
+   "unit": "sveltejs__svelte-7280",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-7280|TS|r2",
+   "item": "sveltejs__svelte-7280",
+   "unit": "sveltejs__svelte-7280",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-7280|TS|r1",
+   "item": "sveltejs__svelte-7280",
+   "unit": "sveltejs__svelte-7280",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-7280|GF|r2",
+   "item": "sveltejs__svelte-7280",
+   "unit": "sveltejs__svelte-7280",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-7280|G0|r1",
+   "item": "sveltejs__svelte-7280",
+   "unit": "sveltejs__svelte-7280",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-7280|TT|r2",
+   "item": "sveltejs__svelte-7280",
+   "unit": "sveltejs__svelte-7280",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-7280|TT|r1",
+   "item": "sveltejs__svelte-7280",
+   "unit": "sveltejs__svelte-7280",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-7280|GF|r1",
+   "item": "sveltejs__svelte-7280",
+   "unit": "sveltejs__svelte-7280",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-7280|CR|r1",
+   "item": "sveltejs__svelte-7280",
+   "unit": "sveltejs__svelte-7280",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "microsoft__vscode-159031|TS|r2",
+   "item": "microsoft__vscode-159031",
+   "unit": "microsoft__vscode-159031",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "microsoft__vscode-159031|TT|r2",
+   "item": "microsoft__vscode-159031",
+   "unit": "microsoft__vscode-159031",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "microsoft__vscode-159031|G0|r1",
+   "item": "microsoft__vscode-159031",
+   "unit": "microsoft__vscode-159031",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "microsoft__vscode-159031|GF|r2",
+   "item": "microsoft__vscode-159031",
+   "unit": "microsoft__vscode-159031",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "microsoft__vscode-159031|GF|r1",
+   "item": "microsoft__vscode-159031",
+   "unit": "microsoft__vscode-159031",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "microsoft__vscode-159031|TT|r1",
+   "item": "microsoft__vscode-159031",
+   "unit": "microsoft__vscode-159031",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "microsoft__vscode-159031|CR|r1",
+   "item": "microsoft__vscode-159031",
+   "unit": "microsoft__vscode-159031",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "microsoft__vscode-159031|G0|r2",
+   "item": "microsoft__vscode-159031",
+   "unit": "microsoft__vscode-159031",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "microsoft__vscode-159031|TS|r1",
+   "item": "microsoft__vscode-159031",
+   "unit": "microsoft__vscode-159031",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "microsoft__vscode-159031|CR|r2",
+   "item": "microsoft__vscode-159031",
+   "unit": "microsoft__vscode-159031",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "trinodb__trino-748|CR|r1",
+   "item": "trinodb__trino-748",
+   "unit": "trinodb__trino-748",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "trinodb__trino-748|TS|r1",
+   "item": "trinodb__trino-748",
+   "unit": "trinodb__trino-748",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "trinodb__trino-748|TT|r2",
+   "item": "trinodb__trino-748",
+   "unit": "trinodb__trino-748",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "trinodb__trino-748|G0|r1",
+   "item": "trinodb__trino-748",
+   "unit": "trinodb__trino-748",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "trinodb__trino-748|GF|r1",
+   "item": "trinodb__trino-748",
+   "unit": "trinodb__trino-748",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "trinodb__trino-748|G0|r2",
+   "item": "trinodb__trino-748",
+   "unit": "trinodb__trino-748",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "trinodb__trino-748|GF|r2",
+   "item": "trinodb__trino-748",
+   "unit": "trinodb__trino-748",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "trinodb__trino-748|TS|r2",
+   "item": "trinodb__trino-748",
+   "unit": "trinodb__trino-748",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "trinodb__trino-748|TT|r1",
+   "item": "trinodb__trino-748",
+   "unit": "trinodb__trino-748",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "trinodb__trino-748|CR|r2",
+   "item": "trinodb__trino-748",
+   "unit": "trinodb__trino-748",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-10807|CR|r2",
+   "item": "sphinx-doc__sphinx-10807",
+   "unit": "sphinx-doc__sphinx-10807",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-10807|TT|r2",
+   "item": "sphinx-doc__sphinx-10807",
+   "unit": "sphinx-doc__sphinx-10807",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-10807|GF|r1",
+   "item": "sphinx-doc__sphinx-10807",
+   "unit": "sphinx-doc__sphinx-10807",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-10807|GF|r2",
+   "item": "sphinx-doc__sphinx-10807",
+   "unit": "sphinx-doc__sphinx-10807",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-10807|TS|r2",
+   "item": "sphinx-doc__sphinx-10807",
+   "unit": "sphinx-doc__sphinx-10807",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-10807|CR|r1",
+   "item": "sphinx-doc__sphinx-10807",
+   "unit": "sphinx-doc__sphinx-10807",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-10807|G0|r2",
+   "item": "sphinx-doc__sphinx-10807",
+   "unit": "sphinx-doc__sphinx-10807",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-10807|G0|r1",
+   "item": "sphinx-doc__sphinx-10807",
+   "unit": "sphinx-doc__sphinx-10807",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-10807|TS|r1",
+   "item": "sphinx-doc__sphinx-10807",
+   "unit": "sphinx-doc__sphinx-10807",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx-doc__sphinx-10807|TT|r1",
+   "item": "sphinx-doc__sphinx-10807",
+   "unit": "sphinx-doc__sphinx-10807",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-709|CR|r1",
+   "item": "sveltejs__svelte-709",
+   "unit": "sveltejs__svelte-709",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-709|TS|r2",
+   "item": "sveltejs__svelte-709",
+   "unit": "sveltejs__svelte-709",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-709|TT|r2",
+   "item": "sveltejs__svelte-709",
+   "unit": "sveltejs__svelte-709",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-709|G0|r1",
+   "item": "sveltejs__svelte-709",
+   "unit": "sveltejs__svelte-709",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-709|TS|r1",
+   "item": "sveltejs__svelte-709",
+   "unit": "sveltejs__svelte-709",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-709|TT|r1",
+   "item": "sveltejs__svelte-709",
+   "unit": "sveltejs__svelte-709",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-709|GF|r1",
+   "item": "sveltejs__svelte-709",
+   "unit": "sveltejs__svelte-709",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-709|CR|r2",
+   "item": "sveltejs__svelte-709",
+   "unit": "sveltejs__svelte-709",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-709|G0|r2",
+   "item": "sveltejs__svelte-709",
+   "unit": "sveltejs__svelte-709",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-709|GF|r2",
+   "item": "sveltejs__svelte-709",
+   "unit": "sveltejs__svelte-709",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-5865|GF|r2",
+   "item": "apache__rocketmq-5865",
+   "unit": "apache__rocketmq-5865",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-5865|TS|r1",
+   "item": "apache__rocketmq-5865",
+   "unit": "apache__rocketmq-5865",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-5865|CR|r1",
+   "item": "apache__rocketmq-5865",
+   "unit": "apache__rocketmq-5865",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-5865|CR|r2",
+   "item": "apache__rocketmq-5865",
+   "unit": "apache__rocketmq-5865",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-5865|G0|r1",
+   "item": "apache__rocketmq-5865",
+   "unit": "apache__rocketmq-5865",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-5865|TT|r2",
+   "item": "apache__rocketmq-5865",
+   "unit": "apache__rocketmq-5865",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-5865|TS|r2",
+   "item": "apache__rocketmq-5865",
+   "unit": "apache__rocketmq-5865",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-5865|G0|r2",
+   "item": "apache__rocketmq-5865",
+   "unit": "apache__rocketmq-5865",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-5865|TT|r1",
+   "item": "apache__rocketmq-5865",
+   "unit": "apache__rocketmq-5865",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-5865|GF|r1",
+   "item": "apache__rocketmq-5865",
+   "unit": "apache__rocketmq-5865",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-16735|TT|r1",
+   "item": "django__django-16735",
+   "unit": "django__django-16735",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-16735|G0|r1",
+   "item": "django__django-16735",
+   "unit": "django__django-16735",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-16735|TT|r2",
+   "item": "django__django-16735",
+   "unit": "django__django-16735",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-16735|CR|r2",
+   "item": "django__django-16735",
+   "unit": "django__django-16735",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-16735|TS|r1",
+   "item": "django__django-16735",
+   "unit": "django__django-16735",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-16735|GF|r1",
+   "item": "django__django-16735",
+   "unit": "django__django-16735",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-16735|TS|r2",
+   "item": "django__django-16735",
+   "unit": "django__django-16735",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-16735|GF|r2",
+   "item": "django__django-16735",
+   "unit": "django__django-16735",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-16735|G0|r2",
+   "item": "django__django-16735",
+   "unit": "django__django-16735",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-16735|CR|r1",
+   "item": "django__django-16735",
+   "unit": "django__django-16735",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-6345|CR|r1",
+   "item": "serverless__serverless-6345",
+   "unit": "serverless__serverless-6345",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-6345|TT|r2",
+   "item": "serverless__serverless-6345",
+   "unit": "serverless__serverless-6345",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-6345|TS|r1",
+   "item": "serverless__serverless-6345",
+   "unit": "serverless__serverless-6345",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-6345|G0|r2",
+   "item": "serverless__serverless-6345",
+   "unit": "serverless__serverless-6345",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-6345|CR|r2",
+   "item": "serverless__serverless-6345",
+   "unit": "serverless__serverless-6345",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-6345|TS|r2",
+   "item": "serverless__serverless-6345",
+   "unit": "serverless__serverless-6345",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-6345|G0|r1",
+   "item": "serverless__serverless-6345",
+   "unit": "serverless__serverless-6345",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-6345|TT|r1",
+   "item": "serverless__serverless-6345",
+   "unit": "serverless__serverless-6345",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-6345|GF|r1",
+   "item": "serverless__serverless-6345",
+   "unit": "serverless__serverless-6345",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-6345|GF|r2",
+   "item": "serverless__serverless-6345",
+   "unit": "serverless__serverless-6345",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "mui__material-ui-20691|G0|r2",
+   "item": "mui__material-ui-20691",
+   "unit": "mui__material-ui-20691",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "mui__material-ui-20691|G0|r1",
+   "item": "mui__material-ui-20691",
+   "unit": "mui__material-ui-20691",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "mui__material-ui-20691|CR|r2",
+   "item": "mui__material-ui-20691",
+   "unit": "mui__material-ui-20691",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "mui__material-ui-20691|TT|r2",
+   "item": "mui__material-ui-20691",
+   "unit": "mui__material-ui-20691",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "mui__material-ui-20691|GF|r1",
+   "item": "mui__material-ui-20691",
+   "unit": "mui__material-ui-20691",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "mui__material-ui-20691|TS|r2",
+   "item": "mui__material-ui-20691",
+   "unit": "mui__material-ui-20691",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "mui__material-ui-20691|GF|r2",
+   "item": "mui__material-ui-20691",
+   "unit": "mui__material-ui-20691",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "mui__material-ui-20691|TS|r1",
+   "item": "mui__material-ui-20691",
+   "unit": "mui__material-ui-20691",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "mui__material-ui-20691|TT|r1",
+   "item": "mui__material-ui-20691",
+   "unit": "mui__material-ui-20691",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "mui__material-ui-20691|CR|r1",
+   "item": "mui__material-ui-20691",
+   "unit": "mui__material-ui-20691",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-14170|GF|r1",
+   "item": "django__django-14170",
+   "unit": "django__django-14170",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-14170|CR|r2",
+   "item": "django__django-14170",
+   "unit": "django__django-14170",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-14170|TS|r2",
+   "item": "django__django-14170",
+   "unit": "django__django-14170",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-14170|TT|r1",
+   "item": "django__django-14170",
+   "unit": "django__django-14170",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-14170|TS|r1",
+   "item": "django__django-14170",
+   "unit": "django__django-14170",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-14170|CR|r1",
+   "item": "django__django-14170",
+   "unit": "django__django-14170",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-14170|G0|r2",
+   "item": "django__django-14170",
+   "unit": "django__django-14170",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-14170|TT|r2",
+   "item": "django__django-14170",
+   "unit": "django__django-14170",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-14170|G0|r1",
+   "item": "django__django-14170",
+   "unit": "django__django-14170",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-14170|GF|r2",
+   "item": "django__django-14170",
+   "unit": "django__django-14170",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-5509|TS|r2",
+   "item": "serverless__serverless-5509",
+   "unit": "serverless__serverless-5509",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-5509|GF|r2",
+   "item": "serverless__serverless-5509",
+   "unit": "serverless__serverless-5509",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-5509|TT|r2",
+   "item": "serverless__serverless-5509",
+   "unit": "serverless__serverless-5509",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-5509|TT|r1",
+   "item": "serverless__serverless-5509",
+   "unit": "serverless__serverless-5509",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-5509|CR|r2",
+   "item": "serverless__serverless-5509",
+   "unit": "serverless__serverless-5509",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-5509|G0|r2",
+   "item": "serverless__serverless-5509",
+   "unit": "serverless__serverless-5509",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-5509|G0|r1",
+   "item": "serverless__serverless-5509",
+   "unit": "serverless__serverless-5509",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-5509|CR|r1",
+   "item": "serverless__serverless-5509",
+   "unit": "serverless__serverless-5509",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-5509|GF|r1",
+   "item": "serverless__serverless-5509",
+   "unit": "serverless__serverless-5509",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-5509|TS|r1",
+   "item": "serverless__serverless-5509",
+   "unit": "serverless__serverless-5509",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-5037|TT|r1",
+   "item": "apache__rocketmq-5037",
+   "unit": "apache__rocketmq-5037",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-5037|CR|r1",
+   "item": "apache__rocketmq-5037",
+   "unit": "apache__rocketmq-5037",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-5037|GF|r1",
+   "item": "apache__rocketmq-5037",
+   "unit": "apache__rocketmq-5037",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-5037|CR|r2",
+   "item": "apache__rocketmq-5037",
+   "unit": "apache__rocketmq-5037",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-5037|G0|r1",
+   "item": "apache__rocketmq-5037",
+   "unit": "apache__rocketmq-5037",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-5037|GF|r2",
+   "item": "apache__rocketmq-5037",
+   "unit": "apache__rocketmq-5037",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-5037|TS|r2",
+   "item": "apache__rocketmq-5037",
+   "unit": "apache__rocketmq-5037",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-5037|TS|r1",
+   "item": "apache__rocketmq-5037",
+   "unit": "apache__rocketmq-5037",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-5037|G0|r2",
+   "item": "apache__rocketmq-5037",
+   "unit": "apache__rocketmq-5037",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-5037|TT|r2",
+   "item": "apache__rocketmq-5037",
+   "unit": "apache__rocketmq-5037",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-16745|GF|r1",
+   "item": "django__django-16745",
+   "unit": "django__django-16745",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-16745|TT|r1",
+   "item": "django__django-16745",
+   "unit": "django__django-16745",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-16745|G0|r2",
+   "item": "django__django-16745",
+   "unit": "django__django-16745",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-16745|TT|r2",
+   "item": "django__django-16745",
+   "unit": "django__django-16745",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-16745|GF|r2",
+   "item": "django__django-16745",
+   "unit": "django__django-16745",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-16745|TS|r1",
+   "item": "django__django-16745",
+   "unit": "django__django-16745",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-16745|CR|r2",
+   "item": "django__django-16745",
+   "unit": "django__django-16745",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-16745|CR|r1",
+   "item": "django__django-16745",
+   "unit": "django__django-16745",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-16745|TS|r2",
+   "item": "django__django-16745",
+   "unit": "django__django-16745",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-16745|G0|r1",
+   "item": "django__django-16745",
+   "unit": "django__django-16745",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-987|G0|r1",
+   "item": "sveltejs__svelte-987",
+   "unit": "sveltejs__svelte-987",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-987|CR|r1",
+   "item": "sveltejs__svelte-987",
+   "unit": "sveltejs__svelte-987",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-987|GF|r1",
+   "item": "sveltejs__svelte-987",
+   "unit": "sveltejs__svelte-987",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-987|G0|r2",
+   "item": "sveltejs__svelte-987",
+   "unit": "sveltejs__svelte-987",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-987|TS|r1",
+   "item": "sveltejs__svelte-987",
+   "unit": "sveltejs__svelte-987",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-987|TT|r1",
+   "item": "sveltejs__svelte-987",
+   "unit": "sveltejs__svelte-987",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-987|TS|r2",
+   "item": "sveltejs__svelte-987",
+   "unit": "sveltejs__svelte-987",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-987|TT|r2",
+   "item": "sveltejs__svelte-987",
+   "unit": "sveltejs__svelte-987",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-987|CR|r2",
+   "item": "sveltejs__svelte-987",
+   "unit": "sveltejs__svelte-987",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-987|GF|r2",
+   "item": "sveltejs__svelte-987",
+   "unit": "sveltejs__svelte-987",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-7563|G0|r2",
+   "item": "apache__rocketmq-7563",
+   "unit": "apache__rocketmq-7563",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-7563|TS|r1",
+   "item": "apache__rocketmq-7563",
+   "unit": "apache__rocketmq-7563",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-7563|TS|r2",
+   "item": "apache__rocketmq-7563",
+   "unit": "apache__rocketmq-7563",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-7563|G0|r1",
+   "item": "apache__rocketmq-7563",
+   "unit": "apache__rocketmq-7563",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-7563|CR|r1",
+   "item": "apache__rocketmq-7563",
+   "unit": "apache__rocketmq-7563",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-7563|CR|r2",
+   "item": "apache__rocketmq-7563",
+   "unit": "apache__rocketmq-7563",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-7563|GF|r1",
+   "item": "apache__rocketmq-7563",
+   "unit": "apache__rocketmq-7563",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-7563|TT|r1",
+   "item": "apache__rocketmq-7563",
+   "unit": "apache__rocketmq-7563",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "apache__rocketmq-7563|TT|r2",
+   "item": "apache__rocketmq-7563",
+   "unit": "apache__rocketmq-7563",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "apache__rocketmq-7563|GF|r2",
+   "item": "apache__rocketmq-7563",
+   "unit": "apache__rocketmq-7563",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "pydata__xarray-3631|G0|r1",
+   "item": "pydata__xarray-3631",
+   "unit": "pydata__xarray-3631",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "pydata__xarray-3631|CR|r1",
+   "item": "pydata__xarray-3631",
+   "unit": "pydata__xarray-3631",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "pydata__xarray-3631|TT|r2",
+   "item": "pydata__xarray-3631",
+   "unit": "pydata__xarray-3631",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "pydata__xarray-3631|G0|r2",
+   "item": "pydata__xarray-3631",
+   "unit": "pydata__xarray-3631",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "pydata__xarray-3631|CR|r2",
+   "item": "pydata__xarray-3631",
+   "unit": "pydata__xarray-3631",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "pydata__xarray-3631|GF|r2",
+   "item": "pydata__xarray-3631",
+   "unit": "pydata__xarray-3631",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "pydata__xarray-3631|TS|r2",
+   "item": "pydata__xarray-3631",
+   "unit": "pydata__xarray-3631",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "pydata__xarray-3631|TT|r1",
+   "item": "pydata__xarray-3631",
+   "unit": "pydata__xarray-3631",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "pydata__xarray-3631|GF|r1",
+   "item": "pydata__xarray-3631",
+   "unit": "pydata__xarray-3631",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "pydata__xarray-3631|TS|r1",
+   "item": "pydata__xarray-3631",
+   "unit": "pydata__xarray-3631",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-2065|CR|r1",
+   "item": "sveltejs__svelte-2065",
+   "unit": "sveltejs__svelte-2065",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-2065|TS|r1",
+   "item": "sveltejs__svelte-2065",
+   "unit": "sveltejs__svelte-2065",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-2065|G0|r1",
+   "item": "sveltejs__svelte-2065",
+   "unit": "sveltejs__svelte-2065",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-2065|TT|r1",
+   "item": "sveltejs__svelte-2065",
+   "unit": "sveltejs__svelte-2065",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-2065|CR|r2",
+   "item": "sveltejs__svelte-2065",
+   "unit": "sveltejs__svelte-2065",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-2065|TS|r2",
+   "item": "sveltejs__svelte-2065",
+   "unit": "sveltejs__svelte-2065",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-2065|G0|r2",
+   "item": "sveltejs__svelte-2065",
+   "unit": "sveltejs__svelte-2065",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-2065|GF|r1",
+   "item": "sveltejs__svelte-2065",
+   "unit": "sveltejs__svelte-2065",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "sveltejs__svelte-2065|TT|r2",
+   "item": "sveltejs__svelte-2065",
+   "unit": "sveltejs__svelte-2065",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "sveltejs__svelte-2065|GF|r2",
+   "item": "sveltejs__svelte-2065",
+   "unit": "sveltejs__svelte-2065",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "trinodb__trino-1193|TS|r1",
+   "item": "trinodb__trino-1193",
+   "unit": "trinodb__trino-1193",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "trinodb__trino-1193|GF|r1",
+   "item": "trinodb__trino-1193",
+   "unit": "trinodb__trino-1193",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "trinodb__trino-1193|G0|r2",
+   "item": "trinodb__trino-1193",
+   "unit": "trinodb__trino-1193",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "trinodb__trino-1193|TT|r1",
+   "item": "trinodb__trino-1193",
+   "unit": "trinodb__trino-1193",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "trinodb__trino-1193|CR|r2",
+   "item": "trinodb__trino-1193",
+   "unit": "trinodb__trino-1193",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "trinodb__trino-1193|G0|r1",
+   "item": "trinodb__trino-1193",
+   "unit": "trinodb__trino-1193",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "trinodb__trino-1193|GF|r2",
+   "item": "trinodb__trino-1193",
+   "unit": "trinodb__trino-1193",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "trinodb__trino-1193|TT|r2",
+   "item": "trinodb__trino-1193",
+   "unit": "trinodb__trino-1193",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "trinodb__trino-1193|TS|r2",
+   "item": "trinodb__trino-1193",
+   "unit": "trinodb__trino-1193",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "trinodb__trino-1193|CR|r1",
+   "item": "trinodb__trino-1193",
+   "unit": "trinodb__trino-1193",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "microsoft__vscode-136347|G0|r2",
+   "item": "microsoft__vscode-136347",
+   "unit": "microsoft__vscode-136347",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "microsoft__vscode-136347|GF|r2",
+   "item": "microsoft__vscode-136347",
+   "unit": "microsoft__vscode-136347",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "microsoft__vscode-136347|G0|r1",
+   "item": "microsoft__vscode-136347",
+   "unit": "microsoft__vscode-136347",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "microsoft__vscode-136347|TS|r2",
+   "item": "microsoft__vscode-136347",
+   "unit": "microsoft__vscode-136347",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "microsoft__vscode-136347|TT|r2",
+   "item": "microsoft__vscode-136347",
+   "unit": "microsoft__vscode-136347",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "microsoft__vscode-136347|CR|r1",
+   "item": "microsoft__vscode-136347",
+   "unit": "microsoft__vscode-136347",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "microsoft__vscode-136347|GF|r1",
+   "item": "microsoft__vscode-136347",
+   "unit": "microsoft__vscode-136347",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "microsoft__vscode-136347|TT|r1",
+   "item": "microsoft__vscode-136347",
+   "unit": "microsoft__vscode-136347",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "microsoft__vscode-136347|CR|r2",
+   "item": "microsoft__vscode-136347",
+   "unit": "microsoft__vscode-136347",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "microsoft__vscode-136347|TS|r1",
+   "item": "microsoft__vscode-136347",
+   "unit": "microsoft__vscode-136347",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-16263|GF|r2",
+   "item": "django__django-16263",
+   "unit": "django__django-16263",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-16263|CR|r2",
+   "item": "django__django-16263",
+   "unit": "django__django-16263",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-16263|TT|r2",
+   "item": "django__django-16263",
+   "unit": "django__django-16263",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-16263|TS|r1",
+   "item": "django__django-16263",
+   "unit": "django__django-16263",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-16263|CR|r1",
+   "item": "django__django-16263",
+   "unit": "django__django-16263",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-16263|GF|r1",
+   "item": "django__django-16263",
+   "unit": "django__django-16263",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-16263|G0|r2",
+   "item": "django__django-16263",
+   "unit": "django__django-16263",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-16263|G0|r1",
+   "item": "django__django-16263",
+   "unit": "django__django-16263",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "django__django-16263|TS|r2",
+   "item": "django__django-16263",
+   "unit": "django__django-16263",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "django__django-16263|TT|r1",
+   "item": "django__django-16263",
+   "unit": "django__django-16263",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-5579|G0|r2",
+   "item": "serverless__serverless-5579",
+   "unit": "serverless__serverless-5579",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-5579|GF|r1",
+   "item": "serverless__serverless-5579",
+   "unit": "serverless__serverless-5579",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-5579|TT|r2",
+   "item": "serverless__serverless-5579",
+   "unit": "serverless__serverless-5579",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-5579|TS|r2",
+   "item": "serverless__serverless-5579",
+   "unit": "serverless__serverless-5579",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-5579|G0|r1",
+   "item": "serverless__serverless-5579",
+   "unit": "serverless__serverless-5579",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-5579|GF|r2",
+   "item": "serverless__serverless-5579",
+   "unit": "serverless__serverless-5579",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "serverless__serverless-5579|TS|r1",
+   "item": "serverless__serverless-5579",
+   "unit": "serverless__serverless-5579",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-5579|TT|r1",
+   "item": "serverless__serverless-5579",
+   "unit": "serverless__serverless-5579",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-5579|CR|r1",
+   "item": "serverless__serverless-5579",
+   "unit": "serverless__serverless-5579",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "serverless__serverless-5579|CR|r2",
+   "item": "serverless__serverless-5579",
+   "unit": "serverless__serverless-5579",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "trinodb__trino-2768|TT|r1",
+   "item": "trinodb__trino-2768",
+   "unit": "trinodb__trino-2768",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "trinodb__trino-2768|CR|r1",
+   "item": "trinodb__trino-2768",
+   "unit": "trinodb__trino-2768",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "trinodb__trino-2768|GF|r2",
+   "item": "trinodb__trino-2768",
+   "unit": "trinodb__trino-2768",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "trinodb__trino-2768|CR|r2",
+   "item": "trinodb__trino-2768",
+   "unit": "trinodb__trino-2768",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "trinodb__trino-2768|TS|r2",
+   "item": "trinodb__trino-2768",
+   "unit": "trinodb__trino-2768",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "trinodb__trino-2768|G0|r1",
+   "item": "trinodb__trino-2768",
+   "unit": "trinodb__trino-2768",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "trinodb__trino-2768|G0|r2",
+   "item": "trinodb__trino-2768",
+   "unit": "trinodb__trino-2768",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "trinodb__trino-2768|TT|r2",
+   "item": "trinodb__trino-2768",
+   "unit": "trinodb__trino-2768",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "trinodb__trino-2768|TS|r1",
+   "item": "trinodb__trino-2768",
+   "unit": "trinodb__trino-2768",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "trinodb__trino-2768|GF|r1",
+   "item": "trinodb__trino-2768",
+   "unit": "trinodb__trino-2768",
+   "arm": "GF",
+   "repeat": 1
+  }
+ ]
+}

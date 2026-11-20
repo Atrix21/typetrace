@@ -96,7 +96,9 @@ const sha = (s: string | Buffer) => crypto.createHash('sha256').update(s).digest
 EXPECTED_MCP_TOOLS.typetrace = ['find_relevant_code'];
 
 const readJsonl = (f: string) => (fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)) : []);
-const append = (f: string, o: unknown) => fs.appendFileSync(path.join(OUT, f), JSON.stringify(o) + '\n');
+/** Records never carry the owner's absolute paths (error messages quote them): repository-relative, else ~/. */
+const redact = (t: string) => t.split(abs('.') + '/').join('').split(os.homedir() + '/').join('~/');
+const append = (f: string, o: unknown) => fs.appendFileSync(path.join(OUT, f), redact(JSON.stringify(o)) + '\n');
 const log = (s: string) => console.error(`[${new Date().toISOString().slice(11, 19)}] ${s}`);
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const memFreeGb = () => { const m = /MemAvailable:\s+(\d+)/.exec(fs.readFileSync('/proc/meminfo', 'utf8')); return m ? Number(m[1]) / 1048576 : 0; };
