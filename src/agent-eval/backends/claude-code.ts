@@ -575,9 +575,10 @@ export function fingerprintOf(init: any): InitFingerprint {
 
 export interface InitExpectation {
   mcp: McpServerSpec | null; model: string; version?: string; mock: boolean; billing?: Billing; /** Default agentic. Single-shot offers only StructuredOutput. */ protocol?: Protocol;
-  /** Experiment 11 ('project-oauth'): the exact built-in tool set, the skills that may be listed (Claude Code's bundled
-   *  ones plus the arm's), and the slash commands that may be listed. Absent: experiment 2-10 rules (no skills, no commands). */
-  project?: { tools: string[]; skills: string[]; slash: string[] };
+  /** Experiment 11 ('project-oauth'): the exact built-in tool set; the skills the arm's setup must list; the skill and
+   *  command names that must never be listed (the owner's own skills, other arms' skills). Claude Code's own bundled
+   *  skills vary by login and version and are allowed. Absent: experiment 2-10 rules (no skills, no commands). */
+  project?: { tools: string[]; required: string[]; forbidden: string[] };
 }
 export interface InitMismatch { categories: string[]; details: string[] }
 
@@ -598,12 +599,12 @@ export function checkInit(init: any, exp: InitExpectation): InitMismatch {
   }
   for (const t of expected) if (!have.has(t)) flag('missing_tool', `missing tool: ${t}`);
   if (exp.project) {
-    const extra = (fp.skills as string[]).filter((k) => !exp.project!.skills.includes(k));
-    const missing = exp.project.skills.filter((k) => !(fp.skills as string[]).includes(k));
-    if (extra.length || missing.length) flag('skills', `skills differ: extra ${JSON.stringify(extra).slice(0, 120)} missing ${JSON.stringify(missing).slice(0, 120)}`);
+    const bad = (fp.skills as string[]).filter((k) => exp.project!.forbidden.includes(k));
+    const missing = exp.project.required.filter((k) => !(fp.skills as string[]).includes(k));
+    if (bad.length || missing.length) flag('skills', `skills: forbidden listed ${JSON.stringify(bad).slice(0, 120)}, required missing ${JSON.stringify(missing).slice(0, 120)}`);
   } else if (fp.skills.length) flag('skills', `skills listed: ${JSON.stringify(fp.skills).slice(0, 120)}`);
   // MCP prompts of the condition's own server (CRG ships five) surface as `mcp__<server>__<prompt>` slash commands; anything else is drift.
-  const badCmds = fp.slash_commands.filter((c) => !(mcpPrefix && String(c).startsWith(mcpPrefix)) && !(exp.project?.slash.includes(String(c))));
+  const badCmds = exp.project ? fp.slash_commands.filter((c) => exp.project!.forbidden.includes(String(c))) : fp.slash_commands.filter((c) => !(mcpPrefix && String(c).startsWith(mcpPrefix)));
   if (badCmds.length) flag('slash_commands', `slash commands listed: ${JSON.stringify(badCmds).slice(0, 120)}`);
   const badPlugins = fp.plugins.filter((p) => p.path !== 'builtin');
   if (badPlugins.length) flag('plugins', `non-builtin plugins: ${badPlugins.map((p) => p.name).join(',')}`);

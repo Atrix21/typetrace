@@ -74,6 +74,9 @@ const CR_VENV = abs('vendor/.venvs/code-review-graph');
 const TT_BIN = abs('bin/typetrace.js');
 const CLAUDE_BIN = process.env.AGENT_EVAL_CLAUDE_BIN ?? path.join(os.homedir(), 'dev/backups/claude-code-pinned/bin/claude');
 const BUILTINS = JSON.parse(fs.readFileSync(path.join(EXP, 'claude-builtins.json'), 'utf8')) as { claude_code_version: string; skills: string[]; slash_commands: string[] };
+/** Skill names in the owner's own Claude Code configurations: never allowed in any arm (only names are read). */
+const OWNER_SKILLS = [path.join(os.homedir(), '.claude', 'skills'), ...(() => { try { return fs.readdirSync(path.join(os.homedir(), '.config', 'claude-accounts')).map((a) => path.join(os.homedir(), '.config', 'claude-accounts', a, 'skills')); } catch { return []; } })()]
+  .flatMap((d) => { try { return fs.readdirSync(d); } catch { return []; } });
 const ARM_SKILLS: Record<string, string[]> = { G0: [], TT: [], TS: ['typetrace'], GF: ['graphify'], CR: ['debug-issue', 'explore-codebase', 'refactor-safely', 'review-changes'] };
 /**
  * Claude Code's Bash sandbox (bubblewrap), the same in every arm (E11-D01): no network; nothing outside the workspace
@@ -188,16 +191,18 @@ function wsChanges(ws: string): string[] {
 }
 function wsRestore(ws: string) {
   sh('git', ['reset', '-q', '--hard'], { cwd: ws });
-  sh('git', ['clean', '-q', '-f', '-d'], { cwd: ws }); // not -x: the tools' own ignored data (.code-review-graph/) stays
+  // -x: ignored files too (a run killed mid-command can leave some), except code-review-graph's own data folder.
+  sh('git', ['clean', '-q', '-f', '-d', '-x', '-e', '.code-review-graph/'], { cwd: ws });
 }
 
 /** Tool state that may change during a run: hook counters and stamps (reset before each run), the tools' own data. */
 const VOLATILE = [/^graphify-out\/cache\//, /^\.code-review-graph\//];
-function wsState(ws: string): string {
+function wsState(ws: string): string { return sha(wsManifest(ws).sort().join('\n')); }
+function wsManifest(ws: string): string[] {
   const out: string[] = [];
   const walk = (d: string) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); const rel = path.relative(ws, p); if (rel === '.git' || VOLATILE.some((r) => r.test(rel + (e.isDirectory() ? '/' : '')))) continue; if (e.isDirectory()) walk(p); else if (e.isFile()) out.push(`${rel}\0${sha(fs.readFileSync(p))}`); } };
   walk(ws);
-  return sha(out.sort().join('\n'));
+  return out;
 }
 
 // ---------------------------------------------------------------- the arms' setups
@@ -220,7 +225,7 @@ interface ArmSetup {
   ws: string; mcp: McpServerSpec | null; extraEnv: Record<string, string>; pathPrefix: string[];
   /** What the arm's own command line needs to read inside the sandbox (its wrapper, venv and HOME). */
   toolPaths: string[];
-  reset: () => void; state: string; build_ms: number; files: Record<string, string>;
+  reset: () => void; state: string; manifest: string[]; build_ms: number; files: Record<string, string>;
   /** Folders outside the workspace that belong to this setup (deleted with it). */
   dirs: string[];
 }
@@ -256,7 +261,7 @@ async function setupArm(arm: string, root: string, files: string[], it: Item, w:
   const ws = makeWorkspace(root, files, `${it.unit}|${arm}`);
   const home = fs.mkdtempSync(path.join(SCRATCH, 'install-home-'));
   const t0 = performance.now();
-  const base: ArmSetup = { ws, mcp: null, extraEnv: {}, pathPrefix: [], toolPaths: [], reset: () => {}, state: '', build_ms: 0, files: {}, dirs: [] };
+  const base: ArmSetup = { ws, mcp: null, extraEnv: {}, pathPrefix: [], toolPaths: [], reset: () => {}, state: '', manifest: [], build_ms: 0, files: {}, dirs: [] };
   try {
     if (arm === 'TT' || arm === 'TS') {
       const cache = path.join(SCRATCH, 'tt', `${sha(it.unit).slice(0, 12)}-${arm}`);
@@ -307,6 +312,7 @@ async function setupArm(arm: string, root: string, files: string[], it: Item, w:
     // every run's changes (Bash can write in the workspace) are found and undone with git (E11-D01).
     sh('git', ['add', '-A'], { cwd: ws, env: GIT_ENV });
     if (sh('git', ['status', '--porcelain'], { cwd: ws })) sh('git', ['-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'tool setup'], { cwd: ws, env: GIT_ENV });
+    base.manifest = wsManifest(ws);
     base.state = wsState(ws);
     return base;
   } catch (e) {
@@ -479,6 +485,7 @@ async function main() {
           let mockSrv: Awaited<ReturnType<typeof startMockServer>> | null = null;
           let usageLimited = false;
           let runTmp: string | null = null;
+          let initSkills: { skills: string[]; slash: string[] } | null = null;
           try {
             su.reset(); // every run starts like a new session: no hook counters or query stamps from earlier runs
             if (MOCK) {
@@ -500,9 +507,13 @@ async function main() {
             const r = await runClaude(spec, it.prompt, { run_id: p.run_id, task_id: it.id, condition: `exp11:${TASK}:${p.arm}`, repeat: p.repeat, model: MODEL, workspace_hash: sha(su.ws).slice(0, 12) }, {
               guard: pool.guard(acctName), timeoutMs: TIMEOUT_S * 1000, transcriptPath: path.join(OUT, 'transcripts', `${safe}.jsonl`),
               onInit: (init) => {
-                const m = checkInit(init, { mcp: su.mcp, model: MODEL, version, mock: MOCK, billing: 'subscription', project: { tools, skills: [...ARM_SKILLS[p.arm], ...BUILTINS.skills], slash: [...ARM_SKILLS[p.arm], ...BUILTINS.slash_commands] } });
+                const own = ARM_SKILLS[p.arm];
+                const forbidden = [...new Set([...OWNER_SKILLS, ...Object.values(ARM_SKILLS).flat()])].filter((k) => !own.includes(k));
+                initSkills = { skills: init?.skills ?? [], slash: init?.slash_commands ?? [] };
+                const m = checkInit(init, { mcp: su.mcp, model: MODEL, version, mock: MOCK, billing: 'subscription', project: { tools, required: own, forbidden } });
                 mismatch = m.details;
                 if (MOCK && process.env.EXP11_POSITIVE_CONTROL === '1') return null; // let the request-level detector see the leak
+                if (MOCK && process.env.EXP11_FORCE_INIT_MISMATCH === '1') return 'forced'; // test of the abort path (mock only)
                 return m.categories.length ? m.categories.join(',') : null;
               },
               shouldAbort: () => halted,
@@ -542,7 +553,7 @@ async function main() {
               mcp_calls: calls.filter((c) => c.name.startsWith('mcp__')).map((c) => c.name.split('__').pop()),
               files_read: new Set(calls.filter((c) => c.name === 'Read').map((c) => String(c.input?.file_path ?? ''))).size,
               answer: TASK === 'T3' ? parseT3Answer(raw) : parseAnswer(raw), score, claude_version: version, mock: MOCK, setup_build_ms: su.build_ms,
-              workspace_changes: changed.slice(0, 20), workspace_changed: changed.length,
+              workspace_changes: changed.slice(0, 20), workspace_changed: changed.length, init_skills: initSkills,
             };
             append('runs.jsonl', rec); done.add(p.run_id);
             log(`w${w} ${p.run_id} [${label(acctName)}] ${rec.status} turns=${rec.turns} tok=${rec.total_tokens} used=${toolUse} ${TASK === 'T3' ? '' : `primary=${(score as any).primary?.toFixed(2)}`}`);
@@ -558,7 +569,11 @@ async function main() {
             if (runTmp) fs.rmSync(runTmp, { recursive: true, force: true });
             wsRestore(su.ws);
             su.reset();
-            if (wsState(su.ws) !== su.state) { halted = `workspace could not be restored after ${p.run_id}`; log(halted); }
+            if (wsState(su.ws) !== su.state) {
+              const now = new Set(wsManifest(su.ws)), was = new Set(su.manifest);
+              const diff = [...[...now].filter((x) => !was.has(x)).map((x) => `+${x.split('\0')[0]}`), ...[...was].filter((x) => !now.has(x)).map((x) => `-${x.split('\0')[0]}`)].slice(0, 12);
+              halted = `workspace could not be restored after ${p.run_id}: ${diff.join(' ')}`; log(halted);
+            }
           }
           if (usageLimited) continue;
         }
