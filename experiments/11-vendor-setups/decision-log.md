@@ -69,3 +69,7 @@ Changes after the protocol was frozen (2026-11-20, before the pilot). None yet.
   - **Effect on the agent.** None: nothing the agent sees or does changes, and the scores are read from the result as
     before.
   - **The timed-out run** is retried as any infrastructure failure is (once).
+  - **Amended the same day.** A TypeTrace run on vscode timed out after submitting its answer. Its result event appeared
+    only when the timeout stopped the process, so Claude Code can linger before it writes the result, not only after.
+    The 15 s grace now starts when the answer is accepted ("Structured output provided successfully"). SIGTERM then
+    makes Claude Code write its result and exit, so the run is scored instead of being lost to a timeout.

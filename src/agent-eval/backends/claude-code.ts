@@ -696,8 +696,9 @@ export interface RunClaudeOptions {
   onInit?: (init: any) => string | null;
   /** Aborts the run (kills the group) when this returns a reason; polled while running. */
   shouldAbort?: () => string | null;
-  /** Once the final `result` event has arrived, stop the process group if it has not exited after this many ms
-   *  (experiment 11: Claude Code sometimes lingers after its result; the result is complete and is used). */
+  /** Once the answer is in (the StructuredOutput call accepted, or the final `result` event), stop the process group
+   *  with SIGTERM if it has not exited after this many ms; Claude Code then writes its result and exits (experiment 11:
+   *  it sometimes lingers there; the result is complete and is used). */
   afterResultGraceMs?: number;
 }
 
@@ -730,6 +731,10 @@ export async function runClaude(spec: ClaudeCommand, prompt: string, meta: RunMe
     let stdout = '', stderr = '', buf = '', timedOut = false, spawnError = false;
     let initMismatch: string | undefined, aborted: string | undefined, initMs: number | null = null, resultMs: number | null = null, sawInit = false;
     let graceTimer: NodeJS.Timeout | null = null, lingered = false;
+    const armGrace = () => {
+      if (opts.afterResultGraceMs == null || graceTimer) return;
+      graceTimer = setTimeout(() => { lingered = true; killGroup('SIGTERM'); setTimeout(() => killGroup('SIGKILL'), 10_000).unref(); }, opts.afterResultGraceMs);
+    };
     const killGroup = (sig: NodeJS.Signals) => { try { process.kill(-child.pid!, sig); } catch { /* gone */ } };
     const handleLine = (line: string) => {
       if (!sawInit && line.includes('"subtype":"init"') && line.includes('"type":"system"')) {
@@ -741,7 +746,10 @@ export async function runClaude(spec: ClaudeCommand, prompt: string, meta: RunMe
         } catch { /* parsed again later */ }
       } else if (resultMs == null && line.startsWith('{"type":"result"')) {
         resultMs = Date.now() - t0;
-        if (opts.afterResultGraceMs != null) graceTimer = setTimeout(() => { lingered = true; killGroup('SIGTERM'); setTimeout(() => killGroup('SIGKILL'), 5000).unref(); }, opts.afterResultGraceMs);
+        armGrace();
+      } else if (graceTimer == null && line.startsWith('{"type":"user"') && line.includes('Structured output provided successfully')) {
+        // The answer is in. Claude Code sometimes lingers before writing its result; SIGTERM makes it write it and exit.
+        armGrace();
       }
     };
     child.stdout.on('data', (d) => {
