@@ -29,6 +29,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import readline from 'node:readline';
 import { abs } from '../../src/config.js';
 import { SymbolIndex } from '../../src/evaluation/symbol-index.js';
 import { initLanguages, grammarLanguages } from '../../src/languages/registry.js';
@@ -236,6 +237,18 @@ function setupFiles(ws: string, extraRoots: string[] = []): Record<string, strin
   return out;
 }
 
+/** Append to `shared` the vector lines of `fresh` it lacks, streaming (caches of large repositories exceed 512 MB). */
+export async function mergeVectors(shared: string, fresh: string) {
+  const keyOf = (l: string) => /^\{"k":"([0-9a-f]{64})"/.exec(l)?.[1] ?? null;
+  const have = new Set<string>();
+  if (fs.existsSync(shared)) for await (const l of readline.createInterface({ input: fs.createReadStream(shared), crlfDelay: Infinity })) { const k = keyOf(l); if (k) have.add(k); }
+  const out = fs.createWriteStream(shared, { flags: 'a' });
+  for await (const l of readline.createInterface({ input: fs.createReadStream(fresh), crlfDelay: Infinity })) {
+    const k = keyOf(l);
+    if (k && !have.has(k)) { have.add(k); if (!out.write(l + '\n')) await new Promise<void>((r) => out.once('drain', () => r())); }
+  }
+  await new Promise<void>((r) => out.end(r));
+}
 const sharedVectors = (repo: string) => path.join(SCRATCH, 'emb', repo.replace('/', '__'), 'vectors.jsonl');
 function ttCacheDir(cacheBase: string, ws: string) { return path.join(cacheBase, sha(ws).slice(0, 16)); }
 
@@ -258,9 +271,7 @@ async function setupArm(arm: string, root: string, files: string[], it: Item, w:
       sh(process.execPath, [TT_BIN, 'init', ws, '--client', 'claude', '--wait', '--gpu', ...(arm === 'TT' ? ['--no-setup'] : [])], { cwd: ws, env });
       // Keep the shared cache complete for the next issue of this repository.
       fs.mkdirSync(path.dirname(shared), { recursive: true });
-      const have = new Set(fs.existsSync(shared) ? fs.readFileSync(shared, 'utf8').split('\n').filter(Boolean).map((l) => l.slice(0, 80)) : []);
-      const add = fs.readFileSync(path.join(emb, 'vectors.jsonl'), 'utf8').split('\n').filter((l) => l && !have.has(l.slice(0, 80)));
-      if (add.length) fs.appendFileSync(shared, add.join('\n') + '\n');
+      await mergeVectors(shared, path.join(emb, 'vectors.jsonl'));
       const mcpJson = JSON.parse(fs.readFileSync(path.join(ws, '.mcp.json'), 'utf8')).mcpServers.typetrace;
       base.mcp = { name: 'typetrace', command: mcpJson.command, args: mcpJson.args, env: { TYPETRACE_CACHE: cache, HF_HUB_OFFLINE: '1', TOKENIZERS_PARALLELISM: 'false' }, denyTools: [] };
       base.extraEnv = { TYPETRACE_CACHE: cache }; // the hook script finds the index through it, as the server does
