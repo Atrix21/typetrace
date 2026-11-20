@@ -190,3 +190,24 @@ first login. Before publishing, the absolute paths in `results/main/excluded.jso
 the competitor adapter, inside error messages of failed issue setups) were shortened to repository-relative paths.
 No other field and no scored run changed; the original file is kept outside the repository. The analysis ran
 unchanged: `python3 scripts/swebench/analyse_agents.py experiments/10-swebench-agents/results/main`.
+
+## E10-D08 (2026-11-21, after the findings were published): scoring correction
+
+- **The bug.** The answer scorer (`src/agent-eval/exp3/score.ts`, inherited from experiment 3) cleaned every answered
+  path by cutting it before its first `src/`. In repositories whose code sits under `<package>/src/`, this made some
+  correct answers ambiguous, and they scored 0.
+- **Found in experiment 11's pilot (E11-D07) and fixed.** The path as given now wins when it names a corpus file; the
+  old cleaning is only the fallback.
+- **Re-scoring.** Every experiment 10 run that could be affected (444 of 3,460: those listing a path the old cleaning
+  changed) was re-scored from its stored answer against an index rebuilt at the issue's commit
+  (`scripts/exp11/rescore.ts`; `results/main/rescore-E11-D07.jsonl`).
+- **Effect.** Five issues had been scored 0 in every arm and repeat although the answer was right: babel-16130,
+  preact-3345, preact-3567, preact-3689 and axum-1119.
+  - Every arm's top-3 score rises by the same 0.012: grep alone 0.812 → 0.824, TypeTrace 0.809 → 0.821.
+  - Top-1, "any position" and the share of changed functions listed rise slightly, and three rows of the language
+    table change (TypeScript, JavaScript, Rust).
+  - No paired difference, confidence interval, p-value or non-inferiority result changes, because the correction is
+    identical across arms. The conclusions stand.
+- **Records.** `results/main/report.md` is kept as first computed. `results/main/report-corrected.md` is
+  `analyse_agents.py --apply rescore-E11-D07.jsonl`. `findings.md`, the README and the paper now use the corrected
+  figures.

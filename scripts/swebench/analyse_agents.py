@@ -13,6 +13,12 @@ import collections, itertools, json, math, random, statistics, sys
 D = sys.argv[1]
 SEED, B, NPERM = 20261118, 10000, 20000
 runs = [json.loads(l) for l in open(f'{D}/runs.jsonl') if l.strip()]
+# E10-D08 / E11-D07: --apply <rescore file> replaces the scores of re-scored runs (the file names old and new values).
+if '--apply' in sys.argv:
+    fix = {x['run_id']: x['after'] for x in map(json.loads, open(sys.argv[sys.argv.index('--apply') + 1])) if x.get('changed')}
+    for r in runs:
+        if r['run_id'] in fix: r['score'].update(fix[r['run_id']])
+OUTNAME = sys.argv[sys.argv.index('--out') + 1] if '--out' in sys.argv else 'report'
 acc = collections.defaultdict(lambda: collections.defaultdict(list))
 tok = collections.defaultdict(lambda: collections.defaultdict(list))
 meta = {}
@@ -92,6 +98,6 @@ for bn in ['lite', 'ml']:
 accs = collections.defaultdict(list)
 for r in runs: accs[r['account']['name']].append(r['score']['task_score'])
 md.append('\nRuns by account (exploratory check that switching accounts changes nothing): ' + ', '.join(f'{k} {len(v)} runs, mean score {statistics.fmean(v):.3f}' for k, v in accs.items()) + '.\n')
-json.dump(out, open(f'{D}/report.json', 'w'), indent=1)
-open(f'{D}/report.md', 'w').write('\n'.join(md) + '\n')
+json.dump(out, open(f'{D}/{OUTNAME}.json', 'w'), indent=1)
+open(f'{D}/{OUTNAME}.md', 'w').write('\n'.join(md) + '\n')
 print('\n'.join(md))

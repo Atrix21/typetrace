@@ -39,7 +39,7 @@ Code-graph tools that plug into coding agents through the Model Context Protocol
 
 \emph{The graph.} Graph propagation adds 0.05--0.24 Recall@10 on TypeScript, concentrated on cross-module tasks. It adds nothing on SWE-bench, in any of ten languages ($-0.018$ on Python, $-0.002$ on the others).
 
-\emph{Agents.} In 918 headless Claude Code sessions, a compact retrieval answer reduced tokens per task by 18--28\% against grep alone in all five runs. The same answer without graph propagation saved a similar amount, and neither reliably improved accuracy. Agents given the competitors used about as many tokens as grep alone (\gfy) or 52--70\% more (\crg). On 346 SWE-bench issues in ten languages (3,460 sessions), no tool changed how often the agent found the code (81\% in every arm), and \tool's tokens equalled grep's; it used 23\% and 60\% fewer than the competitors, which the agent called in under a fifth of sessions.
+\emph{Agents.} In 918 headless Claude Code sessions, a compact retrieval answer reduced tokens per task by 18--28\% against grep alone in all five runs. The same answer without graph propagation saved a similar amount, and neither reliably improved accuracy. Agents given the competitors used about as many tokens as grep alone (\gfy) or 52--70\% more (\crg). On 346 SWE-bench issues in ten languages (3,460 sessions), no tool changed how often the agent found the code (82\% in every arm), and \tool's tokens equalled grep's; it used 23\% and 60\% fewer than the competitors, which the agent called in under a fifth of sessions.
 
 The headline figures of code-graph tools thus mostly reflect their baselines. In our measurements, a graph helps an agent retrieve code but not answer better, and the token saving depends on the task.
 \end{abstract}
@@ -473,7 +473,7 @@ M, head-to-head (15 / 11) & $-25\%^{*}$ & $-31\%^{*}$ \\
 
 \textbf{Earlier pilot.} In an earlier experiment on the smallest repository with Sonnet, the agent with grep was at ceiling with or without retrieval tools; free to choose, it never called one. In a single call without tools, however, retrieved context raised diagnosis accuracy from 31--33\% (file list only) to 71--98\% (graph-based or hybrid context).
 
-\textbf{SWE-bench issues (experiment 10).} We repeated the agent comparison on 346 issues, 174 from SWE-bench Lite and 172 from SWE-bench Multilingual (ten languages in all), with the same arms, Claude Haiku~5.5 at high effort, two repeats per issue and arm (3,460 sessions), and Claude Code pinned to one version. The answer is an ordered list of functions, scored against the functions the gold patch changes; the primary score is a changed function among the first three. Table~\ref{tab:swe-agent} gives the results. No accuracy test came close (all Holm $p = 1.0$): \tool against grep alone, $\Delta = -0.003$ [$-0.022$, $+0.014$], non-inferior (one-sided lower bound $-0.017$ against a $-0.05$ margin); against the same tool without the graph, $-0.001$. \tool's tokens equalled grep's ($-1\%$, $p = 0.32$) and were 23\% below \gfy's and 60\% below \crg's (both Holm $p = 0.0001$). Most of that gap is the competitors' overhead: the agent called them in 17--18\% of sessions, and in sessions that never called them the median was 50{,}544 tokens with \gfy and 102{,}811 with \crg, against 43{,}927 with grep alone. One exploratory result goes against \tool: top-1 accuracy was 0.678 against 0.701 for grep alone ($\Delta = -0.023$ [$-0.043$, $-0.004$]), the only interval in the experiment that excludes zero.
+\textbf{SWE-bench issues (experiment 10).} We repeated the agent comparison on 346 issues, 174 from SWE-bench Lite and 172 from SWE-bench Multilingual (ten languages in all), with the same arms, Claude Haiku~5.5 at high effort, two repeats per issue and arm (3,460 sessions), and Claude Code pinned to one version. The answer is an ordered list of functions, scored against the functions the gold patch changes; the primary score is a changed function among the first three. Table~\ref{tab:swe-agent} gives the results. No accuracy test came close (all Holm $p = 1.0$): \tool against grep alone, $\Delta = -0.003$ [$-0.022$, $+0.014$], non-inferior (one-sided lower bound $-0.017$ against a $-0.05$ margin); against the same tool without the graph, $-0.001$. \tool's tokens equalled grep's ($-1\%$, $p = 0.32$) and were 23\% below \gfy's and 60\% below \crg's (both Holm $p = 0.0001$). Most of that gap is the competitors' overhead: the agent called them in 17--18\% of sessions, and in sessions that never called them the median was 50{,}544 tokens with \gfy and 102{,}811 with \crg, against 43{,}927 with grep alone. One exploratory result goes against \tool: top-1 accuracy was 0.689 against 0.712 for grep alone ($\Delta = -0.023$ [$-0.043$, $-0.004$]), the only interval in the experiment that excludes zero.
 
 \begin{table}[t]
 \caption{Agents on 346 SWE-bench issues (experiment 10; Claude Haiku~5.5, two repeats). Top-3 = a changed function among the first three (primary); tokens are mean and median per session; use = share of sessions that called the arm's tool.}
@@ -483,11 +483,11 @@ M, head-to-head (15 / 11) & $-25\%^{*}$ & $-31\%^{*}$ \\
 \toprule
 Arm & Top-3 & Top-1 & Mean tok. & Median & Use \\
 \midrule
-A0 grep only & 0.812 & 0.701 & 69{,}915 & 43{,}927 & -- \\
-A1 \tool, no graph & 0.811 & 0.682 & 65{,}473 & 41{,}662 & 96\% \\
-A2 \tool & 0.809 & 0.678 & 70{,}165 & 41{,}435 & 98\% \\
-A5 \gfy & 0.808 & 0.694 & 88{,}387 & 54{,}486 & 17\% \\
-A6 \crg + emb. & 0.812 & 0.694 & 147{,}032 & 108{,}630 & 18\% \\
+A0 grep only & 0.824 & 0.712 & 69{,}915 & 43{,}927 & -- \\
+A1 \tool, no graph & 0.822 & 0.694 & 65{,}473 & 41{,}662 & 96\% \\
+A2 \tool & 0.821 & 0.689 & 70{,}165 & 41{,}435 & 98\% \\
+A5 \gfy & 0.819 & 0.705 & 88{,}387 & 54{,}486 & 17\% \\
+A6 \crg + emb. & 0.824 & 0.705 & 147{,}032 & 108{,}630 & 18\% \\
 \bottomrule
 \end{tabular}
 \end{table}

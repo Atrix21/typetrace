@@ -34,7 +34,7 @@ Accuracy gains over grep alone did not replicate across runs. Graph content adde
 same tool without the graph (Holm p = 0.44).
 
 On 346 SWE-bench issues in ten languages (3,460 agent sessions), no tool changed how often the agent found the code:
-every arm put a changed function in its top three for 81% of issues (all Holm p = 1.0), and TypeTrace was
+every arm put a changed function in its top three for 82% of issues (all Holm p = 1.0), and TypeTrace was
 non-inferior to grep alone. Its tokens equalled grep's (−1%, not significant), so the token saving is
 task-dependent. It used 23% fewer tokens than graphify and 60% fewer than code-review-graph (Holm p = 0.0001). Most
 of that gap is the competitors' own overhead: installed as bare MCP servers, they were called in 17–18% of runs but
@@ -439,11 +439,11 @@ Multilingual (nine languages), 3,460 sessions (5 arms × 2 repeats). Repeats are
 
 | Arm | Changed function in top 3 (primary) | Top 1 | Tokens / run (mean) | Median | Used the tool |
 |---|---:|---:|---:|---:|---:|
-| A0 grep / read only | **0.812** | **0.701** | 69,915 | 43,927 | — |
-| A1 TypeTrace without graph | 0.811 | 0.682 | **65,473** | 41,662 | 96% |
-| A2 TypeTrace | 0.809 | 0.678 | 70,165 | **41,435** | 98% |
-| A5 graphify 0.9.108 | 0.808 | 0.694 | 88,387 | 54,486 | 17% |
-| A6 code-review-graph 2.4.0 + emb. | **0.812** | 0.694 | 147,032 | 108,630 | 18% |
+| A0 grep / read only | **0.824** | **0.712** | 69,915 | 43,927 | — |
+| A1 TypeTrace without graph | 0.822 | 0.694 | **65,473** | 41,662 | 96% |
+| A2 TypeTrace | 0.821 | 0.689 | 70,165 | **41,435** | 98% |
+| A5 graphify 0.9.108 | 0.819 | 0.705 | 88,387 | 54,486 | 17% |
+| A6 code-review-graph 2.4.0 + emb. | **0.824** | 0.705 | 147,032 | 108,630 | 18% |
 
 **Accuracy (family A, Holm over four).** A2 against grep alone: Δ −0.003 [−0.022, +0.014]; against A1 (no graph):
 −0.001 [−0.019, +0.016]; against graphify: +0.001 [−0.014, +0.017]; against code-review-graph: −0.003
@@ -459,7 +459,7 @@ cost 50,544 tokens with graphify installed and 102,811 with code-review-graph, a
 tool definitions and server instructions are sent on every turn whether or not they are used.
 
 **One result against TypeTrace (exploratory, uncorrected).** Top-1 accuracy was lower with TypeTrace than with grep
-alone: 0.678 against 0.701, Δ −0.023 [−0.043, −0.004]. It is the only interval in the experiment that excludes zero.
+alone: 0.689 against 0.712, Δ −0.023 [−0.043, −0.004]. It is the only interval in the experiment that excludes zero.
 
 **By language** (exploratory): no language shows a consistent difference between arms. The 34 issues whose fix spans
 two or more files are where the agent listed fewest of the changed functions (0.40–0.42 in every arm, against 0.78
@@ -566,7 +566,7 @@ with this paper make such claims easier to check.
 | SWE-bench Lite | `experiments/05-swebench-python/findings.md`, `results/report.md` |
 | SWE-bench Multilingual | `experiments/08-swebench-multilingual/findings.md`, `results/report.md` |
 | Agent runs | `experiments/03-graph-scale/results/agent/*-report.md`, decision log E3-D26 |
-| Agents on SWE-bench issues (§6.5) | `experiments/10-swebench-agents/findings.md`, `results/main/report.md` |
+| Agents on SWE-bench issues (§6.5) | `experiments/10-swebench-agents/findings.md`, `results/main/report-corrected.md` (scores corrected 2026-11-21, decision log E10-D08) |
 | Single-file vs multi-file issues in experiment 10 (§6.5) | `experiments/11-vendor-setups/protocol.md` ("The multi-file pool"), computed from `experiments/10-swebench-agents/results/main/runs.jsonl` |
 | Experiment 2 | `experiments/02-agent-diagnosis/findings.md` |
 | Experiment 6 | `experiments/06-next-direction/findings.md` |

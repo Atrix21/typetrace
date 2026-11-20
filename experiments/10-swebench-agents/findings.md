@@ -4,8 +4,11 @@ Main run from 2026-11-19 01:04 IST to 2026-11-20 05:19 IST, with two stops (an a
 full disk, both fixed and logged). All 346 issues were scored with every arm: 3,460 runs (5 arms × 2 repeats). Protocol:
 [`protocol.md`](protocol.md), pre-registered and frozen before the pilot. Changes during the run:
 [`decision-log.md`](decision-log.md) (E10-D01 to E10-D07; no prompt, tool, arm, scoring or analysis change). Full
-tables: [`results/main/report.md`](results/main/report.md), from
-`python3 scripts/swebench/analyse_agents.py experiments/10-swebench-agents/results/main`.
+tables: [`results/main/report-corrected.md`](results/main/report-corrected.md), from
+`python3 scripts/swebench/analyse_agents.py experiments/10-swebench-agents/results/main --apply experiments/10-swebench-agents/results/main/rescore-E11-D07.jsonl --out report-corrected`.
+**Corrected on 2026-11-21 (E10-D08):** a path-cleaning bug in the scorer had scored five issues 0 in every arm; every
+arm's scores rise by the same amount, and no comparison or conclusion changes. The original report is kept as
+[`results/main/report.md`](results/main/report.md).
 
 Model: Claude Haiku 5.5, effort high, 40 turns, Claude Code 2.1.327. 174 issues from SWE-bench Lite (Python) and 172
 from SWE-bench Multilingual (9 languages).
@@ -13,8 +16,8 @@ from SWE-bench Multilingual (9 languages).
 ## Summary
 
 - **No arm made the agent find the code more often (Q1 and Q4: no difference).** A changed function was among the
-  agent's first three answers in 81% of issues in every arm: grep alone 0.812, TypeTrace 0.809, TypeTrace without
-  the graph 0.811, graphify 0.808, code-review-graph with embeddings 0.812. None of the four confirmatory accuracy
+  agent's first three answers in 82% of issues in every arm: grep alone 0.824, TypeTrace 0.821, TypeTrace without
+  the graph 0.822, graphify 0.819, code-review-graph with embeddings 0.824 (corrected on 2026-11-21, E10-D08). None of the four confirmatory accuracy
   tests comes close (all Holm p = 1.0). TypeTrace is non-inferior to grep alone: the one-sided 95% lower bound of
   the difference is −0.017, inside the −0.05 margin. The 95% CI rules out a gain of more than 0.014 over grep.
 - **The graph made no difference inside the agent either (Q2).** TypeTrace with and without the call graph:
@@ -36,11 +39,11 @@ from SWE-bench Multilingual (9 languages).
 
 | Arm | Changed function in top 3 (primary) | Top 1 | Any position | Share of changed functions listed | Tokens / run (mean) | Median | Turns | Wall time | Used the tool |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| A0 grep alone | **0.812** | **0.701** | 0.845 | 0.749 | 69,915 | 43,927 | 9.0 | 38 s | — |
-| A1 TypeTrace without the graph | 0.811 | 0.682 | 0.841 | 0.745 | **65,473** | 41,662 | 9.1 | **34 s** | 96% |
-| A2 TypeTrace (as shipped) | 0.809 | 0.678 | 0.845 | 0.745 | 70,165 | **41,435** | 9.1 | 36 s | 98% |
-| A5 graphify 0.9.108 | 0.808 | 0.694 | **0.847** | **0.751** | 88,387 | 54,486 | 9.5 | 43 s | 17% |
-| A6 code-review-graph 2.4.0 + embeddings | **0.812** | 0.694 | 0.841 | 0.744 | 147,032 | 108,630 | 9.7 | 44 s | 18% |
+| A0 grep alone | **0.824** | **0.712** | 0.857 | 0.759 | 69,915 | 43,927 | 9.0 | 38 s | — |
+| A1 TypeTrace without the graph | 0.822 | 0.694 | 0.853 | 0.756 | **65,473** | 41,662 | 9.1 | **34 s** | 96% |
+| A2 TypeTrace (as shipped) | 0.821 | 0.689 | 0.857 | 0.756 | 70,165 | **41,435** | 9.1 | 36 s | 98% |
+| A5 graphify 0.9.108 | 0.819 | 0.705 | **0.858** | **0.762** | 88,387 | 54,486 | 9.5 | 43 s | 17% |
+| A6 code-review-graph 2.4.0 + embeddings | **0.824** | 0.705 | 0.853 | 0.755 | 147,032 | 108,630 | 9.7 | 44 s | 18% |
 
 Columns after the primary score and the token columns of the confirmatory family are secondary outcomes, reported
 without tests (exploratory).
@@ -66,10 +69,10 @@ Non-inferiority, reported with A2 > A0: lower bound −0.017 against a margin of
 
 ## Exploratory
 
-**Top-1 accuracy is slightly lower with TypeTrace.** Grep alone put a changed function first in 0.701 of issues,
-TypeTrace in 0.678: Δ −0.023, bootstrap 95% CI [−0.043, −0.004]. Without the graph the difference is similar
+**Top-1 accuracy is slightly lower with TypeTrace.** Grep alone put a changed function first in 0.712 of issues,
+TypeTrace in 0.689: Δ −0.023, bootstrap 95% CI [−0.043, −0.004]. Without the graph the difference is similar
 (−0.019 [−0.040, +0.003]). The share of listed functions that actually changed is also lower in both TypeTrace arms
-(0.215 and 0.221, against 0.258 for grep alone): the agent lists more functions, or more neighbours of the right one.
+(0.218 and 0.224, against 0.261 for grep alone): the agent lists more functions, or more neighbours of the right one.
 This is one of many unplanned comparisons, uncorrected, and the top-3 score is unchanged; but it is the only
 difference in the experiment whose interval excludes zero, and it goes against TypeTrace. Experiment 11 reports
 top-1 for every arm.
@@ -82,11 +85,11 @@ top-1 for every arm.
 | Ruby | 26 | 0.75 / 0.60 | 0.79 / 0.61 | 0.77 / 0.59 | 0.75 / 0.58 | 0.75 / 0.60 |
 | PHP | 25 | 0.84 / 0.74 | 0.86 / 0.74 | 0.78 / 0.73 | 0.76 / 0.72 | 0.86 / 0.74 |
 | Go | 25 | 0.74 / 0.70 | 0.76 / 0.70 | 0.76 / 0.72 | 0.78 / 0.71 | 0.78 / 0.72 |
-| Rust | 23 | 0.91 / 0.69 | 0.89 / 0.69 | 0.91 / 0.71 | 0.89 / 0.75 | 0.89 / 0.75 |
+| Rust | 23 | 0.91 / 0.71 | 0.89 / 0.71 | 0.91 / 0.72 | 0.89 / 0.76 | 0.89 / 0.76 |
 | Java | 20 | 0.72 / 0.63 | 0.68 / 0.59 | 0.70 / 0.59 | 0.70 / 0.62 | 0.68 / 0.60 |
-| JavaScript | 20 | 0.55 / 0.53 | 0.55 / 0.51 | 0.55 / 0.51 | 0.57 / 0.53 | 0.57 / 0.51 |
+| JavaScript | 20 | 0.70 / 0.65 | 0.70 / 0.63 | 0.70 / 0.64 | 0.72 / 0.66 | 0.72 / 0.64 |
 | C | 16 | 0.88 / 0.79 | 0.94 / 0.82 | 0.94 / 0.80 | 0.94 / 0.80 | 0.97 / 0.84 |
-| TypeScript | 10 | 0.90 / 0.90 | 0.90 / 0.90 | 0.85 / 0.85 | 0.85 / 0.85 | 0.90 / 0.90 |
+| TypeScript | 10 | 1.00 / 1.00 | 1.00 / 1.00 | 0.95 / 0.95 | 0.95 / 0.95 | 1.00 / 1.00 |
 | C++ | 6 | 0.50 / 0.21 | 0.42 / 0.21 | 0.42 / 0.21 | 0.42 / 0.21 | 0.50 / 0.18 |
 
 One issue whose changed code spans Go, JavaScript and TypeScript is in the totals only. No language shows a
@@ -107,7 +110,7 @@ call them, the medians were 72,837 and 131,434.
 
 1. **On SWE-bench issues a capable agent finds the code with grep as well as with any of these tools.** A likely
    reason: the issues describe the failing behaviour precisely, often with an error message or a function name, and
-   the agent finishes in about nine turns in every arm. The ceiling (0.81 top-3, 0.85 anywhere) is the same for all five arms, so what
+   the agent finishes in about nine turns in every arm. The ceiling (0.82 top-3, 0.86 anywhere) is the same for all five arms, so what
    separates them is cost, not accuracy.
 2. **TypeTrace's retrieval lead (experiments 5 and 8) does not become an agent accuracy lead.** Retrieval alone,
    TypeTrace's Recall@10 was 0.47 and 0.39 against 0.35/0.26 for code-review-graph and 0.15/0.12 for graphify. Inside
@@ -121,7 +124,7 @@ call them, the medians were 72,837 and 131,434.
 
 ## Limitations
 
-- **Ceiling.** Grep alone already finds a changed function in the top three in 81% of issues. The primary score
+- **Ceiling.** Grep alone already finds a changed function in the top three in 82% of issues. The primary score
   cannot show gains much above 0.05 on the remaining 19%, and the experiment was powered for a 0.05 difference.
 - **One model.** Claude Haiku 5.5 at high effort. A weaker model might lean on the tools more; a stronger one less.
 - **Localisation, not resolution.** The agent names the code to change but does not change it. Stage 2 (resolving
@@ -140,4 +143,5 @@ call them, the medians were 72,837 and 131,434.
 - **Retries:** 41 attempts ended without a result event (Claude Code exited without an answer) and 1 was aborted at
   the version stop. All were retried under E10-D02; 33 scored runs are second or later attempts. The run with the
   version mismatch is not counted.
+- **E10-D08 (2026-11-21):** scoring correction, as described at the top of this file; all figures here are corrected.
 - Transcripts (263 MB) and tool logs are kept locally and are not in the repository, as for the pilot.

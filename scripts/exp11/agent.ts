@@ -43,7 +43,8 @@ import { bindAccount, claudeVersion, DENY_TOOLS } from '../../src/agent-eval/age
 import { accountRecord, type AccountInfo } from '../../src/agent-eval/account.js';
 import { startMockServer, type MockStep } from '../../src/agent-eval/mock-anthropic/server.js';
 import { opaqueId, WORK_ROOT } from '../../src/agent-eval/workspace.js';
-import { cleanFile, parseAnswer, scoreAnswer, ANSWER_SCHEMA } from '../../src/agent-eval/exp3/score.js';
+import { parseAnswer, ANSWER_SCHEMA } from '../../src/agent-eval/exp3/score.js';
+import { scoreT12 } from './score.js';
 import { UNSET_ENV } from '../../src/agent-eval/mcp/competitor-servers.js';
 import { T1_PROMPT, T2_PROMPT, T3_PROMPT, T3_SCHEMA, TASK_SYSTEM_PROMPT, parseT3Answer } from './prompts.js';
 
@@ -331,22 +332,7 @@ async function setupArm(arm: string, root: string, files: string[], it: Item, w:
 // ---------------------------------------------------------------- scoring
 function scoreItem(index: SymbolIndex | null, it: Item, raw: unknown) {
   if (it.task === 'T3') return { answered: parseT3Answer(raw) ? 1 : 0 };
-  const answer = parseAnswer(raw);
-  const gt = it.task === 'T2' ? it.gt!.filter((k) => k.split('::')[0] !== it.seed) : it.gt!;
-  const gtFiles = it.task === 'T2' ? it.gtFiles!.filter((f) => f !== it.seed) : it.gtFiles!;
-  const task = { task_id: it.id, split: SET, description: it.prompt, root_cause_symbols: gt, relevant_symbols: gt, relevant_files: gtFiles, task_type: 'bug_localisation', repo: it.repo } as GroundTruthTask;
-  const s = scoreAnswer(index!, task, answer);
-  const listed = [...new Set((answer?.locations ?? []).map((l) => cleanFile(l.file)))].filter((f) => !(it.task === 'T2' && f === it.seed));
-  const fileRecall = gtFiles.filter((f) => listed.includes(f)).length / gtFiles.length;
-  const fileAt3 = listed.slice(0, 3).some((f) => gtFiles.includes(f)) ? 1 : 0;
-  // Primary: T1 function recall; T2 file recall (code-review-graph's own unit). Accuracy: T1 a changed function in the
-  // first three; T2 another changed file among the first three listed files other than the seed.
-  return {
-    ...s, file_recall: fileRecall, file_at_3: fileAt3, function_recall: s.recall,
-    primary: answer ? (it.task === 'T1' ? s.recall : fileRecall) : 0,
-    accuracy: answer ? (it.task === 'T1' ? s.rc_at_3 : fileAt3) : 0,
-    top1: answer ? s.rc_at_1 : 0, gt_size: gt.length, gt_files: gtFiles.length,
-  };
+  return scoreT12(index!, { id: it.id, task: it.task, repo: it.repo, prompt: it.prompt, gt: it.gt!, gtFiles: it.gtFiles!, seed: it.seed }, raw, SET);
 }
 
 // ---------------------------------------------------------------- accounts with failover (as in experiment 10)

@@ -70,13 +70,34 @@ export function cleanSymbol(s: string): string {
 }
 
 /** Canonical key for one answered location, or null if it names nothing in the snapshot. */
-export function resolveLocation(index: SymbolIndex, file: string, symbol: string): string | null {
-  let f = cleanFile(file);
-  const sym = cleanSymbol(symbol);
-  if (!index.byFile.has(f)) {
+/** Trim, posix separators, no :line suffix, no ./, and an absolute workspace path made relative (after /app/). */
+export function normFile(f: string): string {
+  let p = f.trim().replace(/\\/g, '/').replace(/:\d+(-\d+)?$/, '').replace(/^\.\//, '');
+  const i = p.lastIndexOf('/app/');
+  if (p.startsWith('/') && i >= 0) p = p.slice(i + 5);
+  return p;
+}
+
+/**
+ * The corpus file an answer names. The path as given wins when it is a corpus file. Only otherwise the older
+ * cleaning applies (cut before the first "src/", then a unique suffix match), which experiment 3's answers needed.
+ * Fix of 2026-11-21 (E11-D07): cleaning first turned "gson/src/main/..." into "src/main/..." and, in monorepos with
+ * several packages/<x>/src/, made correct answers ambiguous.
+ */
+export function resolveFile(index: SymbolIndex, file: string): string {
+  const raw = normFile(file);
+  if (index.byFile.has(raw)) return raw;
+  for (const f of [raw, cleanFile(file)]) {
+    if (index.byFile.has(f)) return f;
     const cands = [...index.byFile.keys()].filter((k) => k.endsWith('/' + f) || f.endsWith('/' + k));
-    if (cands.length === 1) f = cands[0];
+    if (cands.length === 1) return cands[0];
   }
+  return cleanFile(file);
+}
+
+export function resolveLocation(index: SymbolIndex, file: string, symbol: string): string | null {
+  const f = resolveFile(index, file);
+  const sym = cleanSymbol(symbol);
   const direct = `${f}::${sym}`;
   if (index.byKey.has(direct)) return direct;
   const last = sym.split('.').pop()!;

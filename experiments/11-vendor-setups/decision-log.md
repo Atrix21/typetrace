@@ -111,3 +111,20 @@ Changes after the protocol was frozen (2026-11-20, before the pilot). None yet.
     - `setups.jsonl` also listed some snapshot files as if an installer had written them: files with non-ASCII names
       (git quoted their paths) and, before the `git add -f` fix, files matching a repository's own `.gitignore`. The
       runner now reads git's raw paths, and comparisons of setups use the setup paths above.
+
+- **E11-D07 (2026-11-21, during the pilot): answer paths scored wrongly in multi-package repositories.**
+  - **The bug.** The scorer cut every answered path before its first `src/` (experiment 3's cleaning). For
+    `gson/src/main/...` or `packages/material-ui/src/...` the cut path no longer matched the ground truth. File
+    recall, T2's primary score, was 0 for correct answers, and in monorepos even function matching could fail.
+  - **The fix.** `src/agent-eval/exp3/score.ts` `resolveFile`: the path as given wins when it names a corpus file; the
+    old cleaning is only the fallback. The runner scores through `scripts/exp11/score.ts`, shared with
+    `scripts/exp11/rescore.ts`.
+  - **Pilot re-scoring** from the stored answers (`results/pilot-T*/rescore-E11-D07.jsonl`):
+    - **T1:** 91 of 100 affected runs changed, all in file recall (0 → 0.78 on those runs). T1's primary score and
+      accuracy were unaffected.
+    - **T2:** re-scored when its pilot ends; its primary score is file recall.
+    - The main run is scored with the fix from the start (about 28% of its T1 and T2 issues are in affected
+      repositories).
+  - **Experiment 10 was affected too** (E10-D08). Its every-arm top-3 level is 0.82, not the 0.81 this protocol quotes
+    in "Why" and "The multi-file pool". On its single-file issues the share of changed functions listed is 0.79–0.80,
+    not 0.78. The multi-file figure (0.40–0.42) is unchanged. The argument for the multi-file pool stands.
