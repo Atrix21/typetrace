@@ -141,3 +141,16 @@ describe('the hook script', () => {
     expect(r.stdout).toBe('');
   });
 });
+
+describe('the hook command', () => {
+  afterEach(() => { delete process.env.TYPETRACE_HOOK_NODE; });
+  it('is `node` from the PATH by default, the launcher\'s Node.js when TYPETRACE_HOOK_NODE is set', () => {
+    applyClaudeSetup(repo);
+    expect(settings().hooks.PreToolUse[0].hooks[0].command).toBe(HOOK_COMMAND);
+    process.env.TYPETRACE_HOOK_NODE = '/opt/py env/bin/node';
+    applyClaudeSetup(repo);
+    const c = settings().hooks.PreToolUse;
+    expect(c).toHaveLength(1); // replaced, not duplicated
+    expect(c[0].hooks[0].command).toBe('"/opt/py env/bin/node" "$CLAUDE_PROJECT_DIR/.claude/hooks/typetrace-nudge.mjs" 2>/dev/null || true');
+  });
+});

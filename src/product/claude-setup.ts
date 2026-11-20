@@ -141,6 +141,14 @@ function say() {
 export const HOOK_FILE = path.join('.claude', 'hooks', 'typetrace-nudge.mjs');
 export const SKILL_FILE = path.join('.claude', 'skills', 'typetrace', 'SKILL.md');
 export const HOOK_COMMAND = 'node "$CLAUDE_PROJECT_DIR/.claude/hooks/typetrace-nudge.mjs"';
+/**
+ * The hook's command. Default: `node` from the PATH. TYPETRACE_HOOK_NODE (set by the PyPI launcher, which brings its own
+ * Node.js) names the Node binary instead; if it is gone later (an emptied uv cache), the hook stays silent.
+ */
+export function hookCommand(): string {
+  const node = process.env.TYPETRACE_HOOK_NODE;
+  return node ? `${JSON.stringify(node)} "$CLAUDE_PROJECT_DIR/.claude/hooks/typetrace-nudge.mjs" 2>/dev/null || true` : HOOK_COMMAND;
+}
 const HOOK_MATCHER = 'Grep|Glob|Read|Bash';
 const isOurs = (h: unknown) => JSON.stringify(h ?? '').includes('typetrace-nudge.mjs');
 
@@ -197,7 +205,7 @@ function editSettings(file: string, remove: boolean, dryRun: boolean): SetupChan
     if (!dryRun) { if (Object.keys(cfg).length) writeAtomic(file, JSON.stringify(cfg, null, 2) + '\n'); else fs.rmSync(file); }
     return { file, action: 'removed' };
   }
-  const ours = { matcher: HOOK_MATCHER, hooks: [{ type: 'command', command: HOOK_COMMAND, timeout: 5 }] };
+  const ours = { matcher: HOOK_MATCHER, hooks: [{ type: 'command', command: hookCommand(), timeout: 5 }] };
   const next = { ...cfg, hooks: { ...hooks, PreToolUse: [...others, ours] } };
   const content = JSON.stringify(next, null, 2) + '\n';
   if (text === content) return { file, action: 'unchanged' };

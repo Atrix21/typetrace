@@ -189,8 +189,20 @@ function embeddingState(repo: string, meta: IndexMeta): string {
 
 // ---- commands ----
 
+/** TYPETRACE_LAUNCH: a JSON array, the command (and leading arguments) that starts TypeTrace; `serve ...` is appended. */
+function launchOverride(): string[] | null {
+  const raw = process.env.TYPETRACE_LAUNCH;
+  if (!raw) return null;
+  try { const v = JSON.parse(raw); if (Array.isArray(v) && v.length && v.every((x) => typeof x === 'string' && x)) return v; } catch { /* below */ }
+  throw new Error(`TYPETRACE_LAUNCH must be a JSON array of strings, e.g. ["uvx", "typetrace==${VERSION}"]; got ${raw}`);
+}
+
 const launchFor = (repo: string) => (pinned: boolean): Launch => {
   const tail = ['serve', ...(pinned ? [repo] : []), ...(flag('gpu') ? ['--gpu'] : [])];
+  // Started by another installer (the PyPI package `typetrace` sets TYPETRACE_LAUNCH, e.g. ["uvx", "typetrace==0.3.2"]):
+  // the tools launch the server the same way, so a machine without Node on its PATH works too.
+  const custom = launchOverride();
+  if (custom) return { command: custom[0], args: [...custom.slice(1), ...tail] };
   // Installed from npm: launch through npx (stable across npx cache clean-ups and Node upgrades). From source: this checkout.
   return FROM_NPM ? { command: 'npx', args: ['-y', `${PKG.name}@${VERSION}`, ...tail] } : { command: process.execPath, args: [BIN, ...tail] };
 };
