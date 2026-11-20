@@ -74,8 +74,18 @@ const TT_BIN = abs('bin/typetrace.js');
 const CLAUDE_BIN = process.env.AGENT_EVAL_CLAUDE_BIN ?? path.join(os.homedir(), 'dev/backups/claude-code-pinned/bin/claude');
 const BUILTINS = JSON.parse(fs.readFileSync(path.join(EXP, 'claude-builtins.json'), 'utf8')) as { claude_code_version: string; skills: string[]; slash_commands: string[] };
 const ARM_SKILLS: Record<string, string[]> = { G0: [], TT: [], TS: ['typetrace'], GF: ['graphify'], CR: ['debug-issue', 'explore-codebase', 'refactor-safely', 'review-changes'] };
-/** graphify's setup names these commands (CLAUDE.md, skill); they only read the graph. Nothing else may run in Bash. */
-const GF_BASH = ['Bash(graphify query:*)', 'Bash(graphify path:*)', 'Bash(graphify explain:*)', 'Bash(graphify section:*)'];
+/**
+ * Claude Code's Bash sandbox (bubblewrap), the same in every arm (E11-D01): no network; nothing outside the workspace
+ * readable except the arm's own pinned tool install; writes only in the workspace (reset after every run), the run's
+ * temp folder and the tool's own HOME.
+ */
+function sandboxFor(ws: string, runTmp: string, toolPaths: string[]): Record<string, unknown> {
+  return {
+    enabled: true, failIfUnavailable: true, autoAllowBashIfSandboxed: true, allowUnsandboxedCommands: false,
+    filesystem: { denyRead: [os.homedir(), '/tmp', '/var/tmp', '/root', '/mnt', '/media', '/srv', '/opt'], allowRead: [ws, runTmp, ...toolPaths], allowWrite: [runTmp, ...toolPaths.filter((p) => p.includes('tool-home'))] },
+    network: { allowedDomains: [] },
+  };
+}
 const sha = (s: string | Buffer) => crypto.createHash('sha256').update(s).digest('hex');
 EXPECTED_MCP_TOOLS.typetrace = ['find_relevant_code'];
 
@@ -175,6 +185,15 @@ function makeWorkspace(root: string, files: string[], key: string): string {
   return dir;
 }
 
+/** Files a run changed in the workspace (Bash can write there), tool stamps excluded. Then undone with git. */
+function wsChanges(ws: string): string[] {
+  return sh('git', ['status', '--porcelain', '--untracked-files=all'], { cwd: ws }).split('\n').filter(Boolean).map((l) => l.slice(3)).filter((f) => !/^graphify-out\/cache\//.test(f));
+}
+function wsRestore(ws: string) {
+  sh('git', ['reset', '-q', '--hard'], { cwd: ws });
+  sh('git', ['clean', '-q', '-f', '-d'], { cwd: ws }); // not -x: the tools' own ignored data (.code-review-graph/) stays
+}
+
 /** Tool state that may change during a run: hook counters and stamps (reset before each run), the tools' own data. */
 const VOLATILE = [/^graphify-out\/cache\//, /^\.code-review-graph\//];
 function wsState(ws: string): string {
@@ -201,7 +220,9 @@ function writeWrappers(): { gfBin: string; crBin: string } {
 }
 
 interface ArmSetup {
-  ws: string; mcp: McpServerSpec | null; extraEnv: Record<string, string>; pathPrefix: string[]; bashAllow: string[];
+  ws: string; mcp: McpServerSpec | null; extraEnv: Record<string, string>; pathPrefix: string[];
+  /** What the arm's own command line needs to read inside the sandbox (its wrapper, venv and HOME). */
+  toolPaths: string[];
   reset: () => void; state: string; build_ms: number; files: Record<string, string>;
   /** Folders outside the workspace that belong to this setup (deleted with it). */
   dirs: string[];
@@ -226,7 +247,7 @@ async function setupArm(arm: string, root: string, files: string[], it: Item, w:
   const ws = makeWorkspace(root, files, `${it.unit}|${arm}`);
   const home = fs.mkdtempSync(path.join(SCRATCH, 'install-home-'));
   const t0 = performance.now();
-  const base: ArmSetup = { ws, mcp: null, extraEnv: {}, pathPrefix: [], bashAllow: [], reset: () => {}, state: '', build_ms: 0, files: {}, dirs: [] };
+  const base: ArmSetup = { ws, mcp: null, extraEnv: {}, pathPrefix: [], toolPaths: [], reset: () => {}, state: '', build_ms: 0, files: {}, dirs: [] };
   try {
     if (arm === 'TT' || arm === 'TS') {
       const cache = path.join(SCRATCH, 'tt', `${sha(it.unit).slice(0, 12)}-${arm}`);
@@ -255,7 +276,7 @@ async function setupArm(arm: string, root: string, files: string[], it: Item, w:
       sh('graphify', ['install', '--project', '--platform', 'claude'], { cwd: ws, env });
       sh('graphify', ['claude', 'install'], { cwd: ws, env });
       base.pathPrefix = [w.gfBin];
-      base.bashAllow = GF_BASH;
+      base.toolPaths = [w.gfBin, GF_VENV, path.join(SCRATCH, 'tool-home', 'graphify')];
       base.reset = () => { for (const f of ['last_query_stamp', 'hook_sessions']) fs.rmSync(path.join(ws, 'graphify-out', 'cache', f), { recursive: true, force: true }); };
     } else if (arm === 'CR') {
       const env = { ...process.env, HOME: home, PATH: `${w.crBin}:/usr/bin:/bin` };
@@ -270,10 +291,15 @@ async function setupArm(arm: string, root: string, files: string[], it: Item, w:
       if (!uvx && !own) throw new Error(`unexpected code-review-graph MCP entry ${JSON.stringify(m)}`);
       base.mcp = { name: 'code-review-graph', command: path.join(w.crBin, 'code-review-graph'), args: ['serve'], env: {}, denyTools: DENY_TOOLS.crg };
       base.pathPrefix = [w.crBin];
+      base.toolPaths = [w.crBin, CR_VENV, path.join(SCRATCH, 'tool-home', 'code-review-graph'), path.join(os.homedir(), '.cache', 'huggingface')];
     }
     base.build_ms = Math.round(performance.now() - t0);
     base.files = setupFiles(ws);
     base.reset();
+    // The setup is committed, as in a repository where the tool is set up: git status is clean in every arm, and
+    // every run's changes (Bash can write in the workspace) are found and undone with git (E11-D01).
+    sh('git', ['add', '-A'], { cwd: ws, env: GIT_ENV });
+    if (sh('git', ['status', '--porcelain'], { cwd: ws })) sh('git', ['-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'tool setup'], { cwd: ws, env: GIT_ENV });
     base.state = wsState(ws);
     return base;
   } catch (e) {
@@ -359,6 +385,7 @@ function mockSteps(arm: string, it: Item, mcp: McpServerSpec | null): MockStep[]
   return [
     ...(mcp ? [{ tool: 'mcp:auto', input: { $fill: 'where is this implemented' } } as MockStep] : []),
     ...(arm === 'GF' ? [{ tool: 'Bash', input: { command: 'graphify query "where is this implemented"' } } as MockStep] : []),
+    { tool: 'Bash', input: { command: `grep -rln "${(s0 ?? 'x').split('.').pop()}" . | head -3; echo x > mock-write.txt; cat ~/.claude/CLAUDE.md 2>&1 | head -1` } },
     { tool: 'Grep', input: { pattern: (s0 ?? 'x').split('.').pop()! } },
     { tool: 'Read', input: { file_path: f0 } },
     { structured: final },
@@ -408,6 +435,9 @@ async function main() {
   const mcpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'exp11-mcp-'));
   const wrappers = writeWrappers();
   await initLanguages();
+  // Preflight: the Bash sandbox must work on this machine (bubblewrap + socat; E11-D01), else nothing runs.
+  const pre = spawnSync('bwrap', ['--unshare-user', '--unshare-net', '--ro-bind', '/', '/', 'true'], { encoding: 'utf8' });
+  if (pre.status !== 0 || /Operation not permitted/.test(pre.stderr) || spawnSync('which', ['socat']).status !== 0) throw new Error(`Bash sandbox unavailable (bwrap: ${pre.stderr.trim().slice(0, 200)}; socat ${spawnSync('which', ['socat']).status === 0 ? 'ok' : 'missing'})`);
   const units = [...new Set(items.map((i) => i.unit))].filter((u) => pending(u).length);
   log(`${RUN}: ${TASK} ${SET}, ${units.length} unit(s) with pending runs, ${plan.length - done.size} run(s) pending, ${WORKERS} workers`);
 
@@ -441,22 +471,25 @@ async function main() {
           const safe = p.run_id.replace(/[^A-Za-z0-9_.-]+/g, '_') + (attempt > 1 ? `_try${attempt}` : '');
           let mockSrv: Awaited<ReturnType<typeof startMockServer>> | null = null;
           let usageLimited = false;
+          let runTmp: string | null = null;
           try {
             su.reset(); // every run starts like a new session: no hook counters or query stamps from earlier runs
             if (MOCK) {
               const limited = (process.env.EXP11_MOCK_LIMIT_ACCOUNTS ?? '').split(',').includes(acctName);
               mockSrv = await startMockServer({ logFile: path.join(OUT, 'transcripts', `${safe}.mock.jsonl`), policy: limited ? { kind: 'fault', status: 429, error_type: 'rate_limit_error', message: 'Claude AI usage limit reached|resets 9pm' } : { kind: 'scripted', steps: mockSteps(p.arm, it, su.mcp) } });
             }
+            runTmp = fs.mkdtempSync('/tmp/x11-'); // short: the sandbox's bridge sockets live under TMPDIR (socket paths are limited to ~100 bytes)
             const pathEnv = [...su.pathPrefix, path.dirname(CLAUDE_BIN), path.dirname(process.execPath), '/usr/local/bin', '/usr/bin', '/bin'].join(':');
             const spec = buildClaudeCommand({
               protocol: 'agentic', profile: 'project-oauth', model: MODEL, cwd: su.ws, mcp: su.mcp, systemPrompt: TASK_SYSTEM_PROMPT[TASK], jsonSchema: TASK === 'T3' ? T3_SCHEMA : ANSWER_SCHEMA,
               mcpConfigPath: path.join(mcpDir, `${safe}.json`), mockUrl: mockSrv?.url, maxTurns: MAX_TURNS, maxBudgetUsd: runUsd, effort: EFFORT, billing: 'subscription', baseEnv: acct?.env,
-              bashAllow: su.bashAllow, path: pathEnv, extraEnv: { ...su.extraEnv, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_NOSYSTEM: '1' }, claudeBin: CLAUDE_BIN,
+              sandbox: sandboxFor(su.ws, runTmp, su.toolPaths), path: pathEnv, claudeBin: CLAUDE_BIN,
+              extraEnv: { ...su.extraEnv, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_NOSYSTEM: '1', TMPDIR: runTmp, PYTHONDONTWRITEBYTECODE: '1' },
               // Positive control of the leak check (mock only): user-level settings, CLAUDE.md and skills switched back on.
               ...(MOCK && process.env.EXP11_POSITIVE_CONTROL === '1' ? { extraArgs: ['--setting-sources', 'user,project,local'] } : {}),
             });
             let mismatch: string[] = [];
-            const tools = [...PROJECT_TOOLS, ...(su.bashAllow.length ? ['Bash'] : [])];
+            const tools = [...PROJECT_TOOLS, 'Bash'];
             const r = await runClaude(spec, it.prompt, { run_id: p.run_id, task_id: it.id, condition: `exp11:${TASK}:${p.arm}`, repeat: p.repeat, model: MODEL, workspace_hash: sha(su.ws).slice(0, 12) }, {
               guard: pool.guard(acctName), timeoutMs: TIMEOUT_S * 1000, transcriptPath: path.join(OUT, 'transcripts', `${safe}.jsonl`),
               onInit: (init) => {
@@ -467,6 +500,13 @@ async function main() {
               },
               shouldAbort: () => halted,
             });
+            // Fail closed: a run in which Bash was not sandboxed stops the experiment (failIfUnavailable should prevent it).
+            const unsandboxed = /Sandbox disabled|WITHOUT sandboxing|Sandboxing is disabled|Sandbox is enabled but failed|Refusing to start without a working sandbox/;
+            if (unsandboxed.test(r.detail.stderr_tail ?? '') || unsandboxed.test(r.raw)) {
+              append('excluded.jsonl', { run_id: p.run_id, item: it.id, arm: p.arm, attempt, account: label(acctName), excluded: 'infra_error:sandbox', excluded_kind: 'infra_error', retryable: false, detail: 'Bash sandbox not active' });
+              halted = `Bash sandbox not active in ${p.run_id}`; log(halted); break;
+            }
+            const changed = wsChanges(su.ws);
             const ps = parseStreamJson(r.raw);
             const raw = ps.result?.structured_output ?? ps.lastStructured ?? null;
             const oc = r.outcome;
@@ -495,6 +535,7 @@ async function main() {
               mcp_calls: calls.filter((c) => c.name.startsWith('mcp__')).map((c) => c.name.split('__').pop()),
               files_read: new Set(calls.filter((c) => c.name === 'Read').map((c) => String(c.input?.file_path ?? ''))).size,
               answer: TASK === 'T3' ? parseT3Answer(raw) : parseAnswer(raw), score, claude_version: version, mock: MOCK, setup_build_ms: su.build_ms,
+              workspace_changes: changed.slice(0, 20), workspace_changed: changed.length,
             };
             append('runs.jsonl', rec); done.add(p.run_id);
             log(`w${w} ${p.run_id} [${label(acctName)}] ${rec.status} turns=${rec.turns} tok=${rec.total_tokens} used=${toolUse} ${TASK === 'T3' ? '' : `primary=${(score as any).primary?.toFixed(2)}`}`);
@@ -507,8 +548,10 @@ async function main() {
             if (++infraStreak >= 3 * WORKERS) { halted = 'repeated infrastructure errors'; break; }
           } finally {
             await mockSrv?.close();
+            if (runTmp) fs.rmSync(runTmp, { recursive: true, force: true });
+            wsRestore(su.ws);
             su.reset();
-            if (wsState(su.ws) !== su.state) { halted = `workspace modified during ${p.run_id}`; log(halted); }
+            if (wsState(su.ws) !== su.state) { halted = `workspace could not be restored after ${p.run_id}`; log(halted); }
           }
           if (usageLimited) continue;
         }

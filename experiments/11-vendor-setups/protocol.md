@@ -136,7 +136,7 @@ runs with `scripts/exp11/setup_check.py`.
     skills, no memory marker and nothing on the private-pattern list reached the model.
   - The positive control, user-level settings switched on, detected all four kinds.
 - **Setups delivered, no crossover:** checked per arm in the same mock runs (instructions, skill listing, hook text, MCP
-  tool, Bash only in graphify's arm).
+  tool, Bash in every arm, sandboxed: see E11-D01).
 - **Hook state reset** before every run (graphify's stamps and counters, TypeTrace's query stamp and counters).
 - **TypeTrace versions.** 0.3.0 shipped the setup on npm on 2026-11-20. 0.3.1 changes only the MCP Registry name, so
   the TS arm's setup is 0.3.0's.

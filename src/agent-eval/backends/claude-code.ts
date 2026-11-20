@@ -90,6 +90,11 @@ export interface ClaudeCommandOpts {
    * bashAllow is given, Bash limited to those permission patterns (e.g. "Bash(graphify query:*)").
    */
   bashAllow?: string[];
+  /**
+   * Profile 'project-oauth': Claude Code's Bash sandbox settings (sandbox.* in settings.json). When given, Bash is a
+   * normal tool in every arm and runs sandboxed (bubblewrap; reads, writes and network as configured).
+   */
+  sandbox?: Record<string, unknown>;
   /** Profile 'project-oauth': PATH of the child (pinned tool installs first). Default: the parent's. */
   path?: string;
   /** Profile 'project-oauth': extra variables for the child, which its hooks and MCP servers inherit (e.g. TYPETRACE_CACHE). */
@@ -200,7 +205,7 @@ export function buildClaudeCommand(o: ClaudeCommandOpts): ClaudeCommand {
   else a.push('--safe-mode');
   if (!project) a.push('--disable-slash-commands');
   a.push('--strict-mcp-config', '--mcp-config', mcpPath);
-  a.push('--settings', project ? JSON.stringify({ permissions: { blockReadsOutsideWorkingDirectories: true, ...(o.bashAllow?.length ? { allow: o.bashAllow } : {}) } }) : BLOCK_READS_SETTINGS);
+  a.push('--settings', project ? JSON.stringify({ permissions: { blockReadsOutsideWorkingDirectories: true, ...(o.bashAllow?.length ? { allow: o.bashAllow } : {}) }, ...(o.sandbox ? { sandbox: o.sandbox } : {}) }) : BLOCK_READS_SETTINGS);
   if (project) a.push('--append-system-prompt', o.systemPrompt ?? AGENT_SYSTEM_PROMPT);
   else a.push('--system-prompt', o.systemPrompt ?? (agentic ? AGENT_SYSTEM_PROMPT : SINGLE_SHOT_SYSTEM_PROMPT));
   a.push('--system-prompt-snapshot', 'off');
@@ -210,10 +215,10 @@ export function buildClaudeCommand(o: ClaudeCommandOpts): ClaudeCommand {
   if (o.effort) a.push('--effort', o.effort);
   a.push('--permission-mode', 'dontAsk', '--permission-prompts', 'none');
   if (agentic && project) {
-    const bash = o.bashAllow?.length ? ['Bash'] : [];
+    const bash = o.sandbox || o.bashAllow?.length ? ['Bash'] : [];
     const mcpAllow = mcp ? [mcpToolPattern(mcp.name)] : [];
     a.push('--tools', [...PROJECT_TOOLS, ...bash].join(','));
-    a.push('--allowedTools', [...PROJECT_TOOLS, ...(o.bashAllow ?? []), ...mcpAllow].join(','));
+    a.push('--allowedTools', [...PROJECT_TOOLS, ...(o.sandbox ? ['Bash'] : o.bashAllow ?? []), ...mcpAllow].join(','));
     a.push('--disallowedTools', [...PROJECT_DENIED_TOOLS, ...(bash.length ? [] : ['Bash']), ...(mcp?.denyTools ?? []).map((t) => `mcp__${mcp!.name}__${t}`)].join(','));
   } else if (agentic) {
     const pol = toolPolicy('agentic', mcp);

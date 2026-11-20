@@ -27,17 +27,29 @@ fs.writeFileSync(path.join(ws, '.claude/settings.json'), JSON.stringify(hooks));
 fs.writeFileSync(path.join(ws, 'm.py'), 'def add(a, b):\n    return a + b\n');
 const log = path.join(root, 'mock.jsonl');
 const sandbox = { enabled: true, autoAllowBashIfSandboxed: true, allowUnsandboxedCommands: false, filesystem: { denyRead: ['/home', '/tmp', '/root', '/var/tmp', '/mnt', '/media'], allowRead: [ws], allowWrite: [ws] }, network: { allowedDomains: [] } };
-const settings: any = { permissions: { blockReadsOutsideWorkingDirectories: true, allow: ['Bash(echo:*)'] } };
+const runTmp = path.join(root, 'tmp');
+const sandboxC = { enabled: true, failIfUnavailable: true, autoAllowBashIfSandboxed: true, allowUnsandboxedCommands: false,
+  filesystem: { denyRead: [os.homedir(), '/tmp', '/var/tmp', '/root', '/mnt', '/media'], allowRead: [ws], allowWrite: [runTmp] },
+  network: { allowedDomains: [] } };
+const settings: any = variant === 'C' ? { permissions: { blockReadsOutsideWorkingDirectories: true }, sandbox: sandboxC } : { permissions: { blockReadsOutsideWorkingDirectories: true, allow: ['Bash(echo:*)'] } };
 if (variant === 'A') Object.assign(settings, hooks);
 const srv = await startMockServer({ logFile: log, policy: { kind: 'scripted', steps: [
   { tool: 'Bash', input: { command: `cat ${sib}/SIBLING_SECRET.txt; ls ${os.homedir()}/.claude | head -3; echo BASH_RAN` } },
+  ...(variant === 'C' ? [
+    { tool: 'Bash', input: { command: `echo PROBE_ECHO_OK; grep -rn "def add" . | head -2` } },
+    { tool: 'Bash', input: { command: `echo x > ${ws}/written.txt; echo WRITE_EXIT=$?` } },
+    { tool: 'Bash', input: { command: `mkdir -p ${ws}/graphify-out/cache && echo y > ${ws}/graphify-out/cache/stamp && echo CACHE_WRITE_OK` } },
+    { tool: 'Bash', input: { command: `curl -s -m 5 https://example.com >/dev/null; echo NET_EXIT=$?` } },
+    { tool: 'Bash', input: { command: `cat ${os.homedir()}/.claude/CLAUDE.md | head -1; echo HOME_READ_EXIT=$?` } },
+  ] as any[] : []),
   { tool: 'Read', input: { file_path: `${sib}/SIBLING_SECRET.txt` } },
   { tool: 'Grep', input: { pattern: 'SIBLING_MARKER', path: sib } },
   { tool: 'Read', input: { file_path: path.join(ws, 'm.py') } },
   { structured: { summary: 'probe', locations: [{ file: 'm.py', symbol: 'add' }] } },
 ] } });
-const env: Record<string, string> = { PATH: `${path.dirname(BIN)}:${path.resolve('vendor/socat/root/usr/bin')}:/usr/bin:/bin`, HOME: os.homedir(), LANG: 'C.UTF-8', ...ISOLATION_ENV, ANTHROPIC_BASE_URL: srv.url, ANTHROPIC_API_KEY: DUMMY_API_KEY, TMPDIR: path.join(root, 'tmp') };
+const env: Record<string, string> = { PATH: `${path.dirname(BIN)}:/usr/bin:/bin`, HOME: os.homedir(), LANG: 'C.UTF-8', ...ISOLATION_ENV, ANTHROPIC_BASE_URL: srv.url, ANTHROPIC_API_KEY: DUMMY_API_KEY, TMPDIR: process.env.PROBE_LONG_TMP ? path.join(root, 'tmp', 'x'.repeat(90)) : path.join(root, 'tmp') };
 fs.mkdirSync(env.TMPDIR, { recursive: true });
+if (process.env.PROBE_LONG_TMP) console.error('NEGATIVE TEST: TMPDIR too long for sandbox sockets');
 delete (env as any).CLAUDE_CODE_DISABLE_CLAUDE_MDS;
 const mcp = path.join(root, 'mcp.json'); fs.writeFileSync(mcp, JSON.stringify({ mcpServers: {} }));
 const args = ['-p', '--output-format', 'stream-json', '--verbose', '--no-session-persistence', '--model', 'claude-haiku-5-5',
@@ -45,7 +57,7 @@ const args = ['-p', '--output-format', 'stream-json', '--verbose', '--no-session
   '--strict-mcp-config', '--mcp-config', mcp, '--settings', JSON.stringify(settings),
   '--append-system-prompt', 'TASK_PROMPT_MARKER', '--json-schema', JSON.stringify({ type: 'object', properties: { summary: { type: 'string' }, locations: { type: 'array' } }, required: ['summary', 'locations'] }),
   '--max-turns', '10', '--permission-mode', 'dontAsk', '--permission-prompts', 'none',
-  '--tools', 'Read,Grep,Glob,Bash,Skill', '--allowedTools', 'Read,Grep,Glob,Skill,Bash(echo:*)', '--disallowedTools', 'Edit,Write,NotebookEdit,WebFetch,WebSearch,Task,Agent,TodoWrite'];
+  '--tools', 'Read,Grep,Glob,Bash,Skill', '--allowedTools', variant === 'C' ? 'Read,Grep,Glob,Skill,Bash' : 'Read,Grep,Glob,Skill,Bash(echo:*)', '--disallowedTools', 'Edit,Write,NotebookEdit,WebFetch,WebSearch,Task,Agent,TodoWrite'];
 // async: the mock server runs in this process, so a blocking spawn would starve it
 const r = await new Promise<{ status: number | null; stdout: string; stderr: string }>((resolve) => {
   const c = spawn(BIN, [...args, '--', 'find add'], { cwd: ws, env, stdio: ['ignore', 'pipe', 'pipe'] });
@@ -69,6 +81,7 @@ console.log(JSON.stringify({
   owner_claude_md_lines_leaked: ownerMd.filter((l) => reqs.includes(l.trim())).length, owner_md_lines: ownerMd.length,
   owner_skills_leaked: ownerSkills.filter((s) => reqs.includes(`"${s}"`) || reqs.includes(`- ${s}:`) || reqs.includes(`${s}:`)).slice(0, 8),
   sibling_marker_reached_model: reqs.includes('SIBLING_MARKER_7731'), bash_ran: reqs.includes('BASH_RAN'),
+  workspace_written: fs.existsSync(path.join(ws, 'written.txt')), refused: /Refusing to start without a working sandbox|failIfUnavailable/.test(r.stderr + r.stdout), unsandboxed_ran: /Sandboxing is disabled|failed to initialize/.test(r.stdout), sandbox_warning: /Sandbox disabled|WITHOUT sandboxing/.test(r.stderr),
   tool_results: results,
 }, null, 1));
 if (variant === 'B' && process.argv.includes('--write-builtins') && init) {

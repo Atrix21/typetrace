@@ -9,6 +9,7 @@ Reads every request the agent sent to the mock server (transcripts/*.mock.jsonl)
    memory markers, nothing matching the private-pattern list. Matches are counted, never printed.
 2. Setup delivered: each arm's own instructions, skill listing and hook text reach the model.
 3. No crossover: no arm's request carries another arm's instructions, skill or hook text.
+4. Bash: offered in every arm, sandboxed (the mock's attempt to read the owner's CLAUDE.md finds nothing).
 Exit status 1 on any failure. With --positive-control the leak detectors must FIRE (for a run made with isolation off).
 """
 import glob, json, os, re, sys
@@ -98,7 +99,9 @@ for f in sorted(glob.glob(os.path.join(RUN, 'transcripts', '*.mock.jsonl'))):
         r['mcp_tool'] = any(t.get('name', '').startswith('mcp__') for b in reqs for t in (b.get('tools') or []))
         if not r['mcp_tool'] and not POSITIVE: fail = True; r.setdefault('FAIL', 'no MCP tool offered')
     r['bash_tool'] = any(t.get('name') == 'Bash' for b in reqs for t in (b.get('tools') or []))
-    if not POSITIVE and r['bash_tool'] != (arm == 'GF'): fail = True; r.setdefault('FAIL', 'Bash offered outside GF' if r['bash_tool'] else 'Bash missing in GF')
+    if not POSITIVE and not r['bash_tool']: fail = True; r.setdefault('FAIL', 'Bash missing (every arm has sandboxed Bash, E11-D01)')
+    # The mock's Bash step tries to read the owner's CLAUDE.md: the sandbox must hide it (counted by the leak detectors above).
+    r['sandbox_hid_home'] = 'No such file or directory' in allt and r['owner_claude_md_lines'] == 0
     report[base] = r
 print(json.dumps(report, indent=1))
 print('FAIL' if fail else 'OK')
