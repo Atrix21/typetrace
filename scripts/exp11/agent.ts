@@ -164,19 +164,15 @@ function snapshot(it: Item): { root: string; files: string[] } {
   return { root, files: sourceFiles(root, ['']) };
 }
 
-const MANIFESTS = ['README.md', 'README.rst', 'README', 'setup.py', 'setup.cfg', 'pyproject.toml', 'package.json', 'tsconfig.json', 'Cargo.toml', 'go.mod', 'pom.xml', 'build.gradle', 'composer.json', 'Gemfile', 'CMakeLists.txt', 'Makefile'];
 const GIT_ENV = { ...process.env, GIT_AUTHOR_NAME: 'dev', GIT_AUTHOR_EMAIL: 'dev@localhost', GIT_COMMITTER_NAME: 'dev', GIT_COMMITTER_EMAIL: 'dev@localhost', GIT_AUTHOR_DATE: '2026-01-01T00:00:00Z', GIT_COMMITTER_DATE: '2026-01-01T00:00:00Z' };
-/** The corpus files plus top-level manifests, as a git repository with one commit (no history, no ground truth). */
-function makeWorkspace(root: string, files: string[], key: string): string {
+/** The whole repository at the issue's commit (E11-D02: as a user has it, docs and configuration included), as a git
+ *  repository with one commit (no history, no ground truth). */
+function makeWorkspace(root: string, _files: string[], key: string): string {
   const parent = path.join(WORK_ROOT, opaqueId(key, RUN));
   const dir = path.join(parent, 'app');
   fs.rmSync(parent, { recursive: true, force: true });
-  for (const f of [...files, ...MANIFESTS]) {
-    const src = path.join(root, f);
-    if (!fs.existsSync(src) || !fs.statSync(src).isFile()) continue;
-    fs.mkdirSync(path.dirname(path.join(dir, f)), { recursive: true });
-    fs.copyFileSync(src, path.join(dir, f));
-  }
+  fs.mkdirSync(parent, { recursive: true });
+  sh('cp', ['-a', root + '/.', dir]);
   sh('git', ['init', '-q', '-b', 'main'], { cwd: dir, env: GIT_ENV });
   // Claude Code shows the git user in its context: a neutral one, never the owner's global identity.
   sh('git', ['config', 'user.name', 'dev'], { cwd: dir }); sh('git', ['config', 'user.email', 'dev@localhost'], { cwd: dir });

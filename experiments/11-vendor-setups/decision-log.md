@@ -45,3 +45,15 @@ Changes after the protocol was frozen (2026-11-20, before the pilot). None yet.
   - **Run state when changed.** The pilot had started under the old design and was stopped while building the first
     issue's indexes, with no run scored. It restarts from the beginning.
   - **Not changed.** Tasks, ground truth, arms, prompts, scoring and analysis.
+
+- **E11-D02 (2026-11-20, before any scored run): each workspace is the whole repository.**
+  - **Before.** As in experiment 10, workspaces held only the indexed source files plus top-level manifests. A user's
+    repository also has docs, configuration and data files. graphify's setup is built around more than code, and some
+    SWE-QA reference answers cite docs, so removing them could handicap graphify on its own task (T3).
+  - **Change.** Every arm's workspace is the full `git archive` of the repository at the item's commit, still with no
+    history and no ground truth.
+  - **Not changed.** The ground truth and the corpus each tool indexes (each tool's own file selection). Every arm sees
+    the same files.
+  - **Still not done.** graphify's optional LLM pass for documents, papers and images. It needs an API key, and
+    graphify states that it does not change code nodes. graphify's graph is built with its own `graphify update .`
+    (AST, no LLM), as its hooks rebuild it.
