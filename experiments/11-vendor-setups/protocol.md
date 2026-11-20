@@ -1,8 +1,7 @@
-# Experiment 11: each tool as its vendor ships it, on each tool's own kind of task (DRAFT, not frozen)
+# Experiment 11: each tool as its vendor ships it, on each tool's own kind of task
 
-Status: draft for the owner's review. Nothing here runs until the owner approves the protocol, the harness passes its
-checks, the code is frozen and the owner gives the go. It starts only after experiment 10 has finished (one heavy job
-at a time).
+Status: approved by the owner on 2026-11-20 and frozen before the pilot (the commit that adds this line). Changes after
+the freeze go to `decision-log.md`.
 
 ## Why
 
@@ -50,7 +49,7 @@ vendor's installer adds.
 |---|---|---|
 | G0 | none | Claude Code's base tools only. The baseline. |
 | TT | TypeTrace as it ships today (0.2.0) | `typetrace init`: the index plus the MCP entry in `.mcp.json`. It writes no skill, no instructions and no hooks. |
-| TS | TypeTrace 0.3.0, the release that adds a Claude Code setup | `typetrace init` with default options: the same index and MCP entry, plus a CLAUDE.md block, one skill and a soft PreToolUse hook, under the rules below. |
+| TS | TypeTrace 0.3.0 (setup unchanged in 0.3.1), the release that adds a Claude Code setup | `typetrace init` with default options: the same index and MCP entry, plus a CLAUDE.md block, one skill and a soft PreToolUse hook, under the rules below. |
 | GF | graphify, the release current at the freeze (0.9.113 on 2026-11-20) | Its two documented Claude Code steps with default options: `graphify install --platform claude` (the skill and a line in the user-level CLAUDE.md) and `graphify claude install` (the project CLAUDE.md section and its PreToolUse and SessionStart hooks). This setup has no MCP server: the skill, the instructions and the hooks direct the agent to graphify's command line through Bash. Graph built by `graphify .` (code only: the LLM pass covers documents, needs an API key, and does not change code nodes). |
 | CR | code-review-graph, the release current at the freeze (2.4.0 on 2026-11-20) | `code-review-graph install --platform claude-code -y`: the MCP entry, the instruction block in CLAUDE.md, its four skills, its PostToolUse and SessionStart hooks, and its git hooks. Graph built by `build`, with embeddings as in experiments 8 and 10. |
 
@@ -60,7 +59,7 @@ vendor's installer adds.
 |---|---|---|---|
 | GF | project CLAUDE.md section (198 words), user CLAUDE.md line (29 words), skill description (50 words) | skill body, 6,508 words, plus 8 reference files | PreToolUse on Bash/Grep and Read/Glob: a soft nudge, at most 5 per session and agent, none after the first while a query is under 30 minutes old; SessionStart on compaction resets the count |
 | CR | CLAUDE.md block (308 words), 4 skill descriptions (about 10 words each) | 4 skill bodies, 173 to 220 words each | PostToolUse on Edit/Write rebuilds the graph; SessionStart prints the graph status. No nudge (that is the non-default `--steering`) |
-| TS (draft, `cd2b2fa`) | CLAUDE.md block (146 words), skill description (41 words) | skill body, 288 words | PreToolUse on Grep/Glob/Read and search commands in Bash: graphify's mechanism and cap; a 49-word nudge (graphify's is about 55) |
+| TS (0.3.0) | CLAUDE.md block (146 words), skill description (41 words) | skill body, 288 words | PreToolUse on Grep/Glob/Read and search commands in Bash: graphify's mechanism and cap; a 49-word nudge (graphify's is about 55) |
 
 **Adapting the captured setups to the run** (the only changes; each is mechanical and applied to every arm alike):
 - Commands are pointed at the pinned installs: graphify's hooks name the absolute path of whichever `graphify` was
@@ -100,6 +99,47 @@ vendor's installer adds.
   the whole run (E10-D05).
 - **No sensitivity arms** (decided by the owner on 2026-11-20). graphify's `--strict`, which denies Read and Grep
   until the graph has been queried, and code-review-graph's `--steering` are not their defaults and are not run.
+
+## Harness, as built and checked before the pilot (2026-11-20)
+
+These points settle details the draft left open. They are fixed before any agent run, and each is checked in mock
+runs with `scripts/exp11/setup_check.py`.
+
+- **Loading the setups:** Claude Code runs with `--setting-sources project`. Each workspace's own CLAUDE.md,
+  `.claude/skills/` and `.claude/settings.json` hooks load; user-level ones never do. Reads outside the workspace are
+  blocked (`permissions.blockReadsOutsideWorkingDirectories`). `scripts/exp11/probe_isolation.ts` verified each point.
+- **Installers run in each workspace.** The real installers run in every workspace, with a throwaway HOME (TypeTrace
+  0.3.1 from this repository, graphify 0.9.113 and code-review-graph 2.4.0 from pinned virtual environments). graphify
+  installs its skill at project scope (`graphify install --project`), its documented option. The hashes of every file
+  each installer wrote are recorded in `setups.jsonl`.
+- **Bash.** Claude Code's Bash sandbox cannot start on this machine: Ubuntu's AppArmor restricts unprivileged user
+  namespaces, and lifting that needs root. So no arm runs arbitrary commands.
+  - In the graphify arm, Bash is allowed only for the commands graphify's setup tells the agent to run: `graphify query`,
+    `path`, `explain` and `section`. They only read the graph.
+  - Every other arm has no Bash tool. Read, Grep and Glob are in every arm.
+  - Each tool keeps its own interface: MCP for TypeTrace and code-review-graph, the command line for graphify.
+- **Tool homes.** graphify and code-review-graph always run through wrappers with their own HOME. This applies to
+  their installers, their hooks and graphify's command line. graphify's command line otherwise reads `~/.claude/skills`
+  and refreshes old copies of its skill there.
+- **Pinned commands.**
+  - code-review-graph's installer writes `uvx code-review-graph serve`, or `<its python> -m code_review_graph serve`
+    when uvx is absent. Both are replaced by the pinned install.
+  - Its write-capable MCP tools stay denied, as in experiments 8 and 10.
+  - TypeTrace's MCP entry is used as written.
+- **Prompts.** The task instructions are appended to Claude Code's own system prompt, as a user's would be. They name no
+  tool and do not ask the agent to use one; experiment 10's instruction to use the MCP tool first is gone. Steering is
+  left to the setups. The prompts and schemas are in `scripts/exp11/prompts.ts`.
+- **No owner data.**
+  - Claude Code shows the git user in its context, so each workspace has a neutral git identity and the global git
+    configuration is hidden.
+  - In mock runs of all three tasks and all five arms, no line of the owner's CLAUDE.md files, none of the owner's
+    skills, no memory marker and nothing on the private-pattern list reached the model.
+  - The positive control, user-level settings switched on, detected all four kinds.
+- **Setups delivered, no crossover:** checked per arm in the same mock runs (instructions, skill listing, hook text, MCP
+  tool, Bash only in graphify's arm).
+- **Hook state reset** before every run (graphify's stamps and counters, TypeTrace's query stamp and counters).
+- **TypeTrace versions.** 0.3.0 shipped the setup on npm on 2026-11-20. 0.3.1 changes only the MCP Registry name, so
+  the TS arm's setup is 0.3.0's.
 
 ## Isolation and setup checks (before any billable run)
 
@@ -284,6 +324,7 @@ Decided:
   - no sensitivity arms;
   - SWE-QA only, without the ERPNext questions.
 
-Still open:
-1. **The TS release:** the TS setup ships in `typetrace-cli` 0.3.0, published by the release workflow (trusted
-   publishing). The setup text goes to the owner for review before the release.
+- 2026-11-20: the owner approved the TS setup, the 0.3.0 release, the pilot and the main run ("do all of it").
+  0.3.0 was released the same day.
+
+Nothing is open. The sample sizes follow from the pilot by the rule above.
