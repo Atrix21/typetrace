@@ -168,6 +168,8 @@ function makeWorkspace(root: string, files: string[], key: string): string {
     fs.copyFileSync(src, path.join(dir, f));
   }
   sh('git', ['init', '-q', '-b', 'main'], { cwd: dir, env: GIT_ENV });
+  // Claude Code shows the git user in its context: a neutral one, never the owner's global identity.
+  sh('git', ['config', 'user.name', 'dev'], { cwd: dir }); sh('git', ['config', 'user.email', 'dev@localhost'], { cwd: dir });
   sh('git', ['add', '-A'], { cwd: dir, env: GIT_ENV });
   sh('git', ['-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'snapshot'], { cwd: dir, env: GIT_ENV });
   return dir;
@@ -261,8 +263,11 @@ async function setupArm(arm: string, root: string, files: string[], it: Item, w:
       sh('code-review-graph', ['embed', '--repo', ws], { cwd: ws, env });
       sh('code-review-graph', ['install', '--platform', 'claude-code', '-y', '--repo', ws], { cwd: ws, env });
       const m = JSON.parse(fs.readFileSync(path.join(ws, '.mcp.json'), 'utf8')).mcpServers['code-review-graph'];
-      if (m.command !== 'uvx' || JSON.stringify(m.args) !== JSON.stringify(['code-review-graph', 'serve'])) throw new Error(`unexpected code-review-graph MCP entry ${JSON.stringify(m)}`);
-      // `uvx code-review-graph serve` would download the latest release at run time: the pinned install instead.
+      // The installer writes `uvx code-review-graph serve` when uvx is on the PATH (it would download the latest release at
+      // run time), else its own interpreter (`<python> -m code_review_graph serve`). Either way: the pinned install, via the wrapper.
+      const uvx = m.command === 'uvx' && JSON.stringify(m.args) === JSON.stringify(['code-review-graph', 'serve']);
+      const own = /python[0-9.]*$/.test(String(m.command)) && JSON.stringify(m.args) === JSON.stringify(['-m', 'code_review_graph', 'serve']);
+      if (!uvx && !own) throw new Error(`unexpected code-review-graph MCP entry ${JSON.stringify(m)}`);
       base.mcp = { name: 'code-review-graph', command: path.join(w.crBin, 'code-review-graph'), args: ['serve'], env: {}, denyTools: DENY_TOOLS.crg };
       base.pathPrefix = [w.crBin];
     }
@@ -372,7 +377,7 @@ async function main() {
   if (ONLY) items = items.filter((i) => ONLY.includes(i.id));
   const runUsd = Number(arg('run-usd', '1'));
   const pool = new AccountPool(ACCOUNTS, runUsd, Number(arg('max-usd', '0.01')));
-  const version = claudeVersion();
+  const version = claudeVersion(CLAUDE_BIN); // the pinned copy (E10-D05), not whatever `claude` is on the PATH
   if (!MOCK && version !== BUILTINS.claude_code_version) throw new Error(`Claude Code ${version} is not the pinned ${BUILTINS.claude_code_version}`);
   const config = { set: SET, task: TASK, n: N, arms: ARMS, model: MODEL, effort: EFFORT, repeats: REPEATS, max_turns: MAX_TURNS, items: items.map((i) => i.id), claude_version: version, mock: MOCK, accounts: ACCOUNTS.map(label), system_prompt_sha: sha(TASK_SYSTEM_PROMPT[TASK]).slice(0, 16), schema_sha: sha(JSON.stringify(TASK === 'T3' ? T3_SCHEMA : ANSWER_SCHEMA)).slice(0, 16) };
   const planFile = path.join(OUT, 'plan.json');
@@ -446,7 +451,9 @@ async function main() {
             const spec = buildClaudeCommand({
               protocol: 'agentic', profile: 'project-oauth', model: MODEL, cwd: su.ws, mcp: su.mcp, systemPrompt: TASK_SYSTEM_PROMPT[TASK], jsonSchema: TASK === 'T3' ? T3_SCHEMA : ANSWER_SCHEMA,
               mcpConfigPath: path.join(mcpDir, `${safe}.json`), mockUrl: mockSrv?.url, maxTurns: MAX_TURNS, maxBudgetUsd: runUsd, effort: EFFORT, billing: 'subscription', baseEnv: acct?.env,
-              bashAllow: su.bashAllow, path: pathEnv, extraEnv: su.extraEnv, claudeBin: CLAUDE_BIN,
+              bashAllow: su.bashAllow, path: pathEnv, extraEnv: { ...su.extraEnv, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_NOSYSTEM: '1' }, claudeBin: CLAUDE_BIN,
+              // Positive control of the leak check (mock only): user-level settings, CLAUDE.md and skills switched back on.
+              ...(MOCK && process.env.EXP11_POSITIVE_CONTROL === '1' ? { extraArgs: ['--setting-sources', 'user,project,local'] } : {}),
             });
             let mismatch: string[] = [];
             const tools = [...PROJECT_TOOLS, ...(su.bashAllow.length ? ['Bash'] : [])];
@@ -454,7 +461,9 @@ async function main() {
               guard: pool.guard(acctName), timeoutMs: TIMEOUT_S * 1000, transcriptPath: path.join(OUT, 'transcripts', `${safe}.jsonl`),
               onInit: (init) => {
                 const m = checkInit(init, { mcp: su.mcp, model: MODEL, version, mock: MOCK, billing: 'subscription', project: { tools, skills: [...ARM_SKILLS[p.arm], ...BUILTINS.skills], slash: [...ARM_SKILLS[p.arm], ...BUILTINS.slash_commands] } });
-                mismatch = m.details; return m.categories.length ? m.categories.join(',') : null;
+                mismatch = m.details;
+                if (MOCK && process.env.EXP11_POSITIVE_CONTROL === '1') return null; // let the request-level detector see the leak
+                return m.categories.length ? m.categories.join(',') : null;
               },
               shouldAbort: () => halted,
             });

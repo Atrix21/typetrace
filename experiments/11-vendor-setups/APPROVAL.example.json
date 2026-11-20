@@ -1,0 +1,147 @@
+{
+ "approved_by": "repository owner (chat approval; quote withheld)",
+ "approved_at": "<ISO time of the owner's go>",
+ "_scope": "Experiment 11: Claude Code agents with each vendor's setup (G0, TT, TS, GF, CR) on T1/T2/T3, Haiku 5.5; T3 judged by Sonnet 5.5. Two subscription logins in order, login1 then login2, the second only when the first hits its usage limit. Dollar caps are list-price runaway guards over spend-ledger.jsonl.",
+ "approvals": [
+  {
+   "_stage": "pilot",
+   "protocol": "agentic",
+   "conditions": "*",
+   "model": "claude-haiku-5-5",
+   "split": "pilot:T1",
+   "billing": "subscription",
+   "account": "<name of login1>",
+   "max_total_usd": 100
+  },
+  {
+   "_stage": "pilot",
+   "protocol": "agentic",
+   "conditions": "*",
+   "model": "claude-haiku-5-5",
+   "split": "pilot:T1",
+   "billing": "subscription",
+   "account": "<name of login2>",
+   "max_total_usd": 100
+  },
+  {
+   "_stage": "pilot",
+   "protocol": "agentic",
+   "conditions": "*",
+   "model": "claude-haiku-5-5",
+   "split": "pilot:T2",
+   "billing": "subscription",
+   "account": "<name of login1>",
+   "max_total_usd": 100
+  },
+  {
+   "_stage": "pilot",
+   "protocol": "agentic",
+   "conditions": "*",
+   "model": "claude-haiku-5-5",
+   "split": "pilot:T2",
+   "billing": "subscription",
+   "account": "<name of login2>",
+   "max_total_usd": 100
+  },
+  {
+   "_stage": "pilot",
+   "protocol": "agentic",
+   "conditions": "*",
+   "model": "claude-haiku-5-5",
+   "split": "pilot:T3",
+   "billing": "subscription",
+   "account": "<name of login1>",
+   "max_total_usd": 100
+  },
+  {
+   "_stage": "pilot",
+   "protocol": "agentic",
+   "conditions": "*",
+   "model": "claude-haiku-5-5",
+   "split": "pilot:T3",
+   "billing": "subscription",
+   "account": "<name of login2>",
+   "max_total_usd": 100
+  },
+  {
+   "_stage": "main",
+   "protocol": "agentic",
+   "conditions": "*",
+   "model": "claude-haiku-5-5",
+   "split": "main:T1",
+   "billing": "subscription",
+   "account": "<name of login1>",
+   "max_total_usd": 300
+  },
+  {
+   "_stage": "main",
+   "protocol": "agentic",
+   "conditions": "*",
+   "model": "claude-haiku-5-5",
+   "split": "main:T1",
+   "billing": "subscription",
+   "account": "<name of login2>",
+   "max_total_usd": 300
+  },
+  {
+   "_stage": "main",
+   "protocol": "agentic",
+   "conditions": "*",
+   "model": "claude-haiku-5-5",
+   "split": "main:T2",
+   "billing": "subscription",
+   "account": "<name of login1>",
+   "max_total_usd": 300
+  },
+  {
+   "_stage": "main",
+   "protocol": "agentic",
+   "conditions": "*",
+   "model": "claude-haiku-5-5",
+   "split": "main:T2",
+   "billing": "subscription",
+   "account": "<name of login2>",
+   "max_total_usd": 300
+  },
+  {
+   "_stage": "main",
+   "protocol": "agentic",
+   "conditions": "*",
+   "model": "claude-haiku-5-5",
+   "split": "main:T3",
+   "billing": "subscription",
+   "account": "<name of login1>",
+   "max_total_usd": 300
+  },
+  {
+   "_stage": "main",
+   "protocol": "agentic",
+   "conditions": "*",
+   "model": "claude-haiku-5-5",
+   "split": "main:T3",
+   "billing": "subscription",
+   "account": "<name of login2>",
+   "max_total_usd": 300
+  },
+  {
+   "_stage": "T3 key facts and judging",
+   "protocol": "single_shot",
+   "conditions": "*",
+   "model": "claude-sonnet-5-5",
+   "split": "t3-judge",
+   "billing": "subscription",
+   "account": "<name of login1>",
+   "max_total_usd": 60
+  },
+  {
+   "_stage": "T3 key facts and judging",
+   "protocol": "single_shot",
+   "conditions": "*",
+   "model": "claude-sonnet-5-5",
+   "split": "t3-judge",
+   "billing": "subscription",
+   "account": "<name of login2>",
+   "max_total_usd": 60
+  }
+ ]
+}

@@ -777,6 +777,8 @@ export async function runClaude(spec: ClaudeCommand, prompt: string, meta: RunMe
 export interface SingleShotOptions {
   /** Explicit mock server URL (`MockServer.url`); mock mode is never read from ANTHROPIC_BASE_URL. */ mockUrl?: string;
   runUsd?: number; profile?: ProfileName; maxTotalUsd?: number; split?: string; concurrency?: number; timeoutMs?: number; guard?: BillableGuard;
+  /** Structured-output schema of every call (default: the diagnosis schema of experiment 2). */
+  jsonSchema?: object;
   effort?: string; billing?: Billing;
   /** Claude Code account name (approval) and its child base environment (`resolveAccount(...).env`). */
   account?: string; baseEnv?: NodeJS.ProcessEnv;
@@ -850,7 +852,7 @@ export function claudeSingleShot(model: string, opts: SingleShotOptions = {}): S
         }
       });
       const runOne = async (it: SingleShotItem, attempt: number): Promise<'ok' | 'retry' | 'stop'> => {
-        const spec = buildClaudeCommand({ protocol: 'single_shot', profile, model, cwd: scratch, systemPrompt: it.system, mockUrl, mcpConfigPath: path.join(workDir, 'empty-mcp.json'), effort: opts.effort, billing: opts.billing, baseEnv: opts.baseEnv, maxBudgetUsd: opts.runUsd, claudeBin: process.env.AGENT_EVAL_CLAUDE_BIN });
+        const spec = buildClaudeCommand({ protocol: 'single_shot', profile, model, cwd: scratch, systemPrompt: it.system, mockUrl, mcpConfigPath: path.join(workDir, 'empty-mcp.json'), jsonSchema: opts.jsonSchema, effort: opts.effort, billing: opts.billing, baseEnv: opts.baseEnv, maxBudgetUsd: opts.runUsd, claudeBin: process.env.AGENT_EVAL_CLAUDE_BIN });
         const tag = crypto.createHash('sha1').update(it.id).digest('hex').slice(0, 12);
         inflight.add(it.id);
         try {
