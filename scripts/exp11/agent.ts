@@ -62,6 +62,8 @@ const ACCOUNTS = arg('accounts', MOCK ? 'mock' : '')!.split(',').filter(Boolean)
 const label = (n: string) => `login${ACCOUNTS.indexOf(n) + 1}`;
 const WORKERS = Number(arg('workers', '2'));
 const MIN_FREE_GB = Number(arg('min-free-gb', '4'));
+const RUN_MIN_FREE_GB = Number(arg('run-min-free-gb', '4'));
+const BUILD_MIN_FREE_GB = Number(arg('build-min-free-gb', '6'));
 const ONLY = arg('only')?.split(',');
 const TIMEOUT_S = Number(arg('timeout-s', '900'));
 const MAX_TURNS = 40;
@@ -467,6 +469,8 @@ async function main() {
       await initLanguages(grammarLanguages(files));
       const index = TASK === 'T3' ? null : new SymbolIndex(root, files);
       await serialBuild(async () => {
+        // E11-D04: an index build (graph + GPU embedding) needs headroom; wait for it rather than run the machine out.
+        while (memFreeGb() < BUILD_MIN_FREE_GB && !halted) { log(`w${w} ${unit}: waiting for ${BUILD_MIN_FREE_GB} GB free before the index builds`); await sleep(30_000); }
         for (const arm of ARMS.filter((a) => todo.some((p: any) => p.arm === a))) {
           log(`w${w} ${unit}: ${arm} setup (${files.length} files)`);
           setups[arm] = await setupArm(arm, root, files, unitItems[0], wrappers);
@@ -489,6 +493,7 @@ async function main() {
           let runTmp: string | null = null;
           let initSkills: { skills: string[]; slash: string[] } | null = null;
           try {
+            while (memFreeGb() < RUN_MIN_FREE_GB && !halted) await sleep(15_000); // E11-D04: a run's MCP server loads an embedding model
             su.reset(); // every run starts like a new session: no hook counters or query stamps from earlier runs
             if (MOCK) {
               const limited = (process.env.EXP11_MOCK_LIMIT_ACCOUNTS ?? '').split(',').includes(acctName);
@@ -531,13 +536,15 @@ async function main() {
             const ps = parseStreamJson(r.raw);
             const raw = ps.result?.structured_output ?? ps.lastStructured ?? null;
             const oc = r.outcome;
+            // An MCP server that did not start (e.g. killed when memory ran out) is infrastructure, not a wrong setup.
+            const mcpStartOnly = oc.status === 'init_mismatch' && /mcp_not_connected/.test(oc.reason ?? '') && (oc.reason ?? '').split(',').every((c) => ['mcp_not_connected', 'missing_tool'].includes(c.trim()));
             if (oc.status === 'infra_error' || oc.status === 'init_mismatch' || oc.status === 'aborted') {
-              const ex = { run_id: p.run_id, item: it.id, arm: p.arm, attempt, account: label(acctName), excluded: oc.status === 'infra_error' ? `infra_error:${oc.infra_kind}` : oc.status, excluded_kind: oc.status, retryable: oc.status !== 'init_mismatch', detail: [oc.reason, ...mismatch, oc.text].filter(Boolean).join(' | ').slice(0, 600), cost_ledger_usd: r.cost.ledger };
+              const ex = { run_id: p.run_id, item: it.id, arm: p.arm, attempt, account: label(acctName), excluded: mcpStartOnly ? 'infra_error:mcp_start' : oc.status === 'infra_error' ? `infra_error:${oc.infra_kind}` : oc.status, excluded_kind: mcpStartOnly ? 'infra_error' : oc.status, retryable: mcpStartOnly || oc.status !== 'init_mismatch', detail: [oc.reason, ...mismatch, oc.text].filter(Boolean).join(' | ').slice(0, 600), cost_ledger_usd: r.cost.ledger };
               append('excluded.jsonl', ex); excl.push(ex);
               if (oc.infra_kind === 'limit') { pool.exhausted(acctName, oc.text ?? oc.reason ?? 'limit'); usageLimited = true; attempt--; continue; }
               log(`w${w} ${p.run_id} EXCLUDED ${ex.excluded} ${ex.detail.slice(0, 200)}`);
               if (oc.infra_kind === 'auth') { halted = `auth (${label(acctName)}): ${(oc.text ?? oc.reason ?? '').slice(0, 200)}`; break; }
-              if (oc.status === 'init_mismatch') { halted = `init mismatch: ${mismatch.join('; ')}`; break; }
+              if (oc.status === 'init_mismatch' && !mcpStartOnly) { halted = `init mismatch: ${mismatch.join('; ')}`; break; }
               if (oc.status !== 'aborted' && ++infraStreak >= 3 * WORKERS) { halted = 'repeated infrastructure errors'; break; }
               continue;
             }

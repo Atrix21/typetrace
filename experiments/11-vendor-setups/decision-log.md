@@ -73,3 +73,19 @@ Changes after the protocol was frozen (2026-11-20, before the pilot). None yet.
     only when the timeout stopped the process, so Claude Code can linger before it writes the result, not only after.
     The 15 s grace now starts when the answer is accepted ("Structured output provided successfully"). SIGTERM then
     makes Claude Code write its result and exit, so the run is scored instead of being lost to a timeout.
+
+- **E11-D04 (2026-11-20, during the pilot): memory.**
+  - **What happened.** At 18:40 IST the machine ran out of memory. At that moment one worker was embedding django on
+    the GPU, the other was running a TypeTrace session (its MCP server loads its own embedding model), an unrelated
+    package test was running, and the owner had other work open. The kernel killed django's index build (retried) and
+    processes in the owner's terminals. A TypeTrace MCP server then failed to start, which was recorded as an
+    `init_mismatch` and halted the pilot at 138/300 T1 runs. No scored run was lost.
+  - **Changes:**
+    - An index build waits for 6 GB of free memory, and each run for 4 GB (before, only the start of an item was
+      gated).
+    - The runner's processes have `oom_score_adj` 700, so the kernel kills them before the owner's sessions.
+    - An MCP server that fails to start is a retryable infrastructure failure (`infra_error:mcp_start`) and no longer
+      halts the run.
+  - **Record corrected.** The one record of this kind in `pilot-T1/excluded.jsonl` was reclassified (backup kept
+    outside the repository).
+  - **No effect on what the agent sees, or on scoring.**
