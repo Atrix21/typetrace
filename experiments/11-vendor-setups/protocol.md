@@ -138,7 +138,16 @@ whose fix changes **at least 2 non-test files** (decided by the owner on 2026-11
   - test files, by the path rule of experiments 5 and 8;
   - repositories too large to index within the per-issue time budget. The cap is set from index build times
     measured in preparation and frozen before sampling. Experiment 3 indexed 763k lines; microsoft/vscode is the
-    likely exclusion.
+    likely exclusion;
+  - very large changes: a ground truth of more than 30 functions or more than 10 files. Such a change is a refactor
+    or a feature, not a place to find, and every arm would score near 0. An example is a trino instance with 303
+    functions in 34 files. The bounds are fixed from the ground-truth distribution alone, before any run.
+- **Scripts:**
+  - `scripts/exp11/select_pool.py` freezes the seeded order (`pool-order.json`: 1,400 instances, 639 Python, 327
+    TypeScript, 342 JavaScript and 92 Java);
+  - `scripts/exp11/prepare_pool.ts` derives the ground truth along that order. It reproduced experiment 8's frozen
+    ground truth exactly on 8 of 8 gson instances checked;
+  - `assign_pool.py` (to write) applies the caps and assigns the pilots, T1 and T2.
 - **Sampling:**
   - stratified by language (Python, TypeScript, JavaScript, Java), aiming at equal shares;
   - at most 15% of a task's items from one repository;
@@ -180,7 +189,10 @@ whose fix changes **at least 2 non-test files** (decided by the owner on 2026-11
   - SWE-QA (v2, ACL 2026 Findings): 720 human-checked question and answer pairs from 15 Python repositories,
     balanced across What, Why, Where and How questions;
   - Apache-2.0 licence (Hugging Face `swe-qa/SWE-QA-Benchmark`, checked 2026-11-20);
-  - the repositories are pinned to the commits the dataset used;
+  - the repositories are pinned to the commits the dataset used, from the authors' `repo_commit.txt`
+    (github.com/peng-weihan/SWE-QA-Bench at commit c13deac). Dataset revision f048f07 on Hugging Face; file hashes
+    recorded;
+  - the reference answers are long (median 261 words), so key facts are many per question;
   - graphify's own six ERPNext questions are not added (decided by the owner on 2026-11-20: too few to test, and
     one more large repository to index for every arm).
 - **Prompt:** the question. The answer is free text plus the code locations it relies on.
@@ -190,6 +202,9 @@ whose fix changes **at least 2 non-test files** (decided by the owner on 2026-11
   - **Judge:** Claude Sonnet 5.5 (not the agent's model) marks each key fact as covered or not. It sees the
     question, the facts and the answer, never the arm.
   - **Judge reliability:** a random 10% of answers is judged twice, and the agreement is reported.
+- **Secondary score:** SWE-QA's own judge prompt, from the authors' `llm-as-a-judge.py`. It rates correctness,
+  completeness and three more dimensions against the reference answer, 1 to 20 each. The prompt is unchanged, but the
+  judge is Claude Sonnet 5.5 instead of the authors' GPT-5.
 - **Disclosure:** this is the only task scored by an LLM judge. Our earlier experiments avoided judges. T3 uses one
   because it is graphify's own scoring and the task has no exact ground truth.
 

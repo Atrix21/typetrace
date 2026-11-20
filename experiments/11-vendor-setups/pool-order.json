@@ -1,0 +1,5623 @@
+{
+ "seed": 20261120,
+ "sources_sha256": {
+  ".cache/exp11/swebench-full.json": "070c1ad8afc7e349ae66b95ddac2e821ccd10e8182ec118b87144b3548fcc1fe",
+  ".cache/exp11/polybench.json": "ff3de059f62b07c123ce366b9df6a52bac8193afa9bbe4bb46f2b33b9f2976d9",
+  ".cache/exp11/full-test.parquet": "db4f70ef735b3162c74801ddcdf8d7bae8d704193788c6d844f898c20b571cbb",
+  ".cache/exp11/polybench-test.parquet": "d2d5f7969318ff34ee2427bfeddddd7ffc14539ef3bd7af5346a4f9500cc688d"
+ },
+ "dropped": {
+  "lite": 300,
+  "multilingual": 4,
+  "under 2 source files": 2700,
+  "other language": 0
+ },
+ "counts": {
+  "Python": 639,
+  "TypeScript": 327,
+  "JavaScript": 342,
+  "Java": 92
+ },
+ "order": [
+  {
+   "id": "huggingface__transformers-27663",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-36971",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1137",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apolloconfig__apollo-4207",
+   "language": "Java"
+  },
+  {
+   "id": "sphinx-doc__sphinx-7854",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-21192",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-630",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__gson-2345",
+   "language": "Java"
+  },
+  {
+   "id": "psf__requests-1776",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-26772",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-3804",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-7532",
+   "language": "Java"
+  },
+  {
+   "id": "sphinx-doc__sphinx-7557",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-20235",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1112",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-2707",
+   "language": "Java"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-13221",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-14638",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-7280",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-3479",
+   "language": "Java"
+  },
+  {
+   "id": "pydata__xarray-7112",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-159031",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5314",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-748",
+   "language": "Java"
+  },
+  {
+   "id": "sphinx-doc__sphinx-10807",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-23701",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-709",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-6401",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-12508",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-24213",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-3507",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-5865",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-16735",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-34207",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-6345",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__gson-2549",
+   "language": "Java"
+  },
+  {
+   "id": "huggingface__transformers-26568",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-20691",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6427",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-657",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-14170",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-26576",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5509",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-5037",
+   "language": "Java"
+  },
+  {
+   "id": "matplotlib__matplotlib-24691",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-33974",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-3442",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-3437",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-16745",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-20538",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-987",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-7563",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-14996",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-142119",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6429",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-8414",
+   "language": "Java"
+  },
+  {
+   "id": "pydata__xarray-3631",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-37855",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-2065",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-1193",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-11030",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-136347",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-3811",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-2226",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-16263",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-33873",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5579",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-2768",
+   "language": "Java"
+  },
+  {
+   "id": "sphinx-doc__sphinx-7593",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-12236",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-6000",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-7938",
+   "language": "Java"
+  },
+  {
+   "id": "sphinx-doc__sphinx-10021",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-20376",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-2083",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-767",
+   "language": "Java"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-11585",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-150411",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5029",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-1174",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-14894",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-23364",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1811",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-4660",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-12556",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-19724",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-6293",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__gson-1904",
+   "language": "Java"
+  },
+  {
+   "id": "matplotlib__matplotlib-14623",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-33777",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1148",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-5507",
+   "language": "Java"
+  },
+  {
+   "id": "matplotlib__matplotlib-19553",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13931",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-605",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-5138",
+   "language": "Java"
+  },
+  {
+   "id": "pydata__xarray-3159",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13828",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6612",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__gson-2498",
+   "language": "Java"
+  },
+  {
+   "id": "pydata__xarray-6548",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-12406",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-750",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-6755",
+   "language": "Java"
+  },
+  {
+   "id": "matplotlib__matplotlib-19743",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-12378",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-493",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-5633",
+   "language": "Java"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-13628",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-18824",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1384",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-6074",
+   "language": "Java"
+  },
+  {
+   "id": "sympy__sympy-19201",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-26186",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5898",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-1417",
+   "language": "Java"
+  },
+  {
+   "id": "pytest-dev__pytest-9956",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-166372",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-3435",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apolloconfig__apollo-4199",
+   "language": "Java"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-10427",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-33312",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-10065",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-5945",
+   "language": "Java"
+  },
+  {
+   "id": "sympy__sympy-22098",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-17640",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-6051",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apolloconfig__apollo-4119",
+   "language": "Java"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-13392",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-18153",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-9743",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__guava-3971",
+   "language": "Java"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-25969",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-38182",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1936",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-4379",
+   "language": "Java"
+  },
+  {
+   "id": "huggingface__transformers-29589",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-20406",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-8826",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__gson-2476",
+   "language": "Java"
+  },
+  {
+   "id": "sympy__sympy-13682",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13582",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-4830",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-799",
+   "language": "Java"
+  },
+  {
+   "id": "sphinx-doc__sphinx-7462",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-20403",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1926",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-5008",
+   "language": "Java"
+  },
+  {
+   "id": "astropy__astropy-13417",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-16597",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-738",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-4678",
+   "language": "Java"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-7760",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-34138",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5688",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__gson-2420",
+   "language": "Java"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8599",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-11313",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-4860",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-3317",
+   "language": "Java"
+  },
+  {
+   "id": "sphinx-doc__sphinx-9654",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-25428",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-2847",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-6455",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-10989",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-108634",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-3792",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__gson-2060",
+   "language": "Java"
+  },
+  {
+   "id": "pytest-dev__pytest-5254",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-32185",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-2003",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-4129",
+   "language": "Java"
+  },
+  {
+   "id": "sympy__sympy-13624",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-37615",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-4069",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__guava-5696",
+   "language": "Java"
+  },
+  {
+   "id": "keras-team__keras-19284",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-38100",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-3515",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-7455",
+   "language": "Java"
+  },
+  {
+   "id": "keras-team__keras-4739",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-24205",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-597",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-6522",
+   "language": "Java"
+  },
+  {
+   "id": "yt-dlp__yt-dlp-1649",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-33797",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-2736",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-5834",
+   "language": "Java"
+  },
+  {
+   "id": "langchain-ai__langchain-5609",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-30515",
+   "language": "TypeScript"
+  },
+  {
+   "id": "mrdoob__three.js-24219",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-3638",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-16315",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13082",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1982",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__guava-3191",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-14372",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-36024",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-3812",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__gson-2214",
+   "language": "Java"
+  },
+  {
+   "id": "pydata__xarray-3095",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13138",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1364",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-2801",
+   "language": "Java"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-13974",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-20133",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-7277",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-1090",
+   "language": "Java"
+  },
+  {
+   "id": "pydata__xarray-3114",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15676",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-4522",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-1872",
+   "language": "Java"
+  },
+  {
+   "id": "matplotlib__matplotlib-20470",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-14266",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-464",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__gson-2435",
+   "language": "Java"
+  },
+  {
+   "id": "pylint-dev__pylint-6528",
+   "language": "Python"
+  },
+  {
+   "id": "tailwindlabs__tailwindcss-188",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-14317",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-3590",
+   "language": "Java"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-13618",
+   "language": "Python"
+  },
+  {
+   "id": "tailwindlabs__tailwindcss-774",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-567",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-1742",
+   "language": "Java"
+  },
+  {
+   "id": "keras-team__keras-19844",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-109608",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-3534",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__gson-2178",
+   "language": "Java"
+  },
+  {
+   "id": "matplotlib__matplotlib-26469",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-32913",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-9736",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-8032",
+   "language": "Java"
+  },
+  {
+   "id": "huggingface__transformers-13495",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-18796",
+   "language": "TypeScript"
+  },
+  {
+   "id": "mrdoob__three.js-23796",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-3093",
+   "language": "Java"
+  },
+  {
+   "id": "astropy__astropy-7441",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-23174",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1942",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-3881",
+   "language": "Java"
+  },
+  {
+   "id": "sympy__sympy-13441",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-129066",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1586",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__gson-2376",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-16311",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13499",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-3888",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-4600",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-12441",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-19612",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-4293",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__gson-2410",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-13212",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-34477",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-2189",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-3859",
+   "language": "Java"
+  },
+  {
+   "id": "pallets__flask-4642",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-161597",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-4863",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-4521",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-13671",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-182669",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-3775",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__gson-2167",
+   "language": "Java"
+  },
+  {
+   "id": "yt-dlp__yt-dlp-4524",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13483",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-6518",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-11420",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-13207",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-14212",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-8675",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-5706",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-13589",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13067",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5662",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-7420",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-10301",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-18141",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1899",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-5062",
+   "language": "Java"
+  },
+  {
+   "id": "matplotlib__matplotlib-24538",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-34548",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1930",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-4122",
+   "language": "Java"
+  },
+  {
+   "id": "sympy__sympy-18477",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15851",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1052",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-1584",
+   "language": "Java"
+  },
+  {
+   "id": "matplotlib__matplotlib-23742",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-25874",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-3762",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-3013",
+   "language": "Java"
+  },
+  {
+   "id": "keras-team__keras-18649",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13719",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-3700",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-6577",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-12062",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-33621",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-7327",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__gson-1832",
+   "language": "Java"
+  },
+  {
+   "id": "sympy__sympy-22080",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-26181",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-3647",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-3771",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-15087",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-25390",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-806",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-1804",
+   "language": "Java"
+  },
+  {
+   "id": "psf__requests-1635",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-20475",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1298",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__gson-2556",
+   "language": "Java"
+  },
+  {
+   "id": "pytest-dev__pytest-10893",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-20781",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1929",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-8029",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-13606",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-110094",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-661",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-741",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-14313",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-25883",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1448",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apolloconfig__apollo-4464",
+   "language": "Java"
+  },
+  {
+   "id": "pytest-dev__pytest-10442",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-14121",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1935",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-3725",
+   "language": "Java"
+  },
+  {
+   "id": "sympy__sympy-22773",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-12026",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-1378",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-516",
+   "language": "Java"
+  },
+  {
+   "id": "sympy__sympy-18200",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-25547",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5640",
+   "language": "JavaScript"
+  },
+  {
+   "id": "google__guava-3560",
+   "language": "Java"
+  },
+  {
+   "id": "sympy__sympy-21952",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-20377",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6580",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-4763",
+   "language": "Java"
+  },
+  {
+   "id": "sphinx-doc__sphinx-9828",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-39353",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-2714",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-6498",
+   "language": "Java"
+  },
+  {
+   "id": "huggingface__transformers-17053",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-128337",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-4925",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-8051",
+   "language": "Java"
+  },
+  {
+   "id": "pylint-dev__pylint-6412",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-30560",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-15926",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-13869",
+   "language": "Java"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8120",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-16399",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-4088",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-7544",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-13121",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-146076",
+   "language": "TypeScript"
+  },
+  {
+   "id": "mrdoob__three.js-21532",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__rocketmq-5286",
+   "language": "Java"
+  },
+  {
+   "id": "django__django-16366",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-174074",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1309",
+   "language": "JavaScript"
+  },
+  {
+   "id": "trinodb__trino-5661",
+   "language": "Java"
+  },
+  {
+   "id": "pylint-dev__pylint-6937",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-97440",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-7007",
+   "language": "JavaScript"
+  },
+  {
+   "id": "apache__dubbo-5356",
+   "language": "Java"
+  },
+  {
+   "id": "huggingface__transformers-23223",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-26791",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1401",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-13806",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-19614",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-4303",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-13344",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-17422",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-14688",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pylint-dev__pylint-7097",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-11793",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1493",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pydata__xarray-5126",
+   "language": "Python"
+  },
+  {
+   "id": "coder__code-server-6278",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-2983",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-12458",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-26623",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-5837",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-14805",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-37118",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-2565",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-11532",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-17304",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-4097",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-15085",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-36401",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-4854",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pytest-dev__pytest-7648",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-165197",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1464",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-18116",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15839",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-2989",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pytest-dev__pytest-7046",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-8227",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-606",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pylint-dev__pylint-8281",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-12968",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1988",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-30772",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-26746",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-2099",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-9459",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-18165",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-6133",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-16143",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13686",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-2062",
+   "language": "JavaScript"
+  },
+  {
+   "id": "astropy__astropy-12825",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-145178",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6608",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-16088",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-21460",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5299",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8362",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13452",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1529",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-7351",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-37465",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-3186",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-14641",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-10965",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-3775",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-13530",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-123019",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-9850",
+   "language": "JavaScript"
+  },
+  {
+   "id": "matplotlib__matplotlib-25779",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-12881",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-15831",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pydata__xarray-4510",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15581",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1228",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-12821",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-158371",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-14081",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8058",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13848",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-4372",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-17251",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-156733",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-2111",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-12198",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-131947",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1049",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-14779",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-158493",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-501",
+   "language": "JavaScript"
+  },
+  {
+   "id": "yt-dlp__yt-dlp-5933",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-24253",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-897",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-13841",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-33812",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-416",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-10306",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-33863",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1169",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pylint-dev__pylint-4551",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-171570",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-7838",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-14935",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-17691",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6574",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-14067",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-33994",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1190",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-11916",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-24309",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-4398",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-28522",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13494",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-16691",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pytest-dev__pytest-7985",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-19901",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-11941",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-14564",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-18897",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-15408",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-13436",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-162083",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-4590",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8674",
+   "language": "Python"
+  },
+  {
+   "id": "coder__code-server-3277",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-6808",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-10483",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-163970",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-13268",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-14024",
+   "language": "Python"
+  },
+  {
+   "id": "coder__code-server-4923",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6528",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pylint-dev__pylint-5136",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13233",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-3350",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-12161",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-16628",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-12260",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-11206",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-35410",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1149",
+   "language": "JavaScript"
+  },
+  {
+   "id": "psf__requests-1339",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-11446",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-477",
+   "language": "JavaScript"
+  },
+  {
+   "id": "astropy__astropy-12842",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-12415",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-7322",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pytest-dev__pytest-7122",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15864",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1018",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-11503",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-11858",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6314",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pytest-dev__pytest-8463",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-25784",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1315",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pydata__xarray-4683",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-19319",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1210",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-12784",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-17600",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-2136",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-16256",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-29630",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1357",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-10910",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-17680",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-2922",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-12928",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-133363",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-3529",
+   "language": "JavaScript"
+  },
+  {
+   "id": "mwaskom__seaborn-3187",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-37908",
+   "language": "TypeScript"
+  },
+  {
+   "id": "mrdoob__three.js-17649",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-14464",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-14350",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-5657",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pylint-dev__pylint-4604",
+   "language": "Python"
+  },
+  {
+   "id": "coder__code-server-6225",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1498",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-15135",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-130088",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-4798",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-12682",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-14282",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-4279",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-11605",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-106767",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-6216",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pydata__xarray-3305",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-39679",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-6749",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-15052",
+   "language": "Python"
+  },
+  {
+   "id": "coder__code-server-5633",
+   "language": "TypeScript"
+  },
+  {
+   "id": "mrdoob__three.js-17894",
+   "language": "JavaScript"
+  },
+  {
+   "id": "matplotlib__matplotlib-25129",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-19072",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1477",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-15596",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-23902",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6570",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-15625",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15495",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-2520",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-15948",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-18032",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-5616",
+   "language": "JavaScript"
+  },
+  {
+   "id": "psf__requests-2678",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-145244",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-11920",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-7590",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-177084",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-5519",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-11400",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15644",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5785",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-14248",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-28813",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-6653",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-16302",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-14305",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-3430",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-11384",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-23299",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-2499",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-7234",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-12168",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-778",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-29675",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-16850",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6395",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-29300",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-11585",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5082",
+   "language": "JavaScript"
+  },
+  {
+   "id": "matplotlib__matplotlib-21238",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13003",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-560",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-14430",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-122991",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-3150",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-14898",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-26173",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1932",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-10577",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15430",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-755",
+   "language": "JavaScript"
+  },
+  {
+   "id": "astropy__astropy-13132",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-12969",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-4596",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-13301",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-38544",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-4146",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-12798",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-16137",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5994",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-13199",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-39297",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-747",
+   "language": "JavaScript"
+  },
+  {
+   "id": "matplotlib__matplotlib-26399",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-173362",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1231",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-25752",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15360",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-1702",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-11823",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-29023",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-7118",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-13236",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-18285",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1974",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-12983",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-26807",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1050",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-16759",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13853",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1934",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-16952",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-41651",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-6996",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-11383",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15038",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-6711",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-17058",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-114129",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-8465",
+   "language": "JavaScript"
+  },
+  {
+   "id": "tensorflow__models-2727",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-20356",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-792",
+   "language": "JavaScript"
+  },
+  {
+   "id": "matplotlib__matplotlib-24013",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-24621",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-775",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pydata__xarray-5455",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-150615",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-2093",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pylint-dev__pylint-8929",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-18306",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-5986",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pydata__xarray-6135",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13899",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-6427",
+   "language": "JavaScript"
+  },
+  {
+   "id": "matplotlib__matplotlib-25479",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-159554",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5926",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-10554",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-177785",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-6657",
+   "language": "JavaScript"
+  },
+  {
+   "id": "astropy__astropy-8715",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-145322",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-3329",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-22236",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-29898",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-3315",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pydata__xarray-7444",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-17714",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-3125",
+   "language": "JavaScript"
+  },
+  {
+   "id": "astropy__astropy-13075",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-7444",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-2010",
+   "language": "JavaScript"
+  },
+  {
+   "id": "astropy__astropy-8251",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-34966",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-4701",
+   "language": "JavaScript"
+  },
+  {
+   "id": "matplotlib__matplotlib-25775",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-18768",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-10187",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-15766",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-20657",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-443",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-26242",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13389",
+   "language": "TypeScript"
+  },
+  {
+   "id": "mrdoob__three.js-14566",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8117",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-11941",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6525",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-17845",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-12075",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1312",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-15561",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-12874",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-3660",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pylint-dev__pylint-5175",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-142509",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6417",
+   "language": "JavaScript"
+  },
+  {
+   "id": "astropy__astropy-13477",
+   "language": "Python"
+  },
+  {
+   "id": "tailwindlabs__tailwindcss-463",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-600",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-13300",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-18744",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-3534",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pydata__xarray-5187",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-21051",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-6322",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-13091",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-39536",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-3622",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-12557",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-12570",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6759",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-16092",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-16069",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-7650",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-28115",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15170",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1428",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-14031",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-16467",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1925",
+   "language": "JavaScript"
+  },
+  {
+   "id": "mwaskom__seaborn-3216",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-132041",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-6272",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-13915",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-30899",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-5414",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-9053",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15266",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-3692",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-11883",
+   "language": "Python"
+  },
+  {
+   "id": "coder__code-server-3304",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5312",
+   "language": "JavaScript"
+  },
+  {
+   "id": "matplotlib__matplotlib-26341",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-26323",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-5835",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-23796",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-14465",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-2584",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-15629",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-17571",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-2809",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-18587",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-17892",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6149",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pytest-dev__pytest-8428",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-16004",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-4260",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-13195",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-12202",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-4382",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-30556",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-14461",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-7576",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pylint-dev__pylint-8898",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13534",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-676",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-16858",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15534",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-7110",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-16070",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-16397",
+   "language": "TypeScript"
+  },
+  {
+   "id": "mrdoob__three.js-18648",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-20139",
+   "language": "Python"
+  },
+  {
+   "id": "angular__angular-37484",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-8137",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-16810",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-17240",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-2133",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-27717",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-30706",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-931",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-13467",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13789",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-729",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-17271",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-168115",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-3737",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pydata__xarray-7052",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-19766",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-566",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-14802",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-35994",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-10910",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-10881",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-25259",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-812",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-10531",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15122",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1374",
+   "language": "JavaScript"
+  },
+  {
+   "id": "matplotlib__matplotlib-25547",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-155261",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-3355",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-12325",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-168788",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-599",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-16560",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-168738",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-5393",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-10213",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-12630",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5256",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-17066",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-16694",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-5934",
+   "language": "JavaScript"
+  },
+  {
+   "id": "yt-dlp__yt-dlp-9856",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-11987",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-4890",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-15703",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-25634",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-2187",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-11096",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-34455",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-3067",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pydata__xarray-3637",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-153761",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-852",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-13877",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-26555",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6990",
+   "language": "JavaScript"
+  },
+  {
+   "id": "astropy__astropy-13158",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-26098",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-9866",
+   "language": "JavaScript"
+  },
+  {
+   "id": "astropy__astropy-12891",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15097",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-4947",
+   "language": "JavaScript"
+  },
+  {
+   "id": "keras-team__keras-20002",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-36056",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-8381",
+   "language": "JavaScript"
+  },
+  {
+   "id": "keras-team__keras-19955",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-168744",
+   "language": "TypeScript"
+  },
+  {
+   "id": "mrdoob__three.js-18885",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-12869",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13726",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-11892",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-7906",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-27916",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-16567",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pylint-dev__pylint-5839",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-26470",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1243",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pydata__xarray-4827",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-14036",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-5607",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-10870",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-14882",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6414",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-13667",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-24782",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-2701",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pydata__xarray-7105",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-164719",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-5658",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-7374",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-20368",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-11637",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pydata__xarray-6971",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-26170",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-5840",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-16597",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-23229",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-3172",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-14011",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-23367",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-7102",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pylint-dev__pylint-8683",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-123293",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1017",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-15933",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15863",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6578",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-16864",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-24290",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-4576",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-13915",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-35178",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-733",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-7356",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13661",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-4754",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-12733",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-18286",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1627",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-15198",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-161649",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-4528",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-5470",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-29954",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-8777",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-12088",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-27998",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1420",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-16629",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15398",
+   "language": "TypeScript"
+  },
+  {
+   "id": "mrdoob__three.js-20478",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-16814",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-26460",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-14000",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-15563",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-36399",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1073",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-12185",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-37773",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1345",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pytest-dev__pytest-8447",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-16196",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5531",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pydata__xarray-5365",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-21370",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-2190",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-13279",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-17301",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6838",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-17764",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-128931",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1226",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-11359",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-20146",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5166",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-11281",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-12218",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1377",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-12396",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-29579",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1970",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-14030",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-11730",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-3130",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-13682",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-183368",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1376",
+   "language": "JavaScript"
+  },
+  {
+   "id": "astropy__astropy-7008",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-16275",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-6719",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-14026",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-20209",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-4960",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-14124",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-18154",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-8638",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8548",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-36426",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5840",
+   "language": "JavaScript"
+  },
+  {
+   "id": "yt-dlp__yt-dlp-3435",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-21226",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-7431",
+   "language": "JavaScript"
+  },
+  {
+   "id": "keras-team__keras-19937",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-18357",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1059",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-11311",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-34158",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-5442",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-10067",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-191090",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-947",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pydata__xarray-4758",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-11789",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6556",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-15666",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-15331",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-4636",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-22383",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-24017",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5686",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pydata__xarray-3733",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-33582",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-2009",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-15231",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-17139",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5982",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-12906",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-124514",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5728",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-15831",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-24968",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-8829",
+   "language": "JavaScript"
+  },
+  {
+   "id": "matplotlib__matplotlib-26078",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-166963",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-12584",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-13536",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-12303",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-4892",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-17046",
+   "language": "Python"
+  },
+  {
+   "id": "tailwindlabs__tailwindcss-116",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1516",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-12286",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-21992",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6494",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-14315",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-30118",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-4197",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-16056",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-17972",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-7648",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-10048",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13408",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-7862",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-15423",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-38167",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-5390",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-25102",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-23487",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1381",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-12748",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-29756",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-473",
+   "language": "JavaScript"
+  },
+  {
+   "id": "astropy__astropy-13073",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-28219",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-4390",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8278",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-166493",
+   "language": "TypeScript"
+  },
+  {
+   "id": "mrdoob__three.js-22566",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8075",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-140936",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-2096",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-12881",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-19278",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-9521",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-21586",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-123867",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1978",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-13371",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-25815",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-7859",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-16786",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-37392",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-853",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-15774",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-39962",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-705",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pydata__xarray-6798",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-18754",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-7067",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-13919",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-14023",
+   "language": "TypeScript"
+  },
+  {
+   "id": "prettier__prettier-13402",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-14463",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13430",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-2732",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-16142",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-146962",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-6244",
+   "language": "JavaScript"
+  },
+  {
+   "id": "matplotlib__matplotlib-25785",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-17019",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-1992",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-20136",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-13409",
+   "language": "TypeScript"
+  },
+  {
+   "id": "serverless__serverless-5956",
+   "language": "JavaScript"
+  },
+  {
+   "id": "keras-team__keras-18871",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-162399",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-6237",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-16474",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-18827",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-4300",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-18033",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-12100",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-889",
+   "language": "JavaScript"
+  },
+  {
+   "id": "astropy__astropy-14701",
+   "language": "Python"
+  },
+  {
+   "id": "microsoft__vscode-148635",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-7826",
+   "language": "JavaScript"
+  },
+  {
+   "id": "matplotlib__matplotlib-24604",
+   "language": "Python"
+  },
+  {
+   "id": "mui__material-ui-24794",
+   "language": "TypeScript"
+  },
+  {
+   "id": "sveltejs__svelte-835",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-15446",
+   "language": "Python"
+  },
+  {
+   "id": "prettier__prettier-13019",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-16322",
+   "language": "Python"
+  },
+  {
+   "id": "serverless__serverless-4192",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-29585",
+   "language": "Python"
+  },
+  {
+   "id": "sveltejs__svelte-2117",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-31095",
+   "language": "Python"
+  },
+  {
+   "id": "serverless__serverless-2434",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pytest-dev__pytest-7151",
+   "language": "Python"
+  },
+  {
+   "id": "sveltejs__svelte-4769",
+   "language": "JavaScript"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-13046",
+   "language": "Python"
+  },
+  {
+   "id": "serverless__serverless-6088",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-16037",
+   "language": "Python"
+  },
+  {
+   "id": "prettier__prettier-11461",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-14085",
+   "language": "Python"
+  },
+  {
+   "id": "prettier__prettier-16729",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-8437",
+   "language": "Python"
+  },
+  {
+   "id": "serverless__serverless-5970",
+   "language": "JavaScript"
+  },
+  {
+   "id": "pylint-dev__pylint-4492",
+   "language": "Python"
+  },
+  {
+   "id": "sveltejs__svelte-601",
+   "language": "JavaScript"
+  },
+  {
+   "id": "huggingface__transformers-27561",
+   "language": "Python"
+  },
+  {
+   "id": "prettier__prettier-7208",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-13001",
+   "language": "Python"
+  },
+  {
+   "id": "serverless__serverless-6057",
+   "language": "JavaScript"
+  },
+  {
+   "id": "django__django-14182",
+   "language": "Python"
+  },
+  {
+   "id": "serverless__serverless-3856",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sphinx-doc__sphinx-9261",
+   "language": "Python"
+  },
+  {
+   "id": "sveltejs__svelte-3170",
+   "language": "JavaScript"
+  },
+  {
+   "id": "tensorflow__models-4628",
+   "language": "Python"
+  },
+  {
+   "id": "prettier__prettier-6644",
+   "language": "JavaScript"
+  },
+  {
+   "id": "sympy__sympy-13903",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-9155",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-17239",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-20518",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-12855",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-6744",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-13265",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-16879",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-25515",
+   "language": "Python"
+  },
+  {
+   "id": "keras-team__keras-18852",
+   "language": "Python"
+  },
+  {
+   "id": "yt-dlp__yt-dlp-8917",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-12669",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-11596",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-12313",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-10207",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-14919",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-12091",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-4759",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-13250",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-12945",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-24870",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-12519",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-13549",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-15103",
+   "language": "Python"
+  },
+  {
+   "id": "astropy__astropy-14369",
+   "language": "Python"
+  },
+  {
+   "id": "astropy__astropy-13465",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-16657",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-7272",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-13983",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-12227",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-16597",
+   "language": "Python"
+  },
+  {
+   "id": "pallets__flask-4074",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-11539",
+   "language": "Python"
+  },
+  {
+   "id": "astropy__astropy-13933",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-6938",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-13286",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-11635",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-16514",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-11612",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-12364",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-13301",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-14207",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-24510",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-27463",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-14355",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-12472",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-3520",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-11818",
+   "language": "Python"
+  },
+  {
+   "id": "mwaskom__seaborn-3202",
+   "language": "Python"
+  },
+  {
+   "id": "pylint-dev__pylint-6556",
+   "language": "Python"
+  },
+  {
+   "id": "mwaskom__seaborn-2979",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-15316",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-13933",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-26472",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8028",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-13259",
+   "language": "Python"
+  },
+  {
+   "id": "mwaskom__seaborn-2457",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8539",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-15096",
+   "language": "Python"
+  },
+  {
+   "id": "astropy__astropy-8747",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-13236",
+   "language": "Python"
+  },
+  {
+   "id": "keras-team__keras-19799",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-13744",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-15031",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-21527",
+   "language": "Python"
+  },
+  {
+   "id": "pytest-dev__pytest-6186",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-11862",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8593",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-15028",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-5731",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-25793",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-16819",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-15828",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-18030",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-24849",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-11315",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-12671",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-15625",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-10680",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-31247",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-11298",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-7991",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-11754",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8551",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-25363",
+   "language": "Python"
+  },
+  {
+   "id": "pylint-dev__pylint-6386",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-13512",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-12406",
+   "language": "Python"
+  },
+  {
+   "id": "pytest-dev__pytest-8055",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-10904",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-12771",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-13678",
+   "language": "Python"
+  },
+  {
+   "id": "keras-team__keras-19459",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-12513",
+   "language": "Python"
+  },
+  {
+   "id": "pallets__flask-4575",
+   "language": "Python"
+  },
+  {
+   "id": "mwaskom__seaborn-2813",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-14471",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-21490",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-14631",
+   "language": "Python"
+  },
+  {
+   "id": "pytest-dev__pytest-8952",
+   "language": "Python"
+  },
+  {
+   "id": "psf__requests-2821",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-16631",
+   "language": "Python"
+  },
+  {
+   "id": "psf__requests-2617",
+   "language": "Python"
+  },
+  {
+   "id": "psf__requests-1944",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8771",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-25430",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-25551",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-20438",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-15586",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-12155",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-7374",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-17103",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-15108",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-10382",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-12108",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-21370",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-18198",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-16901",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-3239",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-11584",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-25859",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-3993",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-14727",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8481",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-7075",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-13013",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-7179",
+   "language": "Python"
+  },
+  {
+   "id": "psf__requests-2153",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-15421",
+   "language": "Python"
+  },
+  {
+   "id": "pylint-dev__pylint-4398",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-23198",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-11333",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-11991",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-16938",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-4184",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-13573",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-13744",
+   "language": "Python"
+  },
+  {
+   "id": "pytest-dev__pytest-5281",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8658",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-13097",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-6400",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-7562",
+   "language": "Python"
+  },
+  {
+   "id": "pytest-dev__pytest-8950",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-4911",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-12144",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-13989",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-26479",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-25744",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-12910",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-14385",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-7268",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-14019",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-13495",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-15473",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-8747",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-8554",
+   "language": "Python"
+  },
+  {
+   "id": "astropy__astropy-14907",
+   "language": "Python"
+  },
+  {
+   "id": "astropy__astropy-13398",
+   "language": "Python"
+  },
+  {
+   "id": "pytest-dev__pytest-8399",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-11232",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-12741",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-18765",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-16072",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-24257",
+   "language": "Python"
+  },
+  {
+   "id": "pytest-dev__pytest-5980",
+   "language": "Python"
+  },
+  {
+   "id": "astropy__astropy-14413",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-4819",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-15166",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-13884",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-16208",
+   "language": "Python"
+  },
+  {
+   "id": "pytest-dev__pytest-8124",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-26160",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-10774",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-11542",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-17340",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-9931",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-24431",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-4767",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-25027",
+   "language": "Python"
+  },
+  {
+   "id": "pytest-dev__pytest-9133",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-7831",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-21931",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-11808",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-15491",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-2922",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-6735",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-13157",
+   "language": "Python"
+  },
+  {
+   "id": "pylint-dev__pylint-8757",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-17273",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-15273",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-13240",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-13325",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-11138",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-15084",
+   "language": "Python"
+  },
+  {
+   "id": "psf__requests-1713",
+   "language": "Python"
+  },
+  {
+   "id": "psf__requests-2413",
+   "language": "Python"
+  },
+  {
+   "id": "pytest-dev__pytest-7637",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8291",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-21260",
+   "language": "Python"
+  },
+  {
+   "id": "pylint-dev__pylint-5730",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-19783",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-18168",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-15747",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-17082",
+   "language": "Python"
+  },
+  {
+   "id": "astropy__astropy-13162",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-6804",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-10853",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-13952",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-14376",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-11692",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-5233",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-20691",
+   "language": "Python"
+  },
+  {
+   "id": "mwaskom__seaborn-2996",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-5060",
+   "language": "Python"
+  },
+  {
+   "id": "pylint-dev__pylint-4330",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-23348",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-11885",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-12518",
+   "language": "Python"
+  },
+  {
+   "id": "astropy__astropy-13842",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-16111",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-12431",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-23573",
+   "language": "Python"
+  },
+  {
+   "id": "astropy__astropy-14439",
+   "language": "Python"
+  },
+  {
+   "id": "keras-team__keras-19903",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8095",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-11527",
+   "language": "Python"
+  },
+  {
+   "id": "astropy__astropy-8707",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-14309",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-10558",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-3302",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-24619",
+   "language": "Python"
+  },
+  {
+   "id": "psf__requests-2754",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-15139",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-12073",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-16032",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-8119",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-24353",
+   "language": "Python"
+  },
+  {
+   "id": "mwaskom__seaborn-2766",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-9171",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-11155",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-16906",
+   "language": "Python"
+  },
+  {
+   "id": "astropy__astropy-13068",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-7089",
+   "language": "Python"
+  },
+  {
+   "id": "pytest-dev__pytest-5840",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-23031",
+   "language": "Python"
+  },
+  {
+   "id": "pylint-dev__pylint-5201",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-10360",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-14458",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-10673",
+   "language": "Python"
+  },
+  {
+   "id": "mwaskom__seaborn-3394",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-9997",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-9547",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-11389",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-21932",
+   "language": "Python"
+  },
+  {
+   "id": "pytest-dev__pytest-9475",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-11751",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-8007",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-11151",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-28010",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-5033",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-3716",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-18137",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-21476",
+   "language": "Python"
+  },
+  {
+   "id": "astropy__astropy-14042",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-19093",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-6992",
+   "language": "Python"
+  },
+  {
+   "id": "pylint-dev__pylint-4516",
+   "language": "Python"
+  },
+  {
+   "id": "mwaskom__seaborn-3217",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-7019",
+   "language": "Python"
+  },
+  {
+   "id": "pytest-dev__pytest-5559",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-16963",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-4750",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-13808",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-11734",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-21432",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-12830",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-26122",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-13619",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-17318",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-15248",
+   "language": "Python"
+  },
+  {
+   "id": "psf__requests-4356",
+   "language": "Python"
+  },
+  {
+   "id": "pydata__xarray-6999",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-25308",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-17055",
+   "language": "Python"
+  },
+  {
+   "id": "mwaskom__seaborn-2846",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-14077",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-14374",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-10331",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-13350",
+   "language": "Python"
+  },
+  {
+   "id": "pytest-dev__pytest-8516",
+   "language": "Python"
+  },
+  {
+   "id": "django__django-14480",
+   "language": "Python"
+  },
+  {
+   "id": "huggingface__transformers-15843",
+   "language": "Python"
+  },
+  {
+   "id": "matplotlib__matplotlib-25746",
+   "language": "Python"
+  },
+  {
+   "id": "pylint-dev__pylint-5951",
+   "language": "Python"
+  },
+  {
+   "id": "sphinx-doc__sphinx-9461",
+   "language": "Python"
+  },
+  {
+   "id": "sympy__sympy-17394",
+   "language": "Python"
+  },
+  {
+   "id": "scikit-learn__scikit-learn-13010",
+   "language": "Python"
+  }
+ ]
+}
