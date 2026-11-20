@@ -239,7 +239,8 @@ interface ArmSetup {
 /** Every file in the workspace that is not part of the snapshot commit, with its hash (paths normalised). */
 function setupFiles(ws: string, extraRoots: string[] = []): Record<string, string> {
   const out: Record<string, string> = {};
-  const tracked = new Set(sh('git', ['ls-files'], { cwd: ws }).split('\n').filter(Boolean));
+  // -z: raw paths (git otherwise quotes non-ASCII names, which then looked like untracked setup files)
+  const tracked = new Set(sh('git', ['ls-files', '-z'], { cwd: ws }).split('\0').filter(Boolean));
   const norm = (b: Buffer) => b.toString('utf8').split(ws).join('<WS>').split(SCRATCH).join('<SCRATCH>').split(abs('.')).join('<ROOT>');
   const walk = (d: string, base: string, prefix: string) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); const rel = prefix + path.relative(base, p); if (rel === '.git' || /^graphify-out\//.test(rel) || /^\.code-review-graph\//.test(rel)) continue; if (e.isDirectory()) walk(p, base, prefix); else if (e.isFile() && !tracked.has(rel)) out[rel] = sha(norm(fs.readFileSync(p))).slice(0, 16); } };
   walk(ws, ws, '');

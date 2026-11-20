@@ -6,13 +6,14 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/typetrace-cli"><img src="https://img.shields.io/npm/v/typetrace-cli?style=flat-square&color=2a78d6" alt="npm"></a>
+  <a href="https://pypi.org/project/typetrace/"><img src="https://img.shields.io/pypi/v/typetrace?style=flat-square&color=2a78d6&label=pypi" alt="PyPI"></a>
   <a href="https://github.com/Atrix21/typetrace/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Atrix21/typetrace/ci.yml?branch=main&style=flat-square&label=tests" alt="tests"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/licence-MIT-2a78d6?style=flat-square" alt="MIT licence"></a>
   <a href="https://modelcontextprotocol.io/"><img src="https://img.shields.io/badge/MCP-server-2a78d6?style=flat-square" alt="MCP server"></a>
   <a href="https://doi.org/10.5281/zenodo.24363177"><img src="https://img.shields.io/badge/preprint-10.5281%2Fzenodo.24363177-2a78d6?style=flat-square" alt="preprint DOI"></a>
 </p>
 
-<p align="center"><code>npx typetrace-cli init .</code> in your repository, then restart your AI coding tool.</p>
+<p align="center"><code>npx typetrace-cli init .</code> or <code>uvx typetrace init .</code> in your repository, then restart your AI coding tool.</p>
 
 <p align="center"><img src="docs/demo.gif" alt="Terminal recording: typetrace init builds the code graph of nestjs-boilerplate in 1.4 seconds and registers TypeTrace with five AI coding tools; a query for what happens when a user confirms their email returns the service methods, controllers and routes involved, with file:line and their callers and callees." width="820"></p>
 
@@ -69,6 +70,11 @@ npx typetrace-cli init
 
 Or install it once (`npm i -g typetrace-cli`) and use the `typetrace` command: `typetrace init`.
 
+**From PyPI, without Node.js:** `uvx typetrace init` (or `pip install typetrace`, then `typetrace init`). The PyPI
+package runs the same npm package with a Node.js it brings along, and the MCP entries it writes start the server the
+same way, so only Python is needed. `typetrace-cli` and `typetrace-mcp` on PyPI are aliases with commands of those
+names.
+
 That builds the call graph and the keyword index, registers TypeTrace with each [supported AI coding tool](#supported-tools) it finds on your machine, and returns. Building the graph took 22 s on a 63k-line repository and 81 s on a 763k-line one. Semantic search (the embedding model) is then added by a background job at low priority. Until it finishes, search uses keywords and the call graph, and the server switches over by itself. Restart your tool in the repository and approve the `typetrace` server. The agent can then call `find_relevant_code` whenever it needs to find code.
 
 ```bash
@@ -81,7 +87,7 @@ npx typetrace-cli init . --no-embed                               # or: keywords
 **Keeping the index current.** While your tool runs the server, the server rescans the indexed files every 15 seconds. When edits have settled for 10 seconds, it rebuilds the graph in a background job, then embeds only the code that changed. Queries never wait: the previous index answers until the new one is loaded. Changes made while no server runs (a `git pull`, a branch switch) are picked up when it starts. `typetrace index` rebuilds everything in the foreground.
 
 **Requirements and what to expect:**
-- **Node.js 22.13 or newer.** No Python, no GPU and no API key needed.
+- **Node.js 22.13 or newer**, or Python 3.9+ with the PyPI package (which brings its own Node.js). No GPU and no API key needed.
 - **First run downloads the embedding model (~2.4 GB, once)** to `~/.cache/typetrace/models`. npm dependencies take about 900 MB, mostly ONNX Runtime.
 - **RAM:** 6.5 to 8 GB at the peak of the first index, while embeddings are computed (measured on 120 to 490-file repositories); the MCP server needs less.
 - **Semantic search, first time,** is dominated by embedding on the CPU, in the background. Measured on an 8-core laptop CPU (i7-11800H):

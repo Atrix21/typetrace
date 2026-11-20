@@ -10,7 +10,7 @@ body:
     attributes:
       label: TypeTrace version
       description: Output of `npx typetrace-cli --version`
-      placeholder: "0.2.0"
+      placeholder: "0.3.2"
     validations:
       required: true
   - type: dropdown

@@ -39,9 +39,9 @@ Code-graph tools that plug into coding agents through the Model Context Protocol
 
 \emph{The graph.} Graph propagation adds 0.05--0.24 Recall@10 on TypeScript, concentrated on cross-module tasks. It adds nothing on SWE-bench, in any of ten languages ($-0.018$ on Python, $-0.002$ on the others).
 
-\emph{Agents.} In 918 headless Claude Code sessions, a compact retrieval answer reduced tokens per task by 18--28\% against grep alone in all five runs. The same answer without graph propagation saved a similar amount, and neither reliably improved accuracy. Agents given the competitors used about as many tokens as grep alone (\gfy) or 52--70\% more (\crg).
+\emph{Agents.} In 918 headless Claude Code sessions, a compact retrieval answer reduced tokens per task by 18--28\% against grep alone in all five runs. The same answer without graph propagation saved a similar amount, and neither reliably improved accuracy. Agents given the competitors used about as many tokens as grep alone (\gfy) or 52--70\% more (\crg). On 346 SWE-bench issues in ten languages (3,460 sessions), no tool changed how often the agent found the code (81\% in every arm), and \tool's tokens equalled grep's; it used 23\% and 60\% fewer than the competitors, which the agent called in under a fifth of sessions.
 
-The headline figures of code-graph tools thus mostly reflect their baselines. In our measurements, a graph helps an agent retrieve code but not answer better.
+The headline figures of code-graph tools thus mostly reflect their baselines. In our measurements, a graph helps an agent retrieve code but not answer better, and the token saving depends on the task.
 \end{abstract}
 
 \keywords{code search, code graphs, software engineering agents, Model Context Protocol, pre-registration, retrieval evaluation}
@@ -76,8 +76,8 @@ To answer them we built \tool, an open-source MCP server, and a benchmark harnes
 \begin{enumerate}
 \item \textbf{\tool}, an open-source retrieval tool (\S\ref{sec:tool}). It fuses exact-symbol, BM25 and dense retrieval, and propagates scores along a call graph that the TypeScript compiler resolves, including dependency injection, decorators, routes and event dispatch. It answers with a list of \texttt{file:line} pointers of at most 800 tokens.
 \item \textbf{A scale ladder of real TypeScript repositories} with 81 audited tasks, 58 of them held out for testing (\S\ref{sec:design}). Ground truth comes from merged fixes and a type-checker oracle, and was frozen before any retrieval output existed.
-\item \textbf{Pre-registered comparisons} with \gfy and \crg (\S\ref{sec:results}): retrieval-only on TypeScript, on SWE-bench Lite and on SWE-bench Multilingual, and agent-level with Claude Code. The agent comparison includes an ablation that separates the graph from the retrieval answer.
-\item \textbf{Conditional and negative results, reported as such.} The graph does not help on SWE-bench, in any language. Graph content does not change agent outcomes. Agent accuracy gains do not replicate. A cross-encoder reranker fails its held-out test.
+\item \textbf{Pre-registered comparisons} with \gfy and \crg (\S\ref{sec:results}): retrieval-only on TypeScript, on SWE-bench Lite and on SWE-bench Multilingual, and agent-level with Claude Code on TypeScript tasks and on 346 SWE-bench issues in ten languages. The agent comparison includes an ablation that separates the graph from the retrieval answer.
+\item \textbf{Conditional and negative results, reported as such.} The graph does not help on SWE-bench, in any language. Graph content does not change agent outcomes. Agent accuracy gains do not replicate. On SWE-bench issues, no tool changes agent accuracy or saves tokens against grep. A cross-encoder reranker fails its held-out test.
 \item \textbf{An audit of the competitors' headline claims} against what they measure (\S\ref{sec:claims}).
 \end{enumerate}
 
@@ -473,7 +473,26 @@ M, head-to-head (15 / 11) & $-25\%^{*}$ & $-31\%^{*}$ \\
 
 \textbf{Earlier pilot.} In an earlier experiment on the smallest repository with Sonnet, the agent with grep was at ceiling with or without retrieval tools; free to choose, it never called one. In a single call without tools, however, retrieved context raised diagnosis accuracy from 31--33\% (file list only) to 71--98\% (graph-based or hybrid context).
 
-\finding{3}{Inside a capable agent, a compact retrieval answer reduces tokens by 18--28\% against grep alone, in every run and most on understanding tasks. The saving does not depend on graph content, and accuracy gains do not replicate. Tools whose answers are long increase total tokens.}
+\textbf{SWE-bench issues (experiment 10).} We repeated the agent comparison on 346 issues, 174 from SWE-bench Lite and 172 from SWE-bench Multilingual (ten languages in all), with the same arms, Claude Haiku~5.5 at high effort, two repeats per issue and arm (3,460 sessions), and Claude Code pinned to one version. The answer is an ordered list of functions, scored against the functions the gold patch changes; the primary score is a changed function among the first three. Table~\ref{tab:swe-agent} gives the results. No accuracy test came close (all Holm $p = 1.0$): \tool against grep alone, $\Delta = -0.003$ [$-0.022$, $+0.014$], non-inferior (one-sided lower bound $-0.017$ against a $-0.05$ margin); against the same tool without the graph, $-0.001$. \tool's tokens equalled grep's ($-1\%$, $p = 0.32$) and were 23\% below \gfy's and 60\% below \crg's (both Holm $p = 0.0001$). Most of that gap is the competitors' overhead: the agent called them in 17--18\% of sessions, and in sessions that never called them the median was 50{,}544 tokens with \gfy and 102{,}811 with \crg, against 43{,}927 with grep alone. One exploratory result goes against \tool: top-1 accuracy was 0.678 against 0.701 for grep alone ($\Delta = -0.023$ [$-0.043$, $-0.004$]), the only interval in the experiment that excludes zero.
+
+\begin{table}[t]
+\caption{Agents on 346 SWE-bench issues (experiment 10; Claude Haiku~5.5, two repeats). Top-3 = a changed function among the first three (primary); tokens are mean and median per session; use = share of sessions that called the arm's tool.}
+\label{tab:swe-agent}
+\small
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Arm & Top-3 & Top-1 & Mean tok. & Median & Use \\
+\midrule
+A0 grep only & 0.812 & 0.701 & 69{,}915 & 43{,}927 & -- \\
+A1 \tool, no graph & 0.811 & 0.682 & 65{,}473 & 41{,}662 & 96\% \\
+A2 \tool & 0.809 & 0.678 & 70{,}165 & 41{,}435 & 98\% \\
+A5 \gfy & 0.808 & 0.694 & 88{,}387 & 54{,}486 & 17\% \\
+A6 \crg + emb. & 0.812 & 0.694 & 147{,}032 & 108{,}630 & 18\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\finding{3}{Inside a capable agent, a compact retrieval answer reduces tokens by 18--28\% against grep alone on our multi-file TypeScript tasks, but not on SWE-bench issues, where every tool left accuracy unchanged. The saving does not depend on graph content, and accuracy gains do not replicate. Tools whose answers are long, or whose definitions the agent pays for without calling them, increase total tokens.}
 
 %% ------------------------------------------------------------------
 \section{Discussion}
@@ -487,6 +506,8 @@ We cannot say which condition matters. Precision is a natural candidate, but the
 Retrieval gains of 0.1--0.3 \rat did not become reliable accuracy gains inside the agent. A capable agent with grep recovers most of the missing context with its own search. What a retrieval tool changed reliably was the session's token count, and that change came from the short answer, not from the graph.
 
 The size of the tool's answer matters as much as its ranking. The arm with the second-best retrieval (\crg with embeddings) used the most tokens. For evaluators, this argues for token accounting over whole agent sessions instead of the size of a single answer.
+
+The token saving itself depends on the task. On our TypeScript repositories, where a task needs code spread over several files, the short answer saved 18--28\%. On SWE-bench issues, which often name the failing function or quote an error, it saved nothing, and the agent finished in about nine turns in every arm. A tool the agent does not call cannot help it: as bare MCP servers, the competitors were called in under a fifth of SWE-bench sessions. Both ship installers that add skills, instructions and hooks to steer the agent toward their graphs; a follow-up experiment, running at the time of writing, tests each tool with its vendor's own setup.
 
 \subsection{Implications}
 \textbf{For practitioners.} A retrieval tool is worth installing for the tokens a short answer saves, mostly on questions about features and change impact. It is not worth installing for higher accuracy. In our runs, graph content did not change agent outcomes.
@@ -547,15 +568,15 @@ Separately, indexing three query-time hot spots made queries 13--46$\times$ fast
 \begin{itemize}
 \item \textbf{Task construction.} The tool's authors built the TypeScript tasks, with LLM assistance. The smallest repository's bug reports were written by an LLM that knew the bug. The audits were performed by LLM auditors. SWE-bench Lite, selected by others, counters these risks.
 \item \textbf{Registration timing.} The agent head-to-head was registered after our own results were known, though before any competitor run.
-\item \textbf{Competitor configuration.} The competitors ran as shipped, with \crg's documented embeddings and a same-embedder control added. A different configuration, or agent-written queries in the retrieval-only comparison, might score differently.
+\item \textbf{Competitor configuration.} The competitors ran as shipped, with \crg's documented embeddings and a same-embedder control added. A different configuration, or agent-written queries in the retrieval-only comparison, might score differently. In the agent runs every tool was a bare MCP server, without the skills, instructions and hooks its installer adds.
 \item \textbf{Stubbed types on L.} On the 763k-line repository, third-party types are stubbed to fit a 15\,GB machine, so the graph is not fully type-resolved there.
 \end{itemize}
 
 \par\smallskip\noindent\textbf{External validity.}
 \begin{itemize}
 \item The design was built around TypeScript, and the ranking weights were tuned on a small TypeScript repository.
-\item The SWE-bench results (ten languages) are retrieval only. Four supported languages (Kotlin, Scala, C\#, Swift) have only a graph-quality check.
-\item The agent results cover one agent (Claude Code), two models and three repositories.
+\item The SWE-bench agent results measure localisation (naming the code to change), not resolution. Four supported languages (Kotlin, Scala, C\#, Swift) have only a graph-quality check.
+\item The agent results cover one agent (Claude Code) and two models, on three TypeScript repositories and 346 SWE-bench issues; the SWE-bench runs used one model (Haiku).
 \end{itemize}
 
 \par\smallskip\noindent\textbf{Conclusion validity.}
@@ -569,7 +590,7 @@ Separately, indexing three query-time hot spots made queries 13--46$\times$ fast
 \section{Conclusion}
 A type-resolved call graph combined with strong lexical and dense search finds the code a task needs substantially better than two popular code-graph MCP tools given the task text. This holds on TypeScript repositories up to 763k lines, on 300 Python issues and on 299 issues in nine further languages chosen by others.
 
-The graph itself helps retrieval on TypeScript, on cross-module and understanding tasks, and not on SWE-bench in any language. Inside a coding agent, the dependable benefit is a lower token count, and it comes from a short retrieval answer rather than from the graph. Large headline numbers for code-graph tools mostly reflect their baselines. We hope that pre-registered protocols, frozen datasets and decision logs like ours make such claims easier to check, for our tool as for any other.
+The graph itself helps retrieval on TypeScript, on cross-module and understanding tasks, and not on SWE-bench in any language. Inside a coding agent, no tool made the agent find the code more often, on our TypeScript tasks or on 346 SWE-bench issues. The token saving of a short retrieval answer, which does not come from the graph, holds on multi-file TypeScript tasks but not on SWE-bench issues, where \tool matched grep and cost a quarter to three fifths less than the competitors. Large headline numbers for code-graph tools mostly reflect their baselines. We hope that pre-registered protocols, frozen datasets and decision logs like ours make such claims easier to check, for our tool as for any other.
 
 \section*{Data Availability}
 The tool, benchmark harness, frozen task sets, pre-registered protocols, decision logs, per-task results and analysis scripts are available from the authors. Raw retrieval outputs and agent transcripts are not redistributed, because they contain code from AGPL-licensed repositories. Tasks reference upstream commits by hash, so the outputs can be regenerated.

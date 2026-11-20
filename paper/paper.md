@@ -1,7 +1,8 @@
 # Do Code Graphs Help Coding Agents Find Code? A Pre-Registered Evaluation of Type-Resolved Call Graphs for Retrieval
 
-**Draft, 2026-11-18.** Every number in this draft comes from a committed result file in this repository; §10 maps
-each claim to its source. Section 6.4 reports SWE-bench Multilingual (experiment 8), which finished on 2026-11-18.
+**Draft, 2026-11-20.** Every number in this draft comes from a committed result file in this repository; §10 maps
+each claim to its source. Section 6.5 (agents on SWE-bench issues, experiment 10) was added on 2026-11-20. Experiment
+11 (each tool with its vendor's own Claude Code setup) is running and is not reported yet.
 
 *Author: Aditya Reddy Singireddy (aditya@atrixhq.dev).* Preprint v1: [doi:10.5281/zenodo.24363177](https://doi.org/10.5281/zenodo.24363177). © 2026 Aditya Reddy Singireddy. All rights reserved: the repository's code is MIT-licensed, this paper is not ([LICENSE](LICENSE)).
 
@@ -31,6 +32,13 @@ list, the agents used 18–28% fewer tokens than with grep alone on a typical ta
 graphify used about as many tokens as grep alone, and agents given code-review-graph used 52–70% more on average.
 Accuracy gains over grep alone did not replicate across runs. Graph content added no significant accuracy over the
 same tool without the graph (Holm p = 0.44).
+
+On 346 SWE-bench issues in ten languages (3,460 agent sessions), no tool changed how often the agent found the code:
+every arm put a changed function in its top three for 81% of issues (all Holm p = 1.0), and TypeTrace was
+non-inferior to grep alone. Its tokens equalled grep's (−1%, not significant), so the token saving is
+task-dependent. It used 23% fewer tokens than graphify and 60% fewer than code-review-graph (Holm p = 0.0001). Most
+of that gap is the competitors' own overhead: installed as bare MCP servers, they were called in 17–18% of runs but
+their tool definitions were paid for in every run.
 
 The competitors' headline numbers measure different things: the whole repository pasted into the prompt, a hosted
 product, or conversational memory.
@@ -72,10 +80,11 @@ We ask three questions, each with pre-registered tests:
    audited tasks. The ground truth comes from merged fixes, a type-checker oracle for change impact, and audits
    frozen before any retrieval output existed (§4).
 3. **Pre-registered head-to-heads against graphify and code-review-graph:** retrieval-only on TypeScript and on
-   SWE-bench Lite (Python) and SWE-bench Multilingual (nine other languages), and agent-level with Claude Code
-   (§5–6).
+   SWE-bench Lite (Python) and SWE-bench Multilingual (nine other languages), and agent-level with Claude Code on
+   TypeScript tasks and on 346 SWE-bench issues in ten languages (§5–6).
 4. **Negative and conditional results reported as such** (§6, §7): no graph benefit on SWE-bench in any language, no replicated agent
-   accuracy gain, a cross-encoder reranker that failed its held-out test, and a change-history prior that hurt.
+   accuracy gain, no agent accuracy or token gain over grep on SWE-bench issues, a cross-encoder reranker that failed
+   its held-out test, and a change-history prior that hurt.
 5. **An audit of the competitors' headline claims** against what they measure (§7.3).
 
 ## 2. Related work
@@ -238,6 +247,10 @@ Both are recorded in the experiment 3 decision log (E3-D28, E3-D31).
   - A5: graphify;
   - A6: code-review-graph with embeddings.
 - **Isolation:** no user configuration reached the agent, which was verified from recorded requests.
+- **Experiment 10 (SWE-bench issues):** the same arms and isolation, Claude Haiku 5.5 at high effort, two repeats per
+  issue and arm, and Claude Code pinned to 2.1.327. The answer is an ordered list of functions, scored against the
+  functions the gold patch changes (the frozen ground truth of §4). The primary score is a changed function among the
+  first three.
 
 ## 6. Results
 
@@ -419,6 +432,41 @@ Per language of the ground truth (exploratory), TypeTrace's Recall@10 ranges fro
 of 299 issue texts, as on Lite. The agent tool's output is 0.12× graphify's and 0.09× that of code-review-graph with
 embeddings per instance (geometric means).
 
+### 6.5 Agents on SWE-bench issues (experiment 10)
+
+Pre-registered and frozen before its pilot. 346 issues: 174 from SWE-bench Lite (Python) and 172 from SWE-bench
+Multilingual (nine languages), 3,460 sessions (5 arms × 2 repeats). Repeats are averaged per issue.
+
+| Arm | Changed function in top 3 (primary) | Top 1 | Tokens / run (mean) | Median | Used the tool |
+|---|---:|---:|---:|---:|---:|
+| A0 grep / read only | **0.812** | **0.701** | 69,915 | 43,927 | — |
+| A1 TypeTrace without graph | 0.811 | 0.682 | **65,473** | 41,662 | 96% |
+| A2 TypeTrace | 0.809 | 0.678 | 70,165 | **41,435** | 98% |
+| A5 graphify 0.9.108 | 0.808 | 0.694 | 88,387 | 54,486 | 17% |
+| A6 code-review-graph 2.4.0 + emb. | **0.812** | 0.694 | 147,032 | 108,630 | 18% |
+
+**Accuracy (family A, Holm over four).** A2 against grep alone: Δ −0.003 [−0.022, +0.014]; against A1 (no graph):
+−0.001 [−0.019, +0.016]; against graphify: +0.001 [−0.014, +0.017]; against code-review-graph: −0.003
+[−0.025, +0.019]. All Holm p = 1.0. TypeTrace is non-inferior to grep alone (one-sided 95% lower bound −0.017 against
+a −0.05 margin), and the interval rules out a gain above 0.014.
+
+**Tokens (family T, Holm over three; per-issue log ratio).** Against grep alone, −1% (p = 0.32, not supported).
+Against graphify, −23%, and against code-review-graph, −60% (both Holm p = 0.0001; A2 used fewer tokens on 275 and
+343 of 346 issues).
+
+**Where the competitors' tokens go (exploratory).** In runs where the agent never called the tool, the median run
+cost 50,544 tokens with graphify installed and 102,811 with code-review-graph, against 43,927 with grep alone. Their
+tool definitions and server instructions are sent on every turn whether or not they are used.
+
+**One result against TypeTrace (exploratory, uncorrected).** Top-1 accuracy was lower with TypeTrace than with grep
+alone: 0.678 against 0.701, Δ −0.023 [−0.043, −0.004]. It is the only interval in the experiment that excludes zero.
+
+**By language** (exploratory): no language shows a consistent difference between arms. The 34 issues whose fix spans
+two or more files are where the agent listed fewest of the changed functions (0.40–0.42 in every arm, against 0.78
+on single-file issues); experiment 11 uses such issues.
+
+At list price the 3,460 sessions cost $16.99.
+
 ## 7. Discussion
 
 ### 7.1 When does a code graph help?
@@ -444,6 +492,17 @@ how much the agent reads: a ≤800-token pointer list replaces several rounds of
 
 The size of the tool's output matters as much as its ranking. code-review-graph's arm used the most tokens despite the
 second-best retrieval, because its outputs are large and the agent still read the files.
+
+The token saving itself is task-dependent. On our TypeScript repositories, where a task needs code spread over several
+files, TypeTrace saved 18–28% against grep alone in all five runs. On SWE-bench issues it saved nothing (−1%): the
+issues often name the failing function or quote an error message, and the agent finished in about nine turns in
+every arm. What remained was a cost difference between the tools themselves, driven by what each one adds to every
+turn.
+
+A tool the agent does not call cannot help it. With bare MCP servers, the agent called TypeTrace in 98% of SWE-bench
+runs and the competitors in 17–18%. Both competitors ship installers that add skills, instructions and hooks to steer
+the agent toward their graphs; experiment 11, running at the time of writing, tests each tool with its vendor's setup
+on each tool's own kind of task.
 
 ### 7.3 What the headline claims measure
 
@@ -478,7 +537,8 @@ became 0.29 s.
   and the embedding model may have seen them; this applies to every arm that uses them.
 - **Competitor configuration.** Competitors ran as shipped, and we added code-review-graph's documented embeddings and
   a same-embedder control. A different configuration, or a version newer than the ones pinned here, could score
-  differently.
+  differently. In the agent runs every tool was a bare MCP server, without the skills, instructions and hooks its
+  installer adds; the agent then rarely called the competitors (17–18% of SWE-bench runs).
 - **Retrieval metrics.** Recall@10 measures what an agent is shown first, not whether it fixes the issue. We did not
   measure resolution rates.
 - **Scale cost.** On 763k lines the TypeScript graph takes 81 s and 4.0 GB to build. Third-party types are stubbed to
@@ -488,7 +548,10 @@ became 0.29 s.
 
 A type-resolved call graph combined with strong lexical and dense search finds the code a task needs substantially
 better than two popular code-graph MCP tools: on three TypeScript repositories, on 300 Python issues and on 299
-issues in nine other languages chosen by others. Inside a coding agent, the robust benefit is fewer tokens, not more correct answers. The graph itself helps
+issues in nine other languages chosen by others. Inside a coding agent, no tool made the agent find the code more
+often, on TypeScript tasks or on 346 SWE-bench issues. TypeTrace's token saving over grep holds on multi-file
+TypeScript tasks but not on SWE-bench issues, where it matched grep and cost a quarter to three fifths less than the
+competitors. The graph itself helps
 when it is precise and the task crosses modules, and not otherwise. Large headline numbers for code-graph tools
 usually reflect their baselines. We hope the pre-registered protocols, frozen datasets and decision logs released
 with this paper make such claims easier to check.
@@ -503,6 +566,8 @@ with this paper make such claims easier to check.
 | SWE-bench Lite | `experiments/05-swebench-python/findings.md`, `results/report.md` |
 | SWE-bench Multilingual | `experiments/08-swebench-multilingual/findings.md`, `results/report.md` |
 | Agent runs | `experiments/03-graph-scale/results/agent/*-report.md`, decision log E3-D26 |
+| Agents on SWE-bench issues (§6.5) | `experiments/10-swebench-agents/findings.md`, `results/main/report.md` |
+| Single-file vs multi-file issues in experiment 10 (§6.5) | `experiments/11-vendor-setups/protocol.md` ("The multi-file pool"), computed from `experiments/10-swebench-agents/results/main/runs.jsonl` |
 | Experiment 2 | `experiments/02-agent-diagnosis/findings.md` |
 | Experiment 6 | `experiments/06-next-direction/findings.md` |
 | Graph quality, 11 languages | `experiments/07-languages/README.md` |

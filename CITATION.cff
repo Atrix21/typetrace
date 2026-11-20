@@ -9,8 +9,8 @@ authors:
 repository-code: "https://github.com/Atrix21/typetrace"
 url: "https://www.npmjs.com/package/typetrace-cli"
 license: MIT
-version: 0.2.0
-date-released: 2026-11-19
+version: 0.3.2
+date-released: 2026-11-20
 keywords:
   - code search
   - code graphs

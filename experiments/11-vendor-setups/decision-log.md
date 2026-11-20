@@ -94,3 +94,20 @@ Changes after the protocol was frozen (2026-11-20, before the pilot). None yet.
   quoted absolute paths of the owner's machine (as in experiment 10, E10-D07). They are shortened to
   repository-relative paths (`~/` outside the repository) in the pilot records, and the runner now does this when it
   writes any record. No other field changed. The original is kept outside the repository.
+
+- **E11-D06 (2026-11-20, during the pilot): which TypeTrace build the TT and TS arms run; 0.3.2 merged.**
+  - **The TT arm** ("as it ships today", written as 0.2.0 in the arms table) runs the same build as TS, 0.3.1, with
+    `typetrace init --no-setup`. That writes only the index and the MCP entry, as 0.2.0 did. Between v0.2.0 and v0.3.1
+    the product changed in two places only: `src/product/claude-setup.ts` (new; the setup, not written under
+    `--no-setup`) and 13 lines of `src/product/cli.ts` (wiring the setup, and the query stamp that the hook reads).
+    The search is the same code.
+  - **0.3.2 (PyPI packages) was merged into main** on 2026-11-20 while the pilot ran. The arms run the compiled build
+    in `dist/`, made from 0.3.1 before the pilot, and it is not rebuilt until experiment 11 ends. 0.3.2 would write
+    byte-identical setups anyway: its two product changes apply only when the PyPI launcher sets `TYPETRACE_LAUNCH`
+    and `TYPETRACE_HOOK_NODE`.
+  - **Check.** The hashes of every file each installer wrote are in `setups.jsonl`.
+    - In the first 81 pilot workspaces, every arm wrote one identical set of setup files (CLAUDE.md, `.claude/`,
+      `.mcp.json`, `.gitignore`, git hooks) in every workspace.
+    - `setups.jsonl` also listed some snapshot files as if an installer had written them: files with non-ASCII names
+      (git quoted their paths) and, before the `git add -f` fix, files matching a repository's own `.gitignore`. The
+      runner now reads git's raw paths, and comparisons of setups use the setup paths above.
