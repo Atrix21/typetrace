@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0 (2026-11-20)
+
+- **Claude Code setup.** For Claude Code, `init` and `install` now also write the kind of setup graphify and
+  code-review-graph install, so the agent knows the tool is there: a short block in `CLAUDE.md` (between
+  `<!-- typetrace -->` markers; the rest of the file is kept), a skill (`.claude/skills/typetrace/SKILL.md`) and a
+  PreToolUse hook (`.claude/hooks/typetrace-nudge.mjs`, registered in `.claude/settings.json`). The hook never blocks a
+  call. Before a search or a read it adds one sentence saying the repository is indexed, at most 5 times per session
+  (`TYPETRACE_NUDGE_CAP`), and stays quiet while TypeTrace has been queried in the last 30 minutes. `--no-setup`
+  registers the MCP server only; `uninstall` removes all of it.
+- Experiment 10 (346 SWE-bench issues, 10 languages, 3,460 agent runs): no tool changed how often the agent found
+  the code (all arms 0.81), and TypeTrace's tokens equalled grep's. The README's token claim is narrowed to tasks that
+  span several files ([findings](experiments/10-swebench-agents/findings.md)).
+
 ## 0.2.0 (2026-11-19)
 
 - **Usable in minutes, not hours.** `init` returns once the call graph and the keyword index are built (81 s on a
