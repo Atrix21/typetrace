@@ -180,7 +180,9 @@ function makeWorkspace(root: string, _files: string[], key: string): string {
   sh('git', ['init', '-q', '-b', 'main'], { cwd: dir, env: GIT_ENV });
   // Claude Code shows the git user in its context: a neutral one, never the owner's global identity.
   sh('git', ['config', 'user.name', 'dev'], { cwd: dir }); sh('git', ['config', 'user.email', 'dev@localhost'], { cwd: dir });
-  sh('git', ['add', '-A'], { cwd: dir, env: GIT_ENV });
+  // -f: every file of the snapshot is tracked, also those the repository's own .gitignore matches (e.g. test outputs
+  // that were committed anyway), so the reset after each run restores them.
+  sh('git', ['add', '-A', '-f'], { cwd: dir, env: GIT_ENV });
   sh('git', ['-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'snapshot'], { cwd: dir, env: GIT_ENV });
   return dir;
 }
@@ -542,14 +544,14 @@ async function main() {
             const score = scoreItem(index, it, raw);
             const u = r.run.usage;
             const calls = ps.toolCalls;
-            const toolUse = p.arm === 'G0' ? null : p.arm === 'GF' ? calls.some((c) => c.name === 'Bash' && /^\s*graphify\s/.test(String(c.input?.command ?? ''))) : calls.some((c) => c.name.startsWith('mcp__'));
+            const toolUse = p.arm === 'G0' ? null : p.arm === 'GF' ? calls.some((c) => (c.name === 'Bash' && /(^|[\s;&|(`$])graphify\s+\w|graphify-out\//.test(String(c.input?.command ?? ''))) || (['Read', 'Grep', 'Glob'].includes(c.name) && /graphify-out/.test(JSON.stringify(c.input ?? {})))) : calls.some((c) => c.name.startsWith('mcp__'));
             const rec = {
               run_id: p.run_id, item: it.id, task: TASK, repo: it.repo, language: it.language, arm: p.arm, repeat: p.repeat, attempt, model: MODEL, effort: EFFORT, set: SET,
               account: pool.record(acctName), worker: w, status: raw ? 'submitted' : oc.status, turns: r.run.turns, tool_calls: r.run.tool_calls,
               usage: u, total_tokens: u ? u.input + u.output + u.cache_read + u.cache_write : null,
               cost_reported_usd: r.cost.reported, cost_list_usd: r.cost.list, cost_ledger_usd: r.cost.ledger, wall_ms: r.timing.wall_ms, api_ms: r.detail.duration_api_ms,
               used_tool: toolUse, skills_invoked: calls.filter((c) => c.name === 'Skill').map((c) => String(c.input?.skill ?? c.input?.name ?? '')),
-              bash_commands: calls.filter((c) => c.name === 'Bash').map((c) => String(c.input?.command ?? '').slice(0, 120)),
+              bash_commands: calls.filter((c) => c.name === 'Bash').map((c) => String(c.input?.command ?? '').slice(0, 300)),
               mcp_calls: calls.filter((c) => c.name.startsWith('mcp__')).map((c) => c.name.split('__').pop()),
               files_read: new Set(calls.filter((c) => c.name === 'Read').map((c) => String(c.input?.file_path ?? ''))).size,
               answer: TASK === 'T3' ? parseT3Answer(raw) : parseAnswer(raw), score, claude_version: version, mock: MOCK, setup_build_ms: su.build_ms,
