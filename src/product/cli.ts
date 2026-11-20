@@ -7,7 +7,7 @@
  *   typetrace status    [repo]                                       what is indexed, what is still running
  *   typetrace query     <repo> "<question>"                          print what the agent would see
  *   typetrace serve     [repo]                                       MCP server (stdio): find_relevant_code
- *   typetrace install   [repo] [--client ...] [--dry-run]            register the server with AI coding tools
+ *   typetrace install   [repo] [--client ...] [--dry-run] [--no-setup] register the server with AI coding tools
  *   typetrace uninstall [repo] [--client ...] [--dry-run]
  *
  * First index: `init` builds the call graph and the keyword index (minutes), registers the server and returns. The
@@ -20,7 +20,8 @@
  * the new one is loaded. The two jobs never run at the same time (the embedding job pauses between batches).
  *
  * Indexes live in ~/.cache/typetrace/<hash of repo path>/ (TYPETRACE_CACHE); see index-state.ts for the layout. The
- * repository itself is only written by `init`/`install` (the tools' MCP configuration files).
+ * repository itself is only written by `init`/`install`: the tools' MCP configuration files and, for Claude Code, the
+ * setup in claude-setup.ts (a CLAUDE.md block, a skill and a soft hook; `--no-setup` skips it).
  */
 import fs from 'node:fs';
 import os from 'node:os';
@@ -40,6 +41,7 @@ import { languageSummary } from './source-files.js';
 import { PersistentQueryEmbedder } from '../agent-eval/mcp/retrieval-server.js';
 import { primeGraphCache } from '../retrieval/graph-retrieval.js';
 import { applyClients, CLIENTS, describe, selectClients, SERVER_NAME, type Launch } from './clients.js';
+import { applyClaudeSetup, describeSetup } from './claude-setup.js';
 import {
   clearGraphWanted, diffManifest, embedProgress, findIndexedRepo, graphWanted, jobRunning, paths, readManifest, readMeta,
   requestGraph, scan, spawnJob, tryLock, unlock, writeManifest, writeMeta, type IndexMeta, type Manifest,
@@ -197,7 +199,9 @@ function install(repo: string, remove = false) {
   const clients = selectClients(opt('client') ?? (remove ? 'all' : 'auto'));
   if (!clients.length) { err('no clients selected'); return []; }
   const changes = applyClients(repo, clients, launchFor(repo), { dryRun: flag('dry-run'), remove });
-  err(`${flag('dry-run') ? 'would change (dry run, nothing written)' : remove ? 'removed TypeTrace from' : 'registered TypeTrace with'}:\n${changes.map((c) => describe(repo, c)).join('\n')}`);
+  // Claude Code also gets its setup (instructions, skill, soft hook) unless --no-setup; uninstall always removes it.
+  const setup = clients.some((c) => c.id === 'claude') && (remove || !flag('no-setup')) ? applyClaudeSetup(repo, { dryRun: flag('dry-run'), remove }) : [];
+  err(`${flag('dry-run') ? 'would change (dry run, nothing written)' : remove ? 'removed TypeTrace from' : 'registered TypeTrace with'}:\n${[...changes.map((c) => describe(repo, c)), ...setup.map((c) => describeSetup(repo, c))].join('\n')}`);
   return changes;
 }
 
@@ -351,6 +355,8 @@ async function serve(repoArg: string | undefined) {
     const q = (req.params.arguments as { query?: unknown } | undefined)?.query;
     if (req.params.name !== EXP3_TOOL_NAME || typeof q !== 'string' || !q.trim()) return { isError: true, content: [{ type: 'text' as const, text: 'Invalid call: "query" must be a non-empty string.' }] };
     if (!current) return { isError: true, content: [{ type: 'text' as const, text: `TypeTrace has no index for ${repo}. Ask the user to run: npx typetrace-cli init ${JSON.stringify(repo)}` }] };
+    // The Claude Code hook stays quiet while this is recent (claude-setup.ts).
+    try { fs.writeFileSync(path.join(paths(repo).dir, 'last_query'), new Date().toISOString()); } catch { /* read-only cache: the hook just nudges up to its cap */ }
     const run = async () => {
       const { m } = await current!;
       await m.prewarmQuery?.(q);
@@ -383,6 +389,7 @@ async function main() {
            --wait              init: compute the embeddings before returning instead of in the background
            --no-embed          keyword + call-graph search only (no model download)
            --dry-run           install/uninstall: show the changes, write nothing
+           --no-setup          init/install: register the MCP server only (no Claude Code instructions, skill or hook)
            --gpu               PyTorch/CUDA embeddings (source checkout with \`npm run setup\` only)
   indexes: ~/.cache/typetrace (TYPETRACE_CACHE to move); model: ~/.cache/typetrace/models (TYPETRACE_MODEL_DIR)`);
     process.exit(cmd ? 2 : 0);

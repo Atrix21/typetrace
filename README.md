@@ -101,7 +101,7 @@ npx typetrace-cli init . --no-embed                               # or: keywords
 
 | Tool | Configuration written | Notes |
 |---|---|---|
-| Claude Code | `.mcp.json` | |
+| Claude Code | `.mcp.json`, plus the setup below | |
 | Cursor | `.cursor/mcp.json` | |
 | VS Code (GitHub Copilot) | `.vscode/mcp.json` | |
 | Codex | `.codex/config.toml` | read once you trust the project |
@@ -112,6 +112,14 @@ npx typetrace-cli init . --no-embed                               # or: keywords
 | Zed | `~/.config/zed/settings.json` | global: same |
 
 Files in the repository name the repository. The two global entries name none: the server serves the nearest indexed repository above the directory the tool starts it in, and says so when there is none, rather than answering about another repository.
+
+**Claude Code setup.** For Claude Code, `init` also writes the kind of setup graphify and code-review-graph install, so the agent knows the tool is there. `--no-setup` skips it, and `typetrace uninstall` removes it.
+
+| File | What it adds |
+|---|---|
+| `CLAUDE.md` | a short block between `<!-- typetrace -->` markers saying when to call `find_relevant_code`; the rest of the file is kept |
+| `.claude/skills/typetrace/SKILL.md` | a skill on writing queries and following the callers and callees in the results |
+| `.claude/hooks/typetrace-nudge.mjs` and `.claude/settings.json` | a PreToolUse hook. Before a search or a read in the repository it adds one sentence saying that the repository is indexed. It never blocks a call, speaks at most 5 times per session (`TYPETRACE_NUDGE_CAP`), and stays quiet while TypeTrace has been queried in the last 30 minutes |
 
 ## The evidence in one table
 
