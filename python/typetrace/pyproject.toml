@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "typetrace"
+# Always the version of the npm package typetrace-cli it runs (checked by tests/product/python-packages.test.ts).
+version = "0.3.2"
+description = "Local code search plus call graph for AI coding agents, served over MCP (Claude Code, Cursor, Codex, Copilot and more). Runs the typetrace-cli npm package with a bundled Node.js."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Atrix21" }]
+keywords = ["mcp", "code-search", "call-graph", "claude-code", "ai-agents"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Topic :: Software Development",
+]
+dependencies = ["nodejs-wheel-binaries>=22.13"]
+
+[project.scripts]
+typetrace = "typetrace.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/Atrix21/typetrace"
+Repository = "https://github.com/Atrix21/typetrace"
+Changelog = "https://github.com/Atrix21/typetrace/blob/main/CHANGELOG.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/typetrace"]

@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "typetrace-cli"
+version = "0.3.2"
+description = "TypeTrace (alias of the 'typetrace' package): local code search plus call graph for AI coding agents, served over MCP. Provides the 'typetrace-cli' command."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Atrix21" }]
+dependencies = ["typetrace==0.3.2"]
+
+[project.scripts]
+typetrace-cli = "typetrace.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/Atrix21/typetrace"
+Repository = "https://github.com/Atrix21/typetrace"
+
+[tool.hatch.build.targets.wheel]
+bypass-selection = true

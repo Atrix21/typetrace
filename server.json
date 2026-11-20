@@ -8,12 +8,12 @@
     "source": "github"
   },
   "websiteUrl": "https://github.com/Atrix21/typetrace",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "typetrace-cli",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "runtimeHint": "npx",
       "transport": {
         "type": "stdio"
@@ -24,6 +24,21 @@
           "value": "-y"
         }
       ],
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "serve"
+        }
+      ]
+    },
+    {
+      "registryType": "pypi",
+      "identifier": "typetrace",
+      "version": "0.3.2",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
       "packageArguments": [
         {
           "type": "positional",

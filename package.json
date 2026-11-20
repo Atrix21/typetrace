@@ -1,6 +1,6 @@
 {
   "name": "typetrace-cli",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Local code search + call graph for AI coding agents, served over MCP: Claude Code, Cursor, Codex, Copilot and five more. 14 languages, no API keys. Benchmarked head-to-head against graphify and code-review-graph.",
   "author": "Atrix21",
   "license": "MIT",

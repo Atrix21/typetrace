@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.2 (2026-11-20)
+
+- **On PyPI.** `uvx typetrace init .` or `pip install typetrace`: the PyPI package runs this npm package with a Node.js
+  it brings along (`nodejs-wheel-binaries`), so only Python is needed. The MCP entries `init` writes start the server
+  the same way. `typetrace-cli` and `typetrace-mcp` on PyPI are aliases with commands of those names.
+- `TYPETRACE_LAUNCH` (a JSON array) sets the command that MCP entries use to start the server.
+
 ## 0.3.1 (2026-11-20)
 
 - The MCP Registry name is `io.github.Atrix21/typetrace` (the registry matches the GitHub account's case). No code
