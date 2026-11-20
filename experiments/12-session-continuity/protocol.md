@@ -1,7 +1,10 @@
 # Experiment 12: working on one codebase across many sessions (DRAFT, not frozen)
 
-Status: draft. Nothing here runs until experiment 11 has finished, the owner has decided the open questions at the
-end, the harness passes its checks, the protocol is frozen and the owner gives the go.
+Status: draft. Nothing here runs until experiment 11 has finished, the remaining open questions are decided, the
+harness passes its checks, the protocol is frozen and the owner gives the go.
+
+Decided on 2026-11-20: option C (two TypeTrace arms, 0.3 as is and 0.4 with continuity features). The features are
+built on the branch `product/session-continuity` and released as 0.4.0 before the pilot.
 
 ## Why
 
@@ -58,7 +61,8 @@ Two factors: the tool, each with its vendor's setup as captured in experiment 11
 | Tool | Setup |
 |---|---|
 | G0 | Claude Code's base tools only (Read, Grep, Glob, Skill, sandboxed Bash) |
-| TS | TypeTrace with its Claude Code setup (version per open decision 1) |
+| T3 | TypeTrace 0.3 with its Claude Code setup: a persistent, self-updating index, no memory of sessions |
+| T4 | TypeTrace 0.4 with its Claude Code setup: T3 plus the worklog, `recent_work`, `changes_since_last_session`, `codebase_overview`, and the session-start and post-compaction hook |
 | GF | graphify, as in experiment 11 |
 | CR | code-review-graph, as in experiment 11 |
 
@@ -93,11 +97,12 @@ session modes require.
 
 The unit is the chain. Tests are paired sign-flip permutation tests, two-sided, with bootstrap CIs and Holm within
 each family, as in experiment 11.
-- **Family C1 (tokens, Fresh mode):** each tool against G0 (3 tests).
-- **Family C2 (tokens, Memory mode):** each tool against G0-Memory (3 tests).
+- **Family C1 (tokens, Fresh mode):** each tool against G0 (4 tests: T3, T4, GF, CR).
+- **Family C2 (tokens, Memory mode):** each tool against G0-Memory (4 tests).
 - **Family C3 (Claude Code's own mechanisms, tokens):** G0-Memory against G0-Fresh, and G0-Continued against G0-Fresh
   (2 tests).
-- **Family A (accuracy, mean over the chain's tasks, Fresh and Memory modes):** each tool against G0 (6 tests).
+- **Family A (accuracy, mean over the chain's tasks, Fresh and Memory modes):** each tool against G0 (8 tests).
+- **T4 against T3** (what 0.4's continuity features add), per mode, is exploratory.
 
 Everything else is exploratory: Continued mode between tools, re-reading, the learning curve and splits by language.
 
@@ -127,16 +132,16 @@ The fairness rules of experiment 11 apply unchanged, and three more are added:
 
 ## Open decisions for the owner
 
-1. **TypeTrace version.**
-   - **Option A: test 0.3.x as is.** This answers whether a persistent search index alone helps across sessions.
-   - **Option B: first build and release continuity features**, under the feature rules above:
-     - a working set (what the agent searched and then read, offered to the next session);
-     - an overview of the codebase from the call graph;
-     - "changed since your last session";
-     - a post-compaction hook.
+1. **TypeTrace version (decided 2026-11-20: option C, both).**
+   - **T3:** 0.3 as is (a persistent search index alone).
+   - **T4:** 0.4, which adds:
+     - a working set (what earlier sessions searched, read and edited, `recent_work`);
+     - an overview of the codebase from the call graph (`codebase_overview`);
+     - "changed since your last session" (`changes_since_last_session`);
+     - a session-start pointer and a post-compaction restatement of the working set.
 
-     Option B tests TypeTrace at its best. It takes product work first.
-   - **Option C:** both, as two TypeTrace arms (like TT and TS in experiment 11).
+     0.4 follows the feature rules above: written before this experiment's data was looked at, generic, and released
+     publicly before the pilot.
 2. **Size.** The full design (4 tools × 3 modes) or the minimum (G0 and TS × Fresh and Memory) first.
 3. **Model.** Claude Haiku 5.5 as in experiments 10 and 11, or also a Sonnet subset (more likely to use memory well,
    at a higher cost to the usage limits).
