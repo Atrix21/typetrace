@@ -696,9 +696,12 @@ export interface RunClaudeOptions {
   onInit?: (init: any) => string | null;
   /** Aborts the run (kills the group) when this returns a reason; polled while running. */
   shouldAbort?: () => string | null;
+  /** Once the final `result` event has arrived, stop the process group if it has not exited after this many ms
+   *  (experiment 11: Claude Code sometimes lingers after its result; the result is complete and is used). */
+  afterResultGraceMs?: number;
 }
 
-export interface RunTiming { wall_ms: number; init_ms: number | null; close_ms: number }
+export interface RunTiming { wall_ms: number; init_ms: number | null; close_ms: number; /** stopped after lingering past its result (afterResultGraceMs) */ lingered?: boolean }
 export interface RunCost { reported: number | null; list: number | null; ledger: number }
 export interface RunClaudeResult { run: AgentRun; detail: ClaudeRunDetail; raw: string; outcome: Outcome; timing: RunTiming; cost: RunCost; init: InitFingerprint | null }
 
@@ -726,6 +729,7 @@ export async function runClaude(spec: ClaudeCommand, prompt: string, meta: RunMe
     liveChildren.add(child);
     let stdout = '', stderr = '', buf = '', timedOut = false, spawnError = false;
     let initMismatch: string | undefined, aborted: string | undefined, initMs: number | null = null, resultMs: number | null = null, sawInit = false;
+    let graceTimer: NodeJS.Timeout | null = null, lingered = false;
     const killGroup = (sig: NodeJS.Signals) => { try { process.kill(-child.pid!, sig); } catch { /* gone */ } };
     const handleLine = (line: string) => {
       if (!sawInit && line.includes('"subtype":"init"') && line.includes('"type":"system"')) {
@@ -735,7 +739,10 @@ export async function runClaude(spec: ClaudeCommand, prompt: string, meta: RunMe
           const why = opts.onInit?.(ev);
           if (why) { initMismatch = why; killGroup('SIGKILL'); }
         } catch { /* parsed again later */ }
-      } else if (resultMs == null && line.startsWith('{"type":"result"')) resultMs = Date.now() - t0;
+      } else if (resultMs == null && line.startsWith('{"type":"result"')) {
+        resultMs = Date.now() - t0;
+        if (opts.afterResultGraceMs != null) graceTimer = setTimeout(() => { lingered = true; killGroup('SIGTERM'); setTimeout(() => killGroup('SIGKILL'), 5000).unref(); }, opts.afterResultGraceMs);
+      }
     };
     child.stdout.on('data', (d) => {
       const t = String(d); stdout += t; buf += t;
@@ -749,6 +756,7 @@ export async function runClaude(spec: ClaudeCommand, prompt: string, meta: RunMe
     const poll = opts.shouldAbort ? setInterval(() => { const w = opts.shouldAbort!(); if (w && !aborted) { aborted = w; killGroup('SIGKILL'); } }, 250) : null;
     const code = await new Promise<number | null>((resolve) => { child.on('error', () => { spawnError = true; resolve(null); }); child.on('close', (c) => resolve(c)); });
     clearTimeout(timer);
+    if (graceTimer) clearTimeout(graceTimer);
     if (poll) clearInterval(poll);
     if (buf) handleLine(buf);
     killGroup('SIGKILL'); // MCP server children
@@ -772,7 +780,7 @@ export async function runClaude(spec: ClaudeCommand, prompt: string, meta: RunMe
     if (!mock && !res && (timedOut || outcome.status === 'aborted') && ledger === 0) ledger = opts.guard.runUsd ?? 0; // unknown spend: charge the reservation
     opts.guard.record(meta.run_id, ledger, spec.env, { status: outcome.status, cost_reported: reported, cost_list: list });
     reserved = false;
-    return { ...out, raw: stdout, outcome, timing: { wall_ms: wall, init_ms: initMs, close_ms: closeMs }, cost: { reported, list, ledger }, init: parsed.init ? fingerprintOf(parsed.init) : null };
+    return { ...out, raw: stdout, outcome, timing: { wall_ms: wall, init_ms: initMs, close_ms: closeMs, lingered }, cost: { reported, list, ledger }, init: parsed.init ? fingerprintOf(parsed.init) : null };
   } finally { if (reserved) opts.guard.release(spec.env); }
 }
 

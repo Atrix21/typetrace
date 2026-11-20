@@ -57,3 +57,15 @@ Changes after the protocol was frozen (2026-11-20, before the pilot). None yet.
   - **Still not done.** graphify's optional LLM pass for documents, papers and images. It needs an API key, and
     graphify states that it does not change code nodes. graphify's graph is built with its own `graphify update .`
     (AST, no LLM), as its hooks rebuild it.
+
+- **E11-D03 (2026-11-20, during the pilot): processes that linger after their result.**
+  - **What happened.** In 3 of the first 83 pilot runs the Claude Code process did not finish promptly. One sent its
+    final result and answer after about 30 s but never exited, and was stopped at the 900 s timeout as
+    `infra_error:timeout`. Two spent 7 to 8 minutes before their sessions started (Claude Code's own session time was
+    27 s and 34 s), with no tool errors.
+  - **Change.** Once the final result has arrived, a process still running after 15 s is stopped, and the result is
+    used (`lingered` is recorded). Wall time in the analysis is Claude Code's own session time (`session_ms`), not the
+    process lifetime.
+  - **Effect on the agent.** None: nothing the agent sees or does changes, and the scores are read from the result as
+    before.
+  - **The timed-out run** is retried as any infrastructure failure is (once).

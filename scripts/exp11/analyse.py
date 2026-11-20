@@ -26,6 +26,8 @@ ap.add_argument('--out', default='experiments/11-vendor-setups/results/report')
 A = ap.parse_args()
 z = NormalDist().inv_cdf
 
+GF_CMD = __import__('re').compile(r'(^|[\s;&|(`$])graphify\s+\w|graphify-out/')
+
 def jl(f): return [json.loads(l) for l in open(f) if l.strip()] if os.path.exists(f) else []
 
 def load(task, d):
@@ -42,7 +44,11 @@ def load(task, d):
             row = {'primary': j['coverage'], 'rubric': j['rubric_total']}
         else:
             row = {'primary': s['primary'], 'accuracy': s['accuracy'], 'top1': s['top1'], 'file_recall': s['file_recall'], 'function_recall': s['function_recall']}
-        row.update(tokens=r.get('total_tokens'), turns=r.get('turns'), wall=(r.get('wall_ms') or 0) / 1000, used=r.get('used_tool'), cost=r.get('cost_list_usd') or 0,
+        used = r.get('used_tool')
+        if r['arm'] == 'GF':  # recomputed from the recorded commands (the runner's first detector missed `... && graphify query`)
+            used = bool(used) or any(GF_CMD.search(c) for c in r.get('bash_commands') or [])
+        row.update(tokens=r.get('total_tokens'), turns=r.get('turns'), wall=(r.get('session_ms') or r.get('wall_ms') or 0) / 1000,  # Claude Code's own session time (E11-D03)
+                    used=used, cost=r.get('cost_list_usd') or 0,
                    skill=bool(r.get('skills_invoked')), language=r.get('language'), repo=r.get('repo'))
         per[r['item']][r['arm']].append(row)
     return per

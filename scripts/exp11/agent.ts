@@ -508,6 +508,7 @@ async function main() {
             const tools = [...PROJECT_TOOLS, 'Bash'];
             const r = await runClaude(spec, it.prompt, { run_id: p.run_id, task_id: it.id, condition: `exp11:${TASK}:${p.arm}`, repeat: p.repeat, model: MODEL, workspace_hash: sha(su.ws).slice(0, 12) }, {
               guard: pool.guard(acctName), timeoutMs: TIMEOUT_S * 1000, transcriptPath: path.join(OUT, 'transcripts', `${safe}.jsonl`),
+              afterResultGraceMs: 15_000, // E11-D03: a process lingering after its result is stopped; the result is used
               onInit: (init) => {
                 const own = ARM_SKILLS[p.arm];
                 const forbidden = [...new Set([...OWNER_SKILLS, ...Object.values(ARM_SKILLS).flat()])].filter((k) => !own.includes(k));
@@ -549,13 +550,13 @@ async function main() {
               run_id: p.run_id, item: it.id, task: TASK, repo: it.repo, language: it.language, arm: p.arm, repeat: p.repeat, attempt, model: MODEL, effort: EFFORT, set: SET,
               account: pool.record(acctName), worker: w, status: raw ? 'submitted' : oc.status, turns: r.run.turns, tool_calls: r.run.tool_calls,
               usage: u, total_tokens: u ? u.input + u.output + u.cache_read + u.cache_write : null,
-              cost_reported_usd: r.cost.reported, cost_list_usd: r.cost.list, cost_ledger_usd: r.cost.ledger, wall_ms: r.timing.wall_ms, api_ms: r.detail.duration_api_ms,
+              cost_reported_usd: r.cost.reported, cost_list_usd: r.cost.list, cost_ledger_usd: r.cost.ledger, wall_ms: r.timing.wall_ms, api_ms: r.detail.duration_api_ms, session_ms: ps.result?.duration_ms ?? null,
               used_tool: toolUse, skills_invoked: calls.filter((c) => c.name === 'Skill').map((c) => String(c.input?.skill ?? c.input?.name ?? '')),
               bash_commands: calls.filter((c) => c.name === 'Bash').map((c) => String(c.input?.command ?? '').slice(0, 300)),
               mcp_calls: calls.filter((c) => c.name.startsWith('mcp__')).map((c) => c.name.split('__').pop()),
               files_read: new Set(calls.filter((c) => c.name === 'Read').map((c) => String(c.input?.file_path ?? ''))).size,
               answer: TASK === 'T3' ? parseT3Answer(raw) : parseAnswer(raw), score, claude_version: version, mock: MOCK, setup_build_ms: su.build_ms,
-              workspace_changes: changed.slice(0, 20), workspace_changed: changed.length, init_skills: initSkills,
+              workspace_changes: changed.slice(0, 20), workspace_changed: changed.length, init_skills: initSkills, lingered: !!r.timing.lingered, close_ms: r.timing.close_ms,
             };
             append('runs.jsonl', rec); done.add(p.run_id);
             log(`w${w} ${p.run_id} [${label(acctName)}] ${rec.status} turns=${rec.turns} tok=${rec.total_tokens} used=${toolUse} ${TASK === 'T3' ? '' : `primary=${(score as any).primary?.toFixed(2)}`}`);
