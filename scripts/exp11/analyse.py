@@ -34,6 +34,10 @@ def load(task, d):
     """item -> arm -> list of per-run dicts with primary, accuracy and the secondary measures."""
     if not d: return {}
     runs = jl(f'{d}/runs.jsonl')
+    # E11-D07: scores re-computed with the fixed file resolution replace the originals (pilot runs scored before it)
+    fix = {x['run_id']: x['after'] for x in jl(f'{d}/rescore-E11-D07.jsonl') if x.get('changed')}
+    for r in runs:
+        if r['run_id'] in fix: r['score'].update(fix[r['run_id']])
     judged = {r['run_id']: r for r in jl(f'{d}/judged.jsonl') if r.get('pass') == 1 and not r.get('mock')} if task == 'T3' else {}
     per = collections.defaultdict(lambda: collections.defaultdict(list))
     for r in runs:

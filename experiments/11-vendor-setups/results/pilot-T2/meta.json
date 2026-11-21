@@ -1,0 +1,34 @@
+{
+  "run": "pilot-T2",
+  "status": "completed",
+  "set": "pilot",
+  "task": "T2",
+  "n": null,
+  "arms": [
+    "G0",
+    "TT",
+    "TS",
+    "GF",
+    "CR"
+  ],
+  "model": "claude-haiku-5-5",
+  "effort": "high",
+  "repeats": 2,
+  "max_turns": 40,
+  "items": 30,
+  "claude_version": "2.1.327",
+  "mock": false,
+  "accounts": [
+    "login1",
+    "login2"
+  ],
+  "system_prompt_sha": "cc79beca37e77227",
+  "schema_sha": "53ca3a9507c3b138",
+  "run_usd": 1,
+  "workers": 2,
+  "updated": "2026-11-21T00:40:02.887Z",
+  "halted": null,
+  "n_plan": 300,
+  "n_scored": 300,
+  "ledger_usd": 3.316025900000003
+}

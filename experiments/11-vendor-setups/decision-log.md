@@ -154,3 +154,20 @@ Changes after the protocol was frozen (2026-11-20, before the pilot). None yet.
   - **Fix.** The setup paths (`.claude`, `CLAUDE.md`, `.mcp.json`, `.gitignore`, `graphify-out`) are added to the
     setup commit with `git add -f`; the tools' own data (`.code-review-graph/`) stays untracked.
   - **Check.** A mock run on xarray (TS, GF, CR, two repeats each) restored every workspace. The pilot was resumed.
+
+## Pilot completed (2026-11-21)
+
+- **Size and cost.** 900 runs (3 tasks × 30 items × 5 arms × 2 repeats), all scored. Run cost: $2.47 (T1), $3.32 (T2)
+  and $1.99 (T3) at list price. T3 judging cost $9.93.
+- **Judge reliability.** 24 T3 answers were judged twice: 202 of 205 key-fact verdicts agreed (98.5%); coverage
+  differed by 0.011 and the rubric total by 1.1 points on average.
+- **Sample sizes**, by the protocol's rule (`results/pilot-power.json`, using the E11-D07 corrected scores):
+
+  | Task | n required | Main n | Power at main n |
+  |---|---:|---:|---|
+  | T1 | 196 | 196 | 0.90 at the 250 cap |
+  | T2 | 341 | 250 (the cap) | 0.63 for a 0.05 difference |
+  | T3 | 219 | 219 | 0.86 at the 250 cap |
+
+  T2 stays at the pre-registered cap of 250, and its lower power is reported with the results.
+- **Pilot scores** were seen and not acted on, as pre-registered.

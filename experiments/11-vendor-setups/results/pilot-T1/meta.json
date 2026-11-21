@@ -1,6 +1,6 @@
 {
   "run": "pilot-T1",
-  "status": "running",
+  "status": "completed",
   "set": "pilot",
   "task": "T1",
   "n": null,
@@ -26,5 +26,9 @@
   "schema_sha": "53ca3a9507c3b138",
   "run_usd": 1,
   "workers": 2,
-  "updated": "2026-11-20T13:14:10.337Z"
+  "updated": "2026-11-21T00:39:46.463Z",
+  "halted": null,
+  "n_plan": 300,
+  "n_scored": 300,
+  "ledger_usd": 2.4744667899999997
 }

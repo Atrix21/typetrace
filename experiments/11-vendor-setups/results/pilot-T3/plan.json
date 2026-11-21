@@ -1,0 +1,2160 @@
+{
+ "config": {
+  "set": "pilot",
+  "task": "T3",
+  "n": null,
+  "arms": [
+   "G0",
+   "TT",
+   "TS",
+   "GF",
+   "CR"
+  ],
+  "model": "claude-haiku-5-5",
+  "effort": "high",
+  "repeats": 2,
+  "max_turns": 40,
+  "items": [
+   "astropy#25",
+   "astropy#4",
+   "conan#28",
+   "conan#44",
+   "django#40",
+   "django#21",
+   "flask#14",
+   "flask#21",
+   "matplotlib#27",
+   "matplotlib#22",
+   "pylint#24",
+   "pylint#37",
+   "pytest#41",
+   "pytest#1",
+   "reflex#11",
+   "reflex#45",
+   "requests#3",
+   "requests#15",
+   "scikit-learn#37",
+   "scikit-learn#29",
+   "sphinx#1",
+   "sphinx#30",
+   "sqlfluff#8",
+   "sqlfluff#14",
+   "streamlink#40",
+   "streamlink#37",
+   "sympy#27",
+   "sympy#35",
+   "xarray#4",
+   "xarray#12"
+  ],
+  "claude_version": "2.1.327",
+  "mock": false,
+  "accounts": [
+   "login1",
+   "login2"
+  ],
+  "system_prompt_sha": "74ca71dd2941ee5a",
+  "schema_sha": "4b10a285e43b4398"
+ },
+ "items": [
+  {
+   "run_id": "astropy#25|TT|r2",
+   "item": "astropy#25",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "astropy#4|G0|r1",
+   "item": "astropy#4",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "astropy#25|TS|r2",
+   "item": "astropy#25",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "astropy#25|CR|r2",
+   "item": "astropy#25",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "astropy#25|G0|r2",
+   "item": "astropy#25",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "astropy#25|GF|r2",
+   "item": "astropy#25",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "astropy#25|CR|r1",
+   "item": "astropy#25",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "astropy#25|TS|r1",
+   "item": "astropy#25",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "astropy#25|TT|r1",
+   "item": "astropy#25",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "astropy#4|TS|r2",
+   "item": "astropy#4",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "astropy#4|TT|r2",
+   "item": "astropy#4",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "astropy#4|CR|r1",
+   "item": "astropy#4",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "astropy#4|CR|r2",
+   "item": "astropy#4",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "astropy#4|G0|r2",
+   "item": "astropy#4",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "astropy#4|TT|r1",
+   "item": "astropy#4",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "astropy#25|G0|r1",
+   "item": "astropy#25",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "astropy#25|GF|r1",
+   "item": "astropy#25",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "astropy#4|GF|r1",
+   "item": "astropy#4",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "astropy#4|TS|r1",
+   "item": "astropy#4",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "astropy#4|GF|r2",
+   "item": "astropy#4",
+   "unit": "sweqa:astropy/astropy",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "conan#44|G0|r1",
+   "item": "conan#44",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "conan#44|CR|r1",
+   "item": "conan#44",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "conan#28|GF|r1",
+   "item": "conan#28",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "conan#44|TS|r1",
+   "item": "conan#44",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "conan#28|TT|r1",
+   "item": "conan#28",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "conan#28|TS|r2",
+   "item": "conan#28",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "conan#28|TS|r1",
+   "item": "conan#28",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "conan#44|TS|r2",
+   "item": "conan#44",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "conan#28|TT|r2",
+   "item": "conan#28",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "conan#28|G0|r2",
+   "item": "conan#28",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "conan#44|GF|r2",
+   "item": "conan#44",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "conan#44|GF|r1",
+   "item": "conan#44",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "conan#28|G0|r1",
+   "item": "conan#28",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "conan#44|G0|r2",
+   "item": "conan#44",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "conan#28|GF|r2",
+   "item": "conan#28",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "conan#28|CR|r2",
+   "item": "conan#28",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "conan#44|TT|r1",
+   "item": "conan#44",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "conan#44|CR|r2",
+   "item": "conan#44",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "conan#44|TT|r2",
+   "item": "conan#44",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "conan#28|CR|r1",
+   "item": "conan#28",
+   "unit": "sweqa:conan-io/conan",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "django#21|CR|r2",
+   "item": "django#21",
+   "unit": "sweqa:django/django",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "django#40|GF|r2",
+   "item": "django#40",
+   "unit": "sweqa:django/django",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "django#40|GF|r1",
+   "item": "django#40",
+   "unit": "sweqa:django/django",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "django#40|TT|r2",
+   "item": "django#40",
+   "unit": "sweqa:django/django",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "django#21|CR|r1",
+   "item": "django#21",
+   "unit": "sweqa:django/django",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "django#40|TT|r1",
+   "item": "django#40",
+   "unit": "sweqa:django/django",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "django#21|GF|r2",
+   "item": "django#21",
+   "unit": "sweqa:django/django",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "django#21|TS|r2",
+   "item": "django#21",
+   "unit": "sweqa:django/django",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "django#21|GF|r1",
+   "item": "django#21",
+   "unit": "sweqa:django/django",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "django#21|TS|r1",
+   "item": "django#21",
+   "unit": "sweqa:django/django",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "django#21|TT|r2",
+   "item": "django#21",
+   "unit": "sweqa:django/django",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "django#40|G0|r1",
+   "item": "django#40",
+   "unit": "sweqa:django/django",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "django#40|TS|r2",
+   "item": "django#40",
+   "unit": "sweqa:django/django",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "django#40|CR|r1",
+   "item": "django#40",
+   "unit": "sweqa:django/django",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "django#40|CR|r2",
+   "item": "django#40",
+   "unit": "sweqa:django/django",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "django#21|TT|r1",
+   "item": "django#21",
+   "unit": "sweqa:django/django",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "django#40|G0|r2",
+   "item": "django#40",
+   "unit": "sweqa:django/django",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "django#40|TS|r1",
+   "item": "django#40",
+   "unit": "sweqa:django/django",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "django#21|G0|r2",
+   "item": "django#21",
+   "unit": "sweqa:django/django",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "django#21|G0|r1",
+   "item": "django#21",
+   "unit": "sweqa:django/django",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "flask#21|GF|r1",
+   "item": "flask#21",
+   "unit": "sweqa:pallets/flask",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "flask#21|G0|r1",
+   "item": "flask#21",
+   "unit": "sweqa:pallets/flask",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "flask#14|G0|r1",
+   "item": "flask#14",
+   "unit": "sweqa:pallets/flask",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "flask#21|CR|r1",
+   "item": "flask#21",
+   "unit": "sweqa:pallets/flask",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "flask#21|TS|r2",
+   "item": "flask#21",
+   "unit": "sweqa:pallets/flask",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "flask#21|G0|r2",
+   "item": "flask#21",
+   "unit": "sweqa:pallets/flask",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "flask#14|CR|r2",
+   "item": "flask#14",
+   "unit": "sweqa:pallets/flask",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "flask#21|TS|r1",
+   "item": "flask#21",
+   "unit": "sweqa:pallets/flask",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "flask#21|TT|r2",
+   "item": "flask#21",
+   "unit": "sweqa:pallets/flask",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "flask#14|GF|r2",
+   "item": "flask#14",
+   "unit": "sweqa:pallets/flask",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "flask#14|TS|r2",
+   "item": "flask#14",
+   "unit": "sweqa:pallets/flask",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "flask#14|CR|r1",
+   "item": "flask#14",
+   "unit": "sweqa:pallets/flask",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "flask#14|TT|r2",
+   "item": "flask#14",
+   "unit": "sweqa:pallets/flask",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "flask#14|TS|r1",
+   "item": "flask#14",
+   "unit": "sweqa:pallets/flask",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "flask#14|GF|r1",
+   "item": "flask#14",
+   "unit": "sweqa:pallets/flask",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "flask#21|CR|r2",
+   "item": "flask#21",
+   "unit": "sweqa:pallets/flask",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "flask#14|G0|r2",
+   "item": "flask#14",
+   "unit": "sweqa:pallets/flask",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "flask#21|TT|r1",
+   "item": "flask#21",
+   "unit": "sweqa:pallets/flask",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "flask#14|TT|r1",
+   "item": "flask#14",
+   "unit": "sweqa:pallets/flask",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "flask#21|GF|r2",
+   "item": "flask#21",
+   "unit": "sweqa:pallets/flask",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib#22|CR|r2",
+   "item": "matplotlib#22",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib#22|TS|r1",
+   "item": "matplotlib#22",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib#27|G0|r1",
+   "item": "matplotlib#27",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib#27|TS|r1",
+   "item": "matplotlib#27",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib#22|TT|r2",
+   "item": "matplotlib#22",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib#22|TS|r2",
+   "item": "matplotlib#22",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib#22|CR|r1",
+   "item": "matplotlib#22",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib#27|G0|r2",
+   "item": "matplotlib#27",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib#22|GF|r2",
+   "item": "matplotlib#22",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib#22|G0|r1",
+   "item": "matplotlib#22",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib#22|G0|r2",
+   "item": "matplotlib#22",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib#22|TT|r1",
+   "item": "matplotlib#22",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib#27|CR|r1",
+   "item": "matplotlib#27",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib#27|GF|r1",
+   "item": "matplotlib#27",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib#27|GF|r2",
+   "item": "matplotlib#27",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib#27|TT|r1",
+   "item": "matplotlib#27",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib#22|GF|r1",
+   "item": "matplotlib#22",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "matplotlib#27|CR|r2",
+   "item": "matplotlib#27",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib#27|TT|r2",
+   "item": "matplotlib#27",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "matplotlib#27|TS|r2",
+   "item": "matplotlib#27",
+   "unit": "sweqa:matplotlib/matplotlib",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "pylint#24|TS|r2",
+   "item": "pylint#24",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "pylint#24|GF|r2",
+   "item": "pylint#24",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "pylint#24|CR|r1",
+   "item": "pylint#24",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "pylint#37|G0|r1",
+   "item": "pylint#37",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "pylint#37|GF|r2",
+   "item": "pylint#37",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "pylint#24|TT|r2",
+   "item": "pylint#24",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "pylint#37|GF|r1",
+   "item": "pylint#37",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "pylint#24|G0|r2",
+   "item": "pylint#24",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "pylint#37|TT|r1",
+   "item": "pylint#37",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "pylint#24|CR|r2",
+   "item": "pylint#24",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "pylint#24|TT|r1",
+   "item": "pylint#24",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "pylint#37|G0|r2",
+   "item": "pylint#37",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "pylint#37|CR|r2",
+   "item": "pylint#37",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "pylint#37|TS|r2",
+   "item": "pylint#37",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "pylint#24|G0|r1",
+   "item": "pylint#24",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "pylint#37|TS|r1",
+   "item": "pylint#37",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "pylint#37|CR|r1",
+   "item": "pylint#37",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "pylint#24|TS|r1",
+   "item": "pylint#24",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "pylint#37|TT|r2",
+   "item": "pylint#37",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "pylint#24|GF|r1",
+   "item": "pylint#24",
+   "unit": "sweqa:pylint-dev/pylint",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "pytest#41|TS|r1",
+   "item": "pytest#41",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "pytest#1|GF|r2",
+   "item": "pytest#1",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "pytest#41|TT|r1",
+   "item": "pytest#41",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "pytest#1|G0|r2",
+   "item": "pytest#1",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "pytest#1|TS|r2",
+   "item": "pytest#1",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "pytest#1|G0|r1",
+   "item": "pytest#1",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "pytest#41|G0|r1",
+   "item": "pytest#41",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "pytest#41|GF|r2",
+   "item": "pytest#41",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "pytest#1|CR|r2",
+   "item": "pytest#1",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "pytest#1|TS|r1",
+   "item": "pytest#1",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "pytest#41|G0|r2",
+   "item": "pytest#41",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "pytest#1|CR|r1",
+   "item": "pytest#1",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "pytest#41|TS|r2",
+   "item": "pytest#41",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "pytest#1|TT|r2",
+   "item": "pytest#1",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "pytest#1|GF|r1",
+   "item": "pytest#1",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "pytest#41|CR|r2",
+   "item": "pytest#41",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "pytest#41|TT|r2",
+   "item": "pytest#41",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "pytest#41|CR|r1",
+   "item": "pytest#41",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "pytest#41|GF|r1",
+   "item": "pytest#41",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "pytest#1|TT|r1",
+   "item": "pytest#1",
+   "unit": "sweqa:pytest-dev/pytest",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "reflex#11|TS|r1",
+   "item": "reflex#11",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "reflex#11|GF|r1",
+   "item": "reflex#11",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "reflex#11|GF|r2",
+   "item": "reflex#11",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "reflex#45|TS|r1",
+   "item": "reflex#45",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "reflex#45|G0|r1",
+   "item": "reflex#45",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "reflex#11|TT|r2",
+   "item": "reflex#11",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "reflex#45|GF|r1",
+   "item": "reflex#45",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "reflex#45|TT|r1",
+   "item": "reflex#45",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "reflex#11|TT|r1",
+   "item": "reflex#11",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "reflex#11|G0|r2",
+   "item": "reflex#11",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "reflex#11|CR|r2",
+   "item": "reflex#11",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "reflex#45|GF|r2",
+   "item": "reflex#45",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "reflex#45|TT|r2",
+   "item": "reflex#45",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "reflex#45|TS|r2",
+   "item": "reflex#45",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "reflex#11|TS|r2",
+   "item": "reflex#11",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "reflex#11|G0|r1",
+   "item": "reflex#11",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "reflex#11|CR|r1",
+   "item": "reflex#11",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "reflex#45|CR|r1",
+   "item": "reflex#45",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "reflex#45|G0|r2",
+   "item": "reflex#45",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "reflex#45|CR|r2",
+   "item": "reflex#45",
+   "unit": "sweqa:reflex-dev/reflex",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "requests#3|GF|r2",
+   "item": "requests#3",
+   "unit": "sweqa:psf/requests",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "requests#3|TT|r2",
+   "item": "requests#3",
+   "unit": "sweqa:psf/requests",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "requests#15|TT|r1",
+   "item": "requests#15",
+   "unit": "sweqa:psf/requests",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "requests#3|G0|r2",
+   "item": "requests#3",
+   "unit": "sweqa:psf/requests",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "requests#15|CR|r2",
+   "item": "requests#15",
+   "unit": "sweqa:psf/requests",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "requests#3|TS|r2",
+   "item": "requests#3",
+   "unit": "sweqa:psf/requests",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "requests#15|G0|r2",
+   "item": "requests#15",
+   "unit": "sweqa:psf/requests",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "requests#15|GF|r1",
+   "item": "requests#15",
+   "unit": "sweqa:psf/requests",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "requests#15|G0|r1",
+   "item": "requests#15",
+   "unit": "sweqa:psf/requests",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "requests#15|TS|r1",
+   "item": "requests#15",
+   "unit": "sweqa:psf/requests",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "requests#3|CR|r2",
+   "item": "requests#3",
+   "unit": "sweqa:psf/requests",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "requests#15|GF|r2",
+   "item": "requests#15",
+   "unit": "sweqa:psf/requests",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "requests#3|CR|r1",
+   "item": "requests#3",
+   "unit": "sweqa:psf/requests",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "requests#3|TT|r1",
+   "item": "requests#3",
+   "unit": "sweqa:psf/requests",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "requests#15|CR|r1",
+   "item": "requests#15",
+   "unit": "sweqa:psf/requests",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "requests#15|TT|r2",
+   "item": "requests#15",
+   "unit": "sweqa:psf/requests",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "requests#3|GF|r1",
+   "item": "requests#3",
+   "unit": "sweqa:psf/requests",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "requests#15|TS|r2",
+   "item": "requests#15",
+   "unit": "sweqa:psf/requests",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "requests#3|TS|r1",
+   "item": "requests#3",
+   "unit": "sweqa:psf/requests",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "requests#3|G0|r1",
+   "item": "requests#3",
+   "unit": "sweqa:psf/requests",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn#37|GF|r2",
+   "item": "scikit-learn#37",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn#37|G0|r1",
+   "item": "scikit-learn#37",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn#37|TT|r2",
+   "item": "scikit-learn#37",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn#37|TS|r1",
+   "item": "scikit-learn#37",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn#37|G0|r2",
+   "item": "scikit-learn#37",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn#29|GF|r2",
+   "item": "scikit-learn#29",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn#37|CR|r1",
+   "item": "scikit-learn#37",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn#29|TT|r2",
+   "item": "scikit-learn#29",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn#29|TS|r2",
+   "item": "scikit-learn#29",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn#37|GF|r1",
+   "item": "scikit-learn#37",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn#37|TS|r2",
+   "item": "scikit-learn#37",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn#37|TT|r1",
+   "item": "scikit-learn#37",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn#29|CR|r1",
+   "item": "scikit-learn#29",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn#37|CR|r2",
+   "item": "scikit-learn#37",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn#29|GF|r1",
+   "item": "scikit-learn#29",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn#29|G0|r1",
+   "item": "scikit-learn#29",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn#29|TT|r1",
+   "item": "scikit-learn#29",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "scikit-learn#29|CR|r2",
+   "item": "scikit-learn#29",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn#29|G0|r2",
+   "item": "scikit-learn#29",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "scikit-learn#29|TS|r1",
+   "item": "scikit-learn#29",
+   "unit": "sweqa:scikit-learn/scikit-learn",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx#30|TT|r1",
+   "item": "sphinx#30",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx#30|CR|r2",
+   "item": "sphinx#30",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx#1|TS|r2",
+   "item": "sphinx#1",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx#30|GF|r2",
+   "item": "sphinx#30",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx#30|TS|r2",
+   "item": "sphinx#30",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx#30|G0|r1",
+   "item": "sphinx#30",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx#1|TT|r2",
+   "item": "sphinx#1",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx#1|TS|r1",
+   "item": "sphinx#1",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx#1|CR|r2",
+   "item": "sphinx#1",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx#30|TT|r2",
+   "item": "sphinx#30",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx#30|G0|r2",
+   "item": "sphinx#30",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx#1|CR|r1",
+   "item": "sphinx#1",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx#1|TT|r1",
+   "item": "sphinx#1",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx#1|GF|r1",
+   "item": "sphinx#1",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx#1|G0|r1",
+   "item": "sphinx#1",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx#1|G0|r2",
+   "item": "sphinx#1",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx#30|CR|r1",
+   "item": "sphinx#30",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx#1|GF|r2",
+   "item": "sphinx#1",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "sphinx#30|GF|r1",
+   "item": "sphinx#30",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "sphinx#30|TS|r1",
+   "item": "sphinx#30",
+   "unit": "sweqa:sphinx-doc/sphinx",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "sqlfluff#8|TT|r2",
+   "item": "sqlfluff#8",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "sqlfluff#14|CR|r1",
+   "item": "sqlfluff#14",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "sqlfluff#14|TS|r1",
+   "item": "sqlfluff#14",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "sqlfluff#14|G0|r2",
+   "item": "sqlfluff#14",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "sqlfluff#14|TS|r2",
+   "item": "sqlfluff#14",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "sqlfluff#8|TS|r1",
+   "item": "sqlfluff#8",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "sqlfluff#8|CR|r1",
+   "item": "sqlfluff#8",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "sqlfluff#14|GF|r1",
+   "item": "sqlfluff#14",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "sqlfluff#14|CR|r2",
+   "item": "sqlfluff#14",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "sqlfluff#8|GF|r2",
+   "item": "sqlfluff#8",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "sqlfluff#14|GF|r2",
+   "item": "sqlfluff#14",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "sqlfluff#8|TT|r1",
+   "item": "sqlfluff#8",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "sqlfluff#8|G0|r2",
+   "item": "sqlfluff#8",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "sqlfluff#14|G0|r1",
+   "item": "sqlfluff#14",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sqlfluff#8|CR|r2",
+   "item": "sqlfluff#8",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "sqlfluff#14|TT|r2",
+   "item": "sqlfluff#14",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "sqlfluff#14|TT|r1",
+   "item": "sqlfluff#14",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "sqlfluff#8|GF|r1",
+   "item": "sqlfluff#8",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "sqlfluff#8|TS|r2",
+   "item": "sqlfluff#8",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "sqlfluff#8|G0|r1",
+   "item": "sqlfluff#8",
+   "unit": "sweqa:sqlfluff/sqlfluff",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "streamlink#40|TT|r1",
+   "item": "streamlink#40",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "streamlink#40|GF|r1",
+   "item": "streamlink#40",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "streamlink#37|G0|r2",
+   "item": "streamlink#37",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "streamlink#37|TS|r1",
+   "item": "streamlink#37",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "streamlink#40|CR|r2",
+   "item": "streamlink#40",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "streamlink#37|G0|r1",
+   "item": "streamlink#37",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "streamlink#40|TT|r2",
+   "item": "streamlink#40",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "streamlink#40|G0|r1",
+   "item": "streamlink#40",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "streamlink#37|GF|r2",
+   "item": "streamlink#37",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "streamlink#40|TS|r2",
+   "item": "streamlink#40",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "streamlink#37|TT|r1",
+   "item": "streamlink#37",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "streamlink#40|GF|r2",
+   "item": "streamlink#40",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "streamlink#40|TS|r1",
+   "item": "streamlink#40",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "streamlink#37|CR|r1",
+   "item": "streamlink#37",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "streamlink#40|G0|r2",
+   "item": "streamlink#40",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "streamlink#37|TS|r2",
+   "item": "streamlink#37",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "streamlink#40|CR|r1",
+   "item": "streamlink#40",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "streamlink#37|TT|r2",
+   "item": "streamlink#37",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "streamlink#37|GF|r1",
+   "item": "streamlink#37",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "streamlink#37|CR|r2",
+   "item": "streamlink#37",
+   "unit": "sweqa:streamlink/streamlink",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy#35|TT|r1",
+   "item": "sympy#35",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy#35|TS|r2",
+   "item": "sympy#35",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy#27|TT|r2",
+   "item": "sympy#27",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy#35|TT|r2",
+   "item": "sympy#35",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy#35|G0|r2",
+   "item": "sympy#35",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy#27|CR|r2",
+   "item": "sympy#27",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy#35|G0|r1",
+   "item": "sympy#35",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy#35|CR|r1",
+   "item": "sympy#35",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy#27|GF|r1",
+   "item": "sympy#27",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy#27|CR|r1",
+   "item": "sympy#27",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy#35|CR|r2",
+   "item": "sympy#35",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy#27|GF|r2",
+   "item": "sympy#27",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy#35|GF|r2",
+   "item": "sympy#35",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy#27|G0|r2",
+   "item": "sympy#27",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy#35|GF|r1",
+   "item": "sympy#35",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy#27|TS|r2",
+   "item": "sympy#27",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "sympy#27|TS|r1",
+   "item": "sympy#27",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy#27|G0|r1",
+   "item": "sympy#27",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy#27|TT|r1",
+   "item": "sympy#27",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "sympy#35|TS|r1",
+   "item": "sympy#35",
+   "unit": "sweqa:sympy/sympy",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "xarray#4|CR|r2",
+   "item": "xarray#4",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "xarray#12|G0|r2",
+   "item": "xarray#12",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "xarray#4|GF|r1",
+   "item": "xarray#4",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "xarray#4|GF|r2",
+   "item": "xarray#4",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "xarray#4|G0|r2",
+   "item": "xarray#4",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "G0",
+   "repeat": 2
+  },
+  {
+   "run_id": "xarray#4|TT|r1",
+   "item": "xarray#4",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "xarray#12|GF|r2",
+   "item": "xarray#12",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "GF",
+   "repeat": 2
+  },
+  {
+   "run_id": "xarray#12|TS|r1",
+   "item": "xarray#12",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "xarray#12|G0|r1",
+   "item": "xarray#12",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "xarray#12|CR|r2",
+   "item": "xarray#12",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "CR",
+   "repeat": 2
+  },
+  {
+   "run_id": "xarray#4|G0|r1",
+   "item": "xarray#4",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "G0",
+   "repeat": 1
+  },
+  {
+   "run_id": "xarray#4|CR|r1",
+   "item": "xarray#4",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "xarray#12|CR|r1",
+   "item": "xarray#12",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "CR",
+   "repeat": 1
+  },
+  {
+   "run_id": "xarray#4|TT|r2",
+   "item": "xarray#4",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "TT",
+   "repeat": 2
+  },
+  {
+   "run_id": "xarray#12|TS|r2",
+   "item": "xarray#12",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "xarray#4|TS|r2",
+   "item": "xarray#4",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "TS",
+   "repeat": 2
+  },
+  {
+   "run_id": "xarray#12|GF|r1",
+   "item": "xarray#12",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "GF",
+   "repeat": 1
+  },
+  {
+   "run_id": "xarray#4|TS|r1",
+   "item": "xarray#4",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "TS",
+   "repeat": 1
+  },
+  {
+   "run_id": "xarray#12|TT|r1",
+   "item": "xarray#12",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "TT",
+   "repeat": 1
+  },
+  {
+   "run_id": "xarray#12|TT|r2",
+   "item": "xarray#12",
+   "unit": "sweqa:pydata/xarray",
+   "arm": "TT",
+   "repeat": 2
+  }
+ ]
+}
