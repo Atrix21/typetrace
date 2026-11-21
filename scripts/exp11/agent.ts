@@ -319,6 +319,10 @@ async function setupArm(arm: string, root: string, files: string[], it: Item, w:
     // The setup is committed, as in a repository where the tool is set up: git status is clean in every arm, and
     // every run's changes (Bash can write in the workspace) are found and undone with git (E11-D01).
     sh('git', ['add', '-A'], { cwd: ws, env: GIT_ENV });
+    // E11-D09: also when the repository's own .gitignore excludes them (xarray ignores .claude/), so the reset after
+    // each run restores the setup instead of deleting it. The tools' own data (.code-review-graph/) stays untracked.
+    const setupPaths = ['.claude', 'CLAUDE.md', '.mcp.json', '.gitignore', 'graphify-out'].filter((p) => fs.existsSync(path.join(ws, p)));
+    if (setupPaths.length) sh('git', ['add', '-f', '--', ...setupPaths], { cwd: ws, env: GIT_ENV });
     if (sh('git', ['status', '--porcelain'], { cwd: ws })) sh('git', ['-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'tool setup'], { cwd: ws, env: GIT_ENV });
     base.manifest = wsManifest(ws);
     base.state = wsState(ws);

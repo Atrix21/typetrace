@@ -145,3 +145,12 @@ Changes after the protocol was frozen (2026-11-20, before the pilot). None yet.
     the call (for example a rejected answer being redone) is not stopped.
   - **No effect on what the agent sees, or on scoring.** The pilot's timed-out run is retried as before; the main run
     uses the fix.
+
+- **E11-D09 (2026-11-21, T3 pilot): setup files ignored by the repository's own .gitignore.**
+  - **What happened.** xarray's `.gitignore` ignores `.claude/` (a "# Claude Code" section). The setups' `.claude/`
+    files were therefore not in the workspace's setup commit, and the reset after the first run with a setup removed
+    them. The runner's restore check caught it at once and halted at 263/300 T3 runs.
+  - **Effect on runs.** The run before the reset had its full setup; no run ran without one.
+  - **Fix.** The setup paths (`.claude`, `CLAUDE.md`, `.mcp.json`, `.gitignore`, `graphify-out`) are added to the
+    setup commit with `git add -f`; the tools' own data (`.code-review-graph/`) stays untracked.
+  - **Check.** A mock run on xarray (TS, GF, CR, two repeats each) restored every workspace. The pilot was resumed.
