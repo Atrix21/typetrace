@@ -128,3 +128,20 @@ Changes after the protocol was frozen (2026-11-20, before the pilot). None yet.
   - **Experiment 10 was affected too** (E10-D08). Its every-arm top-3 level is 0.82, not the 0.81 this protocol quotes
     in "Why" and "The multi-file pool". On its single-file issues the share of changed functions listed is 0.79–0.80,
     not 0.78. The multi-file figure (0.40–0.42) is unchanged. The argument for the multi-file pool stands.
+
+- **E11-D08 (2026-11-21, during the T3 pilot): two more lingering cases.**
+  - **What happened.** A T3 run (sqlfluff#8, grep only) timed out at 900 s although its session took 22 s (Claude Code's
+    own `duration_ms`). The grace stop of E11-D03 never fired, in this run or in any other T3 run (0 of 259). Two
+    reasons:
+    - Claude Code writes the `result` event with a different key order (`{"duration_api_ms":…,"type":"result"}`), so
+      the check for a line starting with `{"type":"result"` never matched.
+    - A session can stall after the model's StructuredOutput call and before any further output. The lines after the
+      call (its tool result and the result event) then appear only when the process is stopped.
+  - **Fix** (in `runClaude`, opt-in through `afterResultGraceMs`, so earlier experiments are unaffected):
+    - the result event is recognised whatever its key order;
+    - once the model has called StructuredOutput, a process that writes nothing for 4 × the grace (60 s) is stopped
+      with SIGTERM, after which Claude Code writes its result.
+  - **Tested with a fake Claude Code.** A stall after the answer call is stopped; a session that keeps writing after
+    the call (for example a rejected answer being redone) is not stopped.
+  - **No effect on what the agent sees, or on scoring.** The pilot's timed-out run is retried as before; the main run
+    uses the fix.

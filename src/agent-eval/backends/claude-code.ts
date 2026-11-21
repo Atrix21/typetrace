@@ -702,6 +702,11 @@ export interface RunClaudeOptions {
   afterResultGraceMs?: number;
 }
 
+/** A stream-json `result` event. Claude Code does not always put "type" first (e.g. {"duration_api_ms":…,"type":"result"}). */
+function isResultLine(line: string): boolean {
+  if (line.startsWith('{"type":"result"')) return true;
+  try { return JSON.parse(line)?.type === 'result'; } catch { return false; }
+}
 export interface RunTiming { wall_ms: number; init_ms: number | null; close_ms: number; /** stopped after lingering past its result (afterResultGraceMs) */ lingered?: boolean }
 export interface RunCost { reported: number | null; list: number | null; ledger: number }
 export interface RunClaudeResult { run: AgentRun; detail: ClaudeRunDetail; raw: string; outcome: Outcome; timing: RunTiming; cost: RunCost; init: InitFingerprint | null }
@@ -730,13 +735,17 @@ export async function runClaude(spec: ClaudeCommand, prompt: string, meta: RunMe
     liveChildren.add(child);
     let stdout = '', stderr = '', buf = '', timedOut = false, spawnError = false;
     let initMismatch: string | undefined, aborted: string | undefined, initMs: number | null = null, resultMs: number | null = null, sawInit = false;
-    let graceTimer: NodeJS.Timeout | null = null, lingered = false;
+    let graceTimer: NodeJS.Timeout | null = null, lingered = false, lastLineAt = Date.now(), answerCalledAt: number | null = null;
     const armGrace = () => {
       if (opts.afterResultGraceMs == null || graceTimer) return;
       graceTimer = setTimeout(() => { lingered = true; killGroup('SIGTERM'); setTimeout(() => killGroup('SIGKILL'), 10_000).unref(); }, opts.afterResultGraceMs);
     };
     const killGroup = (sig: NodeJS.Signals) => { try { process.kill(-child.pid!, sig); } catch { /* gone */ } };
     const handleLine = (line: string) => {
+      lastLineAt = Date.now();
+      // The model called StructuredOutput (its answer). If Claude Code then stalls before writing anything more, the
+      // watch below stops it (experiment 11: some sessions stall there, and the next lines appear only when stopped).
+      if (answerCalledAt == null && line.startsWith('{"type":"assistant"') && line.includes('"name":"StructuredOutput"')) answerCalledAt = Date.now();
       if (!sawInit && line.includes('"subtype":"init"') && line.includes('"type":"system"')) {
         sawInit = true; initMs = Date.now() - t0;
         try {
@@ -744,7 +753,7 @@ export async function runClaude(spec: ClaudeCommand, prompt: string, meta: RunMe
           const why = opts.onInit?.(ev);
           if (why) { initMismatch = why; killGroup('SIGKILL'); }
         } catch { /* parsed again later */ }
-      } else if (resultMs == null && line.startsWith('{"type":"result"')) {
+      } else if (resultMs == null && line.includes('"type":"result"') && isResultLine(line)) {
         resultMs = Date.now() - t0;
         armGrace();
       } else if (graceTimer == null && line.startsWith('{"type":"user"') && line.includes('Structured output provided successfully')) {
@@ -760,11 +769,16 @@ export async function runClaude(spec: ClaudeCommand, prompt: string, meta: RunMe
     child.stderr.on('data', (d) => { stderr += d; });
     child.stdin.on('error', () => undefined);
     child.stdin.end(prompt);
+    // Silent for 4 × afterResultGraceMs after the answer call: stopped like a process that lingers after its result.
+    const stallWatch = opts.afterResultGraceMs != null ? setInterval(() => {
+      if (answerCalledAt != null && !graceTimer && Date.now() - lastLineAt > 4 * opts.afterResultGraceMs!) { lingered = true; killGroup('SIGTERM'); setTimeout(() => killGroup('SIGKILL'), 10_000).unref(); }
+    }, 5_000) : null;
     const timer = setTimeout(() => { timedOut = true; killGroup('SIGTERM'); setTimeout(() => killGroup('SIGKILL'), 5000).unref(); }, opts.timeoutMs ?? 600_000);
     const poll = opts.shouldAbort ? setInterval(() => { const w = opts.shouldAbort!(); if (w && !aborted) { aborted = w; killGroup('SIGKILL'); } }, 250) : null;
     const code = await new Promise<number | null>((resolve) => { child.on('error', () => { spawnError = true; resolve(null); }); child.on('close', (c) => resolve(c)); });
     clearTimeout(timer);
     if (graceTimer) clearTimeout(graceTimer);
+    if (stallWatch) clearInterval(stallWatch);
     if (poll) clearInterval(poll);
     if (buf) handleLine(buf);
     killGroup('SIGKILL'); // MCP server children
